@@ -1,0 +1,1 @@
+{[{foreach from=$aIncludes item=include key=key name=inclueds}][{capture assign="rendered"}][{include file=$include}][{/capture}]"[{$key}]":"[{$rendered|escape:"javascript":"UTF-8"|replace:"\\'":"'"|replace:'\r\n':''}]"[{if !$smarty.foreach.inclueds.last}],[{/if}][{/foreach}]}

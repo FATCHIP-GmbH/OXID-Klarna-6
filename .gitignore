@@ -1,0 +1,10 @@
+/.idea
+composer.lock
+*_tasks.py
+core/KlarnaSessionBag.php
+chromedriver.exe
+selenium-server-standalone-3.8.1.jar
+tests/selenium-server-standalone-3.8.1.jar
+tests/devTest.php
+vendor
+vendor/*

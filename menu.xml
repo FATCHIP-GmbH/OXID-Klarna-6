@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OX>
+    <OXMENU id="NAVIGATION_ESHOPADMIN">
+        <MAINMENU id="KL_KLARNAMAINMENU">
+            <SUBMENU id="KL_START" cl="klarna_start" />
+            <SUBMENU id="KL_GENERAL_SETTINGS" cl="klarna_general" />
+            <SUBMENU id="KL_CONFIGURATION" cl="klarna_configuration" />
+            <SUBMENU id="KL_KLARNADESIGN" cl="klarna_design" />
+            <SUBMENU id="KL_EXTERNAL_PAYMENTS" cl="klarna_external_payments" />
+            <SUBMENU id="KL_EXTRA_MERCHANT_DATA" cl="klarna_emd_admin" />
+        </MAINMENU>
+        <MAINMENU id="mxorders">
+            <SUBMENU id="mxdisplayorders" cl="admin_order" list="order_list">
+                <TAB id="kl_tbclklarna_orders" cl="klarna_orders" />
+            </SUBMENU>
+        </MAINMENU>
+    </OXMENU>
+</OX>
