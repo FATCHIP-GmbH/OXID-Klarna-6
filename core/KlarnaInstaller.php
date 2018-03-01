@@ -72,7 +72,9 @@ class KlarnaInstaller extends shop_config
                   AND COLUMN_NAME = '$sColumnName'
                   ";
 
-        return (boolean)$this->db->execute($query)->RecordCount();
+//        var_dump($this->db->select($query));die;
+
+        return count($this->db->select($query)) > 0;
 
     }
 
@@ -222,7 +224,6 @@ class KlarnaInstaller extends shop_config
 
     /**
      *
-     * @throws oxConnectionException
      */
     protected function extendDbTables()
     {
@@ -283,11 +284,14 @@ class KlarnaInstaller extends shop_config
                     }
                     $query .= $queryPart;
                     $first = false;
+//                    var_dump($queryPart);
                 }
             }
+//            var_dump($query);
+//            die;
             $this->db->execute($query);
         }
-
+        $this->updateViews();
 
         $updateOxPayments =
             array(
@@ -309,7 +313,7 @@ class KlarnaInstaller extends shop_config
     {
         //preventing edit for anyone except malladmin
         if (oxRegistry::getSession()->getVariable("malladmin")) {
-            $oMetaData = oxNew('oxDbMetaDataHandler');
+            $oMetaData = oxNew(\OxidEsales\Eshop\Core\DbMetaDataHandler::class);
             $oMetaData->updateViews();
         }
     }

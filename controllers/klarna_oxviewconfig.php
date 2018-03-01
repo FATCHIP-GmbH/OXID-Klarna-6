@@ -51,7 +51,7 @@ class klarna_oxviewconfig extends klarna_oxviewconfig_parent
         $sUrl = str_replace(
             rtrim($this->getConfig()->getConfigParam('sShopDir'), '/'),
             rtrim($this->getConfig()->getSslShopUrl(), '/'),
-            $this->getConfig()->getConfigParam('sShopDir') . 'modules/klarna/' . $sPath
+            $this->getConfig()->getConfigParam('sShopDir') . 'modules/klarna/klarna/' . $sPath
         );
 
         return $sUrl;

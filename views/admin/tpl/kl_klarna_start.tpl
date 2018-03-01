@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="[{$oViewConf->getResourceUrl()}]main.css">
-<link rel="stylesheet" href="[{ $oViewConf->getKlarnaModuleUrl('out/admin/css/kl_klarna_admin2.css') }]">
+<link rel="stylesheet" href="[{$oViewConf->getKlarnaModuleUrl('out/admin/css/kl_klarna_admin2.css') }]">
 <div class="[{$box|default:'box'}]" style="[{if !$box && !$bottom_buttons}]height: 100%;[{/if}]">
     <div class="start_ext_version">
         <img src="[{ $oViewConf->getKlarnaModuleUrl('out/admin/img/checked_checkbox_green_35.png') }]"> [{$oView->getKlarnaModuleInfo()}]

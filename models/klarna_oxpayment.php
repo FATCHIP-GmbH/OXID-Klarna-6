@@ -52,7 +52,7 @@ class klarna_oxpayment extends klarna_oxpayment_parent
      */
     public static function getKlarnaPaymentsIds($filter = null)
     {
-        if(!$filter) {
+        if (!$filter) {
             return array(
                 self::KLARNA_PAYMENT_CHECKOUT_ID,
                 self::KLARNA_PAYMENT_SLICE_IT_ID,
@@ -61,7 +61,7 @@ class klarna_oxpayment extends klarna_oxpayment_parent
                 self::KLARNA_PAYMENT_SOFORT,
             );
         }
-        if($filter === 'KP'){
+        if ($filter === 'KP') {
             return array(
                 self::KLARNA_PAYMENT_SLICE_IT_ID,
                 self::KLARNA_PAYMENT_PAY_LATER_ID,
@@ -71,28 +71,32 @@ class klarna_oxpayment extends klarna_oxpayment_parent
         }
     }
 
-
+    /**
+     * @return mixed
+     */
     public function getKlarnaBadgeName()
     {
         $names = array(
-            self::KLARNA_PAYMENT_SLICE_IT_ID => 'slice_it',
+            self::KLARNA_PAYMENT_SLICE_IT_ID  => 'slice_it',
             self::KLARNA_PAYMENT_PAY_LATER_ID => 'pay_later',
             self::KLARNA_PAYMENT_DIRECT_DEBIT => 'pay_now',
-            self::KLARNA_PAYMENT_SOFORT => 'pay_now'
+            self::KLARNA_PAYMENT_SOFORT       => 'pay_now',
         );
 
         return $names[$this->oxpayments__oxid->value];
     }
 
-
+    /**
+     * @return bool|mixed
+     */
     public function getPaymentCategoryName()
     {
-        if(in_array($this->getId(), self::getKlarnaPaymentsIds('KP'))){
+        if (in_array($this->getId(), self::getKlarnaPaymentsIds('KP'))) {
             $names = array(
-                self::KLARNA_PAYMENT_SLICE_IT_ID => 'slice_it',
+                self::KLARNA_PAYMENT_SLICE_IT_ID  => 'slice_it',
                 self::KLARNA_PAYMENT_PAY_LATER_ID => 'pay_later',
                 self::KLARNA_PAYMENT_DIRECT_DEBIT => 'direct_debit',
-                self::KLARNA_PAYMENT_SOFORT => 'direct_bank_transfer'
+                self::KLARNA_PAYMENT_SOFORT       => 'direct_bank_transfer',
             );
 
             return $names[$this->getId()];
@@ -101,7 +105,9 @@ class klarna_oxpayment extends klarna_oxpayment_parent
         return false;
     }
 
-
+    /**
+     * @return bool
+     */
     public function isKPPayment()
     {
         return in_array($this->oxpayments__oxid->value, self::getKlarnaPaymentsIds('KP'));
@@ -120,34 +126,36 @@ class klarna_oxpayment extends klarna_oxpayment_parent
 
     /**
      * @return array
-     * @throws oxConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
      */
     public function getKPMethods()
     {
-        $db = oxdb::getDb(oxDb::FETCH_MODE_ASSOC);
+        $db  = oxdb::getDb(oxDb::FETCH_MODE_ASSOC);
         $sql = 'SELECT oxid, oxactive 
                 FROM oxpayments
-                WHERE oxid IN ("'. join('","',$this->getKlarnaPaymentsIds('KP')) .'")';
-        $oRs = $db->execute($sql);
+                WHERE oxid IN ("' . join('","', $this->getKlarnaPaymentsIds('KP')) . '")';
+        $oRs = $db->select($sql);
 
         $kpMethods = array();
-        while (!$oRs->EOF){
+        while (!$oRs->EOF) {
             $kpMethods[$oRs->fields['oxid']] = $oRs->fields['oxactive'];
             $oRs->moveNext();
         }
+
         return $kpMethods;
     }
 
     public function setActiveKPMethods()
     {
-        $oConfig = oxRegistry::getConfig();
+        $oConfig    = oxRegistry::getConfig();
         $aKPmethods = $oConfig->getRequestParameter('kpMethods');
 
-            foreach($aKPmethods as $oxId => $value){
-                $this->load($oxId);
-                $this->oxpayments__oxactive = new oxField($value, oxField::T_RAW);
-                $this->save();
-            }
+        foreach ($aKPmethods as $oxId => $value) {
+            $this->load($oxId);
+            $this->oxpayments__oxactive = new oxField($value, oxField::T_RAW);
+            $this->save();
+        }
     }
 
 
