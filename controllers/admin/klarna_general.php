@@ -95,5 +95,34 @@ class Klarna_General extends klarna_base_config
         return $nestedArray;
     }
 
+    /**
+     * @return mixed
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
+     * @throws oxSystemComponentException
+     */
+    protected function getKlarnaCountryAssocList()
+    {
+        if ($this->_aKlarnaCountries) {
+            return $this->_aKlarnaCountries;
+        }
+        $sViewName = getViewName('oxcountry', $this->_aViewData['adminlang']);
+        $isoList   = KlarnaUtils::getKlarnaGlobalActiveShopCountryISOs();
+
+        /** @var \OxidEsales\EshopCommunity\Core\Database\Adapter\Doctrine\Database $db */
+        $db  = oxdb::getDb(oxDb::FETCH_MODE_ASSOC);
+        $sql = 'SELECT oxisoalpha2, oxtitle 
+                FROM ' . $sViewName . ' 
+                WHERE oxisoalpha2 IN ("' . implode('","', $isoList) . '")';
+
+        /** @var \OxidEsales\EshopCommunity\Core\Database\Adapter\Doctrine\ResultSet $oResult */
+        $oResult = $db->select($sql);
+        foreach($oResult->getIterator() as $aCountry){
+            $this->_aKlarnaCountries[$aCountry['OXISOALPHA2']] = $aCountry['OXTITLE'];
+        }
+
+        return $this->_aKlarnaCountries;
+    }
+
 
 }
