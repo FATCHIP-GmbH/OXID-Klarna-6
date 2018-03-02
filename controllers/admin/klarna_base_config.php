@@ -219,7 +219,8 @@ class klarna_base_config extends Shop_Config
         $db = oxdb::getDb(oxdb::FETCH_MODE_ASSOC);
 
         $sql    = 'SELECT oxid FROM oxpayments WHERE oxactive=1 AND oxid != "oxempty"';
-        $result = $db->getArray($sql);
+
+        $result = $db->select($sql);
 
         return $result;
     }
