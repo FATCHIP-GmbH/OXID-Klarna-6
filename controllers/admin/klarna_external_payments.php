@@ -48,7 +48,7 @@ class Klarna_External_Payments extends klarna_base_config
                 AND oxid != "oxempty"
                 AND oxactive = 1';
 
-        $oxids = $db->getArray($sql);
+        $oxids = $db->select($sql);
 
         $payments = array();
         foreach ($oxids as $oxid) {

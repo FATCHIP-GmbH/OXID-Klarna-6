@@ -140,7 +140,7 @@ class klarna_oxpayment extends klarna_oxpayment_parent
         $kpMethods = array();
         while (!$oRs->EOF) {
             $kpMethods[$oRs->fields['oxid']] = $oRs->fields['oxactive'];
-            $oRs->moveNext();
+            $oRs->fetchRow();
         }
 
         return $kpMethods;

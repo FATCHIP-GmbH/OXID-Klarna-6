@@ -105,7 +105,8 @@ class klarna_base_config extends Shop_Config
 
     /**
      * @return mixed
-     * @throws oxConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
      * @throws oxSystemComponentException
      */
     protected function getKlarnaCountryAssocList()
@@ -116,20 +117,23 @@ class klarna_base_config extends Shop_Config
         $sViewName = getViewName('oxcountry', $this->_aViewData['adminlang']);
         $isoList   = KlarnaUtils::getKlarnaGlobalActiveShopCountryISOs();
 
+        /** @var \OxidEsales\EshopCommunity\Core\Database\Adapter\Doctrine\Database $db */
         $db  = oxdb::getDb(oxDb::FETCH_MODE_ASSOC);
         $sql = 'SELECT oxisoalpha2, oxtitle 
                 FROM ' . $sViewName . ' 
                 WHERE oxisoalpha2 IN ("' . implode('","', $isoList) . '")';
 
-        $this->_aKlarnaCountries = $db->getAssoc($sql);
+        $this->_aKlarnaCountries = $db->getAll($sql);
+        var_dump($this->_aKlarnaCountries);
 
         return $this->_aKlarnaCountries;
     }
 
     /**
      * @param $aKeys
-     * @return object
-     * @throws oxConnectionException
+     * @return int
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
      */
     protected function removeConfigKeys($aKeys)
     {
