@@ -184,14 +184,14 @@ class klarna_express extends oxUBase
 
         try {
             $oKlarnaOrder = oxNew('KlarnaOrder', $oBasket, $this->_oUser);
+
         } catch (KlarnaConfigException $e) {
+
             oxRegistry::get("oxUtilsView")->addErrorToDisplay($e);
             KlarnaUtils::fullyResetKlarnaSession();
 
             return $this->_sThisTemplate;
-//            $this->redirectForNonKlarnaCountry(oxRegistry::getSession()->getVariable('sCountryISO'), false);
-//            $this->addTplParam('confError', true);
-//            oxRegistry::getUtils()->redirect(oxRegistry::getConfig()->getShopHomeURL() . 'cl=start', true, 302);
+
         } catch (KlarnaBasketTooLargeException $e) {
             oxRegistry::get("oxUtilsView")->addErrorToDisplay($e);
 
@@ -199,8 +199,11 @@ class klarna_express extends oxUBase
         }
 
         if ($oSession->getVariable('wrong_merchant_urls')) {
+
             $oSession->deleteVariable('wrong_merchant_urls');
+
             oxRegistry::get("oxUtilsView")->addErrorToDisplay('KLARNA_WRONG_URLS_CONFIG', false, true);
+
             $this->addTplParam('confError', true);
 
             return $this->_sThisTemplate;
