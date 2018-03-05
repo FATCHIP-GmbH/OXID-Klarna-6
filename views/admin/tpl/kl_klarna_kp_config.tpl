@@ -65,10 +65,10 @@
                     </div>
                 </label>
 
-                <input type="hidden" name="kpMethods[klarna_direct_debit]" value="0"/>
-                <input id="klarna_direct_debit" type="checkbox" name="kpMethods[klarna_direct_debit]"
+                <input type="hidden" name="kpMethods[klarna_pay_now]" value="0"/>
+                <input id="klarna_pay_now" type="checkbox" name="kpMethods[klarna_pay_now]"
                        [{if $aKPMethods.klarna_direct_debit == '1'}]checked="checked" [{/if}]value="1"/>
-                <label class="kp-option equalHM eq" for="klarna_direct_debit">
+                <label class="kp-option equalHM eq" for="klarna_pay_now">
 
                     <div class="kp-option__top">
                         <div class="kp-option__top-img">
@@ -79,36 +79,13 @@
 
                     <div class="kp-option__bottom">
                         <i class="fa fa-check fa-2x" aria-hidden="true"></i>
-                        <h2 class="cl-pink">[{oxmultilang ident="KL_DIRECT_DEBIT"}]</h2>
+                        <h2 class="cl-pink">[{oxmultilang ident="KL_PAY_NOW"}]</h2>
                         <div class="kp-option__bottom-text">
-                            [{oxmultilang ident="KL_DIRECT_DEBIT_TEXT"}]
+                            [{oxmultilang ident="KL_PAY_NOW_TEXT"}]
                         </div>
                     </div>
 
                 </label>
-
-                <input type="hidden" name="kpMethods[klarna_sofort]" value="0"/>
-                <input id="klarna_sofort" type="checkbox" name="kpMethods[klarna_sofort]"
-                       [{if $aKPMethods.klarna_sofort == '1'}]checked="checked" [{/if}]value="1"/>
-                <label class="kp-option equalHM eq" for="klarna_sofort">
-
-                    <div class="kp-option__top">
-                        <div class="kp-option__top-img">
-                            <img src="https://cdn.klarna.com/1.0/shared/image/generic/badge/en_gb/pay_now/standard/pink.svg">
-                        </div>
-
-                    </div>
-
-                    <div class="kp-option__bottom">
-                        <i class="fa fa-check fa-2x" aria-hidden="true"></i>
-                        <h2 class="cl-pink">[{oxmultilang ident="KL_SOFORT"}]</h2>
-                        <div class="kp-option__bottom-text">
-                            [{oxmultilang ident="KL_SOFORT_TEXT"}]
-                        </div>
-                    </div>
-
-                </label>
-
             </div>
             <div class="center-content">
                 <input type="submit" name="save" value="[{oxmultilang ident="GENERAL_SAVE"}]"

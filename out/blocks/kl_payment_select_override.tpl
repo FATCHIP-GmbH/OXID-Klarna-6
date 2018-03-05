@@ -49,45 +49,24 @@
                 </dt>
             </dl>
         </div>
-    [{elseif $sPaymentID == "klarna_direct_debit"}]
-            <div class="well well-sm kp-outer">
-            <dl>
-                <dt>
-                    <input class="kp-radio" id="kp-db" data-payment_id="direct_debit" type="radio" name="paymentid"
-                           value="[{$sPaymentID}]"
-                           [{if $is_checked}]checked[{/if}]>
-                    <label for="kp-db"><b>[{$oView->removeKlarnaPrefix($paymentmethod->oxpayments__oxdesc->value)}]</b></label>
-                    <img src="[{"//cdn.klarna.com/1.0/shared/image/generic/badge/%s/pay_now/standard/pink.svg"|sprintf:$sLocale}]">
-                </dt>
-                <dt style="font-weight: normal">[{oxmultilang ident="KL_DIRECT_DEBIT_SUBTITLE"}]</dt>
-                <dt>
-                    [{if $kpError }]
-                        <div class="kp-method alert alert-info"
-                             style="[{if !$is_checked}]display: none; [{/if}]max-width:700px">[{ $kpError }]</div>
-                    [{else}]
-                        <div id="direct_debit" class="kp-method" style="display: none;"></div>
-                    [{/if}]
-                </dt>
-            </dl>
-        </div>
-    [{elseif $sPaymentID == "klarna_sofort"}]
+    [{elseif $sPaymentID == "klarna_pay_now"}]
         <div class="well well-sm kp-outer">
             <dl>
                 <dt>
-                    <input class="kp-radio" id="kp-sf" data-payment_id="direct_bank_transfer" type="radio"
+                    <input class="kp-radio" id="kp-pn" data-payment_id="pay_now" type="radio"
                            name="paymentid"
                            value="[{$sPaymentID}]"
                            [{if $is_checked}]checked[{/if}]>
-                    <label for="kp-sf"><b>[{$oView->removeKlarnaPrefix($paymentmethod->oxpayments__oxdesc->value)}]</b></label>
+                    <label for="kp-pn"><b>[{$oView->removeKlarnaPrefix($paymentmethod->oxpayments__oxdesc->value)}]</b></label>
                     <img src="[{"//cdn.klarna.com/1.0/shared/image/generic/badge/%s/pay_now/standard/pink.svg"|sprintf:$sLocale}]">
                 </dt>
-                <dt style="font-weight: normal">[{oxmultilang ident="KL_SOFORT_SUBTITLE"}]</dt>
+                <dt style="font-weight: normal">[{oxmultilang ident="KL_PAY_NOW_SUBTITLE"}]</dt>
                 <dt>
                     [{if $kpError }]
                         <div class="kp-method alert alert-info"
                              style="[{if !$is_checked}]display: none; [{/if}]max-width:700px">[{ $kpError }]</div>
                     [{else}]
-                        <div id="direct_bank_transfer" class="kp-method" style="display: none;"></div>
+                        <div id="pay_now" class="kp-method" style="display: none;"></div>
                     [{/if}]
                 </dt>
             </dl>

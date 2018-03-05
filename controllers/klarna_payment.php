@@ -206,26 +206,6 @@ class klarna_payment extends klarna_payment_parent
         }
     }
 
-
-    /**
-     * @param $klarnaPaymentId
-     * @return bool
-     */
-    public function isPaymentAvailable($klarnaPaymentId)
-    {
-        $sessionData = oxRegistry::getSession()->getVariable('klarna_session_data');
-
-        if (is_array($sessionData)) {
-            foreach ($sessionData['payment_method_categories'] as $val) {
-                if (in_array($klarnaPaymentId, $val)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
     /**
      * @param $name
      * @return mixed

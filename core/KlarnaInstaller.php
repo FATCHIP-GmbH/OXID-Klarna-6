@@ -183,11 +183,10 @@ class KlarnaInstaller extends shop_config
                                  array($de_prefix => 'Klarna Rechnung', $en_prefix => 'Klarna Pay Later'),
                              klarna_oxpayment::KLARNA_PAYMENT_SLICE_IT_ID  =>
                                  array($de_prefix => 'Klarna Ratenkauf', $en_prefix => 'Klarna Slice It'),
-                             klarna_oxpayment::KLARNA_PAYMENT_DIRECT_DEBIT =>
-                                 array($de_prefix => 'Klarna Lastschrift', $en_prefix => 'Klarna Direct Debit'),
-                             klarna_oxpayment::KLARNA_PAYMENT_SOFORT       =>
-                                 array($de_prefix => 'Klarna Sofortüberweisung', $en_prefix => 'Klarna Online Bank Transfer'),
+                             klarna_oxpayment::KLARNA_PAYMENT_PAY_NOW =>
+                                 array($de_prefix => 'Sofort bezahlen', $en_prefix => 'Klarna Pay Now'),
         );
+
         $sort        = -350;
         $aLangs      = oxRegistry::getLang()->getLanguageArray();
 
@@ -288,11 +287,9 @@ class KlarnaInstaller extends shop_config
                     }
                     $query .= $queryPart;
                     $first = false;
-//                    var_dump($queryPart);
                 }
             }
-//            var_dump($query);
-//            die;
+
             $this->db->execute($query);
         }
         $this->updateViews();

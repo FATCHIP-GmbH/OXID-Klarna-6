@@ -58,8 +58,7 @@ $aLang = array(
 
     'KL_PAY_LATER_SUBTITLE'    => 'Erst kaufen, dann bezahlen',
     'KL_SLICE_IT_SUBTITLE'     => 'Bequem in Raten zahlen',
-    'KL_DIRECT_DEBIT_SUBTITLE' => 'Einfach und direkt bezahlen per Lastschrift',
-    'KL_SOFORT_SUBTITLE'       => 'Einfach und direkt bezahlen per Online-Banking',
+    'KL_PAY_NOW_SUBTITLE'      => 'Einfach und direkt bezahlen',
     'KL_ORDER_AMOUNT_TOO_HIGH' => 'Der Bestellwert ist zu hoch.',
 
     'KL_ANONYMIZED_PRODUCT'                  => 'Anonymisierter Produkttitel:',

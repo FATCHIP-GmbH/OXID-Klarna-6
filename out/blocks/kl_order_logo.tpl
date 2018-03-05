@@ -1,7 +1,7 @@
 [{$smarty.block.parent}]
 
 [{if $payment && $payment->isKPPayment()}]
-    [{assign var="klarnaBadgeName" value=$payment->getKlarnaBadgeName()}]
+    [{assign var="klarnaBadgeName" value=$payment->getPaymentCategoryName()}]
     [{capture assign="insertLogoJS" }]
         var $parent = $('#orderPayment').find('.panel-body');
         var parentStyle = getComputedStyle($parent[0]);
