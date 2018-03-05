@@ -67,7 +67,7 @@
 
                 <input type="hidden" name="kpMethods[klarna_pay_now]" value="0"/>
                 <input id="klarna_pay_now" type="checkbox" name="kpMethods[klarna_pay_now]"
-                       [{if $aKPMethods.klarna_direct_debit == '1'}]checked="checked" [{/if}]value="1"/>
+                       [{if $aKPMethods.klarna_pay_now == '1'}]checked="checked" [{/if}]value="1"/>
                 <label class="kp-option equalHM eq" for="klarna_pay_now">
 
                     <div class="kp-option__top">
