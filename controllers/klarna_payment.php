@@ -49,50 +49,49 @@ class klarna_payment extends klarna_payment_parent
      */
     public function render()
     {
+
         $sTplName = parent::render();
-        $oUser    = $this->getUser();
-        if ($this->countKPMethods()) {
+        if ($this->countKPMethods() && $this->loadKlarnaPaymentWidget) {
 
-            if ($this->loadKlarnaPaymentWidget) {
-                $oSession = oxRegistry::getSession();
-                $oBasket  = $oSession->getBasket();
+            $oUser    = $this->getUser();
+            $oSession = oxRegistry::getSession();
+            $oBasket  = $oSession->getBasket();
 
-                if (KlarnaPayment::countryWasChanged($oUser)) {
-                    KlarnaPayment::cleanUpSession();
-                }
-
-                $this->oKlarnaPayment = oxNew('KlarnaPayment', $oBasket, $oUser);
-
-                if(!$this->oKlarnaPayment->isSessionValid()){
-                    KlarnaPayment::cleanUpSession();
-                }
-
-                $this->oKlarnaPayment->isOrderStateChanged();
-                $errors = $this->oKlarnaPayment->getError();
-                if (!$errors) {
-                    try {
-                        $this->getKlarnaClient()
-                            ->initOrder($this->oKlarnaPayment)
-                            ->createOrUpdateSession();
-
-                        $sessionData = $oSession->getVariable('klarna_session_data');
-                        $this->addTplParam("client_token", $sessionData['client_token']);
-
-                    } catch (oxException $e) {
-                        $e->debugOut();
-
-                        return $sTplName;
-                    }
-                } else {
-                    // show only first
-                    $this->addTplParam("kpError", $errors[0]);
-                }
-
-                // remove unavailable klarna payments
-                $this->removeUnavailableKP($sessionData);
-
-                $this->addTplParam("sLocale", strtolower(KlarnaConsts::getLocale()));
+            if (KlarnaPayment::countryWasChanged($oUser)) {
+                KlarnaPayment::cleanUpSession();
             }
+
+            $this->oKlarnaPayment = oxNew('KlarnaPayment', $oBasket, $oUser);
+
+            if(!$this->oKlarnaPayment->isSessionValid()){
+                KlarnaPayment::cleanUpSession();
+            }
+
+            $this->oKlarnaPayment->isOrderStateChanged();
+            $errors = $this->oKlarnaPayment->getError();
+            if (!$errors) {
+                try {
+                    $this->getKlarnaClient()
+                        ->initOrder($this->oKlarnaPayment)
+                        ->createOrUpdateSession();
+
+                    $sessionData = $oSession->getVariable('klarna_session_data');
+                    $this->addTplParam("client_token", $sessionData['client_token']);
+
+                    // remove unavailable klarna payments
+                    $this->removeUnavailableKP($sessionData);
+
+                } catch (oxException $e) {
+                    $e->debugOut();
+
+                    return $sTplName;
+                }
+            } else {
+                // show only first
+                $this->addTplParam("kpError", $errors[0]);
+            }
+
+            $this->addTplParam("sLocale", strtolower(KlarnaConsts::getLocale()));
         }
 
         return $sTplName;
@@ -103,8 +102,16 @@ class klarna_payment extends klarna_payment_parent
      */
     public function getPaymentList()
     {
-        $this->aPaymentList = parent::getPaymentList();
+        /**
+         * This method is called in the template
+         * We will remove some methods in the render method after getting payment_method_categories
+         * This will pass modified list to the tempalte
+         */
+        if($this->aPaymentList) {
+            return $this->aPaymentList;
+        }
 
+        $this->aPaymentList = parent::getPaymentList();
         if (KlarnaUtils::isKlarnaPaymentsEnabled()) {
             // remove needless methods from the list
             unset($this->aPaymentList[Klarna_oxPayment::KLARNA_PAYMENT_CHECKOUT_ID]);
@@ -192,16 +199,18 @@ class klarna_payment extends klarna_payment_parent
      */
     protected function removeUnavailableKP($sessionData)
     {
-        $klarnaIds = array_map(function($element){
+        if($sessionData['payment_method_categories']){
+            $klarnaIds = array_map(function($element){
                 return $element['identifier'];
             },
-            $sessionData['payment_method_categories']
-        );
+                $sessionData['payment_method_categories']
+            );
 
-        foreach($this->aPaymentList as $payid => $oxPayment ){
-            $klarnaName = $oxPayment->getPaymentCategoryName();
-            if($klarnaName && !in_array($klarnaName, $klarnaIds)){
-                unset($this->aPaymentList[$payid]);
+            foreach($this->aPaymentList as $payid => $oxPayment ){
+                $klarnaName = $oxPayment->getPaymentCategoryName();
+                if($klarnaName && !in_array($klarnaName, $klarnaIds)){
+                    unset($this->aPaymentList[$payid]);
+                }
             }
         }
     }
