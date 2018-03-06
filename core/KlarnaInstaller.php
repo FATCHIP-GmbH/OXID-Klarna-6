@@ -14,6 +14,9 @@ class KlarnaInstaller extends shop_config
     /** @var  database name */
     protected $dbName;
 
+    protected $moduleRelativePath = 'modules/klarna/klarna';
+    protected $modulePath;
+
     /**
      * @return KlarnaInstaller|null|object
      * @throws oxConnectionException
@@ -25,6 +28,7 @@ class KlarnaInstaller extends shop_config
             self::$instance         = oxNew('KlarnaInstaller');
             self::$instance->db     = oxDb::getDb(oxDb::FETCH_MODE_ASSOC);
             self::$instance->dbName = oxRegistry::getConfig()->getConfigParam('dbName');
+            self::$instance->modulePath = oxRegistry::getConfig()->getConfigParam('sShopDir') . self::$instance->moduleRelativePath;
         }
 
         return self::$instance;
@@ -179,11 +183,10 @@ class KlarnaInstaller extends shop_config
                                  array($de_prefix => 'Klarna Rechnung', $en_prefix => 'Klarna Pay Later'),
                              klarna_oxpayment::KLARNA_PAYMENT_SLICE_IT_ID  =>
                                  array($de_prefix => 'Klarna Ratenkauf', $en_prefix => 'Klarna Slice It'),
-                             klarna_oxpayment::KLARNA_PAYMENT_DIRECT_DEBIT =>
-                                 array($de_prefix => 'Klarna Lastschrift', $en_prefix => 'Klarna Direct Debit'),
-                             klarna_oxpayment::KLARNA_PAYMENT_SOFORT       =>
-                                 array($de_prefix => 'Klarna Sofortüberweisung', $en_prefix => 'Klarna Online Bank Transfer'),
+                             klarna_oxpayment::KLARNA_PAYMENT_PAY_NOW =>
+                                 array($de_prefix => 'Sofort bezahlen', $en_prefix => 'Klarna Pay Now'),
         );
+
         $sort        = -350;
         $aLangs      = oxRegistry::getLang()->getLanguageArray();
 
@@ -284,11 +287,9 @@ class KlarnaInstaller extends shop_config
                     }
                     $query .= $queryPart;
                     $first = false;
-//                    var_dump($queryPart);
                 }
             }
-//            var_dump($query);
-//            die;
+
             $this->db->execute($query);
         }
         $this->updateViews();
@@ -329,6 +330,7 @@ class KlarnaInstaller extends shop_config
         $sTitle    = 'Klarna Teaser';
         $sLink     = '';
         $sFileName = 'klarna-banner.png';
+        $actionsMediaPath = oxRegistry::getConfig()->getConfigParam('sShopDir') . 'out/pictures/promo/';
 
         $oActionKlarnaTeaser = oxNew('oxActions');
         $oActionKlarnaTeaser->setShopId($shopId);
@@ -348,8 +350,9 @@ class KlarnaInstaller extends shop_config
             $oActionKlarnaTeaser->{'oxactions__oxlink' . $sTag}  = new oxField($sLink, oxField::T_RAW);
             $oActionKlarnaTeaser->{'oxactions__oxpic' . $sTag}   = new oxField($langFileName, oxField::T_RAW);
 
-            if (file_exists('../modules/klarna/out/img/' . $langFileName)) {
-                copy('../modules/klarna/out/img/' . $langFileName, '../out/pictures/promo/' . $langFileName);
+            $filePath = self::$instance->modulePath .  '/out/img/' . $langFileName;
+            if (file_exists($filePath)) {
+                copy($filePath, $actionsMediaPath . $langFileName);
             }
         }
         $oActionKlarnaTeaser->save();

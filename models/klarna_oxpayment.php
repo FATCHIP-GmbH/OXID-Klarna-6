@@ -31,18 +31,11 @@ class klarna_oxpayment extends klarna_oxpayment_parent
     const KLARNA_PAYMENT_CHECKOUT_ID = 'klarna_checkout';
 
     /**
-     * Oxid value of Klarna Direct Debit payment
+     * Oxid value of Klarna Pay Now payment
      *
      * @var string
      */
-    const KLARNA_PAYMENT_DIRECT_DEBIT = 'klarna_direct_debit';
-
-    /**
-     * Oxid value of Klarna Sofort (direct_bank_transfer) payment
-     *
-     * @var string
-     */
-    const KLARNA_PAYMENT_SOFORT = 'klarna_sofort';
+    const KLARNA_PAYMENT_PAY_NOW = 'klarna_pay_now';
 
     /**
      * Get list of Klarna payments ids
@@ -57,33 +50,17 @@ class klarna_oxpayment extends klarna_oxpayment_parent
                 self::KLARNA_PAYMENT_CHECKOUT_ID,
                 self::KLARNA_PAYMENT_SLICE_IT_ID,
                 self::KLARNA_PAYMENT_PAY_LATER_ID,
-                self::KLARNA_PAYMENT_DIRECT_DEBIT,
-                self::KLARNA_PAYMENT_SOFORT,
+                self::KLARNA_PAYMENT_PAY_NOW,
+
             );
         }
         if ($filter === 'KP') {
             return array(
                 self::KLARNA_PAYMENT_SLICE_IT_ID,
                 self::KLARNA_PAYMENT_PAY_LATER_ID,
-                self::KLARNA_PAYMENT_DIRECT_DEBIT,
-                self::KLARNA_PAYMENT_SOFORT,
+                self::KLARNA_PAYMENT_PAY_NOW,
             );
         }
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getKlarnaBadgeName()
-    {
-        $names = array(
-            self::KLARNA_PAYMENT_SLICE_IT_ID  => 'slice_it',
-            self::KLARNA_PAYMENT_PAY_LATER_ID => 'pay_later',
-            self::KLARNA_PAYMENT_DIRECT_DEBIT => 'pay_now',
-            self::KLARNA_PAYMENT_SOFORT       => 'pay_now',
-        );
-
-        return $names[$this->oxpayments__oxid->value];
     }
 
     /**
@@ -93,10 +70,9 @@ class klarna_oxpayment extends klarna_oxpayment_parent
     {
         if (in_array($this->getId(), self::getKlarnaPaymentsIds('KP'))) {
             $names = array(
-                self::KLARNA_PAYMENT_SLICE_IT_ID  => 'slice_it',
+                self::KLARNA_PAYMENT_SLICE_IT_ID  => 'pay_over_time',
                 self::KLARNA_PAYMENT_PAY_LATER_ID => 'pay_later',
-                self::KLARNA_PAYMENT_DIRECT_DEBIT => 'direct_debit',
-                self::KLARNA_PAYMENT_SOFORT       => 'direct_bank_transfer',
+                self::KLARNA_PAYMENT_PAY_NOW => 'pay_now',
             );
 
             return $names[$this->getId()];

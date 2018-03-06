@@ -211,10 +211,10 @@ class Klarna_Payment_History_Full
         $sTable = getViewName('oxpayments');
         $query  = "SELECT {$sTable}.* FROM {$sTable} WHERE {$sTable}.oxactive = 1 ";
 
+        /** @var getPaymentList  $paymentList */
         $paymentList = oxNew('oxpaymentlist');
         $paymentList->selectString($query);
-
-        return $paymentList->getArray();
+        return $paymentList;
     }
 
     /**
@@ -223,6 +223,7 @@ class Klarna_Payment_History_Full
      * @param oxUser $user
      * @param $paymentList
      * @return bool
+     * @throws oxSystemComponentException
      */
     protected function hasPaymentHistory(oxUser $user, $paymentList)
     {

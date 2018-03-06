@@ -163,18 +163,14 @@ class KlarnaPayment extends oxBase
     }
 
     /**
-     * @return mixed
+     * @return string klarna payment category name
      */
     public function getPaymentMethodCategory()
     {
-        $mapping = array(
-            'klarna_pay_later'    => 'pay_later',
-            'klarna_slice_it'     => 'pay_over_time',
-            'klarna_direct_debit' => 'direct_debit',
-            'klarna_sofort'       => 'direct_bank_transfer',
-        );
+        $oPayment = oxRegistry::get('oxPayment');
+        $oPayment->load($this->_sPaymentMethod);
 
-        return $mapping[$this->_sPaymentMethod];
+        return $oPayment->getPaymentCategoryName();
     }
 
     /**

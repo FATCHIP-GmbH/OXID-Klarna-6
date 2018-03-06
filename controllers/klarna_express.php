@@ -184,14 +184,14 @@ class klarna_express extends oxUBase
 
         try {
             $oKlarnaOrder = oxNew('KlarnaOrder', $oBasket, $this->_oUser);
+
         } catch (KlarnaConfigException $e) {
+
             oxRegistry::get("oxUtilsView")->addErrorToDisplay($e);
             KlarnaUtils::fullyResetKlarnaSession();
 
             return $this->_sThisTemplate;
-//            $this->redirectForNonKlarnaCountry(oxRegistry::getSession()->getVariable('sCountryISO'), false);
-//            $this->addTplParam('confError', true);
-//            oxRegistry::getUtils()->redirect(oxRegistry::getConfig()->getShopHomeURL() . 'cl=start', true, 302);
+
         } catch (KlarnaBasketTooLargeException $e) {
             oxRegistry::get("oxUtilsView")->addErrorToDisplay($e);
 
@@ -199,8 +199,11 @@ class klarna_express extends oxUBase
         }
 
         if ($oSession->getVariable('wrong_merchant_urls')) {
+
             $oSession->deleteVariable('wrong_merchant_urls');
+
             oxRegistry::get("oxUtilsView")->addErrorToDisplay('KLARNA_WRONG_URLS_CONFIG', false, true);
+
             $this->addTplParam('confError', true);
 
             return $this->_sThisTemplate;
@@ -255,7 +258,9 @@ class klarna_express extends oxUBase
 
     /**
      * Get addresses saved by the user if any exist.
-     * @throws oxConnectionException
+     * @return array|bool
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
      */
     public function getFormattedUserAddresses()
     {
@@ -264,17 +269,16 @@ class klarna_express extends oxUBase
         }
 
         $db = oxdb::getDb(oxDb::FETCH_MODE_ASSOC);
-
         $sql = 'SELECT oxid, oxfname, oxlname, oxstreet, oxstreetnr, oxzip, oxcity FROM oxaddress WHERE oxuserid=?';
+        $results = $db->getAll($sql, array($this->_oUser->getId()));
 
-        $result = $db->getAssoc($sql, array($this->_oUser->getId()));
-
-        if (!is_array($result) || empty($result)) {
+        if (!is_array($results) || empty($results)) {
             return false;
         }
 
-        foreach ($result as $oxid => $data) {
-            $formattedResult[$oxid] =
+        $formattedResults = array();
+        foreach ($results as $data) {
+            $formattedResults[$data['oxid']] =
                 $data['oxfname'] . ' ' .
                 $data['oxlname'] . ', ' .
                 $data['oxstreet'] . ' ' .
@@ -283,7 +287,7 @@ class klarna_express extends oxUBase
                 $data['oxcity'];
         }
 
-        return $formattedResult;
+        return $formattedResults;
     }
 
     /**

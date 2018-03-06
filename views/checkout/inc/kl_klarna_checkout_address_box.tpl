@@ -31,7 +31,7 @@
                             [{foreach from=$savedAddresses name=delAddrList key=oxid item=address}]
                                 <li class="js-klarna-address-list-item"
                                     data-address-id="[{$oxid}]">
-                                    <span class="klarna-formatted-address">[{$address}]</span>
+                                    <div class="klarna-formatted-address">[{$address}]</div>
                                 </li>
                                 [{if !$smarty.foreach.delAddrList.last}]
                                     <li role="separator" class="divider"></li>

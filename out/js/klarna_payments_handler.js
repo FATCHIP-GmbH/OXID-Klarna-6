@@ -92,7 +92,7 @@ window.klarnaAsyncCallback = function () {
         if (response.approved === true) {
 
 
-            // sofort method
+            // pay now method
             if (response.finalize_required === true) {
                 if($form.attr('id') === 'payment'){
                     $('<input>').attr({

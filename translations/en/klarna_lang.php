@@ -60,8 +60,7 @@ $aLang = array(
 
     'KL_PAY_LATER_SUBTITLE'    => 'Pay X days after delivery',
     'KL_SLICE_IT_SUBTITLE'     => 'Pay over time',
-    'KL_DIRECT_DEBIT_SUBTITLE' => 'Simple and secure',
-    'KL_SOFORT_SUBTITLE'       => 'Simple and secure',
+    'KL_PAY_NOW_SUBTITLE'      => 'Easy and direct payment',
     'KL_ORDER_AMOUNT_TOO_HIGH' => 'The order amount is too high.',
 
     'KL_ANONYMIZED_PRODUCT'                  => 'Anonymized product title:',

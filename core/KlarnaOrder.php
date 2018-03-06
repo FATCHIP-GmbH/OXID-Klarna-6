@@ -296,6 +296,11 @@ class KlarnaOrder extends oxBase
         $externalCheckoutMethods = array();
 
         $paymentList = $oPayList->getPaymentList($oBasket->getShippingId(), $dBasketPrice, $oUser);
+
+        //var_dump(array_keys($paymentList));
+
+
+
         foreach ($paymentList as $paymentId => $oPayment) {
             $oPayment->calculate($oBasket);
             $aCountryISO = $this->getKlarnaCountryListByPayment($oPayment, $this->getKlarnaCountryList());
