@@ -125,13 +125,13 @@ $aLang = array(
     'KL_DIRECT_DEBIT_TEXT'            => 'Lastschrift ist perfekt geeignet für Abonnements und wiederkehrende Zahlungen. Klarna übernimmt das Risiko und die Abwicklung ausstehender Zahlungen. Dank Klarna´s umfangreicher Mandatsdatenbank wird vielen Kunden die Eingabe der IBAN erspart und steigert damit die Conversion.',
     'KL_SOFORT'                       => 'Pay Now - Sofortüberweisung',
     'KL_SOFORT_TEXT'                  => 'Sofortüberweisung ermöglicht einfaches und direktes bezahlen per Direktüberweisung mit den vertrauten Online-Banking Daten. Alles ohne zusätzliche Registrierung oder zweites Konto (Wallet). Hohe Sicherheit verspricht das doppelstufige Online-Banking-Authentifizierungsverfahren mit PIN & TAN. ​Sofortüberweisung ist ein vom TÜV-Saarland zertifiziertes Zahlungssystem mit zertifiziertem Datenschutz.',
-    'KL_EXTERNAL_PAYMENTS_ADMIN_DESC' => 'Hier können Sie die External Payment Methods zur Verwendung mit dem Klarna Modul für den OXID eShop konfigurieren. Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips <i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="#doc-url">Handbuch</a> oder wenden Sie sich an den Klarna Integration Support.',
+    'KL_EXTERNAL_PAYMENTS_ADMIN_DESC' => 'Hier können Sie die External Payment Methods zur Verwendung mit dem Klarna Modul für den OXID eShop konfigurieren. Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips <i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> oder wenden Sie sich an den Klarna Integration Support.',
 
-    'KL_EXTRA_MERCHANT_DATA_ADMIN_DESC' => 'Hier können Sie konfigurieren, ob ggf. Extra Merchant Data an Klarna übertragen werden soll. Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips <i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="#doc-url">Handbuch</a> oder wenden Sie sich an den Klarna Integration Support.',
+    'KL_EXTRA_MERCHANT_DATA_ADMIN_DESC' => 'Hier können Sie konfigurieren, ob ggf. Extra Merchant Data an Klarna übertragen werden soll. Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips <i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> oder wenden Sie sich an den Klarna Integration Support.',
 
-    'KL_DESIGN_SETTINGS_ADMIN_DESC' => 'Hier können Sie die Design Einstellungen zur Verwendung mit dem Klarna Modul für den OXID eShop konfigurieren. Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips <i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="#doc-url">Handbuch</a> oder wenden Sie sich an den Klarna Integration Support.',
+    'KL_DESIGN_SETTINGS_ADMIN_DESC' => 'Hier können Sie die Design Einstellungen zur Verwendung mit dem Klarna Modul für den OXID eShop konfigurieren. Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips <i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> oder wenden Sie sich an den Klarna Integration Support.',
 
-    'KL_GENERAL_SETTINGS_ADMIN_DESC' => 'Hier können Sie die %s zur Verwendung mit dem Klarna Modul für den OXID eShop konfigurieren. Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips <i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="#doc-url">Handbuch</a> oder wenden Sie sich an den Klarna Integration Support.',
+    'KL_GENERAL_SETTINGS_ADMIN_DESC' => 'Hier können Sie die %s zur Verwendung mit dem Klarna Modul für den OXID eShop konfigurieren. Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips <i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> oder wenden Sie sich an den Klarna Integration Support.',
 
     'KL_PAYMENT_METHOD'          => 'Zahlungsart',
     'KL_EXTERNAL_PAYMENT_METHOD' => 'External Payment Method',
@@ -227,9 +227,9 @@ $aLang = array(
     'KLARNA_ORDER_IS_CANCELLED'              => 'Die Bestellung wurde storniert. ',
     'KLARNA_SEE_ORDER_IN_PORTAL'             => '<a href="%s" target="_blank" class="alert-link">Diese Bestellung im Klarna Portal aufrufen</a>',
     'KLARNA_ORDER_NOT_IN_SYNC'               => '<strong>Achtung!</strong> Die Daten dieser Bestellung weichen von den bei Klarna gespeicherten Daten ab. ',
-    'KL_ORDER_UPDATE_CANT_BE_SENT_TO_KLARNA' => 'Achtung! Ihre letzten Änderungen an dieser Bestellung konnten nicht von Klarna verarbeitet werden (Grund: %s). Bitte machen Sie Ihre kürzlichen Änderungen im OXID eShop rückgängig oder führen Sie die entsprechende Anpassung von Hand im Klarna Merchant Portal durch falls erforderlich.',
+    'KL_ORDER_UPDATE_CANT_BE_SENT_TO_KLARNA' => 'Achtung! Aufgrund des aktuellen Bestellstatus kann diese Anpassung nicht an Klarna übermittelt werden. Führen Sie die entsprechende Anpassung ggf. direkt im Klarna Merchant Portal von Hand durch.',
     'KLARNA_UNAUTHORIZED_REQUEST'            => 'Unerlaubte Anfrage. Prüfen Sie die Einstellungen des Klarna Moduls und die Merchant ID sowie das zugehörige Passwort',
-    'KLARNA_ORDER_NOT_FOUND'                 => 'Bestellung nicht gefunden.',
+    'KLARNA_ORDER_NOT_FOUND'                 => 'Diese Bestellung konnte bei Klarna im System nicht gefunden werden. Änderungen an den Bestelldaten werden daher nicht an Klarna übertragen.',
     'KLARNA_MID_CHANGED_FOR_COUNTRY'         => '<strong>Wrong credentials!</strong> This order has been placed using <strong>%s</strong> merchant id. Currently configured merchant id for <strong>%s</strong> is <strong>%s</strong>.',
     'KL_PRODUCT_NAME'                        => 'Produktname',
     'KL_ANONYMIZED_PRODUCT'                  => 'Anonymisierter Produkttitel:',
@@ -254,4 +254,5 @@ $aLang = array(
     'KLARNA_CAPTURE_SUCCESSFULL'      => 'Der Betrag wurde erfolgreich abgebucht.',
     'KL_CAPUTRE_FAIL_ORDER_CANCELLED' => ' Die Bestellung konnte nicht abgebucht werden, da sie bereits storniert wurde.',
     'KL_ANONYMIZED_PRODUCT_TOOLTIP'   => 'Geben Sie hier die Zeichenfolge ein, die anstatt des tatsächlichen Produkttitels an Klarna gesendet werden soll.',
+    'KL_NO_REQUESTS_WILL_BE_SENT'     => 'Ihre Änderungen an dieser Bestellungen werden nicht an Klarna übertragen.',
 );

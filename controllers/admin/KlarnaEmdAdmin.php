@@ -1,9 +1,12 @@
 <?php
 
+namespace Klarna\Klarna\Controllers\Admin;
+
+
 /**
  * Class Klarna_Config for module configuration in OXID backend
  */
-class Klarna_Emd_Admin extends klarna_base_config
+class KlarnaEmdAdmin extends klarna_base_config
 {
 
     protected $_sThisTemplate = 'kl_klarna_emd_admin.tpl';

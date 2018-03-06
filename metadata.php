@@ -33,11 +33,11 @@ $aModule = array(
         //        'KlarnaOxidConfig'                 => 'klarna/klarna/tests/oxidTools/klarna_oxid_config.php',
         //
         //admin
-        'klarna_general'           => 'klarna/klarna/controllers/admin/klarna_general.php',
+        'klarna_general'           => Klarna\Klarna\Controllers\Admin\KlarnaGeneral::class,
         'klarna_base_config'       => 'klarna/klarna/controllers/admin/klarna_base_config.php',
         'klarna_design'            => 'klarna/klarna/controllers/admin/klarna_design.php',
         'klarna_start'             => 'klarna/klarna/controllers/admin/klarna_start.php',
-        'klarna_configuration'     => 'klarna/klarna/controllers/admin/klarna_configuration.php',
+        'klarna_configuration'     => Klarna\Klarna\Controllers\Admin\KlarnaConfiguration::class,
         'klarna_external_payments' => 'klarna/klarna/controllers/admin/klarna_external_payments.php',
         'klarna_emd_admin'         => 'klarna/klarna/controllers/admin/klarna_emd_admin.php',
         'klarna_orders'            => 'klarna/klarna/controllers/admin/klarna_orders.php',
@@ -81,7 +81,6 @@ $aModule = array(
         //
         //        // admin
         //        'order_address'  => 'klarna/klarna/controllers/admin/klarna_order_address',
-        //        'order_list'     => 'klarna/klarna/controllers/admin/klarna_order_list',
         //        'order_article'  => 'klarna/klarna/controllers/admin/klarna_order_article',
         //        'order_main'     => 'klarna/klarna/controllers/admin/klarna_order_main',
         //        'order_overview' => 'klarna/klarna/controllers/admin/klarna_order_overview',
@@ -206,6 +205,16 @@ $aModule = array(
             'template' => 'order_overview.tpl',
             'block'    => 'admin_order_overview_billingaddress',
             'file'     => 'kl_admin_order_overview_billingaddress',
+        ),
+        array(
+            'template' => 'order_article.tpl',
+            'block'    => 'admin_order_article_listitem',
+            'file'     => 'kl_admin_order_article_listitem',
+        ),
+        array(
+            'template' => 'order_list.tpl',
+            'block'    => 'admin_list_order_filter',
+            'file'     => 'kl_admin_list_order_filter',
         ),
 
     ),

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: arekk
- * Date: 29.08.2017
- * Time: 18:35
- */
 
 class Klarna_oxEmail extends Klarna_oxEmail_parent
 {

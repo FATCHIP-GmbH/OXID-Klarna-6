@@ -1,9 +1,12 @@
 <?php
 
+namespace Klarna\Klarna\Controllers\Admin;
+
+
 /**
  * Class Klarna_Config for module configuration in OXID backend
  */
-class Klarna_External_Payments extends klarna_base_config
+class KlarnaExternalPayments extends klarna_base_config
 {
 
     protected $_sThisTemplate = 'kl_klarna_external_payments.tpl';
