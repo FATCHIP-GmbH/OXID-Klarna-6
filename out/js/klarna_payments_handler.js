@@ -117,7 +117,7 @@ window.klarnaAsyncCallback = function () {
 
 
         } else if (response.show_form === false) {
-            $($kpRadio.active).closest('.kp-outer').hide();
+            $($kpRadio.active).closest('.kp-outer').hide(600);
         }
     }
 
@@ -197,7 +197,7 @@ window.klarnaAsyncCallback = function () {
                     loadWidget(this.paymentMethod);
                 }
                 if (this.checked) {
-                    this.$klarnaDiv.show(400);
+                    this.$klarnaDiv.show(600);
                     $kpRadio.active = this;
                 }
             });
@@ -220,14 +220,14 @@ window.klarnaAsyncCallback = function () {
                 $(this)
                     .closest('.kp-outer')
                     .find('.kp-method')
-                    .show(400);
+                    .show(600);
 
                 $kpRadio.each((function (i, node) {
                     if (node !== this) {
                         $(node)
                             .closest('.kp-outer')
                             .find('.kp-method')
-                            .hide(400);
+                            .hide(600);
                     }
                 }).bind(this));
 
@@ -238,7 +238,7 @@ window.klarnaAsyncCallback = function () {
             // hide KP methods if other payment selected
             $otherRadio.click(function () {
                 delete $kpRadio.active;
-                $('.kp-method').hide(400);
+                $('.kp-method').hide(600);
             });
 
             // order step4 click
@@ -250,7 +250,7 @@ window.klarnaAsyncCallback = function () {
             event.preventDefault();
             if ($kpRadio.active && $form.attr('id') === 'payment') {
                 if (!$kpRadio.active.hasError) {
-                    $('.loading').show(400);
+                    $('.loading').show(600);
                     klarnaSendXHR({
                         action: 'checkOrderStatus',
                         paymentId: $kpRadio.active.value,
@@ -259,7 +259,7 @@ window.klarnaAsyncCallback = function () {
                 }
 
             } else if ($form.attr('id') === 'orderConfirmAgbBottom') {
-                $('.loading').show(400);
+                $('.loading').show(600);
                 var downloadItemAgreement = $('input[type=checkbox][name="oxdownloadableproductsagreement"]').get(0);
                 if(downloadItemAgreement && downloadItemAgreement.checked === false){
                     $form.submit();
@@ -277,7 +277,7 @@ window.klarnaAsyncCallback = function () {
         });
 
         Klarna.Payments.on('fullscreenOverlayHidden', function(){
-            $('.loading').hide(400);
+            $('.loading').hide(600);
             console.log('Spinner is hidden.');
         });
 

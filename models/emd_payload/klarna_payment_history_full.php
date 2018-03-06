@@ -100,7 +100,7 @@ class Klarna_Payment_History_Full
                 MAX({$orderTable}.OXORDERDATE)
                 FROM {$orderTable}
                 WHERE " . $this->getPaymentQueryConditions($payment, $userId);
-
+            /** @var \OxidEsales\EshopCommunity\Core\Database\Adapter\Doctrine\Database $oDb */
             $oDb    = oxDb::getDb();
             $result = $oDb->getRow($query);
 

@@ -210,10 +210,10 @@ class klarna_oxarticle extends klarna_oxarticle_parent
         } else {
             if (KlarnaUtils::getShopConfVar('blKlarnaEnableAnonymization')) {
                 $sSQL = "SELECT oxartid 
-FROM kl_anon_lookup 
-JOIN {$sArticleTable} art
-ON art.OXID=oxartid
-WHERE art.OXACTIVE=1 AND klartnum = ?";
+                            FROM kl_anon_lookup 
+                            JOIN {$sArticleTable} art
+                            ON art.OXID=oxartid
+                            WHERE art.OXACTIVE=1 AND klartnum = ?";
             } else {
                 $sSQL = "SELECT art.oxid FROM {$sArticleTable} art WHERE art.OXACTIVE=1 AND art.OXARTNUM = ?";
             }

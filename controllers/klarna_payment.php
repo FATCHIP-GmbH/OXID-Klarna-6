@@ -78,7 +78,7 @@ class klarna_payment extends klarna_payment_parent
                     $sessionData = $oSession->getVariable('klarna_session_data');
                     $this->addTplParam("client_token", $sessionData['client_token']);
 
-                    // remove unavailable klarna payments
+                    // update KP options, remove unavailable klarna payments
                     $this->removeUnavailableKP($sessionData);
 
                 } catch (oxException $e) {
@@ -90,8 +90,11 @@ class klarna_payment extends klarna_payment_parent
                 // show only first
                 $this->addTplParam("kpError", $errors[0]);
             }
-
             $this->addTplParam("sLocale", strtolower(KlarnaConsts::getLocale()));
+        }
+
+        if($this->countKPMethods() === 0){
+            $this->loadKlarnaPaymentWidget = false;
         }
 
         return $sTplName;

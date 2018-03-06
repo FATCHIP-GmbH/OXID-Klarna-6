@@ -111,12 +111,12 @@ class klarna_oxpayment extends klarna_oxpayment_parent
         $sql = 'SELECT oxid, oxactive 
                 FROM oxpayments
                 WHERE oxid IN ("' . join('","', $this->getKlarnaPaymentsIds('KP')) . '")';
+        /** @var \OxidEsales\Eshop\Core\Database\Adapter\Doctrine\ResultSet $oRs */
         $oRs = $db->select($sql);
 
         $kpMethods = array();
-        while (!$oRs->EOF) {
-            $kpMethods[$oRs->fields['oxid']] = $oRs->fields['oxactive'];
-            $oRs->fetchRow();
+        foreach($oRs->getIterator() as $dataRow) {
+            $kpMethods[$dataRow['oxid']] = $dataRow['oxactive'];
         }
 
         return $kpMethods;

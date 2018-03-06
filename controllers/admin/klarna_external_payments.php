@@ -35,11 +35,13 @@ class Klarna_External_Payments extends klarna_base_config
 
     /**
      * @return array
-     * @throws oxConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
      * @throws oxSystemComponentException
      */
     public function getPaymentList()
     {
+        /** @var \OxidEsales\Eshop\Core\Database\Adapter\Doctrine\Database $db */
         $db = oxdb::getDb(oxDb::FETCH_MODE_ASSOC);
 
         $sql = 'SELECT oxid 

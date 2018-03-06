@@ -76,8 +76,6 @@ class KlarnaInstaller extends shop_config
                   AND COLUMN_NAME = '$sColumnName'
                   ";
 
-//        var_dump($this->db->select($query));die;
-
         return count($this->db->select($query)) > 0;
 
     }
