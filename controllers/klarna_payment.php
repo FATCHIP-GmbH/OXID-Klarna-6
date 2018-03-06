@@ -193,24 +193,25 @@ class klarna_payment extends klarna_payment_parent
 
     /**
      * Removes unavailable Klarna Payments Categories
-     * We will render only methods recieved in the create session response
+     * Render only methods recieved in the create session response
      *
      * @param $sessionData array create session response
      */
     protected function removeUnavailableKP($sessionData)
     {
-        if($sessionData['payment_method_categories']){
-            $klarnaIds = array_map(function($element){
+        $klarnaIds = array();
+        if($sessionData['payment_method_categories']) {
+            $klarnaIds = array_map(function ($element) {
                 return $element['identifier'];
             },
                 $sessionData['payment_method_categories']
             );
+        }
 
-            foreach($this->aPaymentList as $payid => $oxPayment ){
-                $klarnaName = $oxPayment->getPaymentCategoryName();
-                if($klarnaName && !in_array($klarnaName, $klarnaIds)){
-                    unset($this->aPaymentList[$payid]);
-                }
+        foreach($this->aPaymentList as $payid => $oxPayment ){
+            $klarnaName = $oxPayment->getPaymentCategoryName();
+            if($klarnaName && !in_array($klarnaName, $klarnaIds)){
+                unset($this->aPaymentList[$payid]);
             }
         }
     }
