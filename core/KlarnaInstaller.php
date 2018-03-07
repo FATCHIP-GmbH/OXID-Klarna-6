@@ -1,7 +1,9 @@
 <?php
 namespace Klarna\Klarna\Core;
 
-class KlarnaInstaller extends shop_config
+use OxidEsales\Eshop\Application\Controller\Admin\ShopConfiguration;
+
+class KlarnaInstaller extends ShopConfiguration
 {
     const KLARNA_MODULE_ID = 'klarna';
 
