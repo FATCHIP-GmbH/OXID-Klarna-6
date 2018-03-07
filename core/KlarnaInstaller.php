@@ -1,4 +1,5 @@
 <?php
+namespace Klarna\Klarna\Core;
 
 class KlarnaInstaller extends shop_config
 {
@@ -40,6 +41,7 @@ class KlarnaInstaller extends shop_config
      */
     public static function onActivate()
     {
+        die('dupa');
         $instance = self::getInstance();
 
         $instance->extendDbTables();

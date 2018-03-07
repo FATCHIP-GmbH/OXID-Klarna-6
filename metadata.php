@@ -227,7 +227,7 @@ $aModule = array(
 
     'settings' => array(),
     'events'   => array(
-        'onActivate'   => 'KlarnaInstaller::onActivate',
-        'onDeactivate' => 'KlarnaInstaller::onDeactivate',
+        'onActivate'   => '\Klarna\Klarna\CoreKlarnaInstaller::onActivate',
+        'onDeactivate' => '\Klarna\Klarna\Core\KlarnaInstaller::onDeactivate',
     ),
 );
