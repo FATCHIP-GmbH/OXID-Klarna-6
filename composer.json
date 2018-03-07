@@ -23,7 +23,7 @@
 
   "autoload": {
     "psr-4": {
-      "Klarna\\Klarna": "../../../source/modules/klarna/klarna"
+      "Klarna\\Klarna\\": "../../../source/modules/klarna/klarna"
     }
   }
 }
