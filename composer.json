@@ -1,5 +1,6 @@
 {
   "name": "klarna/klarna",
+<<<<<<< HEAD
   "type": "oxideshop-module",
 
   "extra": {
@@ -16,14 +17,24 @@
     "rmccue/requests": ">=1.0"
   },
 
+=======
+  "extra": {
+    "oxideshop": {
+      "target-directory": "klarna/klarna"
+    }
+  },
+>>>>>>> 9809173d8f0340d11e7fc0a955c09a42c25ec9c6
   "require-dev": {
     "phpunit/phpunit": "*",
     "phpunit/phpunit-selenium": ">=1.2"
   },
-
   "autoload": {
     "psr-4": {
+<<<<<<< HEAD
       "Klarna\\Klarna": "../../../source/modules/klarna/klarna"
+=======
+      "SeleniumTests\\": "tests"
+>>>>>>> 9809173d8f0340d11e7fc0a955c09a42c25ec9c6
     }
   }
 }

@@ -1,6 +1,9 @@
 <?php
 
-class klarna_orders extends oxAdminDetails
+namespace Klarna\Klarna\Controllers\Admin;
+
+
+class KlarnaOrders extends oxAdminDetails
 {
     const KLARNA_PORTAL_PLAYGROUND_URL = 'https://orders.playground.eu.portal.klarna.com/merchants/%s/orders/%s';
     const KLARNA_PORTAL_LIVE_URL       = 'https://orders.eu.portal.klarna.com/merchants/%s/orders/%s';

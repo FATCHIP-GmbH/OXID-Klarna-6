@@ -1,6 +1,8 @@
 <?php
 
-class klarna_base_config extends Shop_Config
+namespace Klarna\Klarna\Controllers\Admin;
+
+class KlarnaBaseConfig extends Shop_Config
 {
     /**
      * Request parameter container

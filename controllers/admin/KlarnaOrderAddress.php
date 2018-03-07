@@ -1,9 +1,12 @@
 <?php
 
+namespace Klarna\Klarna\Controllers\Admin;
+
+
 /**
  * Class Klarna_Order_Address
  */
-class klarna_order_address extends klarna_order_address_parent
+class KlarnaOrderAddress extends klarna_order_address_parent
 {
     /**
      * Executes parent method parent::render(), creates oxorder and

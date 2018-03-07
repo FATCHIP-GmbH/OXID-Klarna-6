@@ -92,6 +92,7 @@ $aModule = array(
         'oxcmp_basket'   => 'klarna/klarna/components/klarna_oxcmp_basket',
         'oxcmp_user'     => 'klarna/klarna/components/klarna_oxcmp_user',
         'oxwservicemenu' => 'klarna/klarna/components/widgets/oxw_klarna_servicemenu',
+
     ),
 
     'templates' => array(
@@ -210,6 +211,16 @@ $aModule = array(
             'template' => 'order_overview.tpl',
             'block'    => 'admin_order_overview_billingaddress',
             'file'     => 'kl_admin_order_overview_billingaddress',
+        ),
+        array(
+            'template' => 'order_article.tpl',
+            'block'    => 'admin_order_article_listitem',
+            'file'     => 'kl_admin_order_article_listitem',
+        ),
+        array(
+            'template' => 'order_list.tpl',
+            'block'    => 'admin_list_order_filter',
+            'file'     => 'kl_admin_list_order_filter',
         ),
 
     ),

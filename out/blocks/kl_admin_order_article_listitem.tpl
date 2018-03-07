@@ -14,23 +14,20 @@
         }
     </style>
     [{if $sErrorMessage}]
-        <script>
+        <script type="text/javascript">
             var messagebox = '<div class="messagebox danger">[{$sErrorMessage|escape:'quotes'}]</div>';
-            document.getElementById("myedit").insertAdjacentHTML("beforebegin", messagebox);
+            document.getElementById("transfer").insertAdjacentHTML("afterend", messagebox);
         </script>
     [{elseif $sWarningMessage}]
-        <script>
+        <script type="text/javascript">
             var messagebox = '<div class="messagebox warn">[{$sWarningMessage|escape:'quotes'}]</div>';
-            document.getElementById("myedit").insertAdjacentHTML("beforebegin", messagebox);
+            document.getElementById("transfer").insertAdjacentHTML("afterend", messagebox);
         </script>
     [{/if}]
     [{if $sMessage}]
-        <script>
+        <script type="text/javascript">
             var messagebox = '<div class="messagebox">[{$sMessage|escape:'quotes'}]</div>';
-            document.getElementById("myedit").insertAdjacentHTML("beforebegin", messagebox);
+            document.getElementById("transfer").insertAdjacentHTML("afterend", messagebox);
         </script>
     [{/if}]
-
-    [{oxscript add='document.getElementsByName("setDelSet")[0].disabled = "disabled";'}]
-    [{oxscript add='document.getElementsByName("editval[oxorder__oxdelcost]")[0].disabled = "disabled";'}]
 [{/if}]

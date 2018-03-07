@@ -326,8 +326,7 @@ class Klarna_Order extends Klarna_Order_parent
 
             oxRegistry::getSession()->setVariable('paymentid', 'klarna_checkout');
 
-            oxRegistry::getUtils()->redirect(oxRegistry::getConfig()->getShopHomeURL() . "cl=thankyou", false);
-
+            oxRegistry::getUtils()->redirect(oxRegistry::getConfig()->getShopSecureHomeUrl() . "cl=thankyou", false);
         }
     }
 

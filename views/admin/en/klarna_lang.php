@@ -129,20 +129,20 @@ $aLang = array(
 
     'KL_EXTERNAL_PAYMENTS_ADMIN_DESC' => 'Here you can configure the External Payment Methods to use with the Klarna extension 
 for OXID. For a detailed description of the different settings please see the tool-tip function 
-<i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s">documentation</a> 
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s" target="_blank">documentation</a> 
 or contact Klarna Integration Support.',
 
     'KL_EXTRA_MERCHANT_DATA_ADMIN_DESC' => 'Here you can configure the Extra Merchant Data to use with the Klarna extension 
 for OXID. For a detailed description of the different settings please see the tool-tip function 
-<i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s">documentation</a> 
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s" target="_blank">documentation</a> 
 or contact Klarna Integration Support.',
 
     'KL_DESIGN_SETTINGS_ADMIN_DESC' => 'Here you can configure the design settings to use with the Klarna extension 
 for OXID. For a detailed description of the different settings please see the tool-tip function 
-<i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s">documentation</a> 
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s" target="_blank">documentation</a> 
 or contact Klarna Integration Support.',
 
-    'KL_GENERAL_SETTINGS_ADMIN_DESC' => 'Here you can configure the %s to use with the Klarna extension for OXID. For a detailed description of the different settings please see the tool-tip function <i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s">documentation</a> or contact Klarna Integration Support.',
+    'KL_GENERAL_SETTINGS_ADMIN_DESC' => 'Here you can configure the %s to use with the Klarna extension for OXID. For a detailed description of the different settings please see the tool-tip function <i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s" target="_blank">documentation</a> or contact Klarna Integration Support.',
 
     'KL_PAYMENT_METHOD'          => 'Payment method',
     'KL_EXTERNAL_PAYMENT_METHOD' => 'External Payment Method',
@@ -241,9 +241,9 @@ or contact Klarna Integration Support.',
     'KLARNA_MID_CHANGED_FOR_COUNTRY'         => '<strong>Wrong credentials!</strong> This order has been placed using <strong>%s</strong> merchant id. Currently configured merchant id for <strong>%s</strong> is <strong>%s</strong>.',
     'KL_KP_INVOICE_MSG'                      => 'Your payment is processed by our partner Klarna. You will shortly receive instructions on how to complete your payment. You can manage all your payments via Klarna.com or in the Klarna app.',
     'KL_KCO_INVOICE_MSG'                     => 'Your payment is processed by our partner Klarna. If you chose to pay directly, your payment is already complete. If you opted to pay later or over time you will shortly receive payment instructions from Klarna. You can manage all your payments via Klarna.com or in our app.',
-    'KL_ORDER_UPDATE_CANT_BE_SENT_TO_KLARNA' => 'Caution! Your last changes of the current order could not be processed by Klarna (Reason: %s). Please manually undo your recent changes in the OXID eShop or adjust the order in the Klarna Merchant Portal accordingly if necessary.',
+    'KL_ORDER_UPDATE_CANT_BE_SENT_TO_KLARNA' => 'Caution! Due to the current order status this order update can\'t be submitted to Klarna. Please manually adjust the order status in the Klarna Merchant Portal accordingly.',
     'KLARNA_UNAUTHORIZED_REQUEST'            => 'Unauthorized request. Check the general settings for Klarna to see if Merchant Id and Password are correct.',
-    'KLARNA_ORDER_NOT_FOUND'                 => 'Order not found.',
+    'KLARNA_ORDER_NOT_FOUND'                 => 'This order could not be found in the ordering system of Klarna. That\'s why any changes to the order data will not be transmitted to Klarna.',
     'KL_PRODUCT_NAME'                        => 'Product name',
     'KL_ANONYMIZED_PRODUCT'                  => 'Anonymized product title:',
     'KL_VOUCHER_DISCOUNT'                    => 'Coupon Discount',
@@ -264,7 +264,7 @@ or contact Klarna Integration Support.',
 
     'KLARNA_CAPTURE_SUCCESSFULL'      => 'Order successfully captured in Klarna.',
     'KL_CAPUTRE_FAIL_ORDER_CANCELLED' => 'Order could not be captured, because it was already cancelled.',
-    'KL_NO_REQUESTS_WILL_BE_SENT'     => 'No requests will be sent to Klarna.',
+    'KL_NO_REQUESTS_WILL_BE_SENT'     => 'Changes to this order will not be transmitted to Klarna.',
     'KL_ANONYMIZED_PRODUCT_TOOLTIP'   => 'Please enter the string which should be transmitted to Klarna instead of the real product title.',
 
 );
