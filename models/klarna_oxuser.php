@@ -1,5 +1,7 @@
 <?php
+namespace Klarna\Klarna\Model;
 
+use Klarna\Klarna\Core\KlarnaUtils;
 /**
  * Class Klarna_oxUser extends default OXID oxUser class to add
  * Klarna payment related additional parameters and logic

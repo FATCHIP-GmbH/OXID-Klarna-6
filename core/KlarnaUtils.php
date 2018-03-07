@@ -1,4 +1,5 @@
 <?php
+namespace Klarna\Klarna\Core;
 
 class KlarnaUtils
 {

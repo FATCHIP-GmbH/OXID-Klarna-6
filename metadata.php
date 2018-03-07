@@ -14,6 +14,11 @@ $aModule = array(
     'url'         => 'http://integration.klarna.com',
     'email'       => 'integration@klarna.com',
 
+    'controllers' => array(
+        'klarna_start'                     => Klarna\Klarna\Controllers\Admin\KlarnaStart::class,
+//        'KlarnaUtils'                      => 'klarna/klarna/core/KlarnaUtils.php',
+    ),
+
 //    'files' => array(
 //        // core classes
 //        'KlarnaInstaller'                  => 'klarna/klarna/core/KlarnaInstaller.php',
@@ -21,7 +26,7 @@ $aModule = array(
 //        'KlarnaCheckoutClient'             => 'klarna/klarna/core/KlarnaCheckoutClient.php',
 //        'KlarnaPaymentsClient'             => 'klarna/klarna/core/KlarnaPaymentsClient.php',
 //        'KlarnaOrderManagementClient'      => 'klarna/klarna/core/KlarnaOrderManagementClient.php',
-//        'KlarnaUtils'                      => 'klarna/klarna/core/KlarnaUtils.php',
+//        'KlarnaUtils'                      => \Klarna\Klarna\Core\KlarnaUtils::class,
 //        'KlarnaFormatter'                  => 'klarna/klarna/core/KlarnaFormatter.php',
 //        'KlarnaConsts'                     => 'klarna/klarna/core/KlarnaConsts.php',
 //        'klarna_logs'                      => 'klarna/klarna/core/klarna_logs.php',
@@ -68,7 +73,7 @@ $aModule = array(
     'extend' => array(
         // models
         'oxbasket'       => 'klarna/klarna/models/klarna_oxbasket',
-        'oxuser'         => 'klarna/klarna/models/klarna_oxuser',
+        \OxidEsales\Eshop\Application\Model\User::class         => Klarna\Klarna\Model\klarna_oxuser::class,
         'oxarticle'      => 'klarna/klarna/models/klarna_oxarticle',
         'oxorder'        => 'klarna/klarna/models/klarna_oxorder',
         'oxemail'        => 'klarna/klarna/models/klarna_oxemail',
@@ -235,4 +240,6 @@ $aModule = array(
         'onDeactivate' => '\Klarna\Klarna\Core\KlarnaInstaller::onDeactivate',
     ),
 );
+
+//var_dump(get_declared_classes());die;
 
