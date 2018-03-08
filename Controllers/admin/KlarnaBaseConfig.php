@@ -2,7 +2,16 @@
 
 namespace Klarna\Klarna\Controllers\Admin;
 
-class KlarnaBaseConfig extends Shop_Config
+use Klarna\Klarna\Core\KlarnaConsts;
+use Klarna\Klarna\Core\KlarnaUtils;
+use OxidEsales\Eshop\Application\Controller\Admin\ShopConfiguration;
+use OxidEsales\Eshop\Application\Model\Shop;
+use OxidEsales\Eshop\Core\Database\Adapter\Doctrine\Database;
+use OxidEsales\Eshop\Core\DatabaseProvider as oxDb;
+use OxidEsales\Eshop\Core\Registry as oxRegistry;
+use OxidEsales\Eshop\Core\Request;
+
+class KlarnaBaseConfig extends ShopConfiguration
 {
     /**
      * Request parameter container
@@ -10,6 +19,11 @@ class KlarnaBaseConfig extends Shop_Config
      * @var array
      */
     protected $_aParameters = array();
+
+    /**
+     * @var Request
+     */
+    protected $_oRequest;
 
     /**
      * Keys with these prefixes will be deleted on save operation if not present in the POST array
@@ -43,17 +57,18 @@ class KlarnaBaseConfig extends Shop_Config
         return $this->_aParameters[$sName];
     }
 
+    public function init()
+    {
+        parent::init();
+        $this->_oRequest = oxRegistry::get(Request::class);
+    }
+
     public function render()
     {
         parent::render();
         foreach ($this->_aViewData['confaarrs'] as $key => $arr) {
             $this->_aViewData['confaarrs'][$key] = $this->_multilineToAarray(html_entity_decode($arr));
         }
-
-//        $oLang = oxRegistry::getLang();
-//        $aLang = $oLang->getLanguageArray();
-//        $activeLang = $aLang[$oLang->getTplLanguage()];
-//        $this->_aViewData['languages'] = $oLang->getLanguageArray();
     }
 
     /**
@@ -66,7 +81,6 @@ class KlarnaBaseConfig extends Shop_Config
     {
         // Save parameters to container
         $this->fillContainer();
-
         $this->doSave();
     }
 
@@ -75,16 +89,15 @@ class KlarnaBaseConfig extends Shop_Config
      */
     protected function fillContainer()
     {
-        $oConfig = oxRegistry::getConfig();
         foreach ($this->_aConfParams as $sType => $sParam) {
 
             if ($sType === 'aarr') {
                 $this->setParameter($sParam,
                     $this->convertNestedParams(
-                        $oConfig->getRequestParameter($sParam)
+                        $this->_oRequest->getRequestEscapedParameter($sParam)
                     ));
             } else {
-                $this->setParameter($sParam, $oConfig->getRequestParameter($sParam));
+                $this->setParameter($sParam, $this->_oRequest->getRequestEscapedParameter($sParam));
             }
         }
     }
@@ -113,7 +126,8 @@ class KlarnaBaseConfig extends Shop_Config
      */
     protected function removeConfigKeys($aKeys)
     {
-        $db = oxdb::getDb(oxDb::FETCH_MODE_ASSOC);
+        /** @var Database $db */
+        $db = oxDb::getDb(oxDb::FETCH_MODE_ASSOC);
 
         $sql = "DELETE 
                     FROM oxconfig
@@ -125,7 +139,7 @@ class KlarnaBaseConfig extends Shop_Config
 
     /**
      * Save vars as shop config does
-     * @throws oxSystemComponentException
+     * @throws \Exception
      */
     private function doSave()
     {
@@ -133,9 +147,10 @@ class KlarnaBaseConfig extends Shop_Config
         $sOxid = $this->getEditObjectId();
 
         //saving additional fields ("oxshops__oxdefcat") that goes directly to shop (not config)
-        $oShop = oxNew("oxshop");
+        /** @var Shop $oShop */
+        $oShop = oxNew(Shop::class);
         if ($oShop->load($sOxid)) {
-            $oShop->assign(oxRegistry::getConfig()->getRequestParameter("editval"));
+            $oShop->assign($this->_oRequest->getRequestEscapedParameter("editval"));
             $oShop->save();
         }
     }
@@ -146,9 +161,9 @@ class KlarnaBaseConfig extends Shop_Config
     private function performConfVarsSave()
     {
         $this->resetContentCache();
-
         foreach ($this->_aConfParams as $sType => $sParam) {
             $aConfVars = $this->getParameter($sParam);
+
             if (!is_array($aConfVars)) {
                 continue;
             }

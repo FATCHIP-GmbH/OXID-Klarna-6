@@ -117,10 +117,10 @@ class klarna_payment extends klarna_payment_parent
         $this->aPaymentList = parent::getPaymentList();
         if (KlarnaUtils::isKlarnaPaymentsEnabled()) {
             // remove needless methods from the list
-            unset($this->aPaymentList[Klarna_oxPayment::KLARNA_PAYMENT_CHECKOUT_ID]);
+            unset($this->aPaymentList[klarnaOxPayment::KLARNA_PAYMENT_CHECKOUT_ID]);
 
         } else {
-            $klarnaPayments = klarna_oxpayment::getKlarnaPaymentsIds();
+            $klarnaPayments = klarnaOxPayment::getKlarnaPaymentsIds();
             foreach ($klarnaPayments as $paymentId) {
                 unset($this->aPaymentList[$paymentId]);
             }
@@ -165,7 +165,7 @@ class klarna_payment extends klarna_payment_parent
             $oSession = oxRegistry::getSession();
             $oBasket               = $oSession->getBasket();
             $sPaymentId            = $oBasket->getPaymentId();
-            $aKlarnaPaymentMethods = Klarna_oxPayment::getKlarnaPaymentsIds('KP');
+            $aKlarnaPaymentMethods = klarnaOxPayment::getKlarnaPaymentsIds('KP');
 
             if (in_array($sPaymentId, $aKlarnaPaymentMethods)) {
 

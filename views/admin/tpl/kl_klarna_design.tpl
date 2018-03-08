@@ -20,7 +20,7 @@
 
                 <input type="hidden" name="MAX_FILE_SIZE" value="[{$iMaxUploadFileSize}]">
                 [{$oViewConf->getHiddenSid()}]
-                <input type="hidden" name="cl" value="klarna_design">
+                <input type="hidden" name="cl" value="KlarnaDesign">
                 <input type="hidden" name="fnc" value="save">
                 <!-- Teaser -->
                 <div class="klarna-row">

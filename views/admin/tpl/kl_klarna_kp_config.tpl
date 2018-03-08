@@ -25,7 +25,7 @@
               enctype="multipart/form-data">
             <input type="hidden" name="MAX_FILE_SIZE" value="[{$iMaxUploadFileSize}]">
             [{$oViewConf->getHiddenSid()}]
-            <input type="hidden" name="cl" value="klarna_configuration">
+            <input type="hidden" name="cl" value="KlarnaConfiguration">
             <input type="hidden" name="fnc" value="save">
 
             <div class="kp-options equalHMWrap eqWrap">

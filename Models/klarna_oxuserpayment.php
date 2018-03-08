@@ -16,7 +16,7 @@ class klarna_oxuserpayment extends klarna_oxuserpayment_parent
      */
     public function isKlarnaPayment()
     {
-        return klarna_oxpayment::isKlarnaPayment($this->oxuserpayments__oxpaymentsid->value);
+        return klarnaOxPayment::isKlarnaPayment($this->oxuserpayments__oxpaymentsid->value);
     }
 
     /**

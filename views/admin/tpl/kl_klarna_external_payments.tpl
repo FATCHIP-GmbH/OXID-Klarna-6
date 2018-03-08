@@ -14,7 +14,7 @@
             <form name="myedit" id="myedit" method="post" action="[{$oViewConf->getSelfLink()}]" enctype="multipart/form-data">
                 <input type="hidden" name="MAX_FILE_SIZE" value="[{$iMaxUploadFileSize}]">
                 [{$oViewConf->getHiddenSid()}]
-                <input type="hidden" name="cl" value="klarna_external_payments">
+                <input type="hidden" name="cl" value="KlarnaExternalPayments">
                 <input type="hidden" name="fnc" value="save">
                 [{foreach from=$activePayments item=payment}]
                     [{assign var="paymentOn" value=$payment.klexternalpayment|intval }]

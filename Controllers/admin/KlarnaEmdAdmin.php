@@ -2,11 +2,15 @@
 
 namespace Klarna\Klarna\Controllers\Admin;
 
+use Klarna\Klarna\Core\KlarnaConsts;
+use OxidEsales\Eshop\Application\Model\Payment;
+use OxidEsales\Eshop\Core\Registry as oxRegistry;
+use OxidEsales\Eshop\Core\Field as oxField;
 
 /**
  * Class Klarna_Config for module configuration in OXID backend
  */
-class KlarnaEmdAdmin extends klarna_base_config
+class KlarnaEmdAdmin extends KlarnaBaseConfig
 {
 
     protected $_sThisTemplate = 'kl_klarna_emd_admin.tpl';
@@ -16,8 +20,6 @@ class KlarnaEmdAdmin extends klarna_base_config
      *
      * @see admin/oxAdminDetails::render()
      * @return string
-     * @throws oxConnectionException
-     * @throws oxSystemComponentException
      */
     public function render()
     {
@@ -35,14 +37,15 @@ class KlarnaEmdAdmin extends klarna_base_config
     }
 
     /**
-     * @throws oxSystemComponentException
+     * @throws \Exception
      */
     public function save()
     {
         parent::save();
 
-        $vars    = oxRegistry::getConfig()->getRequestParameter('payments');
-        $payment = oxNew('oxPayment');
+        $vars    = $this->_oRequest->getRequestEscapedParameter('payments');
+        /** @var Payment $payment */
+        $payment = oxNew(Payment::class);
 
         foreach ($vars as $oxid => $settings) {
             $payment->load($oxid);
@@ -55,8 +58,6 @@ class KlarnaEmdAdmin extends klarna_base_config
 
     /**
      * @return array
-     * @throws oxConnectionException
-     * @throws oxSystemComponentException
      */
     public function getPaymentList()
     {

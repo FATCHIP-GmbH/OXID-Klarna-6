@@ -42,7 +42,7 @@ bannerMultiLang.onInit({
     formCssSelector: 'form#myedit',
     toggleCssSelector: '#DisplayBanner',
     inputsCssSelector: '.source.m-lang',
-    dataPath: 'cl=klarna_design'
+    dataPath: 'cl=KlarnaDesign'
 });
 
 

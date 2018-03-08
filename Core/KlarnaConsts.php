@@ -1,8 +1,10 @@
 <?php
+namespace Klarna\Klarna\Core;
+
+use OxidEsales\Eshop\Core\Registry as oxRegistry;
 
 class KlarnaConsts
 {
-    const ANON_ENCRYPT_KEY = 'sjdkfbnv730yghwbvtvzkdjfnbpvu54n93ybtnuqn94uhmndruyh9syue';
 
     const MODULE_MODE_KCO = 'KCO';
 
@@ -134,20 +136,6 @@ class KlarnaConsts
         else
             return $aFooterImgUrls;
     }
-
-//    /**
-//     * @param null $sCountryISO
-//     * @return array|mixed
-//     */
-//    public static function getLocale2($sCountryISO = null)
-//    {
-//        $locale = 'en_gb';
-//        $langTag = oxRegistry::getLang()->getLanguageAbbr();
-//        if ($sCountryISO)
-//            return $langTag . '_' . strtolower($sCountryISO);
-//        else
-//            return $locale;
-//    }
 
     /**
      * @param bool $isAdmin

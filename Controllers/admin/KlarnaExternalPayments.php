@@ -2,11 +2,17 @@
 
 namespace Klarna\Klarna\Controllers\Admin;
 
+use Klarna\Klarna\Core\KlarnaConsts;
+use Klarna\Klarna\Core\KlarnaUtils;
+use OxidEsales\Eshop\Application\Model\Payment;
+use OxidEsales\Eshop\Core\Field as oxField;
+use OxidEsales\Eshop\Core\Registry as oxRegistry;
+use OxidEsales\Eshop\Core\DatabaseProvider as oxDb;
 
 /**
  * Class Klarna_Config for module configuration in OXID backend
  */
-class KlarnaExternalPayments extends klarna_base_config
+class KlarnaExternalPayments extends KlarnaBaseConfig
 {
 
     protected $_sThisTemplate = 'kl_klarna_external_payments.tpl';
@@ -16,8 +22,6 @@ class KlarnaExternalPayments extends klarna_base_config
      *
      * @see admin/oxAdminDetails::render()
      * @return string
-     * @throws oxConnectionException
-     * @throws oxSystemComponentException
      */
     public function render()
     {
@@ -40,12 +44,11 @@ class KlarnaExternalPayments extends klarna_base_config
      * @return array
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
-     * @throws oxSystemComponentException
      */
     public function getPaymentList()
     {
         /** @var \OxidEsales\Eshop\Core\Database\Adapter\Doctrine\Database $db */
-        $db = oxdb::getDb(oxDb::FETCH_MODE_ASSOC);
+        $db = oxDb::getDb(oxDb::FETCH_MODE_ASSOC);
 
         $sql = 'SELECT oxid 
                 FROM oxpayments
@@ -63,13 +66,11 @@ class KlarnaExternalPayments extends klarna_base_config
         return $payments;
     }
 
-    /**
-     * @throws oxSystemComponentException
-     */
+
     public function save()
     {
-        $vars    = oxRegistry::getConfig()->getRequestParameter('payments');
-        $payment = oxNew('oxPayment');
+        $vars    = $this->_oRequest->getRequestEscapedParameter('payments');
+        $payment = oxNew(Payment::class);
         $payment->setEnableMultilang(false);
         foreach ($vars as $oxid => $settings) {
             $payment->load($oxid);
@@ -92,7 +93,7 @@ class KlarnaExternalPayments extends klarna_base_config
         );
         $imageUrls = array();
         foreach ($this->getPaymentList() as $payment) {
-            $oPayment = oxNew('oxPayment');
+            $oPayment = oxNew(Payment::class);
             $oPayment->setEnableMultilang(false);
             $oPayment->load($payment['oxid']);
             foreach ($langs as $langId) {

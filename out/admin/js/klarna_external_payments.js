@@ -175,7 +175,7 @@
 
     function getData() {
         $.ajax({
-            url: '?cl=klarna_external_payments&fnc=getMultilangUrls&stoken=' + token,
+            url: '?cl=KlarnaExternalPayments&fnc=getMultilangUrls&stoken=' + token,
             type: 'GET',
             dataType: 'json',
         }).success(function(oData){

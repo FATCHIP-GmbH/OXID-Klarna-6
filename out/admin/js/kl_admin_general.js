@@ -168,7 +168,7 @@ multiLangForm.onInit({
     formCssSelector: 'form#myedit',
     toggleCssSelector: '#anonymized',
     inputsCssSelector: '#anonymized-value',
-    dataPath: 'cl=klarna_general'
+    dataPath: 'cl=KlarnaGeneral'
 });
 
 var modeSelector = new Selector2({

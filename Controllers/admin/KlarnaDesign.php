@@ -2,11 +2,17 @@
 
 namespace Klarna\Klarna\Controllers\Admin;
 
+use Klarna\Klarna\Core\KlarnaConsts;
+use Klarna\Klarna\Core\KlarnaUtils;
+use OxidEsales\Eshop\Application\Model\Actions;
+use OxidEsales\Eshop\Core\Registry as oxRegistry;
+use OxidEsales\Eshop\Core\Field as oxField;
+use OxidEsales\Eshop\Core\Request;
 
 /**
  * Class Klarna_Config for module configuration in OXID backend
  */
-class KlarnaDesign extends klarna_base_config
+class KlarnaDesign extends KlarnaBaseConfig
 {
 
     protected $_sThisTemplate = 'kl_klarna_design.tpl';
@@ -62,9 +68,9 @@ class KlarnaDesign extends klarna_base_config
     {
         $oConfig   = oxRegistry::getConfig();
         $oShop     = $oConfig->getActiveShop();
-        $aSettings = $this->getConfig()->getRequestParameter('settings');
+        $aSettings = $this->_oRequest->getRequestEscapedParameter('settings');
 
-        $oKlarnaTeaserAction = oxnew('oxActions');
+        $oKlarnaTeaserAction = oxNew(Actions::class);
         $oKlarnaTeaserAction->load('klarna_teaser_' . $oShop->getId());
         $oKlarnaTeaserAction->oxactions__oxactive->setValue($aSettings['blKlarnaTeaserActive'], oxField::T_RAW);
         $oKlarnaTeaserAction->save();
@@ -75,7 +81,7 @@ class KlarnaDesign extends klarna_base_config
         $oConfig = oxRegistry::getConfig();
         $oShop   = $oConfig->getActiveShop();
 
-        $oKlarnaTeaserAction = oxnew('oxActions');
+        $oKlarnaTeaserAction = oxNew(Actions::class);
         $oKlarnaTeaserAction->load('klarna_teaser_' . $oShop->getId());
 
         return array(

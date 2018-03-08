@@ -2,6 +2,14 @@
 namespace Klarna\Klarna\Core;
 
 use OxidEsales\Eshop\Application\Controller\Admin\ShopConfiguration;
+use OxidEsales\Eshop\Application\Model\Actions;
+use OxidEsales\Eshop\Application\Model\Payment;
+use OxidEsales\Eshop\Core\DatabaseProvider as oxDb;
+use OxidEsales\Eshop\Core\DbMetaDataHandler;
+use OxidEsales\Eshop\Core\Registry as oxRegistry;
+use OxidEsales\Eshop\Core\Field as oxField;
+use OxidEsales\Eshop\Core\Database\Adapter\Doctrine\Database;
+use Klarna\Klarna\Models\KlarnaPayment;
 
 class KlarnaInstaller extends ShopConfiguration
 {
@@ -22,13 +30,13 @@ class KlarnaInstaller extends ShopConfiguration
 
     /**
      * @return KlarnaInstaller|null|object
-     * @throws oxConnectionException
-     * @throws oxSystemComponentException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      */
     public static function getInstance()
     {
         if (!self::$instance) {
-            self::$instance         = oxNew('KlarnaInstaller');
+            self::$instance         = new KlarnaInstaller;
+            /** @var Database db */
             self::$instance->db     = oxDb::getDb(oxDb::FETCH_MODE_ASSOC);
             self::$instance->dbName = oxRegistry::getConfig()->getConfigParam('dbName');
             self::$instance->modulePath = oxRegistry::getConfig()->getConfigParam('sShopDir') . self::$instance->moduleRelativePath;
@@ -38,12 +46,9 @@ class KlarnaInstaller extends ShopConfiguration
     }
 
     /**
-     * @throws oxConnectionException
-     * @throws oxSystemComponentException
      */
     public static function onActivate()
     {
-        die('dupa');
         $instance = self::getInstance();
 
         $instance->extendDbTables();
@@ -58,8 +63,7 @@ class KlarnaInstaller extends ShopConfiguration
     }
 
     /**
-     * @throws oxConnectionException
-     * @throws oxSystemComponentException
+     *
      */
     public static function onDeactivate()
     {
@@ -71,6 +75,7 @@ class KlarnaInstaller extends ShopConfiguration
      * @param $sTableName
      * @param $sColumnName
      * @return bool
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
      */
     protected function dbColumnExist($sTableName, $sColumnName)
     {
@@ -174,18 +179,18 @@ class KlarnaInstaller extends ShopConfiguration
      */
     protected function addKlarnaPaymentsMethods()
     {
-        $oPayment = oxNew('oxPayment');
+        $oPayment = oxNew(Payment::class);
         $oPayment->load('oxidinvoice');
         $de_prefix = $oPayment->getFieldData('oxdesc') === 'Rechnung' ? 0 : 1;
         $en_prefix = $de_prefix === 1 ? 0 : 1;
 
-        $newPayments = array(klarna_oxpayment::KLARNA_PAYMENT_CHECKOUT_ID  =>
+        $newPayments = array(KlarnaPayment::KLARNA_PAYMENT_CHECKOUT_ID  =>
                                  array($de_prefix => 'Klarna Checkout', $en_prefix => 'Klarna Checkout'),
-                             klarna_oxpayment::KLARNA_PAYMENT_PAY_LATER_ID =>
+                             KlarnaPayment::KLARNA_PAYMENT_PAY_LATER_ID =>
                                  array($de_prefix => 'Klarna Rechnung', $en_prefix => 'Klarna Pay Later'),
-                             klarna_oxpayment::KLARNA_PAYMENT_SLICE_IT_ID  =>
+                             KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID  =>
                                  array($de_prefix => 'Klarna Ratenkauf', $en_prefix => 'Klarna Slice It'),
-                             klarna_oxpayment::KLARNA_PAYMENT_PAY_NOW =>
+                             KlarnaPayment::KLARNA_PAYMENT_PAY_NOW =>
                                  array($de_prefix => 'Sofort bezahlen', $en_prefix => 'Klarna Pay Now'),
         );
 
@@ -195,7 +200,7 @@ class KlarnaInstaller extends ShopConfiguration
         if ($aLangs) {
             foreach ($newPayments as $oxid => $aTitle) {
                 /** @var $oPayment oxPayment */
-                $oPayment = oxNew('oxPayment');
+                $oPayment = oxNew(Payment::class);
                 $oPayment->load($oxid);
                 if ($oPayment->isLoaded()) {
                     $oPayment->oxpayments__oxactive = new oxField(1, oxField::T_RAW);
@@ -228,19 +233,18 @@ class KlarnaInstaller extends ShopConfiguration
     }
 
     /**
-     *
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
      */
     protected function extendDbTables()
     {
-        $db = oxDb::getDb(oxDb::FETCH_MODE_ASSOC);
-
         $sql      = file_get_contents(__DIR__ . '/../install/install.sql');
         $sqlArray = explode(';', trim($sql));
         foreach ($sqlArray as $sql) {
             if ($sql === '') {
                 break;
             }
-            $db->execute($sql);
+            $this->db->execute($sql);
         }
 
         $aStructure = array(
@@ -316,7 +320,7 @@ class KlarnaInstaller extends ShopConfiguration
     {
         //preventing edit for anyone except malladmin
         if (oxRegistry::getSession()->getVariable("malladmin")) {
-            $oMetaData = oxNew(\OxidEsales\Eshop\Core\DbMetaDataHandler::class);
+            $oMetaData = oxNew(DbMetaDataHandler::class);
             $oMetaData->updateViews();
         }
     }
@@ -334,7 +338,7 @@ class KlarnaInstaller extends ShopConfiguration
         $sFileName = 'klarna-banner.png';
         $actionsMediaPath = oxRegistry::getConfig()->getConfigParam('sShopDir') . 'out/pictures/promo/';
 
-        $oActionKlarnaTeaser = oxNew('oxActions');
+        $oActionKlarnaTeaser = oxNew(Actions::class);
         $oActionKlarnaTeaser->setShopId($shopId);
         $oActionKlarnaTeaser->load($oxId);
         $oActionKlarnaTeaser->setId($oxId);
@@ -362,6 +366,7 @@ class KlarnaInstaller extends ShopConfiguration
 
     /**
      *
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
      */
     protected function deactivateKlarnaPayments()
     {

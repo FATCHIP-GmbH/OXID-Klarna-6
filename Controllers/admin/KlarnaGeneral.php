@@ -2,11 +2,15 @@
 
 namespace Klarna\Klarna\Controllers\Admin;
 
+use Klarna\Klarna\Core\KlarnaUtils;
+use OxidEsales\Eshop\Core\Registry as oxRegistry;
+use OxidEsales\Eshop\Core\DatabaseProvider as oxDb;
+
 
 /**
  * Class Klarna_Config for module configuration in OXID backend
  */
-class KlarnaGeneral extends klarna_base_config
+class KlarnaGeneral extends KlarnaBaseConfig
 {
 
     protected $_sThisTemplate = 'kl_klarna_general.tpl';
@@ -23,8 +27,6 @@ class KlarnaGeneral extends klarna_base_config
      *
      * @see admin/oxAdminDetails::render()
      * @return string
-     * @throws oxSystemComponentException
-     * @throws oxConnectionException
      */
     public function render()
     {
@@ -102,7 +104,6 @@ class KlarnaGeneral extends klarna_base_config
      * @return mixed
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
-     * @throws oxSystemComponentException
      */
     protected function getKlarnaCountryAssocList()
     {
@@ -113,7 +114,7 @@ class KlarnaGeneral extends klarna_base_config
         $isoList   = KlarnaUtils::getKlarnaGlobalActiveShopCountryISOs();
 
         /** @var \OxidEsales\EshopCommunity\Core\Database\Adapter\Doctrine\Database $db */
-        $db  = oxdb::getDb(oxDb::FETCH_MODE_ASSOC);
+        $db  = oxDb::getDb(oxDb::FETCH_MODE_ASSOC);
         $sql = 'SELECT oxisoalpha2, oxtitle 
                 FROM ' . $sViewName . ' 
                 WHERE oxisoalpha2 IN ("' . implode('","', $isoList) . '")';

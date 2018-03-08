@@ -2,11 +2,16 @@
 
 namespace Klarna\Klarna\Controllers\Admin;
 
+use Klarna\Klarna\Core\KlarnaConsts;
+use Klarna\Klarna\Core\KlarnaUtils;
+use OxidEsales\Eshop\Application\Model\Payment;
+use OxidEsales\Eshop\Core\Registry as oxRegistry;
+
 
 /**
  * Class Klarna_Config for module configuration in OXID backend
  */
-class KlarnaConfiguration extends klarna_base_config
+class KlarnaConfiguration extends KlarnaBaseConfig
 {
 
     protected $_sThisTemplate = 'kl_klarna_kco_config.tpl';
@@ -19,8 +24,6 @@ class KlarnaConfiguration extends klarna_base_config
      *
      * @see admin/oxAdminDetails::render()
      * @return string
-     * @throws oxSystemComponentException
-     * @throws oxConnectionException
      */
     public function render()
     {
@@ -36,7 +39,7 @@ class KlarnaConfiguration extends klarna_base_config
             return oxRegistry::getUtils()->showMessageAndExit(json_encode($output));
         }
 
-        $oPayment = oxNew('oxPayment');
+        $oPayment = oxNew(Payment::class);
         $this->addTplParam('aKPMethods', $oPayment->getKPMethods());
         $this->addTplParam('sLocale', KlarnaConsts::getLocale(true));
 
@@ -45,9 +48,8 @@ class KlarnaConfiguration extends klarna_base_config
             if (oxRegistry::getConfig()->getConfigParam('sSSLShopURL') == null) {
                 $this->addTplParam('sslNotSet', true);
             }
-            $oxPayment = oxNew('oxpayment');
-            $oxPayment->load('klarna_checkout');
-            $klarnaActiveInOxid = $oxPayment->oxpayments__oxactive->value == 1;
+            $oPayment->load('klarna_checkout');
+            $klarnaActiveInOxid = $oPayment->oxpayments__oxactive->value == 1;
             if (!$klarnaActiveInOxid) {
                 $this->addTplParam('KCOinactive', true);
             }
@@ -129,13 +131,13 @@ class KlarnaConfiguration extends klarna_base_config
 
     /**
      * @return bool
-     * @throws oxSystemComponentException
      */
     public function isGermanyActiveShopCountry()
     {
+        /** @var \OxidEsales\Eshop\Application\Model\CountryList $activeCountries */
         $activeCountries = KlarnaUtils::getActiveShopCountries();
-        foreach ($activeCountries as $country) {
-            if ($country->oxcountry__oxisoalpha2->value == 'DE')
+        foreach ($activeCountries as $oCountry) {
+            if ($oCountry->oxcountry__oxisoalpha2->value == 'DE')
                 return true;
         }
 
@@ -144,13 +146,13 @@ class KlarnaConfiguration extends klarna_base_config
 
     /**
      * @return bool
-     * @throws oxSystemComponentException
      */
     public function isAustriaActiveShopCountry()
     {
+        /** @var \OxidEsales\Eshop\Application\Model\CountryList $activeCountries */
         $activeCountries = KlarnaUtils::getActiveShopCountries();
-        foreach ($activeCountries as $country) {
-            if ($country->oxcountry__oxisoalpha2->value == 'AT')
+        foreach ($activeCountries as $oCountry) {
+            if ($oCountry->oxcountry__oxisoalpha2->value == 'AT')
                 return true;
         }
 
@@ -159,13 +161,13 @@ class KlarnaConfiguration extends klarna_base_config
 
     /**
      * @return bool
-     * @throws oxSystemComponentException
      */
     public function isGBActiveShopCountry()
     {
+        /** @var \OxidEsales\Eshop\Application\Model\CountryList $activeCountries */
         $activeCountries = KlarnaUtils::getActiveShopCountries();
-        foreach ($activeCountries as $country) {
-            if ($country->oxcountry__oxisoalpha2->value == 'GB')
+        foreach ($activeCountries as $oCountry) {
+            if ($oCountry->oxcountry__oxisoalpha2->value == 'GB')
                 return true;
         }
 
@@ -173,14 +175,13 @@ class KlarnaConfiguration extends klarna_base_config
     }
 
     /**
-     * @throws oxSystemComponentException
      */
     public function save()
     {
         parent::save();
 
         if (KlarnaUtils::isKlarnaPaymentsEnabled()) {
-            $oPayment = oxNew('oxpayment');
+            $oPayment = oxNew(Payment::class);
             $oPayment->setActiveKPMethods();
         }
     }

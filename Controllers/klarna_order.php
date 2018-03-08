@@ -882,7 +882,7 @@ class Klarna_Order extends Klarna_Order_parent
             $oSession              = oxRegistry::getSession();
             $oBasket               = $oSession->getBasket();
             $payment_id            = $oBasket->getPaymentId();
-            $aKlarnaPaymentMethods = Klarna_oxPayment::getKlarnaPaymentsIds('KP');
+            $aKlarnaPaymentMethods = klarnaOxPayment::getKlarnaPaymentsIds('KP');
 
             if (in_array($payment_id, $aKlarnaPaymentMethods)) {
                 // add KP js to the page
@@ -949,7 +949,7 @@ class Klarna_Order extends Klarna_Order_parent
     {
         $paymentId = oxRegistry::getSession()->getBasket()->getPaymentId();
 
-        return in_array($paymentId, klarna_oxpayment::getKlarnaPaymentsIds('KP'));
+        return in_array($paymentId, klarnaOxPayment::getKlarnaPaymentsIds('KP'));
     }
 
     /**

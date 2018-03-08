@@ -63,7 +63,7 @@ class Klarna_oxOrder extends Klarna_oxOrder_parent
         if ($blUpdate = parent::_setNumber()) {
 
             /** @var oxSession $session */
-            if (in_array($this->oxorder__oxpaymenttype->value, Klarna_oxPayment::getKlarnaPaymentsIds())
+            if (in_array($this->oxorder__oxpaymenttype->value, klarnaOxPayment::getKlarnaPaymentsIds())
                 && empty($this->oxorder__klorderid->value)) {
 
                 $session = oxRegistry::getSession();
@@ -120,7 +120,7 @@ class Klarna_oxOrder extends Klarna_oxOrder_parent
      */
     public function isKP()
     {
-        return in_array($this->oxorder__oxpaymenttype->value, Klarna_oxPayment::getKlarnaPaymentsIds('KP'));
+        return in_array($this->oxorder__oxpaymenttype->value, klarnaOxPayment::getKlarnaPaymentsIds('KP'));
     }
 
     /**
@@ -128,7 +128,7 @@ class Klarna_oxOrder extends Klarna_oxOrder_parent
      */
     public function isKCO()
     {
-        return $this->oxorder__oxpaymenttype->value === Klarna_oxPayment::KLARNA_PAYMENT_CHECKOUT_ID;
+        return $this->oxorder__oxpaymenttype->value === klarnaOxPayment::KLARNA_PAYMENT_CHECKOUT_ID;
     }
 
     /**
@@ -136,7 +136,7 @@ class Klarna_oxOrder extends Klarna_oxOrder_parent
      */
     public function isKlarna()
     {
-        return in_array($this->oxorder__oxpaymenttype->value, Klarna_oxPayment::getKlarnaPaymentsIds());
+        return in_array($this->oxorder__oxpaymenttype->value, klarnaOxPayment::getKlarnaPaymentsIds());
     }
 
     /**

@@ -5,7 +5,7 @@ multiLangForm.onInit({
     formCssSelector: 'form#myedit',
     toggleCssSelector: null,
     inputsCssSelector: '.m-lang',
-    dataPath: 'cl=klarna_configuration',
+    dataPath: 'cl=KlarnaConfiguration',
     validateFormData : function(){
         var $validateInputs = this.$inputs.filter('.url-input');
         this.errors = $.extend(this.errors, JSON.parse(this.$form.attr('data-error')));

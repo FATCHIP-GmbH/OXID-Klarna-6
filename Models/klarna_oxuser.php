@@ -1,5 +1,5 @@
 <?php
-namespace Klarna\Klarna\Model;
+namespace Klarna\Klarna\Models;
 
 use Klarna\Klarna\Core\KlarnaUtils;
 /**

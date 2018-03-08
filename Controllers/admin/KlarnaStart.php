@@ -1,12 +1,14 @@
 <?php
 
 namespace Klarna\Klarna\Controllers\Admin;
+use OxidEsales\Eshop\Core\Module\Module;
+use OxidEsales\Eshop\Core\Registry as  oxRegistry;
 
 
 /**
  * Class Klarna_Config for module configuration in OXID backend
  */
-class KlarnaStart extends klarna_base_config
+class KlarnaStart extends KlarnaBaseConfig
 {
 
     protected $_sThisTemplate = 'kl_klarna_start.tpl';
@@ -32,11 +34,11 @@ class KlarnaStart extends klarna_base_config
 
     /**
      * @return string
-     * @throws oxSystemComponentException
      */
     public function getKlarnaModuleInfo()
     {
-        $module = oxNew('oxModule');
+        /** @var Module $module */
+        $module = oxNew(Module::class);
         $module->load('klarna');
 
         $description = strtoupper($module->getInfo('description'));
