@@ -1,4 +1,9 @@
 <?php
+namespace Klarna\Klarna\Core;
+use OxidEsales\Eshop\Application\Model\Address;
+use OxidEsales\Eshop\Application\Model\User;
+use OxidEsales\Eshop\Core\Field;
+use OxidEsales\Eshop\Core\Registry;
 
 /**
  * Class KlarnaFormatter
@@ -83,13 +88,13 @@ class KlarnaFormatter
      */
     public static function oxidToKlarnaAddress($oxObject)
     {
-        if ($oxObject instanceof oxUser)
+        if ($oxObject instanceof User)
             $sTable = 'oxuser__';
-        else if ($oxObject instanceof oxAddress) {
+        else if ($oxObject instanceof Address) {
             $sTable   = 'oxaddress__';
             $oxObject = self::completeUserData($oxObject);
         } else
-            throw new TypeError('Argument must be instance of oxUser|oxAddress.');
+            throw new \TypeError('Argument must be instance of oxUser|oxAddress.');
 
         $aUserData   = array();
         $sCountryISO = strtolower(KlarnaUtils::getCountryISO($oxObject->{$sTable . 'oxcountryid'}->value));
@@ -132,17 +137,17 @@ class KlarnaFormatter
     }
 
     /**
-     * @param oxAddress $oAddress
-     * @return oxAddress
+     * @param Address $oAddress
+     * @return Address
      */
-    public static function completeUserData(oxAddress $oAddress)
+    public static function completeUserData(Address $oAddress)
     {
-        $oUser  = oxRegistry::getConfig()->getUser();
+        $oUser  = Registry::getConfig()->getUser();
         $sEmail = $oUser->oxuser__oxusername->value;
         if (!$oUser) {
-            $sEmail = oxRegistry::getSession()->getVariable('klarna_checkout_user_email');
+            $sEmail = Registry::getSession()->getVariable('klarna_checkout_user_email');
         }
-        $oAddress->oxaddress__oxusername = new oxField($sEmail, oxField::T_RAW);
+        $oAddress->oxaddress__oxusername = new Field($sEmail, Field::T_RAW);
 
         return $oAddress;
     }

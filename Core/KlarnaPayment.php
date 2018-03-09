@@ -77,7 +77,7 @@ class KlarnaPayment extends oxBase
 
     /**
      * KlarnaPayment constructor.
-     * @param oxBasket | klarna_oxbasket $oBasket
+     * @param oxBasket | klarnaBasket $oBasket
      * @param oxUser | klarna_oxuser $oUser
      * @param array $aPost used to pass ajax request data like selected payment method
      * @throws oxArticleException

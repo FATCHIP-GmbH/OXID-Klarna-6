@@ -1,6 +1,7 @@
 <?php
 namespace Klarna\Klarna\Core;
 
+use Klarna\Klarna\Models\KlarnaEMD;
 use OxidEsales\Eshop\Application\Controller\PaymentController;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\User;
@@ -427,7 +428,7 @@ class KlarnaOrder extends BaseModel
     {
         if (!$this->_oUser->isFake()) {
             /** @var Klarna_EMD $klarnaEmd */
-            $klarnaEmd = oxNew('Klarna_EMD');
+            $klarnaEmd = new KlarnaEMD;
             $emd       = $klarnaEmd->getAttachments($this->_oUser);
 
             if (!empty($emd)) {

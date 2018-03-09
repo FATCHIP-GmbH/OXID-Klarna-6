@@ -5,10 +5,12 @@ use Klarna\Klarna\Controllers\KlarnaViewConfig;
 use Klarna\Klarna\Models\KlarnaCountryList;
 use Klarna\Klarna\Models\KlarnaPayment;
 
+use Klarna\Klarna\Models\KlarnaUser;
 use OxidEsales\Eshop\Application\Component\BasketComponent;
 use OxidEsales\Eshop\Application\Component\UserComponent;
 use OxidEsales\Eshop\Application\Model\CountryList;
 use OxidEsales\Eshop\Application\Model\Payment;
+use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\ViewConfig;
 use OxidEsales\PayPalModule\Controller\PaymentController;
 
@@ -37,6 +39,13 @@ $aModule = array(
         'KlarnaExternalPayments' => \Klarna\Klarna\Controllers\Admin\KlarnaExternalPayments::class,
         'KlarnaEmdAdmin'         => \Klarna\Klarna\Controllers\Admin\KlarnaEmdAdmin::class,
         //        'klarna_orders'                    => 'klarna/klarna/controllers/admin/klarna_orders.php',
+
+        // controllers
+        'KlarnaExpress'       => \Klarna\Klarna\Controllers\KlarnaExpress::class,
+        'Klarna_ajax'         => \Klarna\Klarna\Controllers\KlarnaAjax::class,
+        'KlarnaEpmDispatcher' => \Klarna\Klarna\Controllers\KlarnaEpmDispatcher::class,
+        'KlarnaAcknowledge'   => \Klarna\Klarna\Controllers\KlarnaAcknowledge::class,
+        'KlarnaValidate'      => \Klarna\Klarna\Controllers\KlarnaValidate::class,
     ),
 
 //    'files' => array(
@@ -51,14 +60,7 @@ $aModule = array(
 //        'KlarnaOrder'                      => 'klarna/klarna/core/KlarnaOrder.php',
 //        'KlarnaOrderValidator'             => 'klarna/klarna/core/KlarnaOrderValidator.php',
 //
-//        // controllers
-//        'klarna_express'                   => 'klarna/klarna/controllers/klarna_express.php',
-//        'klarna_ajax'                      => 'klarna/klarna/controllers/klarna_ajax.php',
-//        'klarna_epm_dispatcher'            => 'klarna/klarna/controllers/klarna_epm_dispatcher.php',
-//        'klarna_acknowledge'               => 'klarna/klarna/controllers/klarna_acknowledge.php',
-//        'klarna_validate'                  => 'klarna/klarna/controllers/klarna_validate.php',
-//        'klarna_selenium_controller'       => 'klarna/klarna/tests/oxidTools/klarna_selenium_controller.php',
-//        'KlarnaOxidConfig'                 => 'klarna/klarna/tests/oxidTools/klarna_oxid_config.php',
+
 //
 //
 //        // models
@@ -80,9 +82,8 @@ $aModule = array(
 
     'extend' => array(
         // models
-//        'oxbasket'       => 'klarna/klarna/models/klarna_oxbasket',
-//        \OxidEsales\Eshop\Application\Model\User::class         => Klarna\Klarna\Models\klarna_oxuser::class,
-////      'oxuser'      => 'klarna/klarna/models/klarna_oxuser',
+        Basket::class       => KlarnaBasket::class,
+        User::class      => KlarnaUser::class,
 //        'oxarticle'      => 'klarna/klarna/models/klarna_oxarticle',
 //        'oxorder'        => 'klarna/klarna/models/klarna_oxorder',
 //        'oxemail'        => 'klarna/klarna/models/klarna_oxemail',
