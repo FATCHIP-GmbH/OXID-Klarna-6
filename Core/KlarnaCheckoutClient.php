@@ -1,6 +1,9 @@
 <?php
+namespace Klarna\Klarna\Core;
+
 
 class KlarnaCheckoutClient extends KlarnaClientBase
+
 {
     const ORDERS_ENDPOINT = '/checkout/v3/orders/%s';
 

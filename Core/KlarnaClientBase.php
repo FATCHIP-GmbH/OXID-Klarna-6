@@ -1,22 +1,34 @@
 <?php
+namespace Klarna\Klarna\Core;
 
-abstract class KlarnaClientBase extends oxSuperCfg
+use Klarna\Klarna\Exception\KlarnaClientException;
+use Klarna\Klarna\Exception\KlarnaOrderNotFoundException;
+use Klarna\Klarna\Exception\KlarnaOrderReadOnlyException;
+use Klarna\Klarna\Exception\KlarnaWrongCredentialsException;
+
+use OxidEsales\Eshop\Core\Base;
+use OxidEsales\Eshop\Core\Module\Module;
+use OxidEsales\Eshop\Core\Registry as oxRegistry;
+use OxidEsales\Eshop\Core\UtilsView;
+
+
+abstract class KlarnaClientBase extends Base
 {
     const TEST_API_URL = 'https://api.playground.klarna.com/';
     const LIVE_API_URL = 'https://api.klarna.com/';
 
     /**
-     * @var Requests_Session
+     * @var \Requests_Session
      */
     protected $session;
 
     /**
-     * @var null
+     * @var Base | KlarnaClientBase
      */
     private static $instance;
 
     /**
-     * @var
+     * @var KlarnaOrder
      */
     protected $_oKlarnaOrder;
 
@@ -28,13 +40,14 @@ abstract class KlarnaClientBase extends oxSuperCfg
     /**
      * @param null $sCountryISO
      * @return KlarnaClientBase
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     static function getInstance($sCountryISO = null)
     {
         $calledClass = get_called_class();
         if (self::$instance === null || !self::$instance instanceof $calledClass) {
             require_once __DIR__ . '/../Requests/library/Requests.php';
-            Requests::register_autoloader();
+            \Requests::register_autoloader();
 
             self::$instance               = new $calledClass();
             $aKlarnaCredentials           = KlarnaUtils::getAPICredentials($sCountryISO);
@@ -42,8 +55,8 @@ abstract class KlarnaClientBase extends oxSuperCfg
             $test                         = KlarnaUtils::getShopConfVar('blIsKlarnaTestMode');
             $apiUrl                       = $test ? self::TEST_API_URL : self::LIVE_API_URL;
             $headers                      = array('Authorization' => 'Basic ' . base64_encode("{$aKlarnaCredentials['mid']}:{$aKlarnaCredentials['password']}"), 'Content-Type' => 'application/json');
-            $headers                      = array_merge($headers, self::$instance->getApiClientHeader(self::$instance));
-            self::$instance->loadHttpHandler(new Requests_Session($apiUrl, $headers));
+            $headers                      = array_merge($headers, self::$instance->getApiClientHeader());
+            self::$instance->loadHttpHandler(new \Requests_Session($apiUrl, $headers));
         }
 
         return self::$instance;
@@ -55,9 +68,9 @@ abstract class KlarnaClientBase extends oxSuperCfg
     }
 
     /**
-     * @param Requests_Session $session
+     * @param \Requests_Session $session
      */
-    protected function loadHttpHandler(Requests_Session $session)
+    protected function loadHttpHandler(\Requests_Session $session)
     {
         $this->session = $session;
     }
@@ -66,7 +79,7 @@ abstract class KlarnaClientBase extends oxSuperCfg
      * @param string $endpoint
      * @param array $data json
      * @param array $headers
-     * @return Requests_Response
+     * @return \Requests_Response
      */
     protected function post($endpoint, $data = array(), $headers = array())
     {
@@ -76,7 +89,7 @@ abstract class KlarnaClientBase extends oxSuperCfg
     /**
      * @param string $endpoint
      * @param array $headers
-     * @return Requests_Response
+     * @return \Requests_Response
      */
     protected function get($endpoint, $headers = array())
     {
@@ -87,7 +100,7 @@ abstract class KlarnaClientBase extends oxSuperCfg
      * @param string $endpoint
      * @param array $data
      * @param array $headers
-     * @return Requests_Response
+     * @return \Requests_Response
      */
     protected function patch($endpoint, $data = array(), $headers = array())
     {
@@ -98,7 +111,7 @@ abstract class KlarnaClientBase extends oxSuperCfg
      * @param $endpoint
      * @param array $data
      * @param array $headers
-     * @return Requests_Response
+     * @return \Requests_Response
      */
     protected function delete($endpoint, $data = array(), $headers = array())
     {
@@ -106,13 +119,17 @@ abstract class KlarnaClientBase extends oxSuperCfg
     }
 
     /**
-     * @param Requests_Response $oResponse
+     * @param \Requests_Response $oResponse
      * @param $class
      * @param $method
      * @return array|bool
-     * @throws oxException | KlarnaOrderNotFoundException | KlarnaClientException
+     * @throws \OxidEsales\Eshop\Core\Exception\StandardException
+     * @throws KlarnaOrderNotFoundException
+     * @throws KlarnaOrderReadOnlyException
+     * @throws KlarnaWrongCredentialsException
+     * @throws KlarnaClientException
      */
-    protected function handleResponse(Requests_Response $oResponse, $class, $method)
+    protected function handleResponse(\Requests_Response $oResponse, $class, $method)
     {
         $successCodes = array(200, 201, 204);
         $errorCodes   = array(400, 422, 500);
@@ -147,28 +164,27 @@ abstract class KlarnaClientBase extends oxSuperCfg
     public static function addErrors($aErrors)
     {
         foreach ($aErrors as $message) {
-            oxRegistry::get("oxUtilsView")->addErrorToDisplay($message);
+            oxRegistry::get(UtilsView::class)->addErrorToDisplay($message);
         }
     }
 
     /**
-     * @param $instance
      * @return array
-     * @throws oxSystemComponentException
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
-    protected function getApiClientHeader($instance)
+    protected function getApiClientHeader()
     {
 
         $php    = phpversion();
         $phpVer = 'PHP' . $php;
 
-        $shopName = $instance->getConfig()->getActiveShop()->oxshops__oxname->value;
+        $shopName = self::$instance->getConfig()->getActiveShop()->oxshops__oxname->value;
 
-        $shopEdition = $instance->getConfig()->getActiveShop()->oxshops__oxedition->value;
-        $shopRev     = $instance->getConfig()->getActiveShop()->oxshops__oxversion->value;
+        $shopEdition = self::$instance->getConfig()->getActiveShop()->oxshops__oxedition->value;
+        $shopRev     = self::$instance->getConfig()->getActiveShop()->oxshops__oxversion->value;
         $shopVer     = 'OXID_' . $shopEdition . '_' . $shopRev;
 
-        $module = oxNew('oxModule');
+        $module = oxNew(Module::class);
         $module->loadByDir('klarna');
         $moduleDesc = $module->getDescription();
         $moduleVer  = $module->getInfo('version');
@@ -189,7 +205,7 @@ abstract class KlarnaClientBase extends oxSuperCfg
      * @param $responseRaw
      * @param string $order_id
      * @param $statusCode
-     * @throws oxSystemComponentException
+     * @throws \Exception
      */
     protected function logKlarnaData($action, $requestBody, $url, $responseRaw, $order_id = '', $statusCode)
     {
@@ -204,7 +220,7 @@ abstract class KlarnaClientBase extends oxSuperCfg
         $url = substr($this->session->url, 0, -1) . sprintf($url, $order_id);
 
         $mid        = $this->aCredentials['mid'];
-        $oKlarnaLog = oxNew('klarna_logs');
+        $oKlarnaLog = new KlarnaLogs;
         $aData      = array(
             'kl_logs__klmethod'      => $action,
             'kl_logs__klurl'         => $url,
@@ -228,9 +244,9 @@ abstract class KlarnaClientBase extends oxSuperCfg
     }
 
     /**
-     * @param Requests_Response $oResponse
+     * @param \Requests_Response $oResponse
      */
-    protected function formatAndShowErrorMessage(Requests_Response $oResponse)
+    protected function formatAndShowErrorMessage(\Requests_Response $oResponse)
     {
         $aResponse = json_decode($oResponse->body, true);
         if (is_array($aResponse)) {

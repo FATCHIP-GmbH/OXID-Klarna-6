@@ -1,6 +1,14 @@
 <?php
+namespace Klarna\Klarna\Core;
 
-class KlarnaOrder extends oxBase
+use OxidEsales\Eshop\Application\Controller\PaymentController;
+use OxidEsales\Eshop\Application\Model\Basket;
+use OxidEsales\Eshop\Application\Model\User;
+use OxidEsales\Eshop\Core\Model\BaseModel;
+use OxidEsales\Eshop\Core\Registry as oxRegistry;
+
+
+class KlarnaOrder extends BaseModel
 {
     /**
      * @var array data to post to Klarna
@@ -9,12 +17,12 @@ class KlarnaOrder extends oxBase
 
     /**
      *
-     * @var oxUser
+     * @var User
      */
     protected $_oUser;
 
     /**
-     * @var payment controller
+     * @var PaymentController
      */
     protected $_oPayment;
 
@@ -40,12 +48,11 @@ class KlarnaOrder extends oxBase
 
     /**
      * KlarnaOrder constructor.
-     * @param $oBasket
-     * @param $oUser
-     * @throws oxSystemComponentException
-     * @throws KlarnaConfigException
+     * @param Basket $oBasket
+     * @param User $oUser
+     * @throws \oxSystemComponentException
      */
-    public function __construct(oxBasket $oBasket, oxUser $oUser)
+    public function __construct(Basket $oBasket, User $oUser)
     {
         parent::__construct();
 

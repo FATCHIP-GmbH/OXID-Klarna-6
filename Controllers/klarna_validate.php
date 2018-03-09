@@ -16,35 +16,39 @@ class klarna_validate extends oxUBase
         $order_id         = $aKlarnaOrderData['order_id'];
         $validator        = oxNew('KlarnaOrderValidator', $aKlarnaOrderData);
         $redirectUrl      = null;
-        if ($validator->validateOrder()) {
+        $validator->validateOrder();
+
+        if ($validator->isValid()) {
+            $responseStatus = 200;
             $this->logKlarnaData(
                 'Validate Order',
                 $order_id,
                 'FROMKLARNA: ' . $requestBody,
                 $_SERVER['REQUEST_URI'],
-                200,
+                $responseStatus,
                 $validator->getResultErrors() ?: '',
                 $redirectUrl ?: ''
             );
 
-            header("", true, 200);
+            header("", true, $responseStatus);
             oxRegistry::getUtils()->showMessageAndExit('');
         } else {
             $sid         = oxRegistry::getConfig()->getRequestParameter('s');
-            $redirectUrl = oxRegistry::getConfig()->getShopHomeURL() . "cl=basket&force_sid=$sid&";
-            $redirectUrl .= http_build_query($validator->getResultErrors(), 'error_msg_');
+            $redirectUrl = oxRegistry::getConfig()->getSslShopUrl() . "index.php?cl=basket&force_sid=$sid&klarnaInvalid=1&";
+            $redirectUrl .= http_build_query($validator->getResultErrors());
+            $responseStatus = 303;
 
             $this->logKlarnaData(
                 'Validate Order',
                 $order_id,
                 'FROMKLARNA: ' . $requestBody,
                 $_SERVER['REQUEST_URI'],
-                303,
+                $responseStatus,
                 $validator->getResultErrors(),
                 $redirectUrl
             );
 
-            oxRegistry::getUtils()->redirect($redirectUrl, true, 302);
+            oxRegistry::getUtils()->redirect($redirectUrl, true, $responseStatus);
         }
     }
 

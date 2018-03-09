@@ -75,7 +75,7 @@ class KlarnaOrderValidator extends oxBase
     {
         // remove services from articles list
         foreach ($this->aOrderData['order_lines'] as $index => $aItem) {
-            if (strstr($aItem['reference'], $this->_sReferencePrefix)) {
+            if ($this->isService($aItem)) {
                 unset($this->aOrderData['order_lines'][$index]);
             }
         }
@@ -118,40 +118,34 @@ class KlarnaOrderValidator extends oxBase
         foreach ($mergedProducts as $itemKey => $itemAmount) {
             $oArticleObject->klarna_loadByArtNum($itemKey);
 
-            if (!$oArticleObject->isLoaded()) {
-                $this->_aResultErrors[] =
-                    sprintf(
-                        $oLang->translateString(
-                            'ERROR_MESSAGE_ARTICLE_ARTICLE_DOES_NOT_EXIST',
-                            $oLang->getBaseLanguage()
-                        ),
-                        $itemKey
-                    );
+            if ($oArticleObject->checkForStock($itemAmount) !== true) {
+                $this->_aResultErrors['KL_ERROR_NOT_ENOUGH_IN_STOCK'] = $itemKey;
+                return;
+            }
 
+            if (!$oArticleObject->isLoaded()) {
+                $this->_aResultErrors['ERROR_MESSAGE_ARTICLE_ARTICLE_DOES_NOT_EXIST'] = $itemKey;
                 return;
             }
 
             if (!$oArticleObject->isBuyable()) {
-                $this->_aResultErrors[] =
-                    sprintf(
-                        $oLang->translateString(
-                            'ERROR_MESSAGE_ARTICLE_ARTICLE_NOT_BUYABLE',
-                            $oLang->getBaseLanguage()
-                        ),
-                        $itemKey
-                    );
-
-                return;
-            }
-
-            if ($oArticleObject->checkForStock($itemAmount) !== true) {
-                $this->_aResultErrors[] = sprintf($oLang->translateString(
-                    'KL_ERROR_NOT_ENOUGH_IN_STOCK', $oLang->getBaseLanguage()),
-                    $itemKey);
-
+                $this->_aResultErrors['ERROR_MESSAGE_ARTICLE_ARTICLE_NOT_BUYABLE'] = $itemKey;
                 return;
             }
         }
+    }
+
+    public function isValid()
+    {
+        return count($this->_aResultErrors) === 0;
+    }
+
+    /** @param $item array
+     * @return string
+     */
+    protected function isService($item)
+    {
+        return strpos($item['reference'], $this->_sReferencePrefix) === 0;
     }
 
 }

@@ -3,6 +3,7 @@ namespace Klarna\Klarna\Controllers;
 
 use Klarna\Klarna\Core\KlarnaConsts;
 use Klarna\Klarna\Core\KlarnaUtils;
+use OxidEsales\Eshop\Core\Registry as oxRegistry;
 
 class KlarnaViewConfig extends KlarnaViewConfig_parent
 {

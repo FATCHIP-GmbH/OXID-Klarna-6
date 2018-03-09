@@ -123,8 +123,9 @@ $aLang = array(
     'KL_PAY_LATER_TEXT'    => 'The option to pay later makes buying quicker and easier for customers: no need to fill out lengthy personal details or card number online.',
     'KL_SLICE_IT'          => 'Slice it',
     'KL_SLICE_IT_TEXT'     => 'Your customers can spread the cost of their purchases at a low interest rate, giving them flexibility and increased purchasing power. Our unique credit application requires minimal information and takes just seconds to complete.',
-    'KL_PAY_NOW'            => 'Pay Now',
-    'KL_PAY_NOW_TEXT'       => 'Customers who want to pay in full at checkout can do it quickly and securely with Klarna\'s Pay now',
+    'KL_PAY_NOW'      => 'Pay Now',
+    'KL_PAY_NOW_TEXT' => 'Customers who want to pay in full at checkout can do it quickly and securely with Klarnas Pay now-option - using credit/debit card or Direct bank transfer: Klarna Direkt, Sofort, SEPA Direct Debit.',
+
 
 
     'KL_EXTERNAL_PAYMENTS_ADMIN_DESC' => 'Here you can configure the External Payment Methods to use with the Klarna extension 

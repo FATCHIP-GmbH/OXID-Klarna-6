@@ -122,7 +122,7 @@ $aLang = array(
     'KL_SLICE_IT'                     => 'Slice it',
     'KL_SLICE_IT_TEXT'                => 'Mit “in Raten bezahlen” können Kunden die Einkaufssumme bei geringen Zinsen in Häppchen aufteilen. Das erhöht den Investitionsrahmen und die Kaufkraft. Klarna´s einzigartige Kreditbearbeitung erfordert nur wenige Augenblicke und minimale Dateneingabe. Der Kunde hat die Wahl zwischen fixen und flexiblen Raten.',
     'KL_PAY_NOW'                      => 'Sofort bezahlen',
-    'KL_PAY_NOW_TEXT'                 => 'Sofortüberweisung ermöglicht einfaches und direktes bezahlen per Direktüberweisung mit den vertrauten Online-Banking Daten. Alles ohne zusätzliche Registrierung oder zweites Konto (Wallet). Hohe Sicherheit verspricht das doppelstufige Online-Banking-Authentifizierungsverfahren mit PIN & TAN. ​Sofortüberweisung ist ein vom TÜV-Saarland zertifiziertes Zahlungssystem mit zertifiziertem Datenschutz.',
+    'KL_PAY_NOW_TEXT'                 => 'Kunden, die Beträge sofort vollständig beim Bestellabschluss bezahlen möchten, können Klarna´s pay now nutzen. Zur Auswahl steht Lastschrift und das Direktüberweisungsverfahren Sofort.',
     'KL_EXTERNAL_PAYMENTS_ADMIN_DESC' => 'Hier können Sie die External Payment Methods zur Verwendung mit dem Klarna Modul für den OXID eShop konfigurieren. Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips <i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="#doc-url">Handbuch</a> oder wenden Sie sich an den Klarna Integration Support.',
 
     'KL_EXTRA_MERCHANT_DATA_ADMIN_DESC' => 'Hier können Sie konfigurieren, ob ggf. Extra Merchant Data an Klarna übertragen werden soll. Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips <i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> oder wenden Sie sich an den Klarna Integration Support.',
@@ -252,5 +252,5 @@ $aLang = array(
     'KLARNA_CAPTURE_SUCCESSFULL'      => 'Der Betrag wurde erfolgreich abgebucht.',
     'KL_CAPUTRE_FAIL_ORDER_CANCELLED' => ' Die Bestellung konnte nicht abgebucht werden, da sie bereits storniert wurde.',
     'KL_ANONYMIZED_PRODUCT_TOOLTIP'   => 'Geben Sie hier die Zeichenfolge ein, die anstatt des tatsächlichen Produkttitels an Klarna gesendet werden soll.',
-    'KL_NO_REQUESTS_WILL_BE_SENT'     => 'Ihre Änderungen an dieser Bestellungen werden nicht an Klarna übertragen.',
+    'KL_NO_REQUESTS_WILL_BE_SENT'     => 'Ihre Änderungen an dieser Bestellung werden nicht an Klarna übertragen.',
 );
