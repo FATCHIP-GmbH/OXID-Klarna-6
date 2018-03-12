@@ -1,20 +1,27 @@
 <?php
+namespace Klarna\Klarna\Controllers;
 
-class klarna_thankyou extends klarna_thankyou_parent
+use Klarna\Klarna\Core\KlarnaCheckoutClient;
+use Klarna\Klarna\Core\KlarnaUtils;
+use OxidEsales\Eshop\Application\Model\Order;
+use OxidEsales\Eshop\Core\Exception\StandardException;
+use OxidEsales\Eshop\Core\Registry;
+
+class KlarnaThankyou extends KlarnaThankyou_parent
 {
     /**
      * @return mixed
-     * @throws oxSystemComponentException
+     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      */
     public function render()
     {
         $render = parent::render();
 
-        if (oxRegistry::getSession()->getVariable('paymentid') === 'klarna_checkout') {
+        if (Registry::getSession()->getVariable('paymentid') === 'klarna_checkout') {
 
 
-            $sKlarnaId = oxRegistry::getSession()->getVariable('klarna_checkout_order_id');
-            $oOrder = oxNew('oxorder');
+            $sKlarnaId = Registry::getSession()->getVariable('klarna_checkout_order_id');
+            $oOrder = oxNew(Order::class);
             $query = $oOrder->buildSelectString(array('klorderid' => $sKlarnaId));
             $oOrder->assignRecord($query);
             $sCountryISO = KlarnaUtils::getCountryISO($oOrder->getFieldData('oxbillcountryid'));
@@ -22,7 +29,7 @@ class klarna_thankyou extends klarna_thankyou_parent
 
             try {
                 $this->getKlarnaClient($sCountryISO)->getOrder($sKlarnaId);
-            } catch (oxException $e) {
+            } catch (StandardException $e) {
                 $e->debugOut();
             }
 
@@ -38,7 +45,8 @@ class klarna_thankyou extends klarna_thankyou_parent
 
     /**
      * @param null $sCountryISO
-     * @return KlarnaCheckoutClient|KlarnaClientBase
+     * @return KlarnaCheckoutClient | \Klarna\Klarna\Core\KlarnaClientBase
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function getKlarnaClient($sCountryISO = null)
     {

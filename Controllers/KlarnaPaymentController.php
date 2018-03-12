@@ -1,11 +1,11 @@
 <?php
 namespace Klarna\Klarna\Controllers;
 
+use Klarna\Klarna\Core\KlarnaPaymentsClient;
 use Klarna\Klarna\Models\KlarnaPayment as KlarnaPaymentModel;
 use Klarna\Klarna\Core\KlarnaConsts;
 use Klarna\Klarna\Core\KlarnaPayment;
 use Klarna\Klarna\Core\KlarnaUtils;
-use KlarnaPaymentsClient;
 use OxidEsales\Eshop\Application\Model\DeliverySetList;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Registry as oxRegistry;
@@ -60,7 +60,7 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
 
     /**
      * @return string
-     * @throws \ReflectionException
+     * @throws \oxSystemComponentException
      */
     public function render()
     {
@@ -160,6 +160,7 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
 
     /**
      * @return KlarnaPaymentsClient|KlarnaClientBase
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function getKlarnaClient()
     {

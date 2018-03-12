@@ -193,14 +193,14 @@ class KlarnaPayment extends BaseModel
 
     /**
      * Gets privet properties for checksum calculations
-     * @return ReflectionProperty[]
-     * @throws ReflectionException
+     * @return \ReflectionProperty[]
+     * @throws \ReflectionException
      */
     protected function getPrivateProperties()
     {
-        $reflect = new ReflectionClass($this);
+        $reflect = new \ReflectionClass($this);
 
-        return $reflect->getProperties(ReflectionProperty::IS_PRIVATE);
+        return $reflect->getProperties(\ReflectionProperty::IS_PRIVATE);
     }
 
     /**
@@ -237,7 +237,7 @@ class KlarnaPayment extends BaseModel
         $tStamp = oxRegistry::getSession()->getVariable('sTokenTimeStamp');
 
         if ($tStamp) {
-            $dt = new DateTime();
+            $dt = new \DateTime();
 
             if ($dt->getTimestamp() - $tStamp < 3590)
 
@@ -276,9 +276,8 @@ class KlarnaPayment extends BaseModel
 
     /**
      * Compares current country ISO with country ISO stored in the session
-     * @param $oUser oxUser | klarna_oxuser
+     * @param $oUser User | \Klarna\Klarna\Models\KlarnaUser
      * @return bool
-     * @throws oxSystemComponentException
      */
     public static function countryWasChanged($oUser)
     {
@@ -324,7 +323,7 @@ class KlarnaPayment extends BaseModel
     /**
      * Checks if the currency match to selected country
      * @return void
-     * @throws oxSystemComponentException
+     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      */
     public function validateCountryAndCurrency()
     {
@@ -367,7 +366,7 @@ class KlarnaPayment extends BaseModel
     /**
      * Validates KP order (this)
      * @return bool
-     * @throws oxSystemComponentException
+     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      */
     public function validateOrder()
     {
@@ -403,7 +402,7 @@ class KlarnaPayment extends BaseModel
             return true;
 
         if ($tStamp) {
-            $dt = new DateTime();
+            $dt = new \DateTime();
 
             if ($dt->getTimestamp() - $tStamp < $this->sessionTimeout)      // 86400s = 24h
 
@@ -459,7 +458,7 @@ class KlarnaPayment extends BaseModel
      * Compares order data checksums
      * If there is something to update it is added to $this->aUpdateData array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function checksumCheck()
     {
@@ -484,7 +483,7 @@ class KlarnaPayment extends BaseModel
      * Saves order checksums user and order data
      * KP method is saved earlier at the end of the constructor method (checkSmsCheck)
      * @param $splitedUpdateData
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function saveCheckSums($splitedUpdateData)
     {

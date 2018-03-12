@@ -1,5 +1,8 @@
 <?php
 namespace Klarna\Klarna\Models;
+use Klarna\Klarna\Core\KlarnaUtils;
+use OxidEsales\Eshop\Core\DatabaseProvider;
+use OxidEsales\Eshop\Core\Registry;
 
 /**
  * Class Klarna_oxArticle extends oxArticle class
@@ -48,8 +51,8 @@ class KlarnaArticle extends KlarnaArticle_parent
      */
     protected function _checkPreorderStatus()
     {
-        if (oxRegistry::getConfig()->getConfigParam('iKlarnaMaxDaysForPreorder')) {
-            $iInDays = (int)oxRegistry::getConfig()->getConfigParam('iKlarnaMaxDaysForPreorder');
+        if (Registry::getConfig()->getConfigParam('iKlarnaMaxDaysForPreorder')) {
+            $iInDays = (int)Registry::getConfig()->getConfigParam('iKlarnaMaxDaysForPreorder');
             if ($this->willNotExpired($iInDays)) {
                 return $this->_blShowMonthlyCost = false;
             }
@@ -65,11 +68,11 @@ class KlarnaArticle extends KlarnaArticle_parent
     protected function _checkShowCost()
     {
         $blReturn = true;
-        $oView    = oxRegistry::getConfig()->getActiveView();
+        $oView    = Registry::getConfig()->getActiveView();
         $sCurView = $oView->getClassName();
 
         // if OXID version < 4.7.0
-        if (version_compare(oxRegistry::getConfig()->getVersion(), '4.7.0') == -1) {
+        if (version_compare(Registry::getConfig()->getVersion(), '4.7.0') == -1) {
             $navigationParam = '';
         } else {
             $navigationParam = $oView->getViewParameter('_navurlparams');
@@ -133,7 +136,7 @@ class KlarnaArticle extends KlarnaArticle_parent
      */
     protected function _checkShowCostInDetails()
     {
-        if (oxRegistry::getConfig()->getConfigParam('blKlarnaShowMonthlyRtsDetails')) {
+        if (Registry::getConfig()->getConfigParam('blKlarnaShowMonthlyRtsDetails')) {
             return true;
         }
 
@@ -145,7 +148,7 @@ class KlarnaArticle extends KlarnaArticle_parent
      */
     protected function _checkShowCostInList()
     {
-        if (oxRegistry::getConfig()->getConfigParam('blKlarnaShowMonthlyRtsList')) {
+        if (Registry::getConfig()->getConfigParam('blKlarnaShowMonthlyRtsList')) {
             return true;
         }
 
@@ -157,7 +160,7 @@ class KlarnaArticle extends KlarnaArticle_parent
      */
     protected function _checkShowCostInStart()
     {
-        if (oxRegistry::getConfig()->getConfigParam('blKlarnaShowMonthlyRtsStart')) {
+        if (Registry::getConfig()->getConfigParam('blKlarnaShowMonthlyRtsStart')) {
             return true;
         }
 
@@ -172,7 +175,7 @@ class KlarnaArticle extends KlarnaArticle_parent
      */
     protected function _checkMinimumAmount($sCountry)
     {
-        $dCurrentMinAmount = oxRegistry::getConfig()->getConfigParam('iKlarnaMonthlyRateMinAmount' . $sCountry);
+        $dCurrentMinAmount = Registry::getConfig()->getConfigParam('iKlarnaMonthlyRateMinAmount' . $sCountry);
         if ($dCurrentMinAmount && ((double)$dCurrentMinAmount > $this->getPrice()->getBruttoPrice())) {
             return false;
         }
@@ -199,7 +202,7 @@ class KlarnaArticle extends KlarnaArticle_parent
      *
      * @param $sArtNum
      * @return object oxarticle
-     * @throws oxConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      */
     public function klarna_loadByArtNum($sArtNum)
     {
@@ -207,7 +210,7 @@ class KlarnaArticle extends KlarnaArticle_parent
         if (strlen($sArtNum) === 64) {
             $sArtNum   .= '%';
             $sSQL      = "SELECT art.oxid FROM {$sArticleTable} art WHERE art.OXACTIVE=1 AND art.OXARTNUM LIKE \"{$sArtNum}\"";
-            $articleId = oxDb::getDb(ADODB_FETCH_ASSOC)->getOne($sSQL);
+            $articleId = DatabaseProvider::getDb(ADODB_FETCH_ASSOC)->getOne($sSQL);
         } else {
             if (KlarnaUtils::getShopConfVar('blKlarnaEnableAnonymization')) {
                 $sSQL = "SELECT oxartid 
@@ -218,7 +221,7 @@ class KlarnaArticle extends KlarnaArticle_parent
             } else {
                 $sSQL = "SELECT art.oxid FROM {$sArticleTable} art WHERE art.OXACTIVE=1 AND art.OXARTNUM = ?";
             }
-            $articleId = oxDb::getDb(ADODB_FETCH_ASSOC)->getOne($sSQL, array($sArtNum));
+            $articleId = DatabaseProvider::getDb(ADODB_FETCH_ASSOC)->getOne($sSQL, array($sArtNum));
         }
 
         return $this->load($articleId);
@@ -238,9 +241,9 @@ class KlarnaArticle extends KlarnaArticle_parent
 
         if (KlarnaUtils::getShopConfVar('blKlarnaEnableAnonymization')) {
             if ($iOrderLang) {
-                $lang = strtoupper(oxRegistry::getLang()->getLanguageAbbr($iOrderLang));
+                $lang = strtoupper(Registry::getLang()->getLanguageAbbr($iOrderLang));
             } else {
-                $lang = strtoupper(oxRegistry::getLang()->getLanguageAbbr());
+                $lang = strtoupper(Registry::getLang()->getLanguageAbbr());
             }
 
             $name = KlarnaUtils::getShopConfVar('sKlarnaAnonymizedProductTitle_' . $lang);
@@ -252,13 +255,12 @@ class KlarnaArticle extends KlarnaArticle_parent
         $name = $this->getFieldData('oxtitle');
 
         if (!$name && $parent = $this->getParentArticle()) {
-            $oxArticle = oxNew('oxarticle');
             if ($iOrderLang) {
-                $oxArticle->loadInLang($iOrderLang, $parent->getId());
+                $this->loadInLang($iOrderLang, $parent->getId());
             } else {
-                $oxArticle->load($parent->getId());
+                $this->load($parent->getId());
             }
-            $name = $oxArticle->getFieldData('oxtitle');
+            $name = $this->getFieldData('oxtitle');
         }
 
         return html_entity_decode($name, ENT_QUOTES) ?: '(no title)';
@@ -292,7 +294,7 @@ class KlarnaArticle extends KlarnaArticle_parent
 
             $link = $this->getPictureUrl();
         }
-        //var_dump($link);
+
         return $link ?: null;
     }
 
@@ -340,7 +342,6 @@ class KlarnaArticle extends KlarnaArticle_parent
     }
 
     /**
-     * @param oxArticle $oItem
      * @return string|null
      */
     public function kl_getArticleManufacturer()

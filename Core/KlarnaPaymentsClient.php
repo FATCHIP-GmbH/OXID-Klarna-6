@@ -1,4 +1,10 @@
 <?php
+namespace Klarna\Klarna\Core;
+
+use Klarna\Klarna\Exception\KlarnaClientException;
+use Klarna\Klarna\Exception\KlarnaOrderNotFoundException;
+use Klarna\Klarna\Exception\KlarnaWrongCredentialsException;
+use OxidEsales\Eshop\Core\Registry;
 
 class KlarnaPaymentsClient extends KlarnaClientBase
 {
@@ -26,13 +32,11 @@ class KlarnaPaymentsClient extends KlarnaClientBase
     /**
      * @return array
      * @throws KlarnaClientException
-     * @throws oxException
-     * @throws oxSystemComponentException
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function createOrUpdateSession()
     {
-        $oSession    = oxRegistry::getSession();
+        $oSession    = Registry::getSession();
         list($requestBody, $splittedUpdateData) = $this->formatOrderData();
 
         if (is_null($requestBody)) {
@@ -49,7 +53,7 @@ class KlarnaPaymentsClient extends KlarnaClientBase
                 KlarnaPayment::cleanUpSession();
                 list($requestBody, $splittedUpdateData) = $this->formatOrderData();
                 $this->aSessionData = $this->postSession($requestBody);
-                oxRegistry::getSession()->setVariable('sSessionTimeStamp', $this->getTimeStamp());
+                Registry::getSession()->setVariable('sSessionTimeStamp', $this->getTimeStamp());
                 $this->_oKlarnaOrder->saveCheckSums($splittedUpdateData);
                 $oSession->setVariable('klarna_session_data', $this->aSessionData);
                 if(KlarnaUtils::is_ajax()){
@@ -60,7 +64,7 @@ class KlarnaPaymentsClient extends KlarnaClientBase
         } else {
             // create a new order
             $this->aSessionData = $this->postSession($requestBody);
-            oxRegistry::getSession()->setVariable('sSessionTimeStamp', $this->getTimeStamp());
+            Registry::getSession()->setVariable('sSessionTimeStamp', $this->getTimeStamp());
             $oSession->setVariable('klarna_session_data', $this->aSessionData);
         }
 
@@ -72,8 +76,10 @@ class KlarnaPaymentsClient extends KlarnaClientBase
      * @param string $session_id
      * @return array
      * @throws KlarnaClientException
-     * @throws oxException
-     * @throws oxSystemComponentException
+     * @throws \Klarna\Klarna\Exception\KlarnaOrderNotFoundException
+     * @throws \Klarna\Klarna\Exception\KlarnaOrderReadOnlyException
+     * @throws \Klarna\Klarna\Exception\KlarnaWrongCredentialsException
+     * @throws \OxidEsales\Eshop\Core\Exception\StandardException
      */
     protected function postSession($data, $session_id = '')
     {
@@ -95,8 +101,10 @@ class KlarnaPaymentsClient extends KlarnaClientBase
      * @param $updateData array
      * @return array
      * @throws KlarnaClientException
-     * @throws oxException
-     * @throws oxSystemComponentException
+     * @throws \Klarna\Klarna\Exception\KlarnaOrderNotFoundException
+     * @throws \Klarna\Klarna\Exception\KlarnaOrderReadOnlyException
+     * @throws \Klarna\Klarna\Exception\KlarnaWrongCredentialsException
+     * @throws \OxidEsales\Eshop\Core\Exception\StandardException
      */
     public function updateSession($updateData)
     {
@@ -112,7 +120,7 @@ class KlarnaPaymentsClient extends KlarnaClientBase
         if (isset($this->sSessionId)) {
             return $this->sSessionId;
         } else {
-            $this->aSessionData = oxRegistry::getSession()->getVariable('klarna_session_data');
+            $this->aSessionData = Registry::getSession()->getVariable('klarna_session_data');
             if (isset($this->aSessionData['session_id']))
                 return $this->sSessionId = $this->aSessionData['session_id'];
             else
@@ -123,8 +131,7 @@ class KlarnaPaymentsClient extends KlarnaClientBase
     /**
      * @param $session_id
      * @return array|null
-     * @throws oxException
-     * @throws oxSystemComponentException
+     * @throws \OxidEsales\Eshop\Core\Exception\StandardException
      */
     public function getSessionData($session_id = null)
     {
@@ -154,11 +161,11 @@ class KlarnaPaymentsClient extends KlarnaClientBase
 
     /**
      * @return mixed
-     * @throws oxSystemComponentException
+     * @throws \oxSystemComponentException
      */
     public function createNewOrder()
     {
-        $sAuthToken         = oxRegistry::getSession()->getVariable('sAuthToken');
+        $sAuthToken         = Registry::getSession()->getVariable('sAuthToken');
         $url                = sprintf(self::PAYMENTS_AUTHORIZATION_ENDPOINT, $sAuthToken . '/order');
         $currentSessionData = json_encode(
             array_merge(
@@ -189,7 +196,7 @@ class KlarnaPaymentsClient extends KlarnaClientBase
      * @param $method
      * @return mixed
      */
-    protected function handleNewOrderResponse(Requests_Response $oResponse, $class, $method)
+    protected function handleNewOrderResponse(\Requests_Response $oResponse, $class, $method)
     {
         $successCodes = array(200, 201, 204);
         $errorCodes   = array(400, 500, 503);
@@ -198,7 +205,7 @@ class KlarnaPaymentsClient extends KlarnaClientBase
             if (in_array($oResponse->status_code, $successCodes)) {
                 KlarnaPayment::cleanUpSession();
                 $result = json_decode($oResponse->body, true);
-                oxRegistry::getSession()->setVariable('kp_order_id', $result['order_id']);
+                Registry::getSession()->setVariable('kp_order_id', $result['order_id']);
 
                 return $result;
             }
@@ -271,7 +278,7 @@ class KlarnaPaymentsClient extends KlarnaClientBase
 
     protected function getTimeStamp()
     {
-        $dt = new DateTime();
+        $dt = new \DateTime();
 
         return $dt->getTimestamp();
     }

@@ -46,8 +46,6 @@ abstract class KlarnaClientBase extends Base
     {
         $calledClass = get_called_class();
         if (self::$instance === null || !self::$instance instanceof $calledClass) {
-            require_once __DIR__ . '/../Requests/library/Requests.php';
-            \Requests::register_autoloader();
 
             self::$instance               = new $calledClass();
             $aKlarnaCredentials           = KlarnaUtils::getAPICredentials($sCountryISO);

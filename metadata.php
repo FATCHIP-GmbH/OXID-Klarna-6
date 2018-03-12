@@ -2,31 +2,37 @@
 
 use Klarna\Klarna\Components\KlarnaBasketComponent;
 use Klarna\Klarna\Components\KlarnaUserComponent;
-
+use Klarna\Klarna\Controlelrs\KlarnaUserController;
 use Klarna\Klarna\Controllers\KlarnaAcknowledge;
 use Klarna\Klarna\Controllers\KlarnaAjax;
 use Klarna\Klarna\Controllers\KlarnaBasketController;
 use Klarna\Klarna\Controllers\KlarnaEpmDispatcher;
 use Klarna\Klarna\Controllers\KlarnaExpress;
+use Klarna\Klarna\Controllers\KlarnaOrderController;
 use Klarna\Klarna\Controllers\KlarnaPaymentController;
+use Klarna\Klarna\Controllers\KlarnaThankyou;
 use Klarna\Klarna\Controllers\KlarnaValidate;
 use Klarna\Klarna\Controllers\KlarnaViewConfig;
+use Klarna\Klarna\Models\KlarnaArticle;
 use Klarna\Klarna\Models\KlarnaBasket;
 use Klarna\Klarna\Models\KlarnaCountryList;
+use Klarna\Klarna\Models\KlarnaOrder;
 use Klarna\Klarna\Models\KlarnaPayment;
 use Klarna\Klarna\Models\KlarnaUser;
 
 use OxidEsales\Eshop\Application\Component\BasketComponent;
 use OxidEsales\Eshop\Application\Component\UserComponent;
-
 use OxidEsales\Eshop\Application\Controller\BasketController;
+use OxidEsales\Eshop\Application\Controller\OrderController;
 use OxidEsales\Eshop\Application\Controller\PaymentController;
-
+use OxidEsales\Eshop\Application\Controller\ThankYouController;
+use OxidEsales\Eshop\Application\Controller\UserController;
 use OxidEsales\Eshop\Application\Model\CountryList;
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Application\Model\Basket;
-
+use OxidEsales\Eshop\Application\Model\Article;
+use OxidEsales\Eshop\Core\Email;
 use OxidEsales\Eshop\Core\ViewConfig;
 
 
@@ -63,58 +69,26 @@ $aModule = array(
         'KlarnaValidate'         => KlarnaValidate::class,
     ),
 
-    //    'files' => array(
-    //        // core classes
-    //        'KlarnaClientBase'                 => 'klarna/klarna/core/KlarnaClientBase.php',
-    //        'KlarnaCheckoutClient'             => 'klarna/klarna/core/KlarnaCheckoutClient.php',
-    //        'KlarnaPaymentsClient'             => 'klarna/klarna/core/KlarnaPaymentsClient.php',
-    //        'KlarnaOrderManagementClient'      => 'klarna/klarna/core/KlarnaOrderManagementClient.php',
-    //        'KlarnaFormatter'                  => 'klarna/klarna/core/KlarnaFormatter.php',
-    //        'klarna_logs'                      => 'klarna/klarna/core/klarna_logs.php',
-    //        'KlarnaPayment'                    => 'klarna/klarna/core/KlarnaPayment.php',
-    //        'KlarnaOrder'                      => 'klarna/klarna/core/KlarnaOrder.php',
-    //        'KlarnaOrderValidator'             => 'klarna/klarna/core/KlarnaOrderValidator.php',
-    //
-
-    //
-    //
-    //        // models
-    //        'klarna_emd'                       => 'klarna/klarna/models/klarna_emd.php',
-    //        'klarna_customer_account_info'     => 'klarna/klarna/models/emd_payload/klarna_customer_account_info.php',
-    //        'klarna_payment_history_full'      => 'klarna/klarna/models/emd_payload/klarna_payment_history_full.php',
-    //        'klarna_pass_through'              => 'klarna/klarna/models/emd_payload/klarna_pass_through.php',
-    //        'klarna_invoicepdfarticlesummary'  => 'klarna/klarna/models/klarna_invoicepdfarticlesummary.php',
-    //
-    //        //Exceptions
-    //        'KlarnaClientException'            => 'klarna/klarna/exception/KlarnaClientException.php',
-    //        'KlarnaWrongCredentialsException'  => 'klarna/klarna/exception/KlarnaWrongCredentialsException.php',
-    //        'KlarnaOrderNotFoundException'     => 'klarna/klarna/exception/KlarnaOrderNotFoundException.php',
-    //        'KlarnaOrderReadOnlyException'     => 'klarna/klarna/exception/KlarnaOrderReadOnlyException.php',
-    //        'KlarnaConfigException'            => 'klarna/klarna/exception/KlarnaConfigException.php',
-    //        'KlarnaCaptureNotAllowedException' => 'klarna/klarna/exception/KlarnaCaptureNotAllowedException.php',
-    //        'KlarnaBasketTooLargeException'    => 'klarna/klarna/exception/KlarnaBasketTooLargeException.php',
-    //    ),
-
     'extend' => array(
         // models
-        //Basket::class           => KlarnaBasket::class,
-        User::class              => KlarnaUser::class,
-        //        'oxarticle'      => 'klarna/klarna/models/klarna_oxarticle',
-        //        'oxorder'        => 'klarna/klarna/models/klarna_oxorder',
-        //        'oxemail'        => 'klarna/klarna/models/klarna_oxemail',
+        Basket::class             => KlarnaBasket::class,
+        User::class               => KlarnaUser::class,
+        Article::class            => KlarnaArticle::class,
+        Order::class              => KlarnaOrder::class,
+        Email::class              => KlarnaEmail::class,
         //        'oxaddress'      => 'klarna/klarna/models/klarna_oxaddress',
-        Payment::class           => KlarnaPayment::class,
-        CountryList::class       => KlarnaCountryList::class,
+        Payment::class            => KlarnaPayment::class,
+        CountryList::class        => KlarnaCountryList::class,
         //        'oxorderarticle' => 'klarna/klarna/models/klarna_oxorderarticle',
         //        'oxuserpayment'  => 'klarna/klarna/models/klarna_oxuserpayment',
 
         // controllers
-        //        'order'          => 'klarna/klarna/controllers/klarna_order',
-        //        'thankyou'       => 'klarna/klarna/controllers/klarna_thankyou',
-        ViewConfig::class        => KlarnaViewConfig::class,
-        //        'user'           => 'klarna/klarna/controllers/klarna_user',
-        PaymentController::class => KlarnaPaymentController::class,
-        BasketController::class  => KlarnaBasketController::class,
+        OrderController::class    => KlarnaOrderController::class,
+        ThankYouController::class => KlarnaThankyou::class,
+        ViewConfig::class         => KlarnaViewConfig::class,
+        UserController::class     => KlarnaUserController::class,
+        PaymentController::class  => KlarnaPaymentController::class,
+        BasketController::class   => KlarnaBasketController::class,
         //
         //        // admin
         //        'order_address'  => 'klarna/klarna/controllers/admin/klarna_order_address',
@@ -124,8 +98,8 @@ $aModule = array(
         //        'order_overview' => 'klarna/klarna/controllers/admin/klarna_order_overview',
         //
         //components
-        BasketComponent::class   => KlarnaBasketComponent::class,
-        UserComponent::class     => KlarnaUserComponent::class,
+        BasketComponent::class    => KlarnaBasketComponent::class,
+        UserComponent::class      => KlarnaUserComponent::class,
         //        'oxwservicemenu' => 'klarna/klarna/components/widgets/oxw_klarna_servicemenu',
 
     ),
