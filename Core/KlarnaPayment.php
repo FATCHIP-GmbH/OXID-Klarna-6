@@ -1,10 +1,15 @@
 <?php
+namespace Klarna\Klarna\Core;
+use OxidEsales\Eshop\Application\Model\Basket;
+use OxidEsales\Eshop\Application\Model\User;
+use OxidEsales\Eshop\Core\Model\BaseModel;
+use OxidEsales\Eshop\Core\Registry as oxRegistry;
 
 /**
  * Class KlarnaPayment represents Klarna Payment Order.
  *
  */
-class KlarnaPayment extends oxBase
+class KlarnaPayment extends BaseModel
 {
 
     /** @var array Of session keys used in KP mode */
@@ -77,20 +82,14 @@ class KlarnaPayment extends oxBase
 
     /**
      * KlarnaPayment constructor.
-     * @param oxBasket | klarnaBasket $oBasket
-     * @param oxUser | klarna_oxuser $oUser
+     * @param Basket $oBasket
+     * @param User $oUser
      * @param array $aPost used to pass ajax request data like selected payment method
-     * @throws oxArticleException
-     * @throws oxArticleInputException
-     * @throws oxException
-     * @throws oxNoArticleException
-     * @throws oxSystemComponentException
-     * @throws TypeError
-     * @throws ReflectionException
+     * @throws \oxSystemComponentException
      */
-    public function __construct(oxBasket $oBasket, oxUser $oUser, $aPost = array())
+    public function __construct(Basket $oBasket, User $oUser, $aPost = array())
     {
-        if (!$oUser instanceof oxUser) {
+        if (!$oUser instanceof User) {
             $oUser = $this->getUser();
         }
 

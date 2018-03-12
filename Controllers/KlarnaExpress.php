@@ -271,7 +271,8 @@ class KlarnaExpress extends FrontendController
     }
 
     /**
-     * @return KlarnaCheckoutClient|KlarnaClientBase
+     * @return KlarnaCheckoutClient | \Klarna\Klarna\Core\KlarnaClientBase
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function getKlarnaClient()
     {

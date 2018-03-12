@@ -2,7 +2,11 @@
 namespace Klarna\Klarna\Models;
 
 use Klarna\Klarna\Core\KlarnaUtils;
+use Klarna\Klarna\Models\EmdPayload\KlarnaCustomerAccountInfo;
+use Klarna\Klarna\Models\EmdPayload\KlarnaPassThrough;
+use Klarna\Klarna\Models\EmdPayload\KlarnaPaymentHistoryFull;
 use OxidEsales\Eshop\Application\Model\User;
+
 
 
 /**
@@ -22,9 +26,10 @@ class KlarnaEMD
     /**
      * Get attachments from basket
      *
-     * @param oxUser $oUser
+     * @param User $oUser
      * @return array
-     * @throws oxSystemComponentException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \oxSystemComponentException
      */
     public function getAttachments(User $oUser)
     {
@@ -46,14 +51,13 @@ class KlarnaEMD
     /**
      * Get customer account info
      *
-     * @param oxUser $oUser
+     * @param User $oUser
      * @return array
-     * @throws oxSystemComponentException
      */
     protected function getCustomerAccountInfo(User $oUser)
     {
-        /** @var Klarna_Customer_Account_Info $oKlarnaPayload */
-        $oKlarnaPayload = oxNew('Klarna_Customer_Account_Info');
+        /** @var KlarnaCustomerAccountInfo $oKlarnaPayload */
+        $oKlarnaPayload = new KlarnaCustomerAccountInfo;
 
         return $oKlarnaPayload->getCustomerAccountInfo($oUser);
     }
@@ -61,14 +65,15 @@ class KlarnaEMD
     /**
      * Get payment history
      *
-     * @param oxUser $oUser
+     * @param User $oUser
      * @return array
-     * @throws oxSystemComponentException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \oxSystemComponentException
      */
-    protected function getPaymentHistoryFull(oxUser $oUser)
+    protected function getPaymentHistoryFull(User $oUser)
     {
-        /** @var Klarna_Payment_History_Full $oKlarnaPayload */
-        $oKlarnaPayload = oxNew('Klarna_Payment_History_Full');
+        /** @var KlarnaPaymentHistoryFull $oKlarnaPayload */
+        $oKlarnaPayload = new KlarnaPaymentHistoryFull;
 
         return $oKlarnaPayload->getPaymentHistoryFull($oUser);
     }
@@ -77,12 +82,11 @@ class KlarnaEMD
      * To be implemented by the merchant
      *
      * @return array
-     * @throws oxSystemComponentException
      */
     protected function getPassThroughField()
     {
-        /** @var Klarna_Pass_Through $oKlarnaPayload */
-        $oKlarnaPayload = oxNew('Klarna_Pass_Through');
+        /** @var KlarnaPassThrough $oKlarnaPayload */
+        $oKlarnaPayload = new KlarnaPassThrough;
 
         return $oKlarnaPayload->getPassThroughField();
     }
