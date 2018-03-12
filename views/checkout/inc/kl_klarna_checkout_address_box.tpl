@@ -12,7 +12,7 @@
             <form name="address" action="[{$oViewConf->getSslSelfLink()}]" method="post" role="form">
                 <div class="hidden">
                     [{$oViewConf->getHiddenSid()}]
-                    <input type="hidden" name="cl" value="klarna_express">
+                    <input type="hidden" name="cl" value="KlarnaExpress">
                     <input type="hidden" name="fnc" value="setKlarnaDeliveryAddress">
                     <input type="hidden" name="klarna_address_id" value="">
                 </div>

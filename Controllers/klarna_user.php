@@ -22,7 +22,7 @@ class klarna_user extends klarna_user_parent
                 /*&& !oxRegistry::getConfig()->getRequestParameter('non_kco_global_country')*/
             ) {
                 oxRegistry::getUtils()->redirect(oxRegistry::getConfig()->getShopHomeURL() .
-                                                 'cl=klarna_express', false, 302);
+                                                 'cl=KlarnaExpress', false, 302);
             }
 //
 //            if ($this->getUser() && !$this->getUser()->isFake() &&
@@ -81,7 +81,7 @@ class klarna_user extends klarna_user_parent
 //        oxRegistry::getSession()->deleteVariable('klarna_checkout_order_id');
 
 
-        $sUrl = oxRegistry::getConfig()->getShopSecureHomeURL() . 'cl=klarna_express&reset_klarna_country=1';
+        $sUrl = oxRegistry::getConfig()->getShopSecureHomeURL() . 'cl=KlarnaExpress&reset_klarna_country=1';
         oxRegistry::getUtils()->showMessageAndExit($sUrl);
     }
 }

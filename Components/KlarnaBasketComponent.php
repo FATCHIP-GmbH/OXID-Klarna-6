@@ -18,7 +18,7 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
      *
      * @var string
      */
-    protected $_sRedirectController = 'klarna_express';
+    protected $_sRedirectController = 'KlarnaExpress';
 
     /**
      * Executing action from details page

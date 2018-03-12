@@ -687,7 +687,7 @@ class Klarna_Order extends Klarna_Order_parent
         $paymentId = oxRegistry::getConfig()->getRequestParameter('payment_id');
         if (!$orderId || !$paymentId || !$this->isActivePayment($paymentId)) {
             oxRegistry::get("oxUtilsView")->addErrorToDisplay('KLARNA_WENT_WRONG_TRY_AGAIN', false, true);
-            $redirectUrl = oxRegistry::getConfig()->getShopSecureHomeURL() . 'cl=klarna_express';
+            $redirectUrl = oxRegistry::getConfig()->getShopSecureHomeURL() . 'cl=KlarnaExpress';
             oxRegistry::getUtils()->redirect($redirectUrl, true, 302);
         }
 
@@ -731,7 +731,7 @@ class Klarna_Order extends Klarna_Order_parent
         } else {
             KlarnaUtils::fullyResetKlarnaSession();
             oxRegistry::get("oxUtilsView")->addErrorToDisplay('KLARNA_WENT_WRONG_TRY_AGAIN', false, true);
-            $redirectUrl = oxRegistry::getConfig()->getShopSecureHomeURL() . 'cl=klarna_express';
+            $redirectUrl = oxRegistry::getConfig()->getShopSecureHomeURL() . 'cl=KlarnaExpress';
             oxRegistry::getUtils()->redirect($redirectUrl, true, 302);
         }
     }

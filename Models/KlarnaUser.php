@@ -8,7 +8,7 @@ use OxidEsales\Eshop\Application\Model\Address;
 use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Field;
-use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Registry as oxRegistry;
 use OxidEsales\Eshop\Core\Request;
 
 /**
@@ -40,8 +40,6 @@ class KlarnaUser extends KlarnaUser_parent
 
     /**
      * @return array
-     * @throws oxSystemComponentException
-     * @throws TypeError
      */
     public function getKlarnaData()
     {
@@ -67,32 +65,32 @@ class KlarnaUser extends KlarnaUser_parent
                 $billingAddress            = KlarnaFormatter::oxidToKlarnaAddress($this);
                 $result['billing_address'] = isset($billingAddress) ? $billingAddress : null;
 
-                if (Registry::getSession()->hasVariable('deladrid') && $blShowShippingAddress) {
-                    $delAddressOxid = Registry::getSession()->getVariable('deladrid');
+                if (oxRegistry::getSession()->hasVariable('deladrid') && $blShowShippingAddress) {
+                    $delAddressOxid = oxRegistry::getSession()->getVariable('deladrid');
                     $oAddress       = oxNew(Address::class);
                     $oAddress->load($delAddressOxid);
                     $shippingAddress            = KlarnaFormatter::oxidToKlarnaAddress($oAddress);
                     $result['shipping_address'] = isset($shippingAddress) ? $shippingAddress : null;
                 }
 
-            } elseif ($this->_type == self::NOT_EXISTING && Registry::getSession()->hasVariable('invadr')) {
+            } elseif ($this->_type == self::NOT_EXISTING && oxRegistry::getSession()->hasVariable('invadr')) {
 
-                $this->assign(Registry::getSession()->getVariable('invadr'));
+                $this->assign(oxRegistry::getSession()->getVariable('invadr'));
                 $billingAddress            = KlarnaFormatter::oxidToKlarnaAddress($this);
                 $result['billing_address'] = isset($billingAddress) ? $billingAddress : null;
             }
         }
 
-        if ($sCountryISO = Registry::getConfig()->getRequestParameter('selected-country')) {
-            if (Registry::getSession()->hasVariable('invadr')) {
+        if ($sCountryISO = oxRegistry::getConfig()->getRequestParameter('selected-country')) {
+            if (oxRegistry::getSession()->hasVariable('invadr')) {
                 $result['billing_address']['country'] = $sCountryISO;
-                Registry::getSession()->deleteVariable('invadr');
+                oxRegistry::getSession()->deleteVariable('invadr');
             } else {
                 $result['billing_address'] = array(
                     'country' => $sCountryISO,
                 );
             }
-            Registry::getSession()->setVariable('sCountryISO', $sCountryISO);
+            oxRegistry::getSession()->setVariable('sCountryISO', $sCountryISO);
         }
 
         return $result;
@@ -112,9 +110,9 @@ class KlarnaUser extends KlarnaUser_parent
 
         $billingAddress = KlarnaFormatter::oxidToKlarnaAddress($this);
 
-        if (Registry::getSession()->hasVariable('deladrid')) {
+        if (oxRegistry::getSession()->hasVariable('deladrid')) {
             $oAddress = oxNew(Address::class);
-            $oAddress->load(Registry::getSession()->getVariable('deladrid'));
+            $oAddress->load(oxRegistry::getSession()->getVariable('deladrid'));
             $shippingAddress = KlarnaFormatter::oxidToKlarnaAddress($oAddress);
         }
 
@@ -125,7 +123,7 @@ class KlarnaUser extends KlarnaUser_parent
             'attachment'       => $this->addAttachmentsData(),
         );
 
-        if (!Registry::getSession()->getVariable('userDataHash'))
+        if (!oxRegistry::getSession()->getVariable('userDataHash'))
             $this->saveHash(md5(json_encode($aUserData)));
 
         return $aUserData;
@@ -164,7 +162,7 @@ class KlarnaUser extends KlarnaUser_parent
     {
         $oCountry    = $this->getKlarnaDeliveryCountry();
         $sCountryISO = $oCountry->getFieldData('oxisoalpha2');
-        Registry::getSession()->setVariable('sCountryISO', $sCountryISO);
+        oxRegistry::getSession()->setVariable('sCountryISO', $sCountryISO);
 
         return strtoupper($sCountryISO);
     }
@@ -178,7 +176,7 @@ class KlarnaUser extends KlarnaUser_parent
         $oCountry = oxNew(Country::class);
         // KCO
         if (KlarnaUtils::isKlarnaCheckoutEnabled()) {
-            if (!($sCountryISO = Registry::getSession()->getVariable('sCountryISO'))) {
+            if (!($sCountryISO = oxRegistry::getSession()->getVariable('sCountryISO'))) {
 
                 if (!($sCountryId = $this->getFieldData('oxcountryid'))) {
                     $sCountryISO = KlarnaUtils::getShopConfVar('sKlarnaDefaultCountry');
@@ -320,8 +318,8 @@ class KlarnaUser extends KlarnaUser_parent
         $oAddress->oxaddress__oxuserid  = new Field($this->getId(), Field::T_RAW);
         $oAddress->oxaddress__oxcountry = $this->getUserCountry($oAddress->oxaddress__oxcountryid->value);
 
-        if ($oAddress->isValid() && $this->kl_getType() !== KlarnaUser::REGISTERED) {
-            Registry::getSession()->setVariable('blshowshipaddress', 1);
+        if ($oAddress->isValid() && $this->kl_getType() !== self::REGISTERED) {
+            oxRegistry::getSession()->setVariable('blshowshipaddress', 1);
 
             $sAddressOxid = $oAddress->save();
             $this->updateSessionDeliveryAddressId($sAddressOxid);
@@ -334,13 +332,13 @@ class KlarnaUser extends KlarnaUser_parent
      */
     public function updateSessionDeliveryAddressId($sAddressOxid = null)
     {
-        $oSession = Registry::getSession();
+        $oSession = oxRegistry::getSession();
         if ($this->isFake() && $oSession->hasVariable('deladrid')) {
             $this->clearDeliveryAddress();
         }
         if ($sAddressOxid){
             $oSession->setVariable('deladrid', $sAddressOxid);
-            Registry::getSession()->setVariable('blshowshipaddress', 1);
+            oxRegistry::getSession()->setVariable('blshowshipaddress', 1);
         }
     }
 
@@ -353,9 +351,9 @@ class KlarnaUser extends KlarnaUser_parent
     public function clearDeliveryAddress()
     {
         $oAddress = oxNew(Address::class);
-        $oAddress->load(Registry::getSession()->getVariable('deladrid'));
-        Registry::getSession()->setVariable('deladrid', null);
-        Registry::getSession()->setVariable('blshowshipaddress', 0);
+        $oAddress->load(oxRegistry::getSession()->getVariable('deladrid'));
+        oxRegistry::getSession()->setVariable('deladrid', null);
+        oxRegistry::getSession()->setVariable('blshowshipaddress', 0);
         if ($this->isFake())
             $oAddress->delete();
     }
@@ -365,11 +363,11 @@ class KlarnaUser extends KlarnaUser_parent
      */
     protected function setFakeUserId()
     {
-        if (Registry::getSession()->hasVariable('sFakeUserId')) {
-            $this->setId(Registry::getSession()->getVariable('sFakeUserId'));
+        if (oxRegistry::getSession()->hasVariable('sFakeUserId')) {
+            $this->setId(oxRegistry::getSession()->getVariable('sFakeUserId'));
         } else {
             $this->setId();
-            Registry::getSession()->setVariable('sFakeUserId', $this->getId());
+            oxRegistry::getSession()->setVariable('sFakeUserId', $this->getId());
         }
     }
 
@@ -379,7 +377,7 @@ class KlarnaUser extends KlarnaUser_parent
      */
     public function userDataChanged()
     {
-        $oldHash = Registry::getSession()->getVariable('userDataHash');
+        $oldHash = oxRegistry::getSession()->getVariable('userDataHash');
         if ($this->recalculateHash() != $oldHash)
             return true;
 
@@ -405,7 +403,7 @@ class KlarnaUser extends KlarnaUser_parent
      */
     public function saveHash($currentHash)
     {
-        Registry::getSession()->setVariable('userDataHash', $currentHash);
+        oxRegistry::getSession()->setVariable('userDataHash', $currentHash);
     }
 
     /**
@@ -426,9 +424,9 @@ class KlarnaUser extends KlarnaUser_parent
     public static function getDelAddressInfo()
     {
         $oDelAdress            = null;
-        $blShowShippingAddress = (bool)Registry::getSession()->getVariable('blshowshipaddress');
-        if (!($soxAddressId = Registry::get(Request::class)->getRequestParameter('deladrid'))) {
-            $soxAddressId = Registry::getSession()->getVariable('deladrid');
+        $blShowShippingAddress = (bool)oxRegistry::getSession()->getVariable('blshowshipaddress');
+        if (!($soxAddressId = oxRegistry::get(Request::class)->getRequestParameter('deladrid'))) {
+            $soxAddressId = oxRegistry::getSession()->getVariable('deladrid');
         }
         if ($soxAddressId && $blShowShippingAddress) {
             $oDelAdress = oxNew(Address::class);
@@ -436,7 +434,7 @@ class KlarnaUser extends KlarnaUser_parent
 
             //get delivery country name from delivery country id
             if ($oDelAdress->oxaddress__oxcountryid->value && $oDelAdress->oxaddress__oxcountryid->value != -1) {
-                $oCountry = oxNew('oxcountry');
+                $oCountry = oxNew(Country::class);
                 $oCountry->load($oDelAdress->oxaddress__oxcountryid->value);
                 $oDelAdress->oxaddress__oxcountry = clone $oCountry->oxcountry__oxtitle;
             }
@@ -452,7 +450,7 @@ class KlarnaUser extends KlarnaUser_parent
     {
         parent::changeUserData($sUser, $sPassword, $sPassword2, $aInvAddress, $aDelAddress);
         if (KlarnaUtils::isKlarnaCheckoutEnabled()) {
-            Registry::getSession()->setVariable('sCountryISO', $this->getUserCountryISO2());
+            oxRegistry::getSession()->setVariable('sCountryISO', $this->getUserCountryISO2());
         }
     }
 
@@ -481,7 +479,7 @@ class KlarnaUser extends KlarnaUser_parent
     {
         $result = parent::save();
         if ($result && KlarnaUtils::isKlarnaCheckoutEnabled()) {
-            Registry::getSession()->setVariable('sCountryISO', $this->getUserCountryISO2());
+            oxRegistry::getSession()->setVariable('sCountryISO', $this->getUserCountryISO2());
         }
 
         return $result;
@@ -511,11 +509,11 @@ class KlarnaUser extends KlarnaUser_parent
         parent::login($sUser, $sPassword, $blCookie);
 
         if (KlarnaUtils::getKlarnaModuleMode() == KlarnaConsts::MODULE_MODE_KCO) {
-            Registry::getSession()->setVariable(
+            oxRegistry::getSession()->setVariable(
                 'sCountryISO',
                 $this->getUserCountryISO2()
             );
-            Registry::getSession()->deleteVariable('klarna_checkout_user_email');
+            oxRegistry::getSession()->deleteVariable('klarna_checkout_user_email');
             $this->kl_setType(self::LOGGED_IN);
         }
     }

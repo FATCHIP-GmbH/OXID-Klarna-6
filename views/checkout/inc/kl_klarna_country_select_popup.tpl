@@ -12,7 +12,7 @@
                       method="post">
                     <div class="hidden">
                         [{$oViewConf->getHiddenSid()}]
-                        <input type="hidden" name="cl" value="klarna_express">
+                        <input type="hidden" name="cl" value="KlarnaExpress">
                         <input type="hidden" name="selected-country" value="">
                     </div>
                     [{foreach from=$oView->getKlarnaModalFlagCountries() item="country" name="flagCountries" }]

@@ -13,7 +13,7 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
      *
      * @const string
      */
-    const CONTROLLER_CLASSNAME_KLARNA_EXPRESS = 'klarna_express';
+    const CONTROLLER_CLASSNAME_KLARNA_EXPRESS = 'KlarnaExpress';
 
     /**
      * Flow theme ID

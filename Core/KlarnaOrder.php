@@ -83,7 +83,7 @@ class KlarnaOrder extends BaseModel
                 "terms"        =>
                     $terms,
                 "checkout"     =>
-                    $sSSLShopURL . "?cl=klarna_express",
+                    $sSSLShopURL . "?cl=KlarnaExpress",
                 "confirmation" =>
                     $sSSLShopURL . "?cl=order&fnc=execute&klarna_order_id={checkout.order.id}",
                 "push"         =>

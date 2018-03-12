@@ -35,7 +35,7 @@ class klarna_payment extends klarna_payment_parent
             !oxRegistry::getSession()->getVariable('amazonOrderReferenceId') &&
             !oxRegistry::getConfig()->getRequestParameter('non_kco_global_country')
         ) {
-            $redirectUrl = oxRegistry::getConfig()->getShopSecureHomeURL() . 'cl=klarna_express';
+            $redirectUrl = oxRegistry::getConfig()->getShopSecureHomeURL() . 'cl=KlarnaExpress';
             oxRegistry::getUtils()->redirect($redirectUrl, false, 302);
         }
 

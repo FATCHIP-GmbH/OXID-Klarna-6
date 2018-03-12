@@ -21,7 +21,7 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
      */
     protected $_aClasses = array(
         'user',
-        'klarna_express',
+        'KlarnaExpress',
     );
 
     /**
@@ -37,7 +37,7 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
         if ($oViewConfig->isKlarnaCheckoutEnabled()) {
             if ($this->klarnaRedirect()) {
                 oxRegistry::getUtils()->redirect(
-                    $this->getConfig()->getShopSecureHomeUrl() . 'cl=klarna_express',
+                    $this->getConfig()->getShopSecureHomeUrl() . 'cl=KlarnaExpress',
                     false,
                     302
                 );
@@ -115,7 +115,7 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
         if (KlarnaUtils::isKlarnaCheckoutEnabled() && $result === 'account_user') {
 
             KlarnaUtils::fullyResetKlarnaSession();
-            if (oxRegistry::getConfig()->getRequestParameter('blshowshipaddress')) {
+            if (oxRegistry::get(Request::class)->getRequestParameter('blshowshipaddress')) {
                 oxRegistry::getSession()->setVariable('blshowshipaddress', 1);
                 oxRegistry::getSession()->setVariable('deladrid', oxRegistry::get(Request::class)->getRequestParameter('oxaddressid'));
             } else {

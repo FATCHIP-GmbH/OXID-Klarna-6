@@ -1,17 +1,28 @@
 <?php
 
 use Klarna\Klarna\Components\KlarnaBasketComponent;
+use Klarna\Klarna\Components\KlarnaUserComponent;
+
+use Klarna\Klarna\Controllers\KlarnaAcknowledge;
+use Klarna\Klarna\Controllers\KlarnaAjax;
+use Klarna\Klarna\Controllers\KlarnaEpmDispatcher;
+use Klarna\Klarna\Controllers\KlarnaExpress;
+use Klarna\Klarna\Controllers\KlarnaValidate;
 use Klarna\Klarna\Controllers\KlarnaViewConfig;
+use Klarna\Klarna\Models\KlarnaBasket;
 use Klarna\Klarna\Models\KlarnaCountryList;
 use Klarna\Klarna\Models\KlarnaPayment;
-
 use Klarna\Klarna\Models\KlarnaUser;
+
 use OxidEsales\Eshop\Application\Component\BasketComponent;
 use OxidEsales\Eshop\Application\Component\UserComponent;
 use OxidEsales\Eshop\Application\Model\CountryList;
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Application\Model\User;
+use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Core\ViewConfig;
+
+
 use OxidEsales\PayPalModule\Controller\PaymentController;
 
 
@@ -41,11 +52,11 @@ $aModule = array(
         //        'klarna_orders'                    => 'klarna/klarna/controllers/admin/klarna_orders.php',
 
         // controllers
-        'KlarnaExpress'       => \Klarna\Klarna\Controllers\KlarnaExpress::class,
-        'Klarna_ajax'         => \Klarna\Klarna\Controllers\KlarnaAjax::class,
-        'KlarnaEpmDispatcher' => \Klarna\Klarna\Controllers\KlarnaEpmDispatcher::class,
-        'KlarnaAcknowledge'   => \Klarna\Klarna\Controllers\KlarnaAcknowledge::class,
-        'KlarnaValidate'      => \Klarna\Klarna\Controllers\KlarnaValidate::class,
+        'KlarnaExpress'       => KlarnaExpress::class,
+        'Klarna_ajax'         => KlarnaAjax::class,
+        'KlarnaEpmDispatcher' => KlarnaEpmDispatcher::class,
+        'KlarnaAcknowledge'   => KlarnaAcknowledge::class,
+        'KlarnaValidate'      => KlarnaValidate::class,
     ),
 
 //    'files' => array(
@@ -129,7 +140,7 @@ $aModule = array(
         'kl_klarna_checkout_login_box.tpl'      => 'klarna/klarna/views/checkout/inc/kl_klarna_checkout_login_box.tpl',
         'kl_klarna_checkout_address_box.tpl'    => 'klarna/klarna/views/checkout/inc/kl_klarna_checkout_address_box.tpl',
         'kl_klarna_notice.tpl'                  => 'klarna/klarna/views/widget/kl_klarna_notice.tpl',
-        //
+
         //admin
         'kl_klarna_general.tpl'                 => 'klarna/klarna/views/admin/tpl/kl_klarna_general.tpl',
         'kl_klarna_design.tpl'                  => 'klarna/klarna/views/admin/tpl/kl_klarna_design.tpl',
@@ -147,101 +158,101 @@ $aModule = array(
     ),
 
         'blocks' => array(
-    ////        array(
-    ////            'template' => 'widget/minibasket/minibasket.tpl',
-    ////            'block'    => 'widget_minibasket',
-    ////            'file'     => '/views/blocks/widget/minibasket/kl_klarna_minibasket.tpl',
-    ////        ),
-    ////        array(
-    ////            'template' => 'layout/footer.tpl',
-    ////            'block'    => 'footer_main',
-    ////            'file'     => 'kl_klarna_footer_main',
-    ////        ),
-    ////        array(
-    ////            'template' => 'page/checkout/payment.tpl',
-    ////            'block'    => 'select_payment',
-    ////            'file'     => 'kl_payment_select_override',
-    ////        ),
-    ////        array(
-    ////            'template' => 'page/checkout/basket.tpl',
-    ////            'block'    => 'checkout_basket_next_step_top',
-    ////            'file'     => 'kl_basket_override',
-    ////        ),
-    ////        array(
-    ////            'template' => 'page/checkout/payment.tpl',
-    ////            'block'    => 'change_payment',
-    ////            'file'     => 'kl_kp_widget',
-    ////        ),
-    ////        array(
-    ////            'template' => 'page/checkout/order.tpl',
-    ////            'block'    => 'order_basket',
-    ////            'file'     => 'kl_kp_widget',
-    ////        ),
-    ////        array(
-    ////            'template' => 'page/checkout/order.tpl',
-    ////            'block'    => 'shippingAndPayment',
-    ////            'file'     => 'kl_order_logo',
-    ////        ),
-    ////        array(
-    ////            'template' => 'page/checkout/order.tpl',
-    ////            'block'    => 'checkout_order_next_step_bottom',
-    ////            'file'     => 'kl_remove_amazon',
-    ////        ),
-    ////        array(
-    ////            'template' => 'page/details/inc/productmain.tpl',
-    ////            'block'    => 'details_productmain_tobasket',
-    ////            'file'     => '/views/blocks/page/details/inc/kl_klarna_checkout_button.tpl',
-    ////        ),
-    ////        array(
-    ////            'template' => 'page/checkout/thankyou.tpl',
-    ////            'block'    => 'checkout_thankyou_info',
-    ////            'file'     => '/views/blocks/page/checkout/inc/kl_klarna_checkout_thankyou_info.tpl',
-    ////        ),
-    ////        array(
-    ////            'template' => 'page/checkout/inc/steps.tpl',
-    ////            'block'    => 'checkout_steps_main',
-    ////            'file'     => '/views/blocks/page/checkout/inc/kl_klarna_checkout_steps_main.tpl',
-    ////        ),
-    ////        array(
-    ////            'template' => 'form/fieldset/user_billing.tpl',
-    ////            'block'    => 'form_user_billing_country',
-    ////            'file'     => '/views/blocks/form/fieldset/kl_klarna_user_billing.tpl',
-    ////        ),
-    ////        array(
-    ////            'template' => 'layout/footer.tpl',
-    ////            'block'    => 'footer_main',
-    ////            'file'     => '/views/blocks/widget/header/kl_klarna_law_notice.tpl',
-    ////        ),
-    ////        array(
-    ////            'template' => 'order_main.tpl',
-    ////            'block'    => 'admin_order_main_form',
-    ////            'file'     => 'kl_admin_order_main_form',
-    ////        ),
-    ////        array(
-    ////            'template' => 'email/html/order_cust.tpl',
-    ////            'block'    => 'email_html_order_cust_paymentinfo_top',
-    ////            'file'     => '/views/emails/html/kl_klarna_email_payment_badge.tpl',
-    ////        ),
-    ////        array(
-    ////            'template' => 'form/fieldset/user_shipping.tpl',
-    ////            'block'    => 'form_user_shipping_country',
-    ////            'file'     => '/views/blocks/form/fieldset/kl_klarna_user_shipping.tpl',
-    ////        ),
-    ////        array(
-    ////            'template' => 'order_overview.tpl',
-    ////            'block'    => 'admin_order_overview_billingaddress',
-    ////            'file'     => 'kl_admin_order_overview_billingaddress',
-    ////        ),
-    ////        array(
-    ////            'template' => 'order_article.tpl',
-    ////            'block'    => 'admin_order_article_listitem',
-    ////            'file'     => 'kl_admin_order_article_listitem',
-    ////        ),
-    ////        array(
-    ////            'template' => 'order_list.tpl',
-    ////            'block'    => 'admin_list_order_filter',
-    ////            'file'     => 'kl_admin_list_order_filter',
-    ////        ),
+            array(
+                'template' => 'widget/minibasket/minibasket.tpl',
+                'block'    => 'widget_minibasket',
+                'file'     => '/views/blocks/widget/minibasket/kl_klarna_minibasket.tpl',
+            ),
+            array(
+                'template' => 'layout/footer.tpl',
+                'block'    => 'footer_main',
+                'file'     => 'kl_klarna_footer_main',
+            ),
+            array(
+                'template' => 'page/checkout/payment.tpl',
+                'block'    => 'select_payment',
+                'file'     => 'kl_payment_select_override',
+            ),
+            array(
+                'template' => 'page/checkout/basket.tpl',
+                'block'    => 'checkout_basket_next_step_top',
+                'file'     => 'kl_basket_override',
+            ),
+            array(
+                'template' => 'page/checkout/payment.tpl',
+                'block'    => 'change_payment',
+                'file'     => 'kl_kp_widget',
+            ),
+            array(
+                'template' => 'page/checkout/order.tpl',
+                'block'    => 'order_basket',
+                'file'     => 'kl_kp_widget',
+            ),
+            array(
+                'template' => 'page/checkout/order.tpl',
+                'block'    => 'shippingAndPayment',
+                'file'     => 'kl_order_logo',
+            ),
+            array(
+                'template' => 'page/checkout/order.tpl',
+                'block'    => 'checkout_order_next_step_bottom',
+                'file'     => 'kl_remove_amazon',
+            ),
+            array(
+                'template' => 'page/details/inc/productmain.tpl',
+                'block'    => 'details_productmain_tobasket',
+                'file'     => '/views/blocks/page/details/inc/kl_klarna_checkout_button.tpl',
+            ),
+            array(
+                'template' => 'page/checkout/thankyou.tpl',
+                'block'    => 'checkout_thankyou_info',
+                'file'     => '/views/blocks/page/checkout/inc/kl_klarna_checkout_thankyou_info.tpl',
+            ),
+            array(
+                'template' => 'page/checkout/inc/steps.tpl',
+                'block'    => 'checkout_steps_main',
+                'file'     => '/views/blocks/page/checkout/inc/kl_klarna_checkout_steps_main.tpl',
+            ),
+            array(
+                'template' => 'form/fieldset/user_billing.tpl',
+                'block'    => 'form_user_billing_country',
+                'file'     => '/views/blocks/form/fieldset/kl_klarna_user_billing.tpl',
+            ),
+            array(
+                'template' => 'layout/footer.tpl',
+                'block'    => 'footer_main',
+                'file'     => '/views/blocks/widget/header/kl_klarna_law_notice.tpl',
+            ),
+            array(
+                'template' => 'order_main.tpl',
+                'block'    => 'admin_order_main_form',
+                'file'     => 'kl_admin_order_main_form',
+            ),
+            array(
+                'template' => 'email/html/order_cust.tpl',
+                'block'    => 'email_html_order_cust_paymentinfo_top',
+                'file'     => '/views/emails/html/kl_klarna_email_payment_badge.tpl',
+            ),
+            array(
+                'template' => 'form/fieldset/user_shipping.tpl',
+                'block'    => 'form_user_shipping_country',
+                'file'     => '/views/blocks/form/fieldset/kl_klarna_user_shipping.tpl',
+            ),
+            array(
+                'template' => 'order_overview.tpl',
+                'block'    => 'admin_order_overview_billingaddress',
+                'file'     => 'kl_admin_order_overview_billingaddress',
+            ),
+            array(
+                'template' => 'order_article.tpl',
+                'block'    => 'admin_order_article_listitem',
+                'file'     => 'kl_admin_order_article_listitem',
+            ),
+            array(
+                'template' => 'order_list.tpl',
+                'block'    => 'admin_list_order_filter',
+                'file'     => 'kl_admin_list_order_filter',
+            ),
         ),
 
     'settings' => array(),
