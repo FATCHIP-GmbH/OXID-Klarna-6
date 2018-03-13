@@ -24,7 +24,6 @@ class KlarnaAcknowledgeController extends FrontendController
     /**
      * @param string $sCountryISO
      * @return KlarnaOrderManagementClient|KlarnaClientBase $klarnaClient
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     protected function getKlarnaClient($sCountryISO)
     {

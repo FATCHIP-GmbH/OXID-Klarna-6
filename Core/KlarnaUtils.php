@@ -52,7 +52,6 @@ class KlarnaUtils
     /**
      * @param $sCountryId
      * @return mixed
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      */
     public static function getCountryISO($sCountryId)
     {

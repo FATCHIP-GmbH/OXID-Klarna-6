@@ -747,7 +747,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         $oBasket->onUpdate();
 
         if ($paymentId === 'bestitamazon') {
-            Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . "cl=klarna_epm_dispatcher&fnc=amazonLogin", false);
+            Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . "cl=KlarnaEpmDispatcher&fnc=amazonLogin", false);
         }
         if ($paymentId === 'oxidpaypal') {
             Registry::get('oePayPalStandardDispatcher')->setExpressCheckout();
@@ -760,7 +760,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     public function klarnaExternalCheckout($paymentId)
     {
         if ($paymentId === 'bestitamazon') {
-            Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . "cl=klarna_epm_dispatcher&fnc=amazonLogin", false);
+            Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . "cl=KlarnaEpmDispatcher&fnc=amazonLogin", false);
         } else if ($paymentId === 'oxidpaypal') {
             Registry::get('oePayPalExpressCheckoutDispatcher')->setExpressCheckout();
         } else {

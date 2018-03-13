@@ -9,7 +9,7 @@ use OxidEsales\Eshop\Application\Controller\FrontendController;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Request;
 
-class KlarnaValidate extends FrontendController
+class KlarnaValidationController extends FrontendController
 {
     /**
      * Klarna order validation callback

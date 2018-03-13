@@ -77,7 +77,7 @@ class KlarnaBasket extends KlarnaBasket_parent
         usort($aItems, array($this, 'sortOrderLines'));
 
         $counter = 0;
-        /* @var $oItem BasketItem */
+        /* @var BasketItem $oItem  */
         foreach ($aItems as $oItem) {
             $counter++;
 

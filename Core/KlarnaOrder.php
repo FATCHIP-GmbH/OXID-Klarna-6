@@ -95,14 +95,14 @@ class KlarnaOrder extends BaseModel
                 "confirmation" =>
                     $sSSLShopURL . "?cl=order&fnc=execute&klarna_order_id={checkout.order.id}",
                 "push"         =>
-                    $sSSLShopURL . "?cl=KlarnaAcknowledgeController&klarna_order_id={checkout.order.id}",
+                    $sSSLShopURL . "?cl=KlarnaAcknowledge&klarna_order_id={checkout.order.id}",
 
             ),
         );
 
         if ($this->isValidationEnabled()) {
             $this->_aOrderData["merchant_urls"]["validation"] =
-                $sSSLShopURL . "?cl=klarna_validate&s=$sessionId&klarna_order_id={checkout.order.id}";
+                $sSSLShopURL . "?cl=KlarnaValidate&s=$sessionId&klarna_order_id={checkout.order.id}";
         }
 
         if (!empty($cancellationTerms)) {
@@ -145,11 +145,6 @@ class KlarnaOrder extends BaseModel
 
             $this->setAttachmentsData();
         }
-    }
-
-    protected function setMode($sMode)
-    {
-        $this->_sMode = $sMode;
     }
 
     /**
@@ -302,7 +297,7 @@ class KlarnaOrder extends BaseModel
      */
     public function getExternalPaymentMethods(Basket $oBasket, User $oUser)
     {
-        $oPayList     = Registry::get("oxPaymentList");
+        $oPayList     = Registry::get(PaymentList::class);
         $dBasketPrice = $oBasket->getPriceForPayment();
 
         $externalPaymentMethods  = array();
@@ -364,7 +359,7 @@ class KlarnaOrder extends BaseModel
         $options['shipping_details']                  =
             $this->getShippingDetailsMsg();
 
-        $sCountryISO = strtoupper(Registry::getSession()->getVariable('sCountryISO'));
+//        $sCountryISO = strtoupper(Registry::getSession()->getVariable('sCountryISO'));
 //        if ($sCountryISO == 'GB') {
 //            $options['title_mandatory'] = $this->isSalutationMandatory();
 //        }
@@ -398,6 +393,7 @@ class KlarnaOrder extends BaseModel
 
     /**
      * @return int
+     * @throws \oxSystemComponentException
      */
     protected function getAdditionalCheckbox()
     {
@@ -423,7 +419,7 @@ class KlarnaOrder extends BaseModel
 
     /**
      *
-     * @throws oxSystemComponentException
+     * @throws \oxSystemComponentException
      */
     protected function setAttachmentsData()
     {
@@ -530,12 +526,12 @@ class KlarnaOrder extends BaseModel
 
     /**
      * @param $oPayment
+     * @param bool $checkoutImgUrl
      * @return mixed
-     * @throws oxSystemComponentException
      */
     protected function resolveImageUrl($oPayment, $checkoutImgUrl = false)
     {
-        $viewConfig = oxNew('oxViewConfig');
+        $viewConfig = oxNew(ViewConfig::class);
         if ($checkoutImgUrl) {
             $url = $viewConfig->resolveFullAssetUrl($oPayment->oxpayments__klcheckoutimageurl->value);
         } else {

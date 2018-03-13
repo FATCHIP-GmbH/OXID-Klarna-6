@@ -10,8 +10,8 @@ use Klarna\Klarna\Core\KlarnaOrder;
 use Klarna\Klarna\Core\KlarnaUtils;
 use Klarna\Klarna\Exception\KlarnaClientException;
 use Klarna\Klarna\Models\KlarnaUser;
+use OxidEsales\Eshop\Application\Controller\BasketController;
 use OxidEsales\Eshop\Application\Controller\FrontendController;
-use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Exception\StandardException;
@@ -19,7 +19,7 @@ use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Request;
 
-class KlarnaAjax extends FrontendController
+class KlarnaAjaxController extends FrontendController
 {
 
     /**
@@ -122,7 +122,7 @@ class KlarnaAjax extends FrontendController
     }
 
     /**
-     * Update oxUser object
+     * Update User object
      */
     protected function updateUserObject()
     {
@@ -177,7 +177,7 @@ class KlarnaAjax extends FrontendController
      */
     public function addVoucher()
     {
-        Registry::get(Basket::class)->addVoucher();
+        Registry::get(BasketController::class)->addVoucher();
         $this->updateVouchers();
     }
 
@@ -188,7 +188,7 @@ class KlarnaAjax extends FrontendController
      */
     public function removeVoucher()
     {
-        Registry::get(Basket::class)->removeVoucher();
+        Registry::get(BasketController::class)->removeVoucher();
         $this->updateVouchers();
     }
 

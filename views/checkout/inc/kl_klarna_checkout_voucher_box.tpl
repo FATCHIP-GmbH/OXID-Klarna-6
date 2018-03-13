@@ -18,7 +18,7 @@
                     <div class="" id="coupon">
                         <div class="hidden">
                             [{$oViewConf->getHiddenSid()}]
-                            <input type="hidden" name="cl" value="klarna_ajax">
+                            <input type="hidden" name="cl" value="KlarnaAjax">
                             <input type="hidden" name="fnc" value="addVoucher">
                             <input type="hidden" name="CustomError" value="basket">
                         </div>

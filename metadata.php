@@ -2,29 +2,16 @@
 
 use Klarna\Klarna\Components\KlarnaBasketComponent;
 use Klarna\Klarna\Components\KlarnaUserComponent;
-use Klarna\Klarna\Components\Widgets\KlarnaServiceMenu;
-use Klarna\Klarna\Controllers\Admin\KlarnaConfiguration;
-use Klarna\Klarna\Controllers\Admin\KlarnaDesign;
-use Klarna\Klarna\Controllers\Admin\KlarnaEmdAdmin;
-use Klarna\Klarna\Controllers\Admin\KlarnaExternalPayments;
-use Klarna\Klarna\Controllers\Admin\KlarnaGeneral;
-use Klarna\Klarna\Controllers\Admin\KlarnaOrderAddress;
-use Klarna\Klarna\Controllers\Admin\KlarnaOrderArticle as KlarnaAdminOrderArticle;
-use Klarna\Klarna\Controllers\Admin\KlarnaOrderList;
-use Klarna\Klarna\Controllers\Admin\KlarnaOrderMain;
-use Klarna\Klarna\Controllers\Admin\KlarnaOrderOverview;
-use Klarna\Klarna\Controllers\Admin\KlarnaOrders;
-use Klarna\Klarna\Controllers\Admin\KlarnaStart;
+use Klarna\Klarna\Controlelrs\KlarnaUserController;
 use Klarna\Klarna\Controllers\KlarnaAcknowledgeController;
-use Klarna\Klarna\Controllers\KlarnaThankYouController;
-use Klarna\Klarna\Controllers\KlarnaUserController;
-use Klarna\Klarna\Controllers\KlarnaAjax;
+use Klarna\Klarna\Controllers\KlarnaAjaxController;
 use Klarna\Klarna\Controllers\KlarnaBasketController;
 use Klarna\Klarna\Controllers\KlarnaEpmDispatcher;
-use Klarna\Klarna\Controllers\KlarnaExpress;
+use Klarna\Klarna\Controllers\KlarnaExpressController;
 use Klarna\Klarna\Controllers\KlarnaOrderController;
 use Klarna\Klarna\Controllers\KlarnaPaymentController;
-use Klarna\Klarna\Controllers\KlarnaValidate;
+use Klarna\Klarna\Controllers\KlarnaThankYouController;
+use Klarna\Klarna\Controllers\KlarnaValidationController;
 use Klarna\Klarna\Controllers\KlarnaViewConfig;
 use Klarna\Klarna\Core\KlarnaEmail;
 use Klarna\Klarna\Models\KlarnaAddress;
@@ -52,7 +39,6 @@ use OxidEsales\Eshop\Application\Controller\ThankYouController;
 use OxidEsales\Eshop\Application\Controller\UserController;
 use OxidEsales\Eshop\Application\Model\Address;
 use OxidEsales\Eshop\Application\Model\CountryList;
-use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Application\Model\OrderArticle;
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Application\Model\User;
@@ -89,20 +75,20 @@ $aModule = array(
         'KlarnaOrders'           => KlarnaOrders::class,
 
         // controllers
-        'KlarnaExpress'          => KlarnaExpress::class,
-        'KlarnaAjax'             => KlarnaAjax::class,
+        'KlarnaExpress'          => KlarnaExpressController::class,
+        'KlarnaAjax'             => KlarnaAjaxController::class,
         'KlarnaEpmDispatcher'    => KlarnaEpmDispatcher::class,
         'KlarnaAcknowledge'      => KlarnaAcknowledgeController::class,
-        'KlarnaValidate'         => KlarnaValidate::class,
+        'KlarnaValidate'         => KlarnaValidationController::class,
     ),
 
     'extend' => array(
+        Email::class              => KlarnaEmail::class,
         // models
         Basket::class             => KlarnaBasket::class,
         User::class               => KlarnaUser::class,
         Article::class            => KlarnaArticle::class,
         Order::class              => KlarnaOrder::class,
-        Email::class              => KlarnaEmail::class,
         Address::class            => KlarnaAddress::class,
         Payment::class            => KlarnaPayment::class,
         CountryList::class        => KlarnaCountryList::class,
@@ -110,9 +96,9 @@ $aModule = array(
         UserPayment::class        => KlarnaUserPayment::class,
 
         // controllers
-        OrderController::class    => KlarnaOrderController::class,
         ThankYouController::class => KlarnaThankYouController::class,
         ViewConfig::class         => KlarnaViewConfig::class,
+        OrderController::class    => KlarnaOrderController::class,
         UserController::class     => KlarnaUserController::class,
         PaymentController::class  => KlarnaPaymentController::class,
         BasketController::class   => KlarnaBasketController::class,

@@ -86,6 +86,10 @@ class KlarnaAddress extends KlarnaAddress_parent
         return $sDelAddress;
     }
 
+    /**
+     * @return bool
+     * @throws StandardException
+     */
     public function isValid()
     {
         $aRequiredFields = array(

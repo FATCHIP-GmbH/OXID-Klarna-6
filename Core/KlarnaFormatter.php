@@ -92,6 +92,7 @@ class KlarnaFormatter extends Base
      * @param $oxObject User|Address
      * @return array
      * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
+     * @throws \TypeError
      */
     public static function oxidToKlarnaAddress($oxObject)
     {

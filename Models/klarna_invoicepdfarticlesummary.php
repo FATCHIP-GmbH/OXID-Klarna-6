@@ -1,24 +1,8 @@
 <?php
-/**
- * This file is part of OXID eShop Community Edition.
- *
- * OXID eShop Community Edition is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * OXID eShop Community Edition is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @link      http://www.oxid-esales.com
- * @copyright (C) OXID eSales AG 2003-2017
- * @version   OXID eShop CE
- */
+namespace Klarna\Klarna\Models;
+use OxidEsales\Eshop\Application\Model\Payment;
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Request;
 
 /**
  * Order summary class
@@ -59,7 +43,7 @@ class Klarna_InvoicepdfArticleSummary extends InvoicepdfBlock
      */
     protected function _setTotalCostsWithoutDiscount(&$iStartPos)
     {
-        $oLang = oxRegistry::getLang();
+        $oLang = Registry::getLang();
 
         // products netto price
         $this->line(15, $iStartPos + 1, 195, $iStartPos + 1);
@@ -95,7 +79,7 @@ class Klarna_InvoicepdfArticleSummary extends InvoicepdfBlock
      */
     protected function _setTotalCostsWithDiscount(&$iStartPos)
     {
-        $oLang = oxRegistry::getLang();
+        $oLang = Registry::getLang();
 
         // line separator
         $this->line(15, $iStartPos + 1, 195, $iStartPos + 1);
@@ -189,7 +173,7 @@ class Klarna_InvoicepdfArticleSummary extends InvoicepdfBlock
             if ($dDiscountVal > 0) {
                 $dDiscountVal *= -1;
             }
-            $sPayCost = oxRegistry::getLang()->formatCurrency($dDiscountVal, $this->_oData->getCurrency()) . ' ' . $this->_oData->getCurrency()->name;
+            $sPayCost = Registry::getLang()->formatCurrency($dDiscountVal, $this->_oData->getCurrency()) . ' ' . $this->_oData->getCurrency()->name;
             $this->text(45, $iStartPos, $this->_oData->translate('ORDER_OVERVIEW_PDF_VOUCHER'));
             $this->text(195 - $this->_oPdf->getStringWidth($sPayCost), $iStartPos, $sPayCost);
             $iStartPos += 4;
@@ -206,8 +190,8 @@ class Klarna_InvoicepdfArticleSummary extends InvoicepdfBlock
     protected function _setDeliveryInfo(&$iStartPos)
     {
         $sAddString = '';
-        $oLang      = oxRegistry::getLang();
-        $oConfig    = oxRegistry::getConfig();
+        $oLang      = Registry::getLang();
+        $oConfig    = Registry::getConfig();
 
         if ($oConfig->getConfigParam('blShowVATForDelivery')) {
             // delivery netto
@@ -249,8 +233,8 @@ class Klarna_InvoicepdfArticleSummary extends InvoicepdfBlock
     protected function _setWrappingInfo(&$iStartPos)
     {
         if ($this->_oData->oxorder__oxwrapcost->value || $this->_oData->oxorder__oxgiftcardcost->value) {
-            $oLang   = oxRegistry::getLang();
-            $oConfig = oxRegistry::getConfig();
+            $oLang   = Registry::getLang();
+            $oConfig = Registry::getConfig();
 
             //displaying wrapping VAT info
             if ($oConfig->getConfigParam('blShowVATForWrapping')) {
@@ -325,8 +309,8 @@ class Klarna_InvoicepdfArticleSummary extends InvoicepdfBlock
      */
     protected function _setPaymentInfo(&$iStartPos)
     {
-        $oLang   = oxRegistry::getLang();
-        $oConfig = oxRegistry::getConfig();
+        $oLang   = Registry::getLang();
+        $oConfig = Registry::getConfig();
 
         if ($this->_oData->oxorder__oxstorno->value) {
             $this->_oData->oxorder__oxpaycost->setValue(0);
@@ -379,8 +363,8 @@ class Klarna_InvoicepdfArticleSummary extends InvoicepdfBlock
      */
     protected function _setTsProtection(&$iStartPos)
     {
-        $oLang   = oxRegistry::getLang();
-        $oConfig = oxRegistry::getConfig();
+        $oLang   = Registry::getLang();
+        $oConfig = Registry::getConfig();
         if ($this->_oData->oxorder__oxtsprotectcosts->value && $oConfig->getConfigParam('blShowVATForPayCharge')) {
 
             // payment netto
@@ -435,7 +419,7 @@ class Klarna_InvoicepdfArticleSummary extends InvoicepdfBlock
      */
     protected function _setPaymentMethodInfo(&$iStartPos)
     {
-        $oPayment = oxNew('oxpayment');
+        $oPayment = oxNew(Payment::class);
         $oPayment->loadInLang($this->_oData->getSelectedLang(), $this->_oData->oxorder__oxpaymenttype->value);
 
         $text = $this->_oData->translate('ORDER_OVERVIEW_PDF_SELPAYMENT') . $oPayment->oxpayments__oxdesc->value;
@@ -451,12 +435,12 @@ class Klarna_InvoicepdfArticleSummary extends InvoicepdfBlock
      */
     protected function _setKlarnaMessage(&$iStartPos)
     {
-        $iLang = intval(oxRegistry::getConfig()->getRequestParameter('pdflanguage'));
+        $iLang = intval(Registry::get(Request::class)->getRequestParameter('pdflanguage'));
         if ($this->_oData->oxorder__oxpaymenttype->value === 'klarna_checkout') {
 
-            $text = oxRegistry::getLang()->translateString('KL_KCO_INVOICE_MSG', $iLang);
+            $text = Registry::getLang()->translateString('KL_KCO_INVOICE_MSG', $iLang);
         } else {
-            $text = oxRegistry::getLang()->translateString('KL_KP_INVOICE_MSG', $iLang);
+            $text = Registry::getLang()->translateString('KL_KP_INVOICE_MSG', $iLang);
         }
 
         $this->font($this->getFont(), '', 10);

@@ -23,7 +23,7 @@ use OxidEsales\Eshop\Core\Request;
 use OxidEsales\Eshop\Core\UtilsUrl;
 use OxidEsales\Eshop\Core\UtilsView;
 
-class KlarnaExpress extends FrontendController
+class KlarnaExpressController extends FrontendController
 {
     /**
      * @var string

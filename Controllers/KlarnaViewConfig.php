@@ -8,7 +8,7 @@ use Klarna\Klarna\Core\KlarnaUtils;
 use Klarna\Klarna\Models\KlarnaUser;
 use OxidEsales\Eshop\Application\Model\CountryList;
 use OxidEsales\Eshop\Application\Model\User;
-use OxidEsales\Eshop\Core\Registry as oxRegistry;
+use OxidEsales\Eshop\Core\Registry;
 
 class KlarnaViewConfig extends KlarnaViewConfig_parent
 {
@@ -104,7 +104,7 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
     public function getKlarnaHomepageBanner()
     {
         if (KlarnaUtils::getShopConfVar('blKlarnaDisplayBanner')) {
-            $oLang = oxRegistry::getLang();
+            $oLang = Registry::getLang();
             $lang  = $oLang->getLanguageAbbr();
 
             $varName = 'sKlarnaBannerSrc' . '_' . strtoupper($lang);
@@ -157,11 +157,13 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
     /**
      *
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
+     * @return bool
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function isKlarnaCheckoutEnabled()
     {
         return KlarnaUtils::isKlarnaCheckoutEnabled()
-               && KlarnaUtils::isCountryActiveInKlarnaCheckout(oxRegistry::getSession()->getVariable('sCountryISO'));
+               && KlarnaUtils::isCountryActiveInKlarnaCheckout(Registry::getSession()->getVariable('sCountryISO'));
     }
 
     /**
@@ -202,11 +204,13 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
     /**
      *
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
+     * @return bool
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function isCheckoutNonKlarnaCountry()
     {
         return KlarnaUtils::isKlarnaCheckoutEnabled() &&
-               !KlarnaUtils::isCountryActiveInKlarnaCheckout(oxRegistry::getSession()->getVariable('sCountryISO'));
+               !KlarnaUtils::isCountryActiveInKlarnaCheckout(Registry::getSession()->getVariable('sCountryISO'));
     }
 
     /**
@@ -215,7 +219,7 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
     public function isUserLoggedIn()
     {
         if ($user = $this->getUser()) {
-            return $user->oxuser__oxid->value == oxRegistry::getSession()->getVariable('usr');
+            return $user->oxuser__oxid->value == Registry::getSession()->getVariable('usr');
         }
 
         return false;
