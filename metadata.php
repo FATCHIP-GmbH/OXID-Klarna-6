@@ -15,9 +15,9 @@ use Klarna\Klarna\Controllers\Admin\KlarnaOrderMain;
 use Klarna\Klarna\Controllers\Admin\KlarnaOrderOverview;
 use Klarna\Klarna\Controllers\Admin\KlarnaOrders;
 use Klarna\Klarna\Controllers\Admin\KlarnaStart;
+use Klarna\Klarna\Controllers\KlarnaAcknowledgeController;
 use Klarna\Klarna\Controllers\KlarnaThankYouController;
 use Klarna\Klarna\Controllers\KlarnaUserController;
-use Klarna\Klarna\Controllers\KlarnaAcknowledge;
 use Klarna\Klarna\Controllers\KlarnaAjax;
 use Klarna\Klarna\Controllers\KlarnaBasketController;
 use Klarna\Klarna\Controllers\KlarnaEpmDispatcher;
@@ -92,7 +92,7 @@ $aModule = array(
         'KlarnaExpress'          => KlarnaExpress::class,
         'KlarnaAjax'             => KlarnaAjax::class,
         'KlarnaEpmDispatcher'    => KlarnaEpmDispatcher::class,
-        'KlarnaAcknowledge'      => KlarnaAcknowledge::class,
+        'KlarnaAcknowledge'      => KlarnaAcknowledgeController::class,
         'KlarnaValidate'         => KlarnaValidate::class,
     ),
 

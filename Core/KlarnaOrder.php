@@ -10,6 +10,7 @@ use OxidEsales\Eshop\Application\Controller\PaymentController;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\CountryList;
+use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Model\BaseModel;
 use OxidEsales\Eshop\Core\Registry;
@@ -94,7 +95,7 @@ class KlarnaOrder extends BaseModel
                 "confirmation" =>
                     $sSSLShopURL . "?cl=order&fnc=execute&klarna_order_id={checkout.order.id}",
                 "push"         =>
-                    $sSSLShopURL . "?cl=klarna_acknowledge&klarna_order_id={checkout.order.id}",
+                    $sSSLShopURL . "?cl=KlarnaAcknowledgeController&klarna_order_id={checkout.order.id}",
 
             ),
         );
@@ -402,7 +403,7 @@ class KlarnaOrder extends BaseModel
     {
         $iActiveCheckbox = KlarnaUtils::getShopConfVar('iKlarnaActiveCheckbox');
 
-        if (!$this->getUser()->isFake() || $this->getUser()->kl_getType() === klarna_oxuser::REGISTERED) {
+        if (!$this->getUser()->isFake() || $this->getUser()->kl_getType() === KlarnaUser::REGISTERED) {
             if ($this->getUser()->getNewsSubscription()->getOptInStatus() == 1) {
 
                 return KlarnaConsts::EXTRA_CHECKBOX_NONE;

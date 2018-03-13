@@ -17,7 +17,7 @@ use OxidEsales\Eshop\Core\UtilsObject;
 /**
  * Controller for Klarna Checkout Acknowledge push request
  */
-class KlarnaAcknowledge extends FrontendController
+class KlarnaAcknowledgeController extends FrontendController
 {
     protected $aOrder;
 

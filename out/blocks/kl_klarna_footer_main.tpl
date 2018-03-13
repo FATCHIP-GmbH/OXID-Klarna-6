@@ -5,7 +5,7 @@
 [{ assign var="sKlBanner" value=$oViewConf->getKlarnaHomepageBanner() }]
 
 [{*  *}]
-[{if ($sKlBanner && $oView->getClassId() === 'start') }]
+[{if ($sKlBanner && $oView->getClassName() === 'start') }]
     [{if $oViewConf->getActiveTheme() == 'azure' }]
         <script>
             var re = /src="(.*)"/g;

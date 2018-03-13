@@ -13,7 +13,7 @@ use Klarna\Klarna\Models\KlarnaUser;
 use OxidEsales\Eshop\Application\Model\DeliverySetList;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Exception\StandardException;
-use OxidEsales\Eshop\Core\Registry as oxRegistry;
+use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Request;
 
 class KlarnaPaymentController extends KlarnaPaymentController_parent
@@ -41,24 +41,24 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
      */
     public function init()
     {
-        $this->oRequest = oxRegistry::get(Request::class);
+        $this->oRequest = Registry::get(Request::class);
 
         if ($this->getUser()) {
             $sCountryISO = KlarnaUtils::getCountryISO($this->getUser()->getFieldData('oxcountryid'));
         }
-        if (oxRegistry::getSession()->getVariable('amazonOrderReferenceId')) {
+        if (Registry::getSession()->getVariable('amazonOrderReferenceId')) {
             $this->loadKlarnaPaymentWidget = false;
         }
 
         if (
             KlarnaUtils::isKlarnaCheckoutEnabled() &&
-            (KlarnaUtils::isCountryActiveInKlarnaCheckout(oxRegistry::getSession()->getVariable('sCountryISO')) ||
+            (KlarnaUtils::isCountryActiveInKlarnaCheckout(Registry::getSession()->getVariable('sCountryISO')) ||
              KlarnaUtils::isCountryActiveInKlarnaCheckout($sCountryISO)) &&
-            !oxRegistry::getSession()->getVariable('amazonOrderReferenceId') &&
+            !Registry::getSession()->getVariable('amazonOrderReferenceId') &&
             !$this->oRequest->getRequestEscapedParameter('non_kco_global_country')
         ) {
-            $redirectUrl = oxRegistry::getConfig()->getShopSecureHomeURL() . 'cl=KlarnaExpress';
-            oxRegistry::getUtils()->redirect($redirectUrl, false, 302);
+            $redirectUrl = Registry::getConfig()->getShopSecureHomeURL() . 'cl=KlarnaExpress';
+            Registry::getUtils()->redirect($redirectUrl, false, 302);
         }
 
         parent::init();
@@ -66,6 +66,7 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
 
     /**
      * @return string
+     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      * @throws \ReflectionException
      * @throws \oxSystemComponentException
      */
@@ -76,7 +77,7 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
 
             /** @var User|KlarnaUser $oUser */
             $oUser    = $this->getUser();
-            $oSession = oxRegistry::getSession();
+            $oSession = Registry::getSession();
             $oBasket  = $oSession->getBasket();
 
             if (KlarnaPayment::countryWasChanged($oUser)) {
@@ -85,7 +86,7 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
 
             $this->oKlarnaPayment = new KlarnaPayment($oBasket, $oUser);
 
-            if(!$this->oKlarnaPayment->isSessionValid()){
+            if (!$this->oKlarnaPayment->isSessionValid()) {
                 KlarnaPayment::cleanUpSession();
             }
 
@@ -115,7 +116,7 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
             $this->addTplParam("sLocale", strtolower(KlarnaConsts::getLocale()));
         }
 
-        if($this->countKPMethods() === 0){
+        if ($this->countKPMethods() === 0) {
             $this->loadKlarnaPaymentWidget = false;
         }
 
@@ -132,7 +133,7 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
          * We will remove some methods in the render method after getting payment_method_categories
          * This will pass modified list to the tempalte
          */
-        if($this->aPaymentList) {
+        if ($this->aPaymentList) {
             return $this->aPaymentList;
         }
 
@@ -154,20 +155,20 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
     /** Return shipping sets for KCO */
     public function getCheckoutShippingSets()
     {
-        $sActShipSet = $this->oRequest->getRequestEscapedParameter('sShipSet');
+        $sActShipSet = Registry::get(Request::class)->getRequestEscapedParameter('sShipSet');
         if (!$sActShipSet) {
-            $sActShipSet = oxRegistry::getSession()->getVariable('sShipSet');
+            $sActShipSet = Registry::getSession()->getVariable('sShipSet');
         }
 
-        $oBasket = oxRegistry::getSession()->getBasket();
-        list($aAllSets, ) =
-            oxRegistry::get(DeliverySetList::class)->getDeliverySetData($sActShipSet, $this->getUser(), $oBasket);
+        $oBasket = Registry::getSession()->getBasket();
+        list($aAllSets,) =
+            Registry::get(DeliverySetList::class)->getDeliverySetData($sActShipSet, $this->getUser(), $oBasket);
+
         return $aAllSets;
     }
-    
+
     /**
      * @return KlarnaPaymentsClient|KlarnaClientBase
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function getKlarnaClient()
     {
@@ -176,6 +177,9 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
 
     /** Saves Klarna Payment authorization_token or deleting an existing authorization
      * if payment method was changed to not KP method
+     * @return null
+     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
+     * @throws \ReflectionException
      * @throws \oxSystemComponentException
      */
     public function validatepayment()
@@ -184,7 +188,7 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
             return null;
 
         if (KlarnaUtils::isKlarnaPaymentsEnabled()) {
-            $oSession = oxRegistry::getSession();
+            $oSession              = Registry::getSession();
             $oBasket               = $oSession->getBasket();
             $sPaymentId            = $oBasket->getPaymentId();
             $aKlarnaPaymentMethods = KlarnaPaymentModel::getKlarnaPaymentsIds('KP');
@@ -192,19 +196,19 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
             if (in_array($sPaymentId, $aKlarnaPaymentMethods)) {
 
                 if ($this->oRequest->getRequestEscapedParameter('finalizeRequired')) {
-                    oxRegistry::getSession()->setVariable('finalizeRequired', true);
+                    Registry::getSession()->setVariable('finalizeRequired', true);
                 }
 
                 if ($sAuthToken = $this->oRequest->getRequestEscapedParameter('sAuthToken')) {
-                    oxRegistry::getSession()->setVariable('sAuthToken', $sAuthToken);
+                    Registry::getSession()->setVariable('sAuthToken', $sAuthToken);
                     $dt = new \DateTime();
-                    oxRegistry::getSession()->setVariable('sTokenTimeStamp', $dt->getTimestamp());
+                    Registry::getSession()->setVariable('sTokenTimeStamp', $dt->getTimestamp());
 
                 }
 
                 $this->oKlarnaPayment = new KlarnaPayment($oBasket, $this->getUser());
 
-                if(!$this->oKlarnaPayment->isAuthorized() || $this->oKlarnaPayment->isError()){
+                if (!$this->oKlarnaPayment->isAuthorized() || $this->oKlarnaPayment->isError()) {
                     return null;
                 }
 
@@ -225,7 +229,7 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
     protected function removeUnavailableKP($sessionData)
     {
         $klarnaIds = array();
-        if($sessionData['payment_method_categories']) {
+        if ($sessionData['payment_method_categories']) {
             $klarnaIds = array_map(function ($element) {
                 return $element['identifier'];
             },
@@ -233,9 +237,9 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
             );
         }
 
-        foreach($this->aPaymentList as $payid => $oxPayment ){
+        foreach ($this->aPaymentList as $payid => $oxPayment) {
             $klarnaName = $oxPayment->getPaymentCategoryName();
-            if($klarnaName && !in_array($klarnaName, $klarnaIds)){
+            if ($klarnaName && !in_array($klarnaName, $klarnaIds)) {
                 unset($this->aPaymentList[$payid]);
             }
         }
@@ -275,8 +279,8 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
     protected function countKPMethods()
     {
         $counter = 0;
-        foreach($this->aPaymentList as $payid => $oxPayment ){
-            if($oxPayment->isKPPayment()){
+        foreach ($this->aPaymentList as $payid => $oxPayment) {
+            if ($oxPayment->isKPPayment()) {
                 $counter++;
             }
         }

@@ -74,7 +74,7 @@ class KlarnaArticle extends KlarnaArticle_parent
     {
         $blReturn = true;
         $oView    = Registry::getConfig()->getActiveView();
-        $sCurView = $oView->getClassId();
+        $sCurView = $oView->getClassName();
 
         // if OXID version < 4.7.0
         if (version_compare(oxNew(ShopVersion::class)->getVersion(), '4.7.0') == -1) {
