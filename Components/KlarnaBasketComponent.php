@@ -53,7 +53,6 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
     public function changebasket($sProductId = null, $dAmount = null, $aSel = null, $aPersParam = null, $blOverride = true)
     {
         parent::changebasket($sProductId, $dAmount, $aSel, $aPersParam, $blOverride);
-//        $this->kpOrderChanged();
 
         if (KlarnaUtils::isKlarnaCheckoutEnabled() && Registry::getSession()->hasVariable('klarna_checkout_order_id')) {
             try {
@@ -75,7 +74,6 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
     public function tobasket($sProductId = null, $dAmount = null, $aSel = null, $aPersParam = null, $blOverride = false)
     {
         parent::tobasket($sProductId, $dAmount, $aSel, $aPersParam, $blOverride);
-//        $this->kpOrderChanged();
 
         if (KlarnaUtils::isKlarnaCheckoutEnabled() && Registry::getSession()->hasVariable('klarna_checkout_order_id')) {
             try {
@@ -106,7 +104,6 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
 
     /**
      * @return KlarnaCheckoutClient|KlarnaClientBase
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     protected function getKlarnaCheckoutClient()
     {
@@ -115,7 +112,6 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
 
     /**
      * @return KlarnaOrderManagementClient|KlarnaClientBase
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     protected function getKlarnaOrderClient()
     {

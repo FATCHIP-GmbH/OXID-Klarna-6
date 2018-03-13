@@ -2,7 +2,20 @@
 
 use Klarna\Klarna\Components\KlarnaBasketComponent;
 use Klarna\Klarna\Components\KlarnaUserComponent;
-use Klarna\Klarna\Controlelrs\KlarnaUserController;
+use Klarna\Klarna\Components\Widgets\KlarnaServiceMenu;
+use Klarna\Klarna\Controllers\Admin\KlarnaConfiguration;
+use Klarna\Klarna\Controllers\Admin\KlarnaDesign;
+use Klarna\Klarna\Controllers\Admin\KlarnaEmdAdmin;
+use Klarna\Klarna\Controllers\Admin\KlarnaExternalPayments;
+use Klarna\Klarna\Controllers\Admin\KlarnaGeneral;
+use Klarna\Klarna\Controllers\Admin\KlarnaOrderAddress;
+use Klarna\Klarna\Controllers\Admin\KlarnaOrderArticle as KlarnaAdminOrderArticle;
+use Klarna\Klarna\Controllers\Admin\KlarnaOrderList;
+use Klarna\Klarna\Controllers\Admin\KlarnaOrderMain;
+use Klarna\Klarna\Controllers\Admin\KlarnaOrderOverview;
+use Klarna\Klarna\Controllers\Admin\KlarnaOrders;
+use Klarna\Klarna\Controllers\Admin\KlarnaStart;
+use Klarna\Klarna\Controllers\KlarnaUserController;
 use Klarna\Klarna\Controllers\KlarnaAcknowledgeController;
 use Klarna\Klarna\Controllers\KlarnaAjaxController;
 use Klarna\Klarna\Controllers\KlarnaBasketController;
@@ -22,8 +35,8 @@ use Klarna\Klarna\Models\KlarnaOrder;
 use Klarna\Klarna\Models\KlarnaOrderArticle;
 use Klarna\Klarna\Models\KlarnaPayment;
 use Klarna\Klarna\Models\KlarnaUser;
-
 use Klarna\Klarna\Models\KlarnaUserPayment;
+
 use OxidEsales\Eshop\Application\Component\BasketComponent;
 use OxidEsales\Eshop\Application\Component\UserComponent;
 use OxidEsales\Eshop\Application\Component\Widget\ServiceMenu;
@@ -47,7 +60,6 @@ use OxidEsales\Eshop\Application\Model\Article;
 use OxidEsales\Eshop\Application\Model\UserPayment;
 use OxidEsales\Eshop\Core\Email;
 use OxidEsales\Eshop\Core\ViewConfig;
-
 
 /**
  * Metadata version
@@ -102,7 +114,7 @@ $aModule = array(
         UserController::class     => KlarnaUserController::class,
         PaymentController::class  => KlarnaPaymentController::class,
         BasketController::class   => KlarnaBasketController::class,
-        //
+
         // admin
         OrderAddress::class       => KlarnaOrderAddress::class,
         OrderList::class          => KlarnaOrderList::class,
@@ -114,7 +126,6 @@ $aModule = array(
         BasketComponent::class    => KlarnaBasketComponent::class,
         UserComponent::class      => KlarnaUserComponent::class,
         ServiceMenu::class        => KlarnaServiceMenu::class,
-
     ),
 
     'templates' => array(
@@ -145,7 +156,6 @@ $aModule = array(
         'kl_country_creds.tpl'                  => 'klarna/klarna/views/admin/tpl/kl_country_creds.tpl',
         'kl_header.tpl'                         => 'klarna/klarna/views/admin/tpl/kl_header.tpl',
         'kl_lang_spec_conf.tpl'                 => 'klarna/klarna/views/admin/tpl/kl_lang_spec_conf.tpl',
-        //
     ),
 
     'blocks' => array(
