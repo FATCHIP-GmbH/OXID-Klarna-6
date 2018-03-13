@@ -90,7 +90,7 @@ $aModule = array(
 
         // controllers
         'KlarnaExpress'          => KlarnaExpress::class,
-        'Klarna_ajax'            => KlarnaAjax::class,
+        'KlarnaAjax'             => KlarnaAjax::class,
         'KlarnaEpmDispatcher'    => KlarnaEpmDispatcher::class,
         'KlarnaAcknowledge'      => KlarnaAcknowledge::class,
         'KlarnaValidate'         => KlarnaValidate::class,
@@ -111,7 +111,7 @@ $aModule = array(
 
         // controllers
         OrderController::class    => KlarnaOrderController::class,
-        ThankYouController::class => KlarnaThankyou::class,
+        ThankYouController::class => KlarnaThankYouController::class,
         ViewConfig::class         => KlarnaViewConfig::class,
         UserController::class     => KlarnaUserController::class,
         PaymentController::class  => KlarnaPaymentController::class,

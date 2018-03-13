@@ -98,7 +98,8 @@ class KlarnaAjax extends FrontendController
 
     /**
      * Initialize oxUser object and get order data from Klarna
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \oxSystemComponentException
      */
     protected function _initUser()
     {

@@ -2,11 +2,11 @@
 
 namespace Klarna\Klarna\Controllers\Admin;
 
+
 use Klarna\Klarna\Core\KlarnaConsts;
 use Klarna\Klarna\Core\KlarnaUtils;
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Core\Registry;
-
 
 /**
  * Class Klarna_Config for module configuration in OXID backend

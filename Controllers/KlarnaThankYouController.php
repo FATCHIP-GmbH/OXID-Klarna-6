@@ -9,7 +9,7 @@ use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Registry;
 
-class KlarnaThankYou extends KlarnaThankYou_parent
+class KlarnaThankYouController extends KlarnaThankYouController_parent
 {
     /**
      * @return mixed
