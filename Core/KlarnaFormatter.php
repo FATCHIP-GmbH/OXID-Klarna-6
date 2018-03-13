@@ -6,13 +6,14 @@ namespace Klarna\Klarna\Core;
 use OxidEsales\Eshop\Application\Model\Address;
 use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\User;
+use OxidEsales\Eshop\Core\Base;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 
 /**
  * Class KlarnaFormatter
  */
-class KlarnaFormatter
+class KlarnaFormatter extends Base
 {
     static $aFieldMapper = array(
         'oxusername'    => 'email',
@@ -52,6 +53,10 @@ class KlarnaFormatter
      */
     public static function klarnaToOxidAddress($aCheckoutData, $sKey)
     {
+        if(!$aCheckoutData){
+            return null;
+        }
+
         $aAddressData = $aCheckoutData[$sKey];
         $sTable       = ($sKey == 'billing_address') ? 'oxuser__' : 'oxaddress__';
 

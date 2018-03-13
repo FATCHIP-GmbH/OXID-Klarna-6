@@ -11,7 +11,7 @@
         </MAINMENU>
         <MAINMENU id="mxorders">
             <SUBMENU id="mxdisplayorders" cl="admin_order" list="order_list">
-                <TAB id="kl_tbclklarna_orders" cl="klarna_orders" />
+                <TAB id="kl_tbclklarna_orders" cl="KlarnaOrders" />
             </SUBMENU>
         </MAINMENU>
     </OXMENU>

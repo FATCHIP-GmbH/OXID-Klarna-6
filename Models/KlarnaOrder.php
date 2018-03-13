@@ -14,6 +14,7 @@ use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Session;
+use OxidEsales\Eshop\Core\UtilsDate;
 
 class KlarnaOrder extends KlarnaOrder_parent
 {
@@ -482,7 +483,7 @@ class KlarnaOrder extends KlarnaOrder_parent
         // order date
         $oPdf->setFont($oPdfBlock->getFont(), '', 10);
         $aOrderDate = explode(' ', $this->oxorder__oxorderdate->value);
-        $sOrderDate = Registry::get("oxUtilsDate")->formatDBDate($aOrderDate[0]);
+        $sOrderDate = Registry::get(UtilsDate::class)->formatDBDate($aOrderDate[0]);
         $oPdf->text(15, $iTop + 8, $this->translate('ORDER_OVERVIEW_PDF_ORDERSFROM') . $sOrderDate . $this->translate('ORDER_OVERVIEW_PDF_ORDERSAT') . $oShop->oxshops__oxurl->value);
         $iTop += 16;
 
@@ -573,7 +574,7 @@ class KlarnaOrder extends KlarnaOrder_parent
         }
 
         // loading user info
-        $oUser = oxNew('oxuser');
+        $oUser = oxNew(User::class);
         $oUser->load($this->oxorder__oxuserid->value);
 
         // user info
@@ -614,7 +615,7 @@ class KlarnaOrder extends KlarnaOrder_parent
 
         // order date
         $aOrderDate = explode(' ', $this->oxorder__oxorderdate->value);
-        $sOrderDate = Registry::get("oxUtilsDate")->formatDBDate($aOrderDate[0]);
+        $sOrderDate = Registry::get(UtilsDate::class)->formatDBDate($aOrderDate[0]);
         $oPdf->setFont($oPdfBlock->getFont(), '', 10);
         $oPdf->text(15, 119, $this->translate('ORDER_OVERVIEW_PDF_ORDERSFROM') . $sOrderDate . $this->translate('ORDER_OVERVIEW_PDF_ORDERSAT') . $oShop->oxshops__oxurl->value);
 
