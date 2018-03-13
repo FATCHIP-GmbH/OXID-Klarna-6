@@ -57,9 +57,12 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     protected $isExternalCheckout = false;
 
     /**
-     * @var array data fetched from KlarnaCheckout
+     *
      * @return string
-     * @throws Exception
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
+     * @throws \oxSystemComponentException
      */
     public function init()
     {
@@ -177,6 +180,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      *
      * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
+     * @throws \ReflectionException
      * @throws \oxSystemComponentException
      */
     public function kpBeforeExecute()
@@ -367,8 +371,10 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     /**
      * General Ajax entry point for this controller
      * @throws KlarnaClientException
+     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      * @throws \ReflectionException
+     * @throws \oxSystemComponentException
      */
     public function updateKlarnaAjax()
     {
@@ -899,7 +905,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
     /**
      * @return null|string
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      */
     public function render()
     {
@@ -951,6 +956,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     /**
      * @param null $sCountryISO
      * @return KlarnaOrderManagementClient | \Klarna\Klarna\Core\KlarnaClientBase
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     protected function getKlarnaOrderClient($sCountryISO = null)
     {
