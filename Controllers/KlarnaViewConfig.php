@@ -286,7 +286,7 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
      */
     public function getLawNotificationsLinkKco()
     {
-        $sCountryISO = oxRegistry::getSession()->getVariable('sCountryISO');
+        $sCountryISO = Registry::getSession()->getVariable('sCountryISO');
         $mid         = KlarnaUtils::getAPICredentials($sCountryISO);
         preg_match('/^(?P<mid>(.)+)(\_)/', $mid['mid'], $matches);
 
