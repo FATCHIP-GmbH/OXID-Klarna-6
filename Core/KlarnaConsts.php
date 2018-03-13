@@ -1,5 +1,7 @@
 <?php
+
 namespace Klarna\Klarna\Core;
+
 
 use OxidEsales\Eshop\Core\Registry as oxRegistry;
 

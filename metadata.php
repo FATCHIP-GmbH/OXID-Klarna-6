@@ -2,7 +2,12 @@
 
 use Klarna\Klarna\Components\KlarnaBasketComponent;
 use Klarna\Klarna\Components\KlarnaUserComponent;
-use Klarna\Klarna\Controlelrs\KlarnaUserController;
+use Klarna\Klarna\Components\Widgets\KlarnaServiceMenu;
+use Klarna\Klarna\Controllers\Admin\KlarnaOrderAddress;
+use Klarna\Klarna\Controllers\Admin\KlarnaOrderArticle as KlarnaAdminOrderArticle;
+use Klarna\Klarna\Controllers\Admin\KlarnaOrderMain;
+use Klarna\Klarna\Controllers\Admin\KlarnaOrderOverview;
+use Klarna\Klarna\Controllers\KlarnaUserController;
 use Klarna\Klarna\Controllers\KlarnaAcknowledge;
 use Klarna\Klarna\Controllers\KlarnaAjax;
 use Klarna\Klarna\Controllers\KlarnaBasketController;
@@ -13,25 +18,38 @@ use Klarna\Klarna\Controllers\KlarnaPaymentController;
 use Klarna\Klarna\Controllers\KlarnaThankyou;
 use Klarna\Klarna\Controllers\KlarnaValidate;
 use Klarna\Klarna\Controllers\KlarnaViewConfig;
+use Klarna\Klarna\Core\KlarnaEmail;
+use Klarna\Klarna\Models\KlarnaAddress;
 use Klarna\Klarna\Models\KlarnaArticle;
 use Klarna\Klarna\Models\KlarnaBasket;
 use Klarna\Klarna\Models\KlarnaCountryList;
 use Klarna\Klarna\Models\KlarnaOrder;
+use Klarna\Klarna\Models\KlarnaOrderArticle;
 use Klarna\Klarna\Models\KlarnaPayment;
 use Klarna\Klarna\Models\KlarnaUser;
 
+use Klarna\Klarna\Models\KlarnaUserPayment;
 use OxidEsales\Eshop\Application\Component\BasketComponent;
 use OxidEsales\Eshop\Application\Component\UserComponent;
+use OxidEsales\Eshop\Application\Component\Widget\ServiceMenu;
+use OxidEsales\Eshop\Application\Controller\Admin\OrderAddress;
+use OxidEsales\Eshop\Application\Controller\Admin\OrderArticle as AdminOrderArticle;
+use OxidEsales\Eshop\Application\Controller\Admin\OrderMain;
+use OxidEsales\Eshop\Application\Controller\Admin\OrderOverview;
 use OxidEsales\Eshop\Application\Controller\BasketController;
 use OxidEsales\Eshop\Application\Controller\OrderController;
 use OxidEsales\Eshop\Application\Controller\PaymentController;
 use OxidEsales\Eshop\Application\Controller\ThankYouController;
 use OxidEsales\Eshop\Application\Controller\UserController;
+use OxidEsales\Eshop\Application\Model\Address;
 use OxidEsales\Eshop\Application\Model\CountryList;
+use OxidEsales\Eshop\Application\Model\Order;
+use OxidEsales\Eshop\Application\Model\OrderArticle;
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Article;
+use OxidEsales\Eshop\Application\Model\UserPayment;
 use OxidEsales\Eshop\Core\Email;
 use OxidEsales\Eshop\Core\ViewConfig;
 
@@ -76,11 +94,11 @@ $aModule = array(
         Article::class            => KlarnaArticle::class,
         Order::class              => KlarnaOrder::class,
         Email::class              => KlarnaEmail::class,
-        //        'oxaddress'      => 'klarna/klarna/models/klarna_oxaddress',
+        Address::class            => KlarnaAddress::class,
         Payment::class            => KlarnaPayment::class,
         CountryList::class        => KlarnaCountryList::class,
-        //        'oxorderarticle' => 'klarna/klarna/models/klarna_oxorderarticle',
-        //        'oxuserpayment'  => 'klarna/klarna/models/klarna_oxuserpayment',
+        OrderArticle::class       => KlarnaOrderArticle::class,
+        UserPayment::class        => KlarnaUserPayment::class,
 
         // controllers
         OrderController::class    => KlarnaOrderController::class,
@@ -90,17 +108,17 @@ $aModule = array(
         PaymentController::class  => KlarnaPaymentController::class,
         BasketController::class   => KlarnaBasketController::class,
         //
-        //        // admin
-        //        'order_address'  => 'klarna/klarna/controllers/admin/klarna_order_address',
-        //        'order_list'     => 'klarna/klarna/controllers/admin/klarna_order_list',
-        //        'order_article'  => 'klarna/klarna/controllers/admin/klarna_order_article',
-        //        'order_main'     => 'klarna/klarna/controllers/admin/klarna_order_main',
-        //        'order_overview' => 'klarna/klarna/controllers/admin/klarna_order_overview',
-        //
+        // admin
+        OrderAddress::class       => KlarnaOrderAddress::class,
+        //        \OxidEsales\Eshop\Application\Controller\Admin\OrderList::class              => KlarnaOrder,
+        AdminOrderArticle::class  => KlarnaAdminOrderArticle::class,
+        OrderMain::class          => KlarnaOrderMain::class,
+        OrderOverview::class      => KlarnaOrderOverview::class,
+
         //components
         BasketComponent::class    => KlarnaBasketComponent::class,
         UserComponent::class      => KlarnaUserComponent::class,
-        //        'oxwservicemenu' => 'klarna/klarna/components/widgets/oxw_klarna_servicemenu',
+        ServiceMenu::class        => KlarnaServiceMenu::class,
 
     ),
 
@@ -223,8 +241,8 @@ $aModule = array(
         ),
         array(
             'template' => 'order_article.tpl',
-            'block'    => 'admin_order_article_listitem',
-            'file'     => 'kl_admin_order_article_listitem',
+            'block'    => 'admin_order_article_header',
+            'file'     => 'kl_admin_order_article_header',
         ),
         array(
             'template' => 'order_list.tpl',

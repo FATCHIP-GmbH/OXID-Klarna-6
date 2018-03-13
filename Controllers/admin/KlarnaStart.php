@@ -1,9 +1,10 @@
 <?php
 
 namespace Klarna\Klarna\Controllers\Admin;
-use OxidEsales\Eshop\Core\Module\Module;
-use OxidEsales\Eshop\Core\Registry as  oxRegistry;
 
+
+use OxidEsales\Eshop\Core\Module\Module;
+use OxidEsales\Eshop\Core\Registry;
 
 /**
  * Class Klarna_Config for module configuration in OXID backend
@@ -23,7 +24,7 @@ class KlarnaStart extends KlarnaBaseConfig
     {
         // force shopid as parameter
         // Pass shop OXID so that shop object could be loaded
-        $sShopOXID = oxRegistry::getConfig()->getShopId();
+        $sShopOXID = Registry::getConfig()->getShopId();
 
         $this->setEditObjectId($sShopOXID);
 

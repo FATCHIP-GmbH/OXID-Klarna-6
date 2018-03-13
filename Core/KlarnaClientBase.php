@@ -1,5 +1,7 @@
 <?php
+
 namespace Klarna\Klarna\Core;
+
 
 use Klarna\Klarna\Exception\KlarnaClientException;
 use Klarna\Klarna\Exception\KlarnaOrderNotFoundException;
@@ -8,7 +10,7 @@ use Klarna\Klarna\Exception\KlarnaWrongCredentialsException;
 
 use OxidEsales\Eshop\Core\Base;
 use OxidEsales\Eshop\Core\Module\Module;
-use OxidEsales\Eshop\Core\Registry as oxRegistry;
+use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\UtilsView;
 
 
@@ -162,13 +164,12 @@ abstract class KlarnaClientBase extends Base
     public static function addErrors($aErrors)
     {
         foreach ($aErrors as $message) {
-            oxRegistry::get(UtilsView::class)->addErrorToDisplay($message);
+            Registry::get(UtilsView::class)->addErrorToDisplay($message);
         }
     }
 
     /**
      * @return array
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     protected function getApiClientHeader()
     {

@@ -1,5 +1,7 @@
 <?php
+
 namespace Klarna\Klarna\Models\EmdPayload;
+
 
 class KlarnaPassThrough
 {

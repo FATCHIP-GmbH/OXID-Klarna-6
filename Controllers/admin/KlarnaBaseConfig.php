@@ -2,13 +2,15 @@
 
 namespace Klarna\Klarna\Controllers\Admin;
 
+
 use Klarna\Klarna\Core\KlarnaConsts;
 use Klarna\Klarna\Core\KlarnaUtils;
 use OxidEsales\Eshop\Application\Controller\Admin\ShopConfiguration;
+use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Application\Model\Shop;
 use OxidEsales\Eshop\Core\Database\Adapter\Doctrine\Database;
-use OxidEsales\Eshop\Core\DatabaseProvider as oxDb;
-use OxidEsales\Eshop\Core\Registry as oxRegistry;
+use OxidEsales\Eshop\Core\DatabaseProvider;
+use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Request;
 
 class KlarnaBaseConfig extends ShopConfiguration
@@ -60,7 +62,7 @@ class KlarnaBaseConfig extends ShopConfiguration
     public function init()
     {
         parent::init();
-        $this->_oRequest = oxRegistry::get(Request::class);
+        $this->_oRequest = Registry::get(Request::class);
     }
 
     public function render()
@@ -75,7 +77,6 @@ class KlarnaBaseConfig extends ShopConfiguration
      * Save configuration values
      *
      * @return void
-     * @throws oxSystemComponentException
      */
     public function save()
     {
@@ -127,12 +128,12 @@ class KlarnaBaseConfig extends ShopConfiguration
     protected function removeConfigKeys($aKeys)
     {
         /** @var Database $db */
-        $db = oxDb::getDb(oxDb::FETCH_MODE_ASSOC);
+        $db = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
 
         $sql = "DELETE 
-                    FROM oxconfig
+                FROM oxconfig
                 WHERE oxvarname IN ('" . implode("','", $aKeys) . "')
-                    AND oxshopid = '{$this->getConfig()->getShopId()}'";
+                AND oxshopid = '{$this->getConfig()->getShopId()}'";
 
         return $db->execute($sql);
     }
@@ -180,7 +181,7 @@ class KlarnaBaseConfig extends ShopConfiguration
      */
     protected function _performConfVarsSave($sConfigType, $aConfVars)
     {
-        $myConfig = oxRegistry::getConfig();
+        $myConfig = Registry::getConfig();
         $sShopId  = $this->getEditObjectId();
         $sModule  = $this->_getModuleForConfigVars();
 
@@ -207,13 +208,15 @@ class KlarnaBaseConfig extends ShopConfiguration
     }
 
     /**
-     * @throws oxConnectionException
+     * @return \OxidEsales\Eshop\Core\Database\Adapter\ResultSetInterface
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
      */
     public function getAllActiveOxPaymentIds()
     {
-        $db = oxdb::getDb(oxdb::FETCH_MODE_ASSOC);
+        $db = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
 
-        $sql    = 'SELECT oxid FROM oxpayments WHERE oxactive=1 AND oxid != "oxempty"';
+        $sql = 'SELECT oxid FROM oxpayments WHERE oxactive=1 AND oxid != "oxempty"';
 
         $result = $db->select($sql);
 
@@ -229,7 +232,7 @@ class KlarnaBaseConfig extends ShopConfiguration
     public function getPaymentData($oxid, $lang = false)
     {
         $lang      = $lang !== false ? $lang : $this->_aViewData['adminlang'];
-        $oxpayment = oxnew('oxPayment');
+        $oxpayment = oxnew(Payment::class);
         $oxpayment->loadInLang($lang, $oxid);
 
         $result['oxid'] = $oxid;
@@ -262,7 +265,7 @@ class KlarnaBaseConfig extends ShopConfiguration
      */
     public function getManualDownloadLink()
     {
-        $langTag = oxRegistry::getLang()->getLanguageAbbr($this->_aViewData['adminlang']);
+        $langTag = Registry::getLang()->getLanguageAbbr($this->_aViewData['adminlang']);
 
         return sprintf(KlarnaConsts::KLARNA_MANUAL_DOWNLOAD_LINK, $langTag);
     }
@@ -270,13 +273,13 @@ class KlarnaBaseConfig extends ShopConfiguration
     public function getLangs()
     {
         return htmlentities(json_encode(
-            oxRegistry::getLang()->getLanguageArray()
+            Registry::getLang()->getLanguageArray()
         ));
     }
 
     public function getFlippedLangArray()
     {
-        $aLangs = oxRegistry::getLang()->getLanguageArray();
+        $aLangs = Registry::getLang()->getLanguageArray();
 
         $return = array();
         foreach ($aLangs as $oLang) {

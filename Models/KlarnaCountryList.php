@@ -1,5 +1,7 @@
 <?php
+
 namespace Klarna\Klarna\Models;
+
 
 use Klarna\Klarna\Core\KlarnaConsts;
 

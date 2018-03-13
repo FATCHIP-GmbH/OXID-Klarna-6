@@ -1,9 +1,12 @@
 <?php
+
 namespace Klarna\Klarna\Controllers;
 
+
 use Klarna\Klarna\Core\KlarnaLogs;
+use Klarna\Klarna\Core\KlarnaOrderValidator;
 use OxidEsales\Eshop\Application\Controller\FrontendController;
-use OxidEsales\Eshop\Core\Registry as oxRegistry;
+use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Request;
 
 class KlarnaValidate extends FrontendController
@@ -19,7 +22,7 @@ class KlarnaValidate extends FrontendController
         $requestBody      = file_get_contents('php://input');
         $aKlarnaOrderData = json_decode($requestBody, true);
         $order_id         = $aKlarnaOrderData['order_id'];
-        $validator        = oxNew('KlarnaOrderValidator', $aKlarnaOrderData);
+        $validator        = new KlarnaOrderValidator($aKlarnaOrderData);
         $redirectUrl      = null;
         $validator->validateOrder();
 
@@ -36,11 +39,11 @@ class KlarnaValidate extends FrontendController
             );
 
             header("", true, $responseStatus);
-            oxRegistry::getUtils()->showMessageAndExit('');
+            Registry::getUtils()->showMessageAndExit('');
         } else {
-            $sid         = oxRegistry::get(Request::class)->getRequestParameter('s');
-            $redirectUrl = oxRegistry::getConfig()->getSslShopUrl() . "index.php?cl=basket&force_sid=$sid&klarnaInvalid=1&";
-            $redirectUrl .= http_build_query($validator->getResultErrors());
+            $sid            = Registry::get(Request::class)->getRequestEscapedParameter('s');
+            $redirectUrl    = Registry::getConfig()->getSslShopUrl() . "index.php?cl=basket&force_sid=$sid&klarnaInvalid=1&";
+            $redirectUrl    .= http_build_query($validator->getResultErrors());
             $responseStatus = 303;
 
             $this->logKlarnaData(
@@ -53,7 +56,7 @@ class KlarnaValidate extends FrontendController
                 $redirectUrl
             );
 
-            oxRegistry::getUtils()->redirect($redirectUrl, true, $responseStatus);
+            Registry::getUtils()->redirect($redirectUrl, true, $responseStatus);
         }
     }
 

@@ -1,7 +1,23 @@
 <?php
+
 namespace Klarna\Klarna\Controllers;
 
+
+use Klarna\Klarna\Core\KlarnaCheckoutClient;
+use Klarna\Klarna\Core\KlarnaClientBase;
+use Klarna\Klarna\Core\KlarnaFormatter;
+use Klarna\Klarna\Core\KlarnaOrder;
+use Klarna\Klarna\Core\KlarnaUtils;
+use Klarna\Klarna\Exception\KlarnaClientException;
+use Klarna\Klarna\Models\KlarnaUser;
 use OxidEsales\Eshop\Application\Controller\FrontendController;
+use OxidEsales\Eshop\Application\Model\Basket;
+use OxidEsales\Eshop\Application\Model\Country;
+use OxidEsales\Eshop\Application\Model\User;
+use OxidEsales\Eshop\Core\Exception\StandardException;
+use OxidEsales\Eshop\Core\Field;
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Request;
 
 class KlarnaAjax extends FrontendController
 {
@@ -11,25 +27,24 @@ class KlarnaAjax extends FrontendController
      */
     protected $_sThisTemplate = null;
 
-    /** @var klarna_oxuser|oxuser */
+    /** @var User|KlarnaUser */
     protected $_oUser;
 
 
     /** @var array */
     protected $_aOrderData;
 
-    /** @var oxException */
+    /** @var \Exception[] */
     protected $_aErrors;
 
     /**
      * @return string|void
-     * @throws oxConnectionException
-     * @throws oxException
-     * @throws oxSystemComponentException
+     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function init()
     {
-        $oSession = oxRegistry::getSession();
+        $oSession = Registry::getSession();
         $oBasket  = $oSession->getBasket();
 
         if ($oBasket->getPaymentId() === 'klarna_checkout') {
@@ -47,7 +62,7 @@ class KlarnaAjax extends FrontendController
             $this->updateUserObject();
 
         } else {
-            oxRegistry::getUtils()->showMessageAndExit('Invalid payment ID');
+            Registry::getUtils()->showMessageAndExit('Invalid payment ID');
         }
 
         parent::init();
@@ -63,7 +78,7 @@ class KlarnaAjax extends FrontendController
         if (!$this->_aErrors) {
             try {
                 $this->updateKlarnaOrder();
-            } catch (oxException $e) {
+            } catch (StandardException $e) {
                 $e->debugOut();
             }
         }
@@ -74,6 +89,7 @@ class KlarnaAjax extends FrontendController
 
     /**
      * @return KlarnaCheckoutClient|KlarnaClientBase
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function getKlarnaCheckoutClient()
     {
@@ -82,33 +98,30 @@ class KlarnaAjax extends FrontendController
 
     /**
      * Initialize oxUser object and get order data from Klarna
-     * @throws oxSystemComponentException
-     * @throws oxConnectionException
+     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      */
     protected function _initUser()
     {
         if ($this->_oUser = $this->getUser()) {
             if ($this->getViewConfig()->isUserLoggedIn()) {
-                $this->_oUser->kl_setType(Klarna_oxUser::LOGGED_IN);
+                $this->_oUser->kl_setType(KlarnaUser::LOGGED_IN);
             } else {
-                $this->_oUser->kl_setType(Klarna_oxUser::NOT_REGISTERED);
+                $this->_oUser->kl_setType(KlarnaUser::NOT_REGISTERED);
             }
         } else {
             $this->_oUser                      = KlarnaUtils::getFakeUser($this->_aOrderData['billing_address']['email']);
-            $oCountry                          = oxNew('oxCountry');
-            $this->_oUser->oxuser__oxcountryid = new oxField(
+            $oCountry                          = oxNew(Country::class);
+            $this->_oUser->oxuser__oxcountryid = new Field(
                 $oCountry->getIdByCode(
                     strtoupper($this->_aOrderData['purchase_country'])
                 ),
-                oxField::T_RAW
+                Field::T_RAW
             );
         }
     }
 
     /**
      * Update oxUser object
-     * @throws oxException
-     * @throws oxSystemComponentException
      */
     protected function updateUserObject()
     {
@@ -118,20 +131,18 @@ class KlarnaAjax extends FrontendController
             $this->_oUser->clearDeliveryAddress();
 
         $this->_oUser->assign(KlarnaFormatter::klarnaToOxidAddress($this->_aOrderData, 'billing_address'));
-        if (in_array($this->_oUser->kl_getType(), array(Klarna_oxUser::LOGGED_IN, Klarna_oxUser::NOT_REGISTERED))) {
+        if (in_array($this->_oUser->kl_getType(), array(KlarnaUser::LOGGED_IN, KlarnaUser::NOT_REGISTERED))) {
             $this->_oUser->save();
         }
         if (isset($this->_aOrderData['customer']['date_of_birth'])) {
-            $this->_oUser->oxuser__oxbirthdate = new oxField($this->_aOrderData['customer']['date_of_birth']);
+            $this->_oUser->oxuser__oxbirthdate = new Field($this->_aOrderData['customer']['date_of_birth']);
         }
     }
 
     /**
      * Sends update request to checkout API
      * @return array order data
-     * @throws KlarnaClientException
-     * @throws oxException
-     * @throws oxSystemComponentException
+     * @throws StandardException
      * @internal param oxBasket $oBasket
      * @internal param oxUser $oUser
      */
@@ -139,7 +150,7 @@ class KlarnaAjax extends FrontendController
     {
         $oSession     = $this->getSession();
         $oBasket      = $oSession->getBasket();
-        $oKlarnaOrder = oxNew('KlarnaOrder', $oBasket, $this->_oUser);
+        $oKlarnaOrder = new KlarnaOrder($oBasket, $this->_oUser);
         $oClient      = $this->getKlarnaCheckoutClient();
         $aOrderData   = $oKlarnaOrder->getOrderData();
 
@@ -150,10 +161,10 @@ class KlarnaAjax extends FrontendController
 
     public function setKlarnaDeliveryAddress()
     {
-        $oxidAddress = oxRegistry::getConfig()->getRequestParameter('klarna_address_id');
-        oxRegistry::getSession()->setVariable('deladrid', $oxidAddress);
-        oxRegistry::getSession()->setVariable('blshowshipaddress', 1);
-        oxRegistry::getSession()->deleteVariable('klarna_checkout_order_id');
+        $oxidAddress = Registry::get(Request::class)->getRequestEscpaedParameter('klarna_address_id');
+        Registry::getSession()->setVariable('deladrid', $oxidAddress);
+        Registry::getSession()->setVariable('blshowshipaddress', 1);
+        Registry::getSession()->deleteVariable('klarna_checkout_order_id');
 
         $this->_sThisTemplate = null;
     }
@@ -165,7 +176,7 @@ class KlarnaAjax extends FrontendController
      */
     public function addVoucher()
     {
-        oxRegistry::get('basket')->addVoucher();
+        Registry::get(Basket::class)->addVoucher();
         $this->updateVouchers();
     }
 
@@ -176,7 +187,7 @@ class KlarnaAjax extends FrontendController
      */
     public function removeVoucher()
     {
-        oxRegistry::get('basket')->removeVoucher();
+        Registry::get(Basket::class)->removeVoucher();
         $this->updateVouchers();
     }
 
@@ -204,7 +215,7 @@ class KlarnaAjax extends FrontendController
      */
     private function jsonResponse($action, $status, $data = null)
     {
-        return oxRegistry::getUtils()->showMessageAndExit(json_encode(array(
+        return Registry::getUtils()->showMessageAndExit(json_encode(array(
             'action' => $action,
             'status' => $status,
             'data'   => $data,

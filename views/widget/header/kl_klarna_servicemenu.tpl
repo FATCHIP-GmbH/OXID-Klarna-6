@@ -13,7 +13,7 @@
             <li><a id="registerLink" href="[{ oxgetseourl ident=$oViewConf->getSslSelfLink()|cat:"cl=register" }]" title="[{oxmultilang ident="REGISTER"}]">[{oxmultilang ident="REGISTER"}]</a></li>
         [{/if}]
     </ul>
-    [{oxscript widget=$oView->getClassName()}]
+    [{oxscript widget=$oView->getClassId()}]
 [{else}]
     [{if $oxcmp_user}]
         [{assign var="noticeListCount" value=$oxcmp_user->getNoticeListArtCnt()}]

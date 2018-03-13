@@ -1,13 +1,15 @@
 <?php
+
 namespace Klarna\Klarna\Core;
+
 
 use OxidEsales\Eshop\Application\Controller\Admin\ShopConfiguration;
 use OxidEsales\Eshop\Application\Model\Actions;
 use OxidEsales\Eshop\Application\Model\Payment;
-use OxidEsales\Eshop\Core\DatabaseProvider as oxDb;
+use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\DbMetaDataHandler;
-use OxidEsales\Eshop\Core\Registry as oxRegistry;
-use OxidEsales\Eshop\Core\Field as oxField;
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Database\Adapter\Doctrine\Database;
 use Klarna\Klarna\Models\KlarnaPayment;
 
@@ -35,17 +37,19 @@ class KlarnaInstaller extends ShopConfiguration
     public static function getInstance()
     {
         if (!self::$instance) {
-            self::$instance         = new KlarnaInstaller;
+            self::$instance = new KlarnaInstaller;
             /** @var Database db */
-            self::$instance->db     = oxDb::getDb(oxDb::FETCH_MODE_ASSOC);
-            self::$instance->dbName = oxRegistry::getConfig()->getConfigParam('dbName');
-            self::$instance->modulePath = oxRegistry::getConfig()->getConfigParam('sShopDir') . self::$instance->moduleRelativePath;
+            self::$instance->db         = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
+            self::$instance->dbName     = Registry::getConfig()->getConfigParam('dbName');
+            self::$instance->modulePath = Registry::getConfig()->getConfigParam('sShopDir') . self::$instance->moduleRelativePath;
         }
 
         return self::$instance;
     }
 
     /**
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
      */
     public static function onActivate()
     {
@@ -64,6 +68,8 @@ class KlarnaInstaller extends ShopConfiguration
 
     /**
      *
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      */
     public static function onDeactivate()
     {
@@ -94,10 +100,10 @@ class KlarnaInstaller extends ShopConfiguration
      */
     protected function addConfigVars()
     {
-        $config = oxRegistry::getConfig();
+        $config = Registry::getConfig();
         $shopId = $config->getShopId();
 
-        $currencies    = oxRegistry::getConfig()->getCurrencyArray();
+        $currencies    = Registry::getConfig()->getCurrencyArray();
         $currenciesVar = '';
         foreach ($currencies as $currency) {
             $currenciesVar .= $currency->name . '=>' . $currency->id;
@@ -175,7 +181,7 @@ class KlarnaInstaller extends ShopConfiguration
 
     /**
      * Add Klarna Checkout to payments
-     * @throws oxSystemComponentException
+     * @throws \Exception
      */
     protected function addKlarnaPaymentsMethods()
     {
@@ -190,40 +196,40 @@ class KlarnaInstaller extends ShopConfiguration
                                  array($de_prefix => 'Klarna Rechnung', $en_prefix => 'Klarna Pay Later'),
                              KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID  =>
                                  array($de_prefix => 'Klarna Ratenkauf', $en_prefix => 'Klarna Slice It'),
-                             KlarnaPayment::KLARNA_PAYMENT_PAY_NOW =>
+                             KlarnaPayment::KLARNA_PAYMENT_PAY_NOW      =>
                                  array($de_prefix => 'Sofort bezahlen', $en_prefix => 'Klarna Pay Now'),
         );
 
-        $sort        = -350;
-        $aLangs      = oxRegistry::getLang()->getLanguageArray();
+        $sort   = -350;
+        $aLangs = Registry::getLang()->getLanguageArray();
 
         if ($aLangs) {
             foreach ($newPayments as $oxid => $aTitle) {
-                /** @var $oPayment oxPayment */
+                /** @var Payment $oPayment */
                 $oPayment = oxNew(Payment::class);
                 $oPayment->load($oxid);
                 if ($oPayment->isLoaded()) {
-                    $oPayment->oxpayments__oxactive = new oxField(1, oxField::T_RAW);
+                    $oPayment->oxpayments__oxactive = new Field(1, Field::T_RAW);
                     $oPayment->save();
                     continue;
                 }
                 $oPayment->setEnableMultilang(false);
                 $oPayment->setId($oxid);
-                $oPayment->oxpayments__oxactive      = new oxField(1, oxField::T_RAW);
-                $oPayment->oxpayments__oxaddsum      = new oxField(0, oxField::T_RAW);
-                $oPayment->oxpayments__oxaddsumtype  = new oxField('abs', oxField::T_RAW);
-                $oPayment->oxpayments__oxaddsumrules = new oxField('31', oxField::T_RAW);
-                $oPayment->oxpayments__oxfromboni    = new oxField('0', oxField::T_RAW);
-                $oPayment->oxpayments__oxfromamount  = new oxField('0', oxField::T_RAW);
-                $oPayment->oxpayments__oxtoamount    = new oxField('1000000', oxField::T_RAW);
-                $oPayment->oxpayments__oxchecked     = new oxField(0, oxField::T_RAW);
-                $oPayment->oxpayments__oxsort        = new oxField(strval($sort), oxField::T_RAW);
-                $oPayment->oxpayments__oxtspaymentid = new oxField('', oxField::T_RAW);
+                $oPayment->oxpayments__oxactive      = new Field(1, Field::T_RAW);
+                $oPayment->oxpayments__oxaddsum      = new Field(0, Field::T_RAW);
+                $oPayment->oxpayments__oxaddsumtype  = new Field('abs', Field::T_RAW);
+                $oPayment->oxpayments__oxaddsumrules = new Field('31', Field::T_RAW);
+                $oPayment->oxpayments__oxfromboni    = new Field('0', Field::T_RAW);
+                $oPayment->oxpayments__oxfromamount  = new Field('0', Field::T_RAW);
+                $oPayment->oxpayments__oxtoamount    = new Field('1000000', Field::T_RAW);
+                $oPayment->oxpayments__oxchecked     = new Field(0, Field::T_RAW);
+                $oPayment->oxpayments__oxsort        = new Field(strval($sort), Field::T_RAW);
+                $oPayment->oxpayments__oxtspaymentid = new Field('', Field::T_RAW);
 
                 // set multi language fields
                 foreach ($aLangs as $oLang) {
-                    $sTag                                     = oxRegistry::getLang()->getLanguageTag($oLang->id);
-                    $oPayment->{'oxpayments__oxdesc' . $sTag} = new oxField($aTitle[$oLang->id], oxField::T_RAW);
+                    $sTag                                     = Registry::getLang()->getLanguageTag($oLang->id);
+                    $oPayment->{'oxpayments__oxdesc' . $sTag} = new Field($aTitle[$oLang->id], Field::T_RAW);
                 }
 
                 $oPayment->save();
@@ -233,7 +239,6 @@ class KlarnaInstaller extends ShopConfiguration
     }
 
     /**
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
      */
     protected function extendDbTables()
@@ -319,7 +324,7 @@ class KlarnaInstaller extends ShopConfiguration
     protected function updateViews()
     {
         //preventing edit for anyone except malladmin
-        if (oxRegistry::getSession()->getVariable("malladmin")) {
+        if (Registry::getSession()->getVariable("malladmin")) {
             $oMetaData = oxNew(DbMetaDataHandler::class);
             $oMetaData->updateViews();
         }
@@ -332,31 +337,31 @@ class KlarnaInstaller extends ShopConfiguration
     {
         $shopId = $this->getConfig()->getShopId();
         // Klarna Teaser
-        $oxId      = 'klarna_teaser_' . $shopId;
-        $sTitle    = 'Klarna Teaser';
-        $sLink     = '';
-        $sFileName = 'klarna-banner.png';
-        $actionsMediaPath = oxRegistry::getConfig()->getConfigParam('sShopDir') . 'out/pictures/promo/';
+        $oxId             = 'klarna_teaser_' . $shopId;
+        $sTitle           = 'Klarna Teaser';
+        $sLink            = '';
+        $sFileName        = 'klarna-banner.png';
+        $actionsMediaPath = Registry::getConfig()->getConfigParam('sShopDir') . 'out/pictures/promo/';
 
         $oActionKlarnaTeaser = oxNew(Actions::class);
         $oActionKlarnaTeaser->setShopId($shopId);
         $oActionKlarnaTeaser->load($oxId);
         $oActionKlarnaTeaser->setId($oxId);
         $active                                   = $oActionKlarnaTeaser->oxactions__oxactive->value ?: 0;                                                // assign old value
-        $oActionKlarnaTeaser->oxactions__oxtype   = new oxField(3, oxField::T_RAW);
-        $oActionKlarnaTeaser->oxactions__oxactive = new oxField($active, oxField::T_RAW);
+        $oActionKlarnaTeaser->oxactions__oxtype   = new Field(3, Field::T_RAW);
+        $oActionKlarnaTeaser->oxactions__oxactive = new Field($active, Field::T_RAW);
 
         // set multi language fields
         $oActionKlarnaTeaser->setEnableMultilang(false);
-        $aLangs = oxRegistry::getLang()->getLanguageArray();
+        $aLangs = Registry::getLang()->getLanguageArray();
         foreach ($aLangs as $oLang) {
             $langFileName                                        = $oLang->oxid . '_' . $sFileName;
-            $sTag                                                = oxRegistry::getLang()->getLanguageTag($oLang->id);
-            $oActionKlarnaTeaser->{'oxactions__oxtitle' . $sTag} = new oxField($sTitle, oxField::T_RAW);
-            $oActionKlarnaTeaser->{'oxactions__oxlink' . $sTag}  = new oxField($sLink, oxField::T_RAW);
-            $oActionKlarnaTeaser->{'oxactions__oxpic' . $sTag}   = new oxField($langFileName, oxField::T_RAW);
+            $sTag                                                = Registry::getLang()->getLanguageTag($oLang->id);
+            $oActionKlarnaTeaser->{'oxactions__oxtitle' . $sTag} = new Field($sTitle, Field::T_RAW);
+            $oActionKlarnaTeaser->{'oxactions__oxlink' . $sTag}  = new Field($sLink, Field::T_RAW);
+            $oActionKlarnaTeaser->{'oxactions__oxpic' . $sTag}   = new Field($langFileName, Field::T_RAW);
 
-            $filePath = self::$instance->modulePath .  '/out/img/' . $langFileName;
+            $filePath = self::$instance->modulePath . '/out/img/' . $langFileName;
             if (file_exists($filePath)) {
                 copy($filePath, $actionsMediaPath . $langFileName);
             }

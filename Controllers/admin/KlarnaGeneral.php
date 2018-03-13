@@ -3,8 +3,8 @@
 namespace Klarna\Klarna\Controllers\Admin;
 
 use Klarna\Klarna\Core\KlarnaUtils;
-use OxidEsales\Eshop\Core\Registry as oxRegistry;
-use OxidEsales\Eshop\Core\DatabaseProvider as oxDb;
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\DatabaseProvider;
 
 
 /**
@@ -33,13 +33,13 @@ class KlarnaGeneral extends KlarnaBaseConfig
         parent::render();
         // force shopid as parameter
         // Pass shop OXID so that shop object could be loaded
-        $sShopOXID = oxRegistry::getConfig()->getShopId();
+        $sShopOXID = Registry::getConfig()->getShopId();
 
         $this->setEditObjectId($sShopOXID);
 
         if(KlarnaUtils::is_ajax()){
             $output = $this->getMultiLangData();
-            return oxRegistry::getUtils()->showMessageAndExit(json_encode($output));
+            return Registry::getUtils()->showMessageAndExit(json_encode($output));
         }
 
         $this->addTplParam('kl_countryCreds', $this->getKlarnaCountryCreds());
@@ -114,7 +114,7 @@ class KlarnaGeneral extends KlarnaBaseConfig
         $isoList   = KlarnaUtils::getKlarnaGlobalActiveShopCountryISOs();
 
         /** @var \OxidEsales\EshopCommunity\Core\Database\Adapter\Doctrine\Database $db */
-        $db  = oxDb::getDb(oxDb::FETCH_MODE_ASSOC);
+        $db  = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
         $sql = 'SELECT oxisoalpha2, oxtitle 
                 FROM ' . $sViewName . ' 
                 WHERE oxisoalpha2 IN ("' . implode('","', $isoList) . '")';

@@ -1,6 +1,11 @@
 <?php
 
-class KlarnaOrderValidator extends oxBase
+namespace Klarna\Klarna\Core;
+
+
+use OxidEsales\Eshop\Core\Base;
+
+class KlarnaOrderValidator extends Base
 {
     protected $aOrderData;
 

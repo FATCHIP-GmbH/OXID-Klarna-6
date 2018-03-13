@@ -5,9 +5,8 @@ namespace Klarna\Klarna\Controllers\Admin;
 use Klarna\Klarna\Core\KlarnaConsts;
 use Klarna\Klarna\Core\KlarnaUtils;
 use OxidEsales\Eshop\Application\Model\Actions;
-use OxidEsales\Eshop\Core\Registry as oxRegistry;
-use OxidEsales\Eshop\Core\Field as oxField;
-use OxidEsales\Eshop\Core\Request;
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Field;
 
 /**
  * Class Klarna_Config for module configuration in OXID backend
@@ -31,14 +30,14 @@ class KlarnaDesign extends KlarnaBaseConfig
         parent::render();
         // force shopid as parameter
         // Pass shop OXID so that shop object could be loaded
-        $sShopOXID = oxRegistry::getConfig()->getShopId();
+        $sShopOXID = Registry::getConfig()->getShopId();
 
         $this->setEditObjectId($sShopOXID);
 
         if (KlarnaUtils::is_ajax()) {
             $output = $output = $this->getMultiLangData();
 
-            return oxRegistry::getUtils()->showMessageAndExit(json_encode($output));
+            return Registry::getUtils()->showMessageAndExit(json_encode($output));
         }
 
         $this->addTplParam('settings', $this->getAdditionalSettings());
@@ -66,19 +65,19 @@ class KlarnaDesign extends KlarnaBaseConfig
      */
     protected function saveAdditionalSetting()
     {
-        $oConfig   = oxRegistry::getConfig();
+        $oConfig   = Registry::getConfig();
         $oShop     = $oConfig->getActiveShop();
         $aSettings = $this->_oRequest->getRequestEscapedParameter('settings');
 
         $oKlarnaTeaserAction = oxNew(Actions::class);
         $oKlarnaTeaserAction->load('klarna_teaser_' . $oShop->getId());
-        $oKlarnaTeaserAction->oxactions__oxactive->setValue($aSettings['blKlarnaTeaserActive'], oxField::T_RAW);
+        $oKlarnaTeaserAction->oxactions__oxactive->setValue($aSettings['blKlarnaTeaserActive'], Field::T_RAW);
         $oKlarnaTeaserAction->save();
     }
 
     protected function getAdditionalSettings()
     {
-        $oConfig = oxRegistry::getConfig();
+        $oConfig = Registry::getConfig();
         $oShop   = $oConfig->getActiveShop();
 
         $oKlarnaTeaserAction = oxNew(Actions::class);

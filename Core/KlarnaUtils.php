@@ -1,29 +1,38 @@
 <?php
+
 namespace Klarna\Klarna\Core;
 
+
+use Klarna\Klarna\Models\KlarnaCountryList;
+use Klarna\Klarna\Models\KlarnaUser;
+use OxidEsales\Eshop\Application\Model\Category;
 use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\CountryList;
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Database\Adapter\Doctrine\ResultSet;
 use OxidEsales\Eshop\Core\Exception\SystemComponentException;
-use OxidEsales\Eshop\Core\Registry as oxRegistry;
-use OxidEsales\Eshop\Core\DatabaseProvider as oxDb;
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\DatabaseProvider;
 
+/**
+ * Class KlarnaUtils
+ * @package Klarna\Klarna\Core
+ */
 class KlarnaUtils
 {
     /**
      * @param null $email
      * @return User
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      */
     public static function getFakeUser($email = null)
     {
-        /** @var User | \Klarna\Klarna\Models\KlarnaUser $oUser */
+        /** @var User | KlarnaUser $oUser */
         $oUser = oxNew(User::class);
         $oUser->loadByEmail($email);
 
-        oxRegistry::getConfig()->setUser($oUser);
+        Registry::getConfig()->setUser($oUser);
 
         return $oUser;
     }
@@ -34,7 +43,7 @@ class KlarnaUtils
      */
     public static function getShopConfVar($name)
     {
-        $config = oxRegistry::getConfig();
+        $config = Registry::getConfig();
         $shopId = $config->getShopId();
 
         return $config->getShopConfVar($name, $shopId, 'klarna');
@@ -61,7 +70,7 @@ class KlarnaUtils
     public static function getKlarnaAllowedExternalPayments()
     {
         $result      = array();
-        $db          = oxDb::getDb(oxDb::FETCH_MODE_ASSOC);
+        $db          = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
         $sql         = 'SELECT oxid FROM oxpayments WHERE OXACTIVE=1 AND KLEXTERNALPAYMENT=1';
         /** @var ResultSet $oRs */
         $oRs = $db->select($sql);
@@ -97,7 +106,7 @@ class KlarnaUtils
         $oPayment = oxNew(Payment::class);
         $oPayment->load('klarna_checkout');
         $klarnaActiveInOxid = $oPayment->oxpayments__oxactive->value == 1;
-        $ssl                = oxRegistry::getConfig()->getConfigParam('sSSLShopURL');
+        $ssl                = Registry::getConfig()->getConfigParam('sSSLShopURL');
 
         return KlarnaUtils::getKlarnaModuleMode() === KlarnaConsts::MODULE_MODE_KCO && $klarnaActiveInOxid && isset($ssl);
     }
@@ -122,7 +131,7 @@ class KlarnaUtils
     public static function getAPICredentials($sCountryISO = null)
     {
         if (!$sCountryISO) {
-            $sCountryISO = oxRegistry::getSession()->getVariable('sCountryISO');
+            $sCountryISO = Registry::getSession()->getVariable('sCountryISO');
         }
         if (!$aCredentials = KlarnaUtils::getShopConfVar('aKlarnaCreds_' . $sCountryISO)) {
             $aCredentials = array(
@@ -162,11 +171,10 @@ class KlarnaUtils
 
     /**
      * @return bool
-     * @throws oxSystemComponentException
      */
     public static function isNonKlarnaCountryActive()
     {
-        $activeNonKlarnaCountries = oxNew('oxcountrylist');
+        $activeNonKlarnaCountries = oxNew(CountryList::class);
         $activeNonKlarnaCountries->loadActiveNonKlarnaCheckoutCountries();
         if (count($activeNonKlarnaCountries) > 0) {
             return true;
@@ -177,12 +185,11 @@ class KlarnaUtils
 
     /**
      * @param int|null $iLang
-     * @return oxCountryList
-     * @throws oxSystemComponentException
+     * @return CountryList|KlarnaCountryList
      */
     public static function getKlarnaGlobalActiveShopCountries($iLang = null)
     {
-        $oCountryList = oxNew('oxcountrylist');
+        $oCountryList = oxNew(CountryList::class);
         $oCountryList->loadActiveKlarnaCheckoutCountries($iLang);
 
         return $oCountryList;
@@ -195,7 +202,7 @@ class KlarnaUtils
      */
     public static function getKlarnaGlobalActiveShopCountryISOs($iLang = null)
     {
-        $oCountryList = oxNew('oxcountrylist');
+        $oCountryList = oxNew(CountryList::class);
         $oCountryList->loadActiveKlarnaCheckoutCountries($iLang);
 
         $result = array();
@@ -208,12 +215,11 @@ class KlarnaUtils
 
     /**
      * @param null $iLang
-     * @return klarna_oxcountrylist|object|oxCountryList
-     * @throws oxSystemComponentException
+     * @return CountryList|KlarnaCountryList
      */
     public static function getAllActiveKCOGlobalCountryList($iLang = null)
     {
-        $oCountryList = oxNew('oxcountrylist');
+        $oCountryList = oxNew(CountryList::class);
         $oCountryList->loadActiveKCOGlobalCountries($iLang);
 
         return $oCountryList;
@@ -221,14 +227,16 @@ class KlarnaUtils
 
 
     /**
-     *
-     * @throws oxSystemComponentException
+     * @return bool
+     * @throws SystemComponentException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
      */
     public static function isKlarnaExternalPaymentMethod()
     {
         if (
-            in_array(oxRegistry::getSession()->getBasket()->getPaymentId(), self::getKlarnaAllowedExternalPayments()) &&
-            KlarnaUtils::isCountryActiveInKlarnaCheckout(oxRegistry::getSession()->getVariable('sCountryISO'))
+            in_array(Registry::getSession()->getBasket()->getPaymentId(), self::getKlarnaAllowedExternalPayments()) &&
+            KlarnaUtils::isCountryActiveInKlarnaCheckout(Registry::getSession()->getVariable('sCountryISO'))
         ) {
             return true;
         }
@@ -284,15 +292,15 @@ class KlarnaUtils
      */
     public static function parseFloatAsInt($number)
     {
-        return (int)(oxRegistry::getUtils()->fRound($number));
+        return (int)(Registry::getUtils()->fRound($number));
     }
 
     /**
-     * @param oxCategory $oCat
+     * @param Category $oCat
      * @param array $aCategories
      * @return array
      */
-    public static function getSubCategoriesArray(oxCategory $oCat, $aCategories = array())
+    public static function getSubCategoriesArray(Category $oCat, $aCategories = array())
     {
         $aCategories[] = $oCat->getTitle();
 
@@ -309,8 +317,8 @@ class KlarnaUtils
      */
     public static function resolveLocale($sCountryISO)
     {
-        $lang = oxRegistry::getLang()->getLanguageAbbr();
-        oxRegistry::getSession()->setVariable('klarna_iframe_lang', $lang);
+        $lang = Registry::getLang()->getLanguageAbbr();
+        Registry::getSession()->setVariable('klarna_iframe_lang', $lang);
 
         return strtolower($lang) . '-' . strtoupper($sCountryISO);
     }
@@ -328,19 +336,19 @@ class KlarnaUtils
      */
     public static function fullyResetKlarnaSession()
     {
-        oxRegistry::getSession()->deleteVariable('paymentid');
-        oxRegistry::getSession()->deleteVariable('klarna_checkout_order_id');
-        oxRegistry::getSession()->deleteVariable('kp_order_id');
-        oxRegistry::getSession()->deleteVariable('amazonOrderReferenceId');
-        oxRegistry::getSession()->deleteVariable('klarna_checkout_user_email');
-        oxRegistry::getSession()->deleteVariable('deladrid');
-        oxRegistry::getSession()->deleteVariable('externalCheckout');
-        oxRegistry::getSession()->deleteVariable('sFakeUserId');
-        oxRegistry::getSession()->deleteVariable('sAuthToken');
-        oxRegistry::getSession()->deleteVariable('klarna_session_data');
-        oxRegistry::getSession()->deleteVariable('finalizeRequired');
-        oxRegistry::getSession()->deleteVariable('sCountryISO');
-        oxRegistry::getSession()->setVariable('blshowshipaddress', 0);
+        Registry::getSession()->deleteVariable('paymentid');
+        Registry::getSession()->deleteVariable('klarna_checkout_order_id');
+        Registry::getSession()->deleteVariable('kp_order_id');
+        Registry::getSession()->deleteVariable('amazonOrderReferenceId');
+        Registry::getSession()->deleteVariable('klarna_checkout_user_email');
+        Registry::getSession()->deleteVariable('deladrid');
+        Registry::getSession()->deleteVariable('externalCheckout');
+        Registry::getSession()->deleteVariable('sFakeUserId');
+        Registry::getSession()->deleteVariable('sAuthToken');
+        Registry::getSession()->deleteVariable('klarna_session_data');
+        Registry::getSession()->deleteVariable('finalizeRequired');
+        Registry::getSession()->deleteVariable('sCountryISO');
+        Registry::getSession()->setVariable('blshowshipaddress', 0);
     }
 
     /**

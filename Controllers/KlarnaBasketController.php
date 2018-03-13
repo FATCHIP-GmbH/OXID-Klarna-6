@@ -1,11 +1,16 @@
 <?php
+
 namespace Klarna\Klarna\Controllers;
+
 
 use OxidEsales\Eshop\Core\Registry as oxRegistry;
 use OxidEsales\Eshop\Core\Request;
 use OxidEsales\Eshop\Core\UtilsView;
 
-
+/**
+ * Class KlarnaBasketController
+ * @package Klarna\Klarna\Controllers
+ */
 class KlarnaBasketController extends KlarnaBasketController_parent
 {
     /**
@@ -15,13 +20,13 @@ class KlarnaBasketController extends KlarnaBasketController_parent
      */
     public function render()
     {
-        if(oxRegistry::get(Request::class)->getRequestParameter('openAmazonLogin')){
+        if(oxRegistry::get(Request::class)->getRequestEscapedParameter('openAmazonLogin')){
             $this->addTplParam('openAmazonLogin', true);
         }
 
         $oSession = oxRegistry::getSession();
         $oBasket = $oSession->getBasket();
-        $klarnaInvalid = oxRegistry::get(Request::class)->getRequestParameter('klarnaInvalid');
+        $klarnaInvalid = oxRegistry::get(Request::class)->getRequestEscapedParameter('klarnaInvalid');
         if($oBasket->getPaymentId() === 'klarna_checkout' && $klarnaInvalid){
             $this->displayKlarnaValidationErrors();
         }
@@ -29,7 +34,9 @@ class KlarnaBasketController extends KlarnaBasketController_parent
         return parent::render();
     }
 
-
+    /**
+     *
+     */
     protected function displayKlarnaValidationErrors()
     {
         parse_str($_SERVER['QUERY_STRING'], $query);

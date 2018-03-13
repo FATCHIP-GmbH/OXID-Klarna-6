@@ -1,8 +1,12 @@
 <?php
+
 namespace Klarna\Klarna\Models;
+
+
 use Klarna\Klarna\Core\KlarnaUtils;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\ShopVersion;
 
 /**
  * Class Klarna_oxArticle extends oxArticle class
@@ -64,15 +68,16 @@ class KlarnaArticle extends KlarnaArticle_parent
     /**
      * Check whether to show cost in respective view
      * @return boolean
+     * @throws \oxSystemComponentException
      */
     protected function _checkShowCost()
     {
         $blReturn = true;
         $oView    = Registry::getConfig()->getActiveView();
-        $sCurView = $oView->getClassName();
+        $sCurView = $oView->getClassId();
 
         // if OXID version < 4.7.0
-        if (version_compare(Registry::getConfig()->getVersion(), '4.7.0') == -1) {
+        if (version_compare(oxNew(ShopVersion::class)->getVersion(), '4.7.0') == -1) {
             $navigationParam = '';
         } else {
             $navigationParam = $oView->getViewParameter('_navurlparams');
@@ -201,7 +206,7 @@ class KlarnaArticle extends KlarnaArticle_parent
      * Returning stock items by article number
      *
      * @param $sArtNum
-     * @return object oxarticle
+     * @return object Article
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      */
     public function klarna_loadByArtNum($sArtNum)
@@ -234,7 +239,6 @@ class KlarnaArticle extends KlarnaArticle_parent
      * @param null $counter
      * @param null $iOrderLang
      * @return mixed
-     * @throws oxSystemComponentException
      */
     public function kl_getOrderArticleName($counter = null, $iOrderLang = null)
     {

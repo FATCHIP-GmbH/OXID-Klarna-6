@@ -1,12 +1,17 @@
 <?php
+
 namespace Klarna\Klarna\Controllers;
 
+
+use Klarna\Klarna\Core\KlarnaClientBase;
 use Klarna\Klarna\Core\KlarnaPaymentsClient;
 use Klarna\Klarna\Models\KlarnaPayment as KlarnaPaymentModel;
 use Klarna\Klarna\Core\KlarnaConsts;
 use Klarna\Klarna\Core\KlarnaPayment;
 use Klarna\Klarna\Core\KlarnaUtils;
+use Klarna\Klarna\Models\KlarnaUser;
 use OxidEsales\Eshop\Application\Model\DeliverySetList;
+use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Registry as oxRegistry;
 use OxidEsales\Eshop\Core\Request;
@@ -31,6 +36,7 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
 
     /**
      *
+     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function init()
@@ -49,7 +55,7 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
             (KlarnaUtils::isCountryActiveInKlarnaCheckout(oxRegistry::getSession()->getVariable('sCountryISO')) ||
              KlarnaUtils::isCountryActiveInKlarnaCheckout($sCountryISO)) &&
             !oxRegistry::getSession()->getVariable('amazonOrderReferenceId') &&
-            !$this->oRequest->getRequestParameter('non_kco_global_country')
+            !$this->oRequest->getRequestEscapedParameter('non_kco_global_country')
         ) {
             $redirectUrl = oxRegistry::getConfig()->getShopSecureHomeURL() . 'cl=KlarnaExpress';
             oxRegistry::getUtils()->redirect($redirectUrl, false, 302);
@@ -60,6 +66,7 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
 
     /**
      * @return string
+     * @throws \ReflectionException
      * @throws \oxSystemComponentException
      */
     public function render()
@@ -67,6 +74,7 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
         $sTplName = parent::render();
         if ($this->countKPMethods() && $this->loadKlarnaPaymentWidget) {
 
+            /** @var User|KlarnaUser $oUser */
             $oUser    = $this->getUser();
             $oSession = oxRegistry::getSession();
             $oBasket  = $oSession->getBasket();
@@ -146,7 +154,7 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
     /** Return shipping sets for KCO */
     public function getCheckoutShippingSets()
     {
-        $sActShipSet = $this->oRequest->getRequestParameter('sShipSet');
+        $sActShipSet = $this->oRequest->getRequestEscapedParameter('sShipSet');
         if (!$sActShipSet) {
             $sActShipSet = oxRegistry::getSession()->getVariable('sShipSet');
         }
@@ -156,8 +164,7 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
             oxRegistry::get(DeliverySetList::class)->getDeliverySetData($sActShipSet, $this->getUser(), $oBasket);
         return $aAllSets;
     }
-
-
+    
     /**
      * @return KlarnaPaymentsClient|KlarnaClientBase
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
@@ -169,10 +176,10 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
 
     /** Saves Klarna Payment authorization_token or deleting an existing authorization
      * if payment method was changed to not KP method
+     * @throws \oxSystemComponentException
      */
     public function validatepayment()
     {
-
         if (!$sControllerName = parent::validatepayment())
             return null;
 
@@ -184,11 +191,11 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
 
             if (in_array($sPaymentId, $aKlarnaPaymentMethods)) {
 
-                if ($this->oRequest->getRequestParameter('finalizeRequired')) {
+                if ($this->oRequest->getRequestEscapedParameter('finalizeRequired')) {
                     oxRegistry::getSession()->setVariable('finalizeRequired', true);
                 }
 
-                if ($sAuthToken = $this->oRequest->getRequestParameter('sAuthToken')) {
+                if ($sAuthToken = $this->oRequest->getRequestEscapedParameter('sAuthToken')) {
                     oxRegistry::getSession()->setVariable('sAuthToken', $sAuthToken);
                     $dt = new \DateTime();
                     oxRegistry::getSession()->setVariable('sTokenTimeStamp', $dt->getTimestamp());
@@ -247,7 +254,7 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
      *
      * @param $oUser
      * @return bool
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
+     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      */
     public function isCountryHasKlarnaPaymentsAvailable($oUser = null)
     {

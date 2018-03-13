@@ -1,6 +1,12 @@
 <?php
+
 namespace Klarna\Klarna\Core;
 
+
+use Klarna\Klarna\Exception\KlarnaOrderNotFoundException;
+use Klarna\Klarna\Exception\KlarnaOrderReadOnlyException;
+use Klarna\Klarna\Exception\KlarnaWrongCredentialsException;
+use OxidEsales\Eshop\Core\Registry;
 
 class KlarnaCheckoutClient extends KlarnaClientBase
 
@@ -36,9 +42,6 @@ class KlarnaCheckoutClient extends KlarnaClientBase
      * what allows us access html_snippet later
      * @param string $requestBody in json format
      * @return mixed
-     * @throws KlarnaClientException
-     * @throws oxException
-     * @throws oxSystemComponentException
      */
     public function createOrUpdateOrder($requestBody = null)
     {
@@ -76,9 +79,12 @@ class KlarnaCheckoutClient extends KlarnaClientBase
      * @param $data
      * @param string $order_id
      * @return mixed
-     * @throws KlarnaClientException
-     * @throws oxSystemComponentException
-     * @throws oxException
+     * @throws KlarnaOrderNotFoundException
+     * @throws KlarnaOrderReadOnlyException
+     * @throws KlarnaWrongCredentialsException
+     * @throws \Klarna\Klarna\Exception\KlarnaClientException
+     * @throws \OxidEsales\Eshop\Core\Exception\StandardException
+     * @throws \Exception
      */
     protected function postOrder($data, $order_id = '')
     {
@@ -94,8 +100,8 @@ class KlarnaCheckoutClient extends KlarnaClientBase
 
         $this->aOrder = $this->handleResponse($oResponse, __CLASS__, __FUNCTION__);
 
-        oxRegistry::getSession()->setVariable('klarna_checkout_order_id', $this->aOrder['order_id']);
-        oxRegistry::getSession()->setVariable('klarna_checkout_user_email', $this->aOrder['billing_address']['email']);
+        Registry::getSession()->setVariable('klarna_checkout_order_id', $this->aOrder['order_id']);
+        Registry::getSession()->setVariable('klarna_checkout_user_email', $this->aOrder['billing_address']['email']);
 
         return $this->aOrder;
     }
@@ -103,9 +109,12 @@ class KlarnaCheckoutClient extends KlarnaClientBase
     /**
      * @param null $order_id
      * @return array
-     * @throws KlarnaClientException
-     * @throws oxSystemComponentException
-     * @throws oxException
+     * @throws KlarnaOrderNotFoundException
+     * @throws KlarnaOrderReadOnlyException
+     * @throws KlarnaWrongCredentialsException
+     * @throws \Klarna\Klarna\Exception\KlarnaClientException
+     * @throws \OxidEsales\Eshop\Core\Exception\StandardException
+     * @throws \Exception
      */
     public function getOrder($order_id = null)
     {
@@ -125,7 +134,7 @@ class KlarnaCheckoutClient extends KlarnaClientBase
         );
 
         $this->aOrder = $this->handleResponse($oResponse, __CLASS__, __FUNCTION__);
-        oxRegistry::getSession()->setVariable('klarna_checkout_user_email', $this->aOrder['billing_address']['email']);
+        Registry::getSession()->setVariable('klarna_checkout_user_email', $this->aOrder['billing_address']['email']);
 
         return $this->aOrder;
     }
@@ -139,7 +148,7 @@ class KlarnaCheckoutClient extends KlarnaClientBase
             return $this->aOrder['order_id'];
         }
 
-        return oxRegistry::getSession()->getVariable('klarna_checkout_order_id') ?: '';
+        return Registry::getSession()->getVariable('klarna_checkout_order_id') ?: '';
     }
 
     /**
@@ -160,10 +169,8 @@ class KlarnaCheckoutClient extends KlarnaClientBase
     public function getLoadedPurchaseCountry()
     {
         if (isset($this->aOrder)) {
-//                return $this->aOrder['billing_address']['country'];
-            return oxRegistry::getSession()->getVariable('sCountryISO');
-
-//            return $this->aOrder['purchase_country'];
+            
+            return Registry::getSession()->getVariable('sCountryISO');
         }
 
         return false;

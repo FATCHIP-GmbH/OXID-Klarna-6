@@ -1,7 +1,10 @@
 <?php
+
 namespace Klarna\Klarna\Models\EmdPayload;
+
+
+use Klarna\Klarna\Core\KlarnaConsts;
 use Klarna\Klarna\Models\KlarnaEMD;
-use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Application\Model\PaymentList;
 use OxidEsales\Eshop\Core\DatabaseProvider as oxDb;
 use OxidEsales\Eshop\Application\Model\Payment;
@@ -117,7 +120,7 @@ class KlarnaPaymentHistoryFull
 
             if ($result[0]) {
 
-                $pInfo                = new stdClass();
+                $pInfo                = new \stdClass();
                 $pInfo->purchaseCount = (int)$result[0];
                 $pInfo->purchaseSum   = (float)$result[1];
                 $pInfo->dateFirstPaid = strtotime($result[2]);

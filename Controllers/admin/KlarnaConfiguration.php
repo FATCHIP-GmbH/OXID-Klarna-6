@@ -5,7 +5,7 @@ namespace Klarna\Klarna\Controllers\Admin;
 use Klarna\Klarna\Core\KlarnaConsts;
 use Klarna\Klarna\Core\KlarnaUtils;
 use OxidEsales\Eshop\Application\Model\Payment;
-use OxidEsales\Eshop\Core\Registry as oxRegistry;
+use OxidEsales\Eshop\Core\Registry;
 
 
 /**
@@ -30,13 +30,13 @@ class KlarnaConfiguration extends KlarnaBaseConfig
         parent::render();
         // force shopid as parameter
         // Pass shop OXID so that shop object could be loaded
-        $sShopOXID = oxRegistry::getConfig()->getShopId();
+        $sShopOXID = Registry::getConfig()->getShopId();
         $this->setEditObjectId($sShopOXID);
 
         if (KlarnaUtils::is_ajax()) {
             $output = $output = $this->getMultiLangData();
 
-            return oxRegistry::getUtils()->showMessageAndExit(json_encode($output));
+            return Registry::getUtils()->showMessageAndExit(json_encode($output));
         }
 
         $oPayment = oxNew(Payment::class);
@@ -45,7 +45,7 @@ class KlarnaConfiguration extends KlarnaBaseConfig
 
         $klarnaMode = $this->getActiveKlarnaMode();
         if ($klarnaMode === KlarnaConsts::MODULE_MODE_KCO) {
-            if (oxRegistry::getConfig()->getConfigParam('sSSLShopURL') == null) {
+            if (Registry::getConfig()->getConfigParam('sSSLShopURL') == null) {
                 $this->addTplParam('sslNotSet', true);
             }
             $oPayment->load('klarna_checkout');
@@ -72,8 +72,8 @@ class KlarnaConfiguration extends KlarnaBaseConfig
     public function getErrorMessages()
     {
         return htmlentities(json_encode(array(
-            'valueMissing'    => oxRegistry::getLang()->translateString('KL_EXTERNAL_IMAGE_URL_EMPTY'),
-            'patternMismatch' => oxRegistry::getLang()->translateString('KL_EXTERNAL_IMAGE_URL_INVALID'),
+            'valueMissing'    => Registry::getLang()->translateString('KL_EXTERNAL_IMAGE_URL_EMPTY'),
+            'patternMismatch' => Registry::getLang()->translateString('KL_EXTERNAL_IMAGE_URL_INVALID'),
         )));
     }
 
@@ -84,13 +84,13 @@ class KlarnaConfiguration extends KlarnaBaseConfig
     {
         $selectValues = array(
             KlarnaConsts::EXTRA_CHECKBOX_NONE                =>
-                oxRegistry::getLang()->translateString('KL_NO_CHECKBOX'),
+                Registry::getLang()->translateString('KL_NO_CHECKBOX'),
             KlarnaConsts::EXTRA_CHECKBOX_CREATE_USER         =>
-                oxRegistry::getLang()->translateString('KL_CREATE_USER_ACCOUNT'),
+                Registry::getLang()->translateString('KL_CREATE_USER_ACCOUNT'),
             KlarnaConsts::EXTRA_CHECKBOX_SIGN_UP             =>
-                oxRegistry::getLang()->translateString('KL_SUBSCRIBE_TO_NEWSLETTER'),
+                Registry::getLang()->translateString('KL_SUBSCRIBE_TO_NEWSLETTER'),
             KlarnaConsts::EXTRA_CHECKBOX_CREATE_USER_SIGN_UP =>
-                oxRegistry::getLang()->translateString('KL_CREATE_USER_ACCOUNT_AND_SUBSCRIBE'),
+                Registry::getLang()->translateString('KL_CREATE_USER_ACCOUNT_AND_SUBSCRIBE'),
         );
 
         return $selectValues;
@@ -111,11 +111,11 @@ class KlarnaConfiguration extends KlarnaBaseConfig
     {
         $selectValues = array(
             KlarnaConsts::NO_VALIDATION            =>
-                oxRegistry::getLang()->translateString('KL_NO_VALIDATION_NEEDED'),
+                Registry::getLang()->translateString('KL_NO_VALIDATION_NEEDED'),
             KlarnaConsts::VALIDATION_WITH_SUCCESS  =>
-                oxRegistry::getLang()->translateString('KL_VALIDATION_IGNORE_TIMEOUTS_NEEDED'),
+                Registry::getLang()->translateString('KL_VALIDATION_IGNORE_TIMEOUTS_NEEDED'),
             KlarnaConsts::VALIDATION_WITH_NO_ERROR =>
-                oxRegistry::getLang()->translateString('KL_SUCCESSFUL_VALIDATION_NEEDED'),
+                Registry::getLang()->translateString('KL_SUCCESSFUL_VALIDATION_NEEDED'),
         );
 
         return $selectValues;

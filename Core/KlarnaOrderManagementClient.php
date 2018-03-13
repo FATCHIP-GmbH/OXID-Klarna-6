@@ -1,5 +1,15 @@
 <?php
 
+namespace Klarna\Klarna\Core;
+
+
+use Klarna\Klarna\Exception\KlarnaCaptureNotAllowedException;
+use Klarna\Klarna\Exception\KlarnaClientException;
+use Klarna\Klarna\Exception\KlarnaOrderNotFoundException;
+use Klarna\Klarna\Exception\KlarnaOrderReadOnlyException;
+use Klarna\Klarna\Exception\KlarnaWrongCredentialsException;
+use OxidEsales\Eshop\Core\Exception\StandardException;
+
 class KlarnaOrderManagementClient extends KlarnaClientBase
 {
 
@@ -17,7 +27,7 @@ class KlarnaOrderManagementClient extends KlarnaClientBase
      * @param string $order_id
      * @return mixed
      * @throws KlarnaClientException
-     * @throws oxException
+     * @throws StandardException
      */
     public function getOrder($order_id)
     {
@@ -39,8 +49,11 @@ class KlarnaOrderManagementClient extends KlarnaClientBase
     /**
      * @param string $order_id
      * @return mixed
+     * @throws KlarnaCaptureNotAllowedException
      * @throws KlarnaClientException
-     * @throws oxException
+     * @throws KlarnaOrderNotFoundException
+     * @throws KlarnaOrderReadOnlyException
+     * @throws KlarnaWrongCredentialsException
      */
     public function acknowledgeOrder($order_id)
     {
@@ -62,8 +75,11 @@ class KlarnaOrderManagementClient extends KlarnaClientBase
     /**
      * @param string $order_id
      * @return mixed
+     * @throws KlarnaCaptureNotAllowedException
      * @throws KlarnaClientException
-     * @throws oxException
+     * @throws KlarnaOrderNotFoundException
+     * @throws KlarnaOrderReadOnlyException
+     * @throws KlarnaWrongCredentialsException
      */
     public function cancelOrder($order_id)
     {
@@ -86,9 +102,11 @@ class KlarnaOrderManagementClient extends KlarnaClientBase
      * @param $oxOrderNr
      * @param $order_id
      * @return array
+     * @throws KlarnaCaptureNotAllowedException
      * @throws KlarnaClientException
-     * @throws oxException
-     * @throws oxSystemComponentException
+     * @throws KlarnaOrderNotFoundException
+     * @throws KlarnaOrderReadOnlyException
+     * @throws KlarnaWrongCredentialsException
      */
     public function sendOxidOrderNr($oxOrderNr, $order_id)
     {
@@ -115,8 +133,11 @@ class KlarnaOrderManagementClient extends KlarnaClientBase
      * @param $data
      * @param $order_id
      * @return array
+     * @throws KlarnaCaptureNotAllowedException
      * @throws KlarnaClientException
-     * @throws oxException
+     * @throws KlarnaOrderNotFoundException
+     * @throws KlarnaOrderReadOnlyException
+     * @throws KlarnaWrongCredentialsException
      */
     public function updateOrderLines($data, $order_id)
     {
@@ -139,9 +160,11 @@ class KlarnaOrderManagementClient extends KlarnaClientBase
      * @param $data
      * @param $order_id
      * @return array
+     * @throws KlarnaCaptureNotAllowedException
      * @throws KlarnaClientException
-     * @throws oxException
-     * @throws oxSystemComponentException
+     * @throws KlarnaOrderNotFoundException
+     * @throws KlarnaOrderReadOnlyException
+     * @throws KlarnaWrongCredentialsException
      */
     public function captureOrder($data, $order_id)
     {
@@ -163,8 +186,11 @@ class KlarnaOrderManagementClient extends KlarnaClientBase
     /**
      * @param $order_id
      * @return array
+     * @throws KlarnaCaptureNotAllowedException
      * @throws KlarnaClientException
-     * @throws oxException
+     * @throws KlarnaOrderNotFoundException
+     * @throws KlarnaOrderReadOnlyException
+     * @throws KlarnaWrongCredentialsException
      */
     public function getAllCaptures($order_id)
     {
@@ -177,9 +203,11 @@ class KlarnaOrderManagementClient extends KlarnaClientBase
      * @param $data
      * @param $order_id
      * @return array
+     * @throws KlarnaCaptureNotAllowedException
      * @throws KlarnaClientException
-     * @throws oxException
-     * @throws oxSystemComponentException
+     * @throws KlarnaOrderNotFoundException
+     * @throws KlarnaOrderReadOnlyException
+     * @throws KlarnaWrongCredentialsException
      */
     public function createOrderRefund($data, $order_id)
     {
@@ -201,10 +229,13 @@ class KlarnaOrderManagementClient extends KlarnaClientBase
     /**
      * @param $data
      * @param $order_id
+     * @param $capture_id
      * @return array
+     * @throws KlarnaCaptureNotAllowedException
      * @throws KlarnaClientException
-     * @throws oxException
-     * @throws oxSystemComponentException
+     * @throws KlarnaOrderNotFoundException
+     * @throws KlarnaOrderReadOnlyException
+     * @throws KlarnaWrongCredentialsException
      */
     public function addShippingToCapture($data, $order_id, $capture_id)
     {
@@ -224,14 +255,17 @@ class KlarnaOrderManagementClient extends KlarnaClientBase
     }
 
     /**
-     * @param Requests_Response $oResponse
+     * @param \Requests_Response $oResponse
      * @param $class
      * @param $method
      * @return array|bool
-     * @throws oxException
      * @throws KlarnaClientException
+     * @throws KlarnaWrongCredentialsException
+     * @throws KlarnaOrderNotFoundException
+     * @throws KlarnaCaptureNotAllowedException
+     * @throws KlarnaOrderReadOnlyException
      */
-    protected function handleResponse(Requests_Response $oResponse, $class, $method)
+    protected function handleResponse(\Requests_Response $oResponse, $class, $method)
     {
         $successCodes = array(200, 201, 204);
         $errorCodes   = array(400, 422, 500);
@@ -266,10 +300,10 @@ class KlarnaOrderManagementClient extends KlarnaClientBase
     }
 
     /**
-     * @param Requests_Response $oResponse
+     * @param \Requests_Response $oResponse
      * @return mixed
      */
-    protected function formatErrorMessage(Requests_Response $oResponse)
+    protected function formatErrorMessage(\Requests_Response $oResponse)
     {
         $aResponse = json_decode($oResponse->body, true);
         if (is_array($aResponse)) {

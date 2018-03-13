@@ -1,10 +1,16 @@
 <?php
+
 namespace Klarna\Klarna\Core;
+
 
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Application\Model\User;
 
+/**
+ * Class KlarnaEmail
+ * @package Klarna\Klarna\Core
+ */
 class KlarnaEmail extends KlarnaEmail_parent
 {
     /**

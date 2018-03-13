@@ -1,11 +1,14 @@
 <?php
+
 namespace Klarna\Klarna\Components;
+
 
 use Klarna\Klarna\Core\KlarnaUtils;
 use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Request;
 use OxidEsales\Eshop\Core\ViewConfig;
 use OxidEsales\Eshop\Core\Registry as oxRegistry;
+
 /**
  * Class KlarnaOxCmp_User user component
  *
@@ -26,7 +29,6 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
 
     /**
      * Login user without redirection
-     * @throws oxSystemComponentException
      */
     public function login_noredirect()
     {
@@ -88,7 +90,6 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
     }
 
     /**
-     * @throws oxSystemComponentException
      */
     protected function _getLogoutLink()
     {
@@ -117,7 +118,7 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
             KlarnaUtils::fullyResetKlarnaSession();
             if (oxRegistry::get(Request::class)->getRequestParameter('blshowshipaddress')) {
                 oxRegistry::getSession()->setVariable('blshowshipaddress', 1);
-                oxRegistry::getSession()->setVariable('deladrid', oxRegistry::get(Request::class)->getRequestParameter('oxaddressid'));
+                oxRegistry::getSession()->setVariable('deladrid', oxRegistry::get(Request::class)->getRequestEscapedParameter('oxaddressid'));
             } else {
                 oxRegistry::getSession()->deleteVariable('deladrid');
             }

@@ -1,9 +1,12 @@
 <?php
+
 namespace Klarna\Klarna\Models;
 
-use OxidEsales\Eshop\Core\DatabaseProvider as oxDb;
-use OxidEsales\Eshop\Core\Registry as oxRegistry;
-use OxidEsales\Eshop\Core\Field as oxField;
+
+use OxidEsales\Eshop\Core\DatabaseProvider;
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Field;
+use OxidEsales\Eshop\Core\Request;
 
 /**
  * Class Klarna_oxPayment extends OXID default oxPayment class to add additional
@@ -77,7 +80,7 @@ class KlarnaPayment extends KlarnaPayment_parent
             $names = array(
                 self::KLARNA_PAYMENT_SLICE_IT_ID  => 'pay_over_time',
                 self::KLARNA_PAYMENT_PAY_LATER_ID => 'pay_later',
-                self::KLARNA_PAYMENT_PAY_NOW => 'pay_now',
+                self::KLARNA_PAYMENT_PAY_NOW      => 'pay_now',
             );
 
             return $names[$this->getId()];
@@ -112,7 +115,7 @@ class KlarnaPayment extends KlarnaPayment_parent
      */
     public function getKPMethods()
     {
-        $db  = oxDb::getDb(oxDb::FETCH_MODE_ASSOC);
+        $db  = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
         $sql = 'SELECT oxid, oxactive 
                 FROM oxpayments
                 WHERE oxid IN ("' . join('","', $this->getKlarnaPaymentsIds('KP')) . '")';
@@ -120,7 +123,7 @@ class KlarnaPayment extends KlarnaPayment_parent
         $oRs = $db->select($sql);
 
         $kpMethods = array();
-        foreach($oRs->getIterator() as $dataRow) {
+        foreach ($oRs->getIterator() as $dataRow) {
             $kpMethods[$dataRow['oxid']] = $dataRow['oxactive'];
         }
 
@@ -129,12 +132,11 @@ class KlarnaPayment extends KlarnaPayment_parent
 
     public function setActiveKPMethods()
     {
-        $oConfig    = oxRegistry::getConfig();
-        $aKPmethods = $oConfig->getRequestParameter('kpMethods');
+        $aKPmethods = Registry::get(Request::class)->getRequestEscapedParameter('kpMethods');
 
         foreach ($aKPmethods as $oxId => $value) {
             $this->load($oxId);
-            $this->oxpayments__oxactive = new oxField($value, oxField::T_RAW);
+            $this->oxpayments__oxactive = new Field($value, Field::T_RAW);
             $this->save();
         }
     }

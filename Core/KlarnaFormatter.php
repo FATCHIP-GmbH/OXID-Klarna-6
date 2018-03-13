@@ -1,6 +1,10 @@
 <?php
+
 namespace Klarna\Klarna\Core;
+
+
 use OxidEsales\Eshop\Application\Model\Address;
+use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
@@ -45,7 +49,6 @@ class KlarnaFormatter
      * @param $aCheckoutData array  Klarna address
      * @param $sKey string klarna address key ('billing_address'|'shipping_address')
      * @return array
-     * @throws oxSystemComponentException
      */
     public static function klarnaToOxidAddress($aCheckoutData, $sKey)
     {
@@ -57,7 +60,7 @@ class KlarnaFormatter
         $aAddressData['street_name']   = $matches[0];
         $aAddressData['street_number'] = str_replace($aAddressData['street_name'], '', $aAddressData['street_address']);
 
-        $oCountry                = oxNew('oxCountry');
+        $oCountry                = oxNew(Country::class);
         $aAddressData['country'] = $oCountry->getIdByCode(strtoupper($aAddressData['country']));
 
         $aUserData = array();
@@ -81,10 +84,9 @@ class KlarnaFormatter
     }
 
     /**
-     * @param $oxObject oxUser|oxAddress
+     * @param $oxObject User|Address
      * @return array
-     * @throws TypeError
-     * @throws oxSystemComponentException
+     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      */
     public static function oxidToKlarnaAddress($oxObject)
     {
@@ -94,7 +96,7 @@ class KlarnaFormatter
             $sTable   = 'oxaddress__';
             $oxObject = self::completeUserData($oxObject);
         } else
-            throw new \TypeError('Argument must be instance of oxUser|oxAddress.');
+            throw new \TypeError('Argument must be instance of User|Address.');
 
         $aUserData   = array();
         $sCountryISO = strtolower(KlarnaUtils::getCountryISO($oxObject->{$sTable . 'oxcountryid'}->value));

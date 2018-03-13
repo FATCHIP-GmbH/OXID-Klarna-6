@@ -3,13 +3,22 @@
 namespace Klarna\Klarna\Controllers\Admin;
 
 
-class KlarnaOrderMain extends klarna_order_main_parent
+use Klarna\Klarna\Core\KlarnaOrderManagementClient;
+use Klarna\Klarna\Core\KlarnaUtils;
+use Klarna\Klarna\Exception\KlarnaOrderNotFoundException;
+use Klarna\Klarna\Exception\KlarnaWrongCredentialsException;
+use OxidEsales\Eshop\Application\Model\Order;
+use OxidEsales\Eshop\Core\Exception\StandardException;
+use OxidEsales\Eshop\Core\Field;
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Request;
+
+class KlarnaOrderMain extends KlarnaOrderMain_parent
 {
     protected $klarnaOrderData;
 
     /**
      * @return mixed
-     * @throws oxSystemComponentException
      */
     public function init()
     {
@@ -19,15 +28,7 @@ class KlarnaOrderMain extends klarna_order_main_parent
         if ($this->isKlarnaOrder() && $oOrder->getFieldData('oxstorno') == 0) {
             //check if credentials are valid
             if (!$this->isCredentialsValid()) {
-//                oxRegistry::get('oxUtilsView')->addErrorToDisplay(
-//                    sprintf(oxRegistry::getLang()->translateString("KLARNA_MID_CHANGED_FOR_COUNTRY"),
-//                        $this->_aViewData['sMid'],
-//                        $this->_aViewData['sCountryISO'],
-//                        $this->_aViewData['currentMid']
-//                    )
-//                );
-
-                $oOrder->oxorder__klsync = new oxField(0);
+                $oOrder->oxorder__klsync = new Field(0);
                 $oOrder->save();
 
                 return $result;
@@ -36,26 +37,23 @@ class KlarnaOrderMain extends klarna_order_main_parent
             try {
                 $this->klarnaOrderData = $this->retrieveKlarnaOrder($this->_aViewData['sCountryISO']);
             } catch (KlarnaWrongCredentialsException $e) {
-//                oxRegistry::get('oxUtilsView')->addErrorToDisplay("KLARNA_UNAUTHORIZED_REQUEST");
-                $this->_aViewData['sErrorMessage'] = oxRegistry::getLang()->translateString("KLARNA_UNAUTHORIZED_REQUEST");
+                $this->_aViewData['sErrorMessage'] = Registry::getLang()->translateString("KLARNA_UNAUTHORIZED_REQUEST");
 
-                    $oOrder->oxorder__klsync = new oxField(0);
+                $oOrder->oxorder__klsync = new Field(0);
                 $oOrder->save();
 
                 return $result;
             } catch (KlarnaOrderNotFoundException $e) {
-//                oxRegistry::get('oxUtilsView')->addErrorToDisplay('KLARNA_ORDER_NOT_FOUND');
-                $this->_aViewData['sErrorMessage'] = oxRegistry::getLang()->translateString("KLARNA_ORDER_NOT_FOUND");
+                $this->_aViewData['sErrorMessage'] = Registry::getLang()->translateString("KLARNA_ORDER_NOT_FOUND");
 
-                $oOrder->oxorder__klsync = new oxField(0);
+                $oOrder->oxorder__klsync = new Field(0);
                 $oOrder->save();
 
                 return $result;
-            } catch (oxException $e) {
-//                oxRegistry::get('oxUtilsView')->addErrorToDisplay($e);
+            } catch (StandardException $e) {
                 $this->_aViewData['sErrorMessage'] = $e->getMessage();
 
-                $oOrder->oxorder__klsync = new oxField(0);
+                $oOrder->oxorder__klsync = new Field(0);
                 $oOrder->save();
 
                 return $result;
@@ -70,9 +68,9 @@ class KlarnaOrderMain extends klarna_order_main_parent
                     ) || !$this->isCaptureInSync($this->klarnaOrderData)
                     || $this->klarnaOrderData['status'] === 'CANCELLED'
                 ) {
-                    $oOrder->oxorder__klsync = new oxField(0);
+                    $oOrder->oxorder__klsync = new Field(0);
                 } else {
-                    $oOrder->oxorder__klsync = new oxField(1);
+                    $oOrder->oxorder__klsync = new Field(1);
                 }
                 $oOrder->save();
             }
@@ -82,7 +80,7 @@ class KlarnaOrderMain extends klarna_order_main_parent
     }
 
     /**
-     * @throws oxSystemComponentException
+     *
      */
     public function render()
     {
@@ -95,15 +93,7 @@ class KlarnaOrderMain extends klarna_order_main_parent
 
             //check if credentials are valid
             if (!$this->isCredentialsValid()) {
-//                oxRegistry::get('oxUtilsView')->addErrorToDisplay(
-//                    sprintf(oxRegistry::getLang()->translateString("KLARNA_MID_CHANGED_FOR_COUNTRY"),
-//                        $this->_aViewData['sMid'],
-//                        $this->_aViewData['sCountryISO'],
-//                        $this->_aViewData['currentMid']
-//                    )
-//                );
-
-                $this->_aViewData['sWarningMessage'] = sprintf(oxRegistry::getLang()->translateString("KLARNA_MID_CHANGED_FOR_COUNTRY"),
+                $this->_aViewData['sWarningMessage'] = sprintf(Registry::getLang()->translateString("KLARNA_MID_CHANGED_FOR_COUNTRY"),
                     $this->_aViewData['sMid'],
                     $this->_aViewData['sCountryISO'],
                     $this->_aViewData['currentMid']
@@ -112,30 +102,27 @@ class KlarnaOrderMain extends klarna_order_main_parent
                 return $parent;
             }
 
-            if (oxRegistry::getConfig()->getRequestParameter('fnc')) {
+            if (Registry::get(Request::class)->getRequestEscapedParameter('fnc')) {
 
                 try {
                     $this->klarnaOrderData = $this->retrieveKlarnaOrder($this->_aViewData['sCountryISO']);
                 } catch (KlarnaWrongCredentialsException $e) {
-//                    oxRegistry::get('oxUtilsView')->addErrorToDisplay("KLARNA_UNAUTHORIZED_REQUEST");
-                    $this->_aViewData['sErrorMessage'] = oxRegistry::getLang()->translateString("KLARNA_UNAUTHORIZED_REQUEST");
-                    $oOrder->oxorder__klsync = new oxField(0);
+                    $this->_aViewData['sErrorMessage'] = Registry::getLang()->translateString("KLARNA_UNAUTHORIZED_REQUEST");
+                    $oOrder->oxorder__klsync           = new Field(0);
                     $oOrder->save();
 
                     return $parent;
                 } catch (KlarnaOrderNotFoundException $e) {
-//                    oxRegistry::get('oxUtilsView')->addErrorToDisplay('KLARNA_ORDER_NOT_FOUND');
-                    $this->_aViewData['sErrorMessage'] = oxRegistry::getLang()->translateString("KLARNA_ORDER_NOT_FOUND");
+                    $this->_aViewData['sErrorMessage'] = Registry::getLang()->translateString("KLARNA_ORDER_NOT_FOUND");
 
-                    $oOrder->oxorder__klsync = new oxField(0);
+                    $oOrder->oxorder__klsync = new Field(0);
                     $oOrder->save();
 
                     return $parent;
-                } catch (oxException $e) {
-//                    oxRegistry::get('oxUtilsView')->addErrorToDisplay($e);
+                } catch (StandardException $e) {
                     $this->_aViewData['sErrorMessage'] = $e->getMessage();
 
-                    $oOrder->oxorder__klsync = new oxField(0);
+                    $oOrder->oxorder__klsync = new Field(0);
                     $oOrder->save();
 
                     return $parent;
@@ -143,24 +130,22 @@ class KlarnaOrderMain extends klarna_order_main_parent
             }
 
             if (is_array($this->klarnaOrderData)) {
-                $apiDisabled = oxRegistry::getLang()->translateString("KL_NO_REQUESTS_WILL_BE_SENT");
+                $apiDisabled = Registry::getLang()->translateString("KL_NO_REQUESTS_WILL_BE_SENT");
                 if ($this->klarnaOrderData['status'] === 'CANCELLED') {
-                    $oOrder->oxorder__klsync = new oxField(0);
+                    $oOrder->oxorder__klsync = new Field(0);
 
-                    $orderCancelled = oxRegistry::getLang()->translateString("KLARNA_ORDER_IS_CANCELLED");
-//                    oxRegistry::get('oxUtilsView')->addErrorToDisplay($orderCancelled . $apiDisabled);
+                    $orderCancelled                      = Registry::getLang()->translateString("KLARNA_ORDER_IS_CANCELLED");
                     $this->_aViewData['sWarningMessage'] = $orderCancelled . $apiDisabled;
 
                 } else if ($this->klarnaOrderData['order_amount'] != KlarnaUtils::parseFloatAsInt($oOrder->getTotalOrderSum() * 100)
                            || !$this->isCaptureInSync($this->klarnaOrderData)) {
-                    $oOrder->oxorder__klsync = new oxField(0);
+                    $oOrder->oxorder__klsync = new Field(0);
 
-                    $orderNotInSync = oxRegistry::getLang()->translateString("KLARNA_ORDER_NOT_IN_SYNC");
-//                    oxRegistry::get('oxUtilsView')->addErrorToDisplay($orderNotInSync . $apiDisabled);
+                    $orderNotInSync                      = Registry::getLang()->translateString("KLARNA_ORDER_NOT_IN_SYNC");
                     $this->_aViewData['sWarningMessage'] = $orderNotInSync . $apiDisabled;
 
                 } else {
-                    $oOrder->oxorder__klsync = new oxField(1);
+                    $oOrder->oxorder__klsync = new Field(1);
                 }
                 $oOrder->save();
             }
@@ -171,8 +156,7 @@ class KlarnaOrderMain extends klarna_order_main_parent
 
     /**
      * Sends order. Captures klarna order.
-     * @throws oxSystemComponentException
-     * @throws oxException
+     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      */
     public function sendorder()
     {
@@ -195,25 +179,22 @@ class KlarnaOrderMain extends klarna_order_main_parent
             $sCountryISO = KlarnaUtils::getCountryISO($oOrder->getFieldData('oxbillcountryid'));
 
             try {
-//                oxRegistry::getSession()->deleteVariable('Errors');
                 $this->_aViewData['sErrorMessage'] = '';
 
                 $response = $oOrder->captureKlarnaOrder($data, $oOrder->getFieldData('klorderid'), $sCountryISO);
-            } catch (oxException $e) {
-//                oxRegistry::get("oxUtilsView")->addErrorToDisplay($e->getMessage());
+            } catch (StandardException $e) {
                 $this->_aViewData['sErrorMessage'] = $e->getMessage();
 
                 return $result;
             }
             if ($response === true) {
                 $this->_aViewData['sMessage'] =
-                    oxRegistry::getLang()->translateString("KLARNA_CAPTURE_SUCCESSFULL");
+                    Registry::getLang()->translateString("KLARNA_CAPTURE_SUCCESSFULL");
             }
             $this->klarnaOrderData = $this->retrieveKlarnaOrder($this->_aViewData['sCountryISO']);
         } else {
             if ($cancelled) {
-                $this->_aViewData['sErrorMessage'] = oxRegistry::getLang()->translateString("KL_CAPUTRE_FAIL_ORDER_CANCELLED");
-//                oxRegistry::get("oxUtilsView")->addErrorToDisplay(oxRegistry::getLang()->translateString("KL_CAPUTRE_FAIL_ORDER_CANCELLED"));
+                $this->_aViewData['sErrorMessage'] = Registry::getLang()->translateString("KL_CAPUTRE_FAIL_ORDER_CANCELLED");
             }
         }
 
@@ -222,7 +203,7 @@ class KlarnaOrderMain extends klarna_order_main_parent
 
 
     /**
-     * @throws oxSystemComponentException
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function save()
     {
@@ -235,12 +216,12 @@ class KlarnaOrderMain extends klarna_order_main_parent
         $oOrder       = $this->getEditObject(true);
         $inSync       = $oOrder->getFieldData('klsync') == 1;
         $notCancelled = $oOrder->getFieldData('oxstorno') == 0;
-        $oLang        = oxRegistry::getLang();
+        $oLang        = Registry::getLang();
 
         if ($this->isKlarnaOrder() && $notCancelled && $inSync) {
 
             $orderLang = (int)$oOrder->getFieldData('oxlang');
-            $edit      = oxRegistry::getConfig()->getRequestParameter('editval');
+            $edit      = Registry::getConfig()->getRequestParameter('editval');
 
             $klorderid       = $oOrder->getFieldData('klorderid');
             $sCountryISO     = $oOrder->getFieldData('oxbillcountryid');
@@ -252,16 +233,13 @@ class KlarnaOrderMain extends klarna_order_main_parent
                 if ($captured) {
                     $this->_aViewData['sErrorMessage'] = $oLang->translateString('KL_ORDER_UPDATE_CANT_BE_SENT_TO_KLARNA');
 
-//                    oxRegistry::get('oxUtilsView')->addErrorToDisplay(
-//                        $oLang->translateString('KL_ORDER_UPDATE_CANT_BE_SENT_TO_KLARNA'));
-
                     return;
                 }
 
-                oxRegistry::getSession()->deleteVariable('Errors');
+                Registry::getSession()->deleteVariable('Errors');
                 $orderLines = $oOrder->getNewOrderLinesAndTotals($orderLang);
-                $error = $oOrder->updateKlarnaOrder($orderLines, $klorderid, $sCountryISO);
-                if($error){
+                $error      = $oOrder->updateKlarnaOrder($orderLines, $klorderid, $sCountryISO);
+                if ($error) {
                     $this->_aViewData['sErrorMessage'] = $error;
                 }
             }
@@ -272,11 +250,8 @@ class KlarnaOrderMain extends klarna_order_main_parent
                 try {
                     $klarnaClient->sendOxidOrderNr((int)$edit['oxorder__oxordernr'], $klorderid);
 
-                } catch (oxException $e) {
+                } catch (StandardException $e) {
                     $this->_aViewData['sErrorMessage'] = $oLang->translateString('KL_ORDER_UPDATE_CANT_BE_SENT_TO_KLARNA');
-
-//                    oxRegistry::get('oxUtilsView')->addErrorToDisplay(
-//                        $oLang->translateString('KL_ORDER_UPDATE_CANT_BE_SENT_TO_KLARNA'));
                 }
             }
             //shipment tracking number
@@ -286,22 +261,19 @@ class KlarnaOrderMain extends klarna_order_main_parent
 
                 try {
                     $oOrder->addShippingToCapture($data, $klorderid, $capture_id, $sCountryISO);
-                } catch (oxException $e) {
+                } catch (StandardException $e) {
                     $this->_aViewData['sErrorMessage'] = $oLang->translateString('KL_ORDER_UPDATE_CANT_BE_SENT_TO_KLARNA');
-
-//                    oxRegistry::get('oxUtilsView')->addErrorToDisplay(
-//                        $oLang->translateString('KL_ORDER_UPDATE_CANT_BE_SENT_TO_KLARNA'));
                 }
             }
 
-            $oOrder->oxorder__klsync = new oxField(1);
+            $oOrder->oxorder__klsync = new Field(1);
             $oOrder->save();
         }
     }
 
     /**
      * @return bool
-     * @throws oxSystemComponentException
+     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      */
     public function isCredentialsValid()
     {
@@ -322,14 +294,13 @@ class KlarnaOrderMain extends klarna_order_main_parent
      * Returns editable order object
      *
      * @param bool $reset
-     * @return fcPayOneOrder|InvoicepdfOxOrder|Klarna_oxOrder|null|object|oePayPalOxOrder|oxOrder|OxpsPaymorrowOxOrder|tc_cleverreach_oxorder
-     * @throws oxSystemComponentException
+     * @return Order
      */
     public function getEditObject($reset = false)
     {
         $soxId = $this->getEditObjectId();
         if (($this->_oEditObject === null && isset($soxId) && $soxId != '-1') || $reset) {
-            $this->_oEditObject = oxNew('oxOrder');
+            $this->_oEditObject = oxNew(Order::class);
             $this->_oEditObject->load($soxId);
         }
 
@@ -340,7 +311,6 @@ class KlarnaOrderMain extends klarna_order_main_parent
      * Method checks is order was made with Klarna module
      *
      * @return bool
-     * @throws oxSystemComponentException
      */
     public function isKlarnaOrder()
     {
@@ -356,8 +326,7 @@ class KlarnaOrderMain extends klarna_order_main_parent
     /**
      * @param null $sCountryISO
      * @return mixed
-     * @throws oxException
-     * @throws oxSystemComponentException
+     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      */
     public function retrieveKlarnaOrder($sCountryISO = null)
     {
@@ -371,7 +340,6 @@ class KlarnaOrderMain extends klarna_order_main_parent
     /**
      * @param $klarnaOrderData
      * @return bool
-     * @throws oxSystemComponentException
      */
     public function isCaptureInSync($klarnaOrderData)
     {

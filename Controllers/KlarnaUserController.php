@@ -1,11 +1,14 @@
 <?php
-namespace Klarna\Klarna\Controlelrs;
+
+namespace Klarna\Klarna\Controllers;
 
 
 use Klarna\Klarna\Core\KlarnaUtils;
+use OxidEsales\Eshop\Application\Component\UserComponent;
 use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Request;
+use OxidEsales\Eshop\Core\ViewConfig;
 
 class KlarnaUserController extends KlarnaUserController_parent
 {
@@ -28,7 +31,7 @@ class KlarnaUserController extends KlarnaUserController_parent
                 !Registry::getSession()->hasVariable('amazonOrderReferenceId')
             ) {
                 Registry::getUtils()->redirect(Registry::getConfig()->getShopHomeURL() .
-                                                 'cl=KlarnaExpress', false, 302);
+                                               'cl=KlarnaExpress', false, 302);
             }
         }
 
@@ -40,7 +43,7 @@ class KlarnaUserController extends KlarnaUserController_parent
     public function getInvoiceAddress()
     {
         $result   = parent::getInvoiceAddress();
-        $viewConf = Registry::get('oxViewConfig');
+        $viewConf = Registry::get(ViewConfig::class);
 
         if (!$result && $viewConf->isCheckoutNonKlarnaCountry()) {
             $oCountry                      = oxNew(Country::class);
@@ -55,8 +58,8 @@ class KlarnaUserController extends KlarnaUserController_parent
      */
     public function klarnaResetCountry()
     {
-        $invadr = Registry::getConfig()->getRequestParameter('invadr');
-        Registry::get('oxcmp_user')->changeuser();
+        $invadr = Registry::get(Request::class)->getRequestEscapedParameter('invadr');
+        Registry::get(UserComponent::class)->changeuser();
         unset($invadr['oxuser__oxcountryid']);
         unset($invadr['oxuser__oxzip']);
         unset($invadr['oxuser__oxstreet']);

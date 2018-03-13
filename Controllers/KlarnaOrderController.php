@@ -1,18 +1,21 @@
 <?php
+
 namespace Klarna\Klarna\Controllers;
 
+
 use Klarna\Klarna\Core\KlarnaCheckoutClient;
+use Klarna\Klarna\Core\KlarnaClientBase;
 use Klarna\Klarna\Core\KlarnaConsts;
 use Klarna\Klarna\Core\KlarnaFormatter;
 use Klarna\Klarna\Core\KlarnaLogs;
 use Klarna\Klarna\Core\KlarnaOrder;
+use Klarna\Klarna\Core\KlarnaOrderManagementClient;
 use Klarna\Klarna\Core\KlarnaPayment;
 use Klarna\Klarna\Core\KlarnaPaymentsClient;
 use Klarna\Klarna\Core\KlarnaUtils;
 use Klarna\Klarna\Exception\KlarnaClientException;
 use Klarna\Klarna\Models\KlarnaUser;
 use Klarna\Klarna\Models\KlarnaPayment as KlarnaPaymentModel;
-use KlarnaOrderManagementClient;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\Order;
@@ -23,6 +26,7 @@ use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Request;
+use OxidEsales\Eshop\Core\UtilsView;
 
 /**
  * Extends default OXID order controller logic.
@@ -35,7 +39,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     private $oRequest;
 
     /**
-     * @var User
+     * @var User|KlarnaUser
      */
     protected $_oUser;
 
@@ -57,9 +61,10 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     protected $isExternalCheckout = false;
 
     /**
-     * @var array data fetched from KlarnaCheckout
+     *
      * @return string
-     * @throws Exception
+     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function init()
     {
@@ -68,7 +73,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         $this->oRequest = Registry::get(Request::class);
 
         if (KlarnaUtils::isKlarnaCheckoutEnabled()) {
-            if ($this->oRequest->getRequestParameter('externalCheckout') == 1) {
+            if ($this->oRequest->getRequestEscapedParameter('externalCheckout') == 1) {
                 Registry::getSession()->setVariable('externalCheckout', true);
             }
             $this->isExternalCheckout = Registry::getSession()->getVariable('externalCheckout');
@@ -184,11 +189,11 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
         // downloadable product validation for sofort
         if (!$termsValid = $this->_validateTermsAndConditions()) {
-            Registry::get('oxUtilsView')->addErrorToDisplay('KL_PLEASE_AGREE_TO_TERMS');
+            Registry::get('oxUtilsView::class')->addErrorToDisplay('KL_PLEASE_AGREE_TO_TERMS');
             Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=order', false, 302);
         }
 
-        if ($sAuthToken = Registry::getConfig()->getRequestParameter('sAuthToken')) {
+        if ($sAuthToken = Registry::get(Request::class)->getRequestEscapedParameter('sAuthToken')) {
             Registry::getSession()->setVariable('sAuthToken', $sAuthToken);
             $dt = new \DateTime();
             Registry::getSession()->setVariable('sTokenTimeStamp', $dt->getTimestamp());
@@ -198,7 +203,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         if ($sAuthToken || Registry::getSession()->hasVariable('sAuthToken')) {
 
             $oBasket = Registry::getSession()->getBasket();
-            /** @var  $oKlarnaPayment KlarnaPayment */
+            /** @var KlarnaPayment $oKlarnaPayment */
             $oKlarnaPayment = new KlarnaPayment($oBasket, $this->getUser());
 
             $oClient = $this->getKlarnaPaymentsClient();
@@ -258,6 +263,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      * or create a user
      * @return bool
      * @throws \oxSystemComponentException
+     * @throws \oxUserException
      */
     protected function _validateUser()
     {
@@ -339,7 +345,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         } catch (StandardException $e) {
             Registry::getSession()->deleteVariable('klarna_checkout_order_id');
 
-            Registry::get("oxUtilsView")->addErrorToDisplay($e);
+            Registry::get(UtilsView::class)->addErrorToDisplay($e);
 
         }
 
@@ -713,9 +719,9 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     public function klarnaExternalPayment()
     {
         $orderId   = Registry::getSession()->getVariable('klarna_checkout_order_id');
-        $paymentId = Registry::getConfig()->getRequestParameter('payment_id');
+        $paymentId = Registry::get(Request::class)->getRequestEscapedParameter('payment_id');
         if (!$orderId || !$paymentId || !$this->isActivePayment($paymentId)) {
-            Registry::get("oxUtilsView")->addErrorToDisplay('KLARNA_WENT_WRONG_TRY_AGAIN', false, true);
+            Registry::get(UtilsView::class)->addErrorToDisplay('KLARNA_WENT_WRONG_TRY_AGAIN', false, true);
             $redirectUrl = Registry::getConfig()->getShopSecureHomeURL() . 'cl=KlarnaExpress';
             Registry::getUtils()->redirect($redirectUrl, true, 302);
         }
@@ -759,7 +765,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             Registry::get('oePayPalExpressCheckoutDispatcher')->setExpressCheckout();
         } else {
             KlarnaUtils::fullyResetKlarnaSession();
-            Registry::get("oxUtilsView")->addErrorToDisplay('KLARNA_WENT_WRONG_TRY_AGAIN', false, true);
+            Registry::get(UtilsView::class)->addErrorToDisplay('KLARNA_WENT_WRONG_TRY_AGAIN', false, true);
             $redirectUrl = Registry::getConfig()->getShopSecureHomeURL() . 'cl=KlarnaExpress';
             Registry::getUtils()->redirect($redirectUrl, true, 302);
         }
@@ -793,7 +799,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
     /**
      * @return bool
-     * @throws oxSystemComponentException
      */
     protected function sendChangePasswordEmail()
     {
@@ -807,7 +812,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
         if ($iSuccess !== true) {
             $sError = ($iSuccess === false) ? 'ERROR_MESSAGE_PASSWORD_EMAIL_INVALID' : 'MESSAGE_NOT_ABLE_TO_SEND_EMAIL';
-            Registry::get("oxUtilsView")->addErrorToDisplay($sError, false, true);
+            Registry::get(UtilsView::class)->addErrorToDisplay($sError, false, true);
 
             return false;
         }
@@ -893,6 +898,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
     /**
      * @return null|string
+     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      */
     public function render()
     {
@@ -943,7 +949,8 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
     /**
      * @param null $sCountryISO
-     * @return KlarnaOrderManagementClient | \Klarna\Klarna\Core\KlarnaClientBase
+     * @return \Klarna\Klarna\Core\KlarnaClientBase
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     protected function getKlarnaOrderClient($sCountryISO = null)
     {

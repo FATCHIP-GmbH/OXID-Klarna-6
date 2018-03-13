@@ -1,5 +1,7 @@
 <?php
+
 namespace Klarna\Klarna\Core;
+
 
 use Klarna\Klarna\Exception\KlarnaClientException;
 use Klarna\Klarna\Exception\KlarnaOrderNotFoundException;
@@ -32,11 +34,15 @@ class KlarnaPaymentsClient extends KlarnaClientBase
     /**
      * @return array
      * @throws KlarnaClientException
+     * @throws KlarnaOrderNotFoundException
+     * @throws KlarnaWrongCredentialsException
+     * @throws \Klarna\Klarna\Exception\KlarnaOrderReadOnlyException
+     * @throws \OxidEsales\Eshop\Core\Exception\StandardException
      * @throws \ReflectionException
      */
     public function createOrUpdateSession()
     {
-        $oSession    = Registry::getSession();
+        $oSession = Registry::getSession();
         list($requestBody, $splittedUpdateData) = $this->formatOrderData();
 
         if (is_null($requestBody)) {
@@ -56,7 +62,7 @@ class KlarnaPaymentsClient extends KlarnaClientBase
                 Registry::getSession()->setVariable('sSessionTimeStamp', $this->getTimeStamp());
                 $this->_oKlarnaOrder->saveCheckSums($splittedUpdateData);
                 $oSession->setVariable('klarna_session_data', $this->aSessionData);
-                if(KlarnaUtils::is_ajax()){
+                if (KlarnaUtils::is_ajax()) {
                     $this->_oKlarnaOrder->setStatus('refresh');
                 }
             }
@@ -80,6 +86,7 @@ class KlarnaPaymentsClient extends KlarnaClientBase
      * @throws \Klarna\Klarna\Exception\KlarnaOrderReadOnlyException
      * @throws \Klarna\Klarna\Exception\KlarnaWrongCredentialsException
      * @throws \OxidEsales\Eshop\Core\Exception\StandardException
+     * @throws \Exception
      */
     protected function postSession($data, $session_id = '')
     {
@@ -132,6 +139,7 @@ class KlarnaPaymentsClient extends KlarnaClientBase
      * @param $session_id
      * @return array|null
      * @throws \OxidEsales\Eshop\Core\Exception\StandardException
+     * @throws \Exception
      */
     public function getSessionData($session_id = null)
     {
@@ -162,6 +170,7 @@ class KlarnaPaymentsClient extends KlarnaClientBase
     /**
      * @return mixed
      * @throws \oxSystemComponentException
+     * @throws \Exception
      */
     public function createNewOrder()
     {
@@ -173,9 +182,9 @@ class KlarnaPaymentsClient extends KlarnaClientBase
                 $this->getUser()->getKlarnaPaymentData()
             )
         );
-        
 
-        $headers = array('Klarna-Idempotency-Key' => $this->getSessionId());
+
+        $headers   = array('Klarna-Idempotency-Key' => $this->getSessionId());
         $oResponse = $this->post($url, $currentSessionData, $headers);
         $this->logKlarnaData(
             'Create KP Order',
@@ -191,7 +200,7 @@ class KlarnaPaymentsClient extends KlarnaClientBase
     }
 
     /**
-     * @param Requests_Response $oResponse
+     * @param \Requests_Response $oResponse
      * @param $class
      * @param $method
      * @return mixed
@@ -241,14 +250,16 @@ class KlarnaPaymentsClient extends KlarnaClientBase
             ) {
                 $aChangedData = $this->_oKlarnaOrder->getChangedData();
                 if ($aChangedData) {
-                    $splitted  = $this->splitUserData($aChangedData);
+                    $splitted = $this->splitUserData($aChangedData);
+
                     // update order data
-                    return array(json_encode($aChangedData), $splitted );
+                    return array(json_encode($aChangedData), $splitted);
                 }
 
                 return null;
             }
         }
+
         // create order data
         return array(parent::formatOrderData(), null);  // without user information
     }
@@ -260,19 +271,19 @@ class KlarnaPaymentsClient extends KlarnaClientBase
      */
     protected function splitUserData($aChangedData)
     {
-        $userData = array();
+        $userData   = array();
         $filterKeys = array('customer', 'attachment', 'billing_address', 'shipping_address');
 
-        foreach($aChangedData as $key => $item){
-            if(in_array($key, $filterKeys)){
+        foreach ($aChangedData as $key => $item) {
+            if (in_array($key, $filterKeys)) {
                 $userData[$key] = $item;
                 unset($aChangedData[$key]);
             }
         }
 
         return array(
-            'userData' => $userData,
-            'orderData' => $aChangedData
+            'userData'  => $userData,
+            'orderData' => $aChangedData,
         );
     }
 

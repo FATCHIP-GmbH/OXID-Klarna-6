@@ -1,4 +1,5 @@
 <?php
+
 namespace Klarna\Klarna\Controllers;
 
 use Klarna\Klarna\Core\KlarnaCheckoutClient;
@@ -11,14 +12,16 @@ use Klarna\Klarna\Exception\KlarnaWrongCredentialsException;
 use Klarna\Klarna\Models\KlarnaUser;
 
 use OxidEsales\Eshop\Application\Model\CountryList;
-use OxidEsales\Eshop\Core\DatabaseProvider as oxDb;
+use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Application\Controller\FrontendController;
 use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Exception\StandardException;
-use OxidEsales\Eshop\Core\Registry as oxRegistry;
-use OxidEsales\Eshop\Core\Field as oxField;
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Request;
+use OxidEsales\Eshop\Core\UtilsUrl;
+use OxidEsales\Eshop\Core\UtilsView;
 
 class KlarnaExpress extends FrontendController
 {
@@ -33,7 +36,7 @@ class KlarnaExpress extends FrontendController
     protected $_oKlarnaOrder;
 
     /**
-     * @var User
+     * @var User|KlarnaUser
      */
     protected $_oUser;
 
@@ -56,7 +59,7 @@ class KlarnaExpress extends FrontendController
     protected $blShowPopup;
 
     /** @var Request */
-    protected   $_oRequest;
+    protected $_oRequest;
 
 
     /**
@@ -66,27 +69,27 @@ class KlarnaExpress extends FrontendController
     public function init()
     {
 
-        $oSession = oxRegistry::getSession();
-        $oBasket  = $oSession->getBasket();
-        $this->_oRequest  = oxRegistry::get(Request::class);
-        $oUtils   = oxRegistry::getUtils();
+        $oSession        = Registry::getSession();
+        $oBasket         = $oSession->getBasket();
+        $this->_oRequest = Registry::get(Request::class);
+        $oUtils          = Registry::getUtils();
 
 
         /**
          * KCO is not enabled. redirect to legacy oxid checkout
          */
         if (KlarnaUtils::getShopConfVar('sKlarnaActiveMode') !== 'KCO') {
-            $oUtils->redirect(oxRegistry::getConfig()->getShopSecureHomeUrl() . 'cl=order', false, 302);
+            $oUtils->redirect(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=order', false, 302);
         }
         /**
          * A country has been selected from the country popup.
          */
-        $this->selectedCountryISO = $this->_oRequest->getRequestParameter('selected-country');
+        $this->selectedCountryISO = $this->_oRequest->getRequestEscapedParameter('selected-country');
         if ($this->selectedCountryISO) {
             /**
              * Remove delivery address on country change
              */
-            oxRegistry::getSession()->setVariable('blshowshipaddress', 0);
+            Registry::getSession()->setVariable('blshowshipaddress', 0);
 
             $oSession->setVariable('sCountryISO', $this->selectedCountryISO);
             /**
@@ -95,8 +98,8 @@ class KlarnaExpress extends FrontendController
             if ($this->getUser()) {
                 $oCountry                             = oxNew(Country::class);
                 $sCountryId                           = $oCountry->getIdByCode($this->selectedCountryISO);
-                $this->getUser()->oxuser__oxcountryid = new oxField($sCountryId);
-                $this->getUser()->oxuser__oxcountry   = new oxField($oCountry->oxcountry__oxtitle->value);
+                $this->getUser()->oxuser__oxcountryid = new Field($sCountryId);
+                $this->getUser()->oxuser__oxcountry   = new Field($oCountry->oxcountry__oxtitle->value);
                 $this->getUser()->save();
             }
             /**
@@ -104,7 +107,7 @@ class KlarnaExpress extends FrontendController
              */
             if (KlarnaUtils::isCountryActiveInKlarnaCheckout($this->selectedCountryISO)) {
                 $oSession->deleteVariable('klarna_checkout_order_id');  // force new session every country change
-                $sUrl = oxRegistry::getConfig()->getShopSecureHomeUrl() . 'cl=KlarnaExpress';
+                $sUrl = Registry::getConfig()->getShopSecureHomeUrl() . 'cl=KlarnaExpress';
                 $oUtils->redirect($sUrl, false, 302);
                 /**
                  * Redirect to legacy oxid checkout if selected country is not a KCO country.
@@ -120,7 +123,7 @@ class KlarnaExpress extends FrontendController
             /**
              * User is coming back from legacy oxid checkout wanting to change the country to one of KCO ones
              */
-            if ($this->_oRequest->getRequestParameter('reset_klarna_country') == 1) {
+            if ($this->_oRequest->getRequestEscapedParameter('reset_klarna_country') == 1) {
                 $oSession->setVariable('sCountryISO', KlarnaUtils::getShopConfVar('sKlarnaDefaultCountry'));
                 /**
                  * User is trying to access the klarna checkout for the first time and has to be redirected to legacy oxid checkout
@@ -136,7 +139,7 @@ class KlarnaExpress extends FrontendController
              */
         } else if (!$oSession->getVariable('sCountryISO') &&
                    !KlarnaUtils::isCountryActiveInKlarnaCheckout(KlarnaUtils::getShopConfVar('sKlarnaDefaultCountry')) &&
-                   $this->_oRequest->getRequestParameter('reset_klarna_country') != 1
+                   $this->_oRequest->getRequestEscapedParameter('reset_klarna_country') != 1
         ) {
             /**
              * Guest user is trying to access the klarna checkout for the first time and has to be redirected to legacy oxid checkout
@@ -148,7 +151,7 @@ class KlarnaExpress extends FrontendController
         /**
          * Default country is not KCO and we need the country popup without rendering the iframe.
          */
-        if ($this->_oRequest->getRequestParameter('reset_klarna_country') == 1 /*&&
+        if ($this->_oRequest->getRequestEscapedParameter('reset_klarna_country') == 1 /*&&
             !KlarnaUtils::isCountryActiveInKlarnaCheckout(KlarnaUtils::getShopConfVar('sKlarnaDefaultCountry'))*/
         ) {
             $this->blockIframeRender = true;
@@ -162,23 +165,23 @@ class KlarnaExpress extends FrontendController
 
     /**
      * @return string
+     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function render()
     {
         $result   = parent::render();
-        $oConfig  = oxRegistry::getConfig();
-        $oUtils = oxRegistry::getUtils();
-        $oSession = oxRegistry::getSession();
+        $oConfig  = Registry::getConfig();
+        $oUtils   = Registry::getUtils();
+        $oSession = Registry::getSession();
         $oBasket  = $oSession->getBasket();
 
-        $blAlreadyRedirected = $this->_oRequest->getRequestParameter('sslredirect') == 'forced';
+        $blAlreadyRedirected = $this->_oRequest->getRequestEscapedParameter('sslredirect') == 'forced';
 
         if ($oConfig->getCurrentShopURL() != $oConfig->getSSLShopURL() && !$blAlreadyRedirected) {
             $sUrl = $oConfig->getShopSecureHomeUrl() . 'sslredirect=forced&cl=KlarnaExpress';
             $oUtils->redirect($sUrl, false, 302);
         }
-
 
         if ($this->_oUser = $this->getUser()) {
             if ($this->getViewConfig()->isUserLoggedIn()) {
@@ -194,7 +197,7 @@ class KlarnaExpress extends FrontendController
         $this->blShowPopup = KlarnaUtils::isNonKlarnaCountryActive() &&
                              ($this->getUser()->kl_getType() !== KlarnaUser::LOGGED_IN &&
                               (!$oSession->getVariable('sCountryISO') ||
-                               $this->_oRequest->getRequestParameter('reset_klarna_country') == 1));
+                               $this->_oRequest->getRequestEscapedParameter('reset_klarna_country') == 1));
         $this->addTplParam("blShowPopUp", $this->blShowPopup);
 
         if ($this->blockIframeRender) {
@@ -205,26 +208,26 @@ class KlarnaExpress extends FrontendController
 
 
         try {
-            $oKlarnaOrder = new KlarnaOrder( $oBasket, $this->_oUser);
+            $oKlarnaOrder = new KlarnaOrder($oBasket, $this->_oUser);
 
         } catch (KlarnaConfigException $e) {
 
-            oxRegistry::get("oxUtilsView")->addErrorToDisplay($e);
+            Registry::get(UtilsView::class)->addErrorToDisplay($e);
             KlarnaUtils::fullyResetKlarnaSession();
 
             return $this->_sThisTemplate;
 
         } catch (KlarnaBasketTooLargeException $e) {
-            oxRegistry::get("oxUtilsView")->addErrorToDisplay($e);
+            Registry::get(UtilsView::class)->addErrorToDisplay($e);
 
-            $this->redirectForNonKlarnaCountry(oxRegistry::getSession()->getVariable('sCountryISO'), false);
+            $this->redirectForNonKlarnaCountry(Registry::getSession()->getVariable('sCountryISO'), false);
         }
 
         if ($oSession->getVariable('wrong_merchant_urls')) {
 
             $oSession->deleteVariable('wrong_merchant_urls');
 
-            oxRegistry::get("oxUtilsView")->addErrorToDisplay('KLARNA_WRONG_URLS_CONFIG', false, true);
+            Registry::get(UtilsView::class)->addErrorToDisplay('KLARNA_WRONG_URLS_CONFIG', false, true);
 
             $this->addTplParam('confError', true);
 
@@ -233,8 +236,8 @@ class KlarnaExpress extends FrontendController
         $orderData = $oKlarnaOrder->getOrderData();
 
         if (!KlarnaUtils::isCountryActiveInKlarnaCheckout(strtoupper($orderData['purchase_country']))) {
-            $sUrl = oxRegistry::getConfig()->getShopHomeURL() . 'cl=user';
-            oxRegistry::getUtils()->redirect($sUrl, false, 302);
+            $sUrl = Registry::getConfig()->getShopHomeURL() . 'cl=user';
+            Registry::getUtils()->redirect($sUrl, false, 302);
         }
 
         try {
@@ -244,26 +247,26 @@ class KlarnaExpress extends FrontendController
 
         } catch (KlarnaWrongCredentialsException $oEx) {
             KlarnaUtils::fullyResetKlarnaSession();
-            oxRegistry::get("oxUtilsView")->addErrorToDisplay(
-                oxRegistry::getLang()->translateString('KLARNA_UNAUTHORIZED_REQUEST', null, true));
-            oxRegistry::getUtils()->redirect(oxRegistry::getConfig()->getShopHomeURL() . 'cl=start', true, 301);
+            Registry::get(UtilsView::class)->addErrorToDisplay(
+                Registry::getLang()->translateString('KLARNA_UNAUTHORIZED_REQUEST', null, true));
+            Registry::getUtils()->redirect(Registry::getConfig()->getShopHomeURL() . 'cl=start', true, 301);
         } catch (StandardException $oEx) {
             $oEx->debugOut();
             KlarnaUtils::fullyResetKlarnaSession();
-            oxRegistry::getUtils()->redirect(oxRegistry::getConfig()->getShopSecureHomeURL() . 'cl=KlarnaExpress', false, 302);
+            Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeURL() . 'cl=KlarnaExpress', false, 302);
         }
 
         $countryISO = $this->getKlarnaClient()->getLoadedPurchaseCountry();
 
         if (!KlarnaUtils::is_ajax()) {
-            oxRegistry::getSession()->setVariable('sCountryISO', $countryISO);
+            Registry::getSession()->setVariable('sCountryISO', $countryISO);
             $oCountry = oxNew(Country::class);
             $oCountry->load($oCountry->getIdByCode($countryISO));
             $this->addTplParam("sCountryName", $oCountry->oxcountry__oxtitle->value);
 
             $this->addTplParam("sPurchaseCountry", $countryISO);
             $this->addTplParam("sKlarnaIframe", $this->getKlarnaClient()->getHtmlSnippet());
-            $this->addTplParam("sCurrentUrl", oxRegistry::get('oxUtilsUrl')->getCurrentUrl());
+            $this->addTplParam("sCurrentUrl", Registry::get(UtilsUrl::class)->getCurrentUrl());
             $this->addTplParam("shippingAddressAllowed", KlarnaUtils::getShopConfVar('blKlarnaAllowSeparateDeliveryAddress'));
         }
 
@@ -291,8 +294,8 @@ class KlarnaExpress extends FrontendController
             return false;
         }
 
-        $db = oxDb::getDb(oxDb::FETCH_MODE_ASSOC);
-        $sql = 'SELECT oxid, oxfname, oxlname, oxstreet, oxstreetnr, oxzip, oxcity FROM oxaddress WHERE oxuserid=?';
+        $db      = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
+        $sql     = 'SELECT oxid, oxfname, oxlname, oxstreet, oxstreetnr, oxzip, oxcity FROM oxaddress WHERE oxuserid=?';
         $results = $db->getAll($sql, array($this->_oUser->getId()));
 
         if (!is_array($results) || empty($results)) {
@@ -315,7 +318,6 @@ class KlarnaExpress extends FrontendController
 
     /**
      *
-     * @throws oxSystemComponentException
      */
     public function getKlarnaModalFlagCountries()
     {
@@ -336,7 +338,6 @@ class KlarnaExpress extends FrontendController
 
     /**
      *
-     * @throws oxSystemComponentException
      */
     public function getKlarnaModalOtherCountries()
     {
@@ -369,9 +370,9 @@ class KlarnaExpress extends FrontendController
     {
         $aPaths        = array();
         $aPath         = array();
-        $iBaseLanguage = oxRegistry::getLang()->getBaseLanguage();
+        $iBaseLanguage = Registry::getLang()->getBaseLanguage();
 
-        $aPath['title'] = oxRegistry::getLang()->translateString('KL_CHECKOUT', $iBaseLanguage, false);
+        $aPath['title'] = Registry::getLang()->translateString('KL_CHECKOUT', $iBaseLanguage, false);
         $aPath['link']  = $this->getLink();
         $aPaths[]       = $aPath;
 
@@ -379,7 +380,7 @@ class KlarnaExpress extends FrontendController
     }
 
     /**
-     * @throws oxSystemComponentException
+     *
      */
     public function getActiveShopCountries()
     {
@@ -394,7 +395,7 @@ class KlarnaExpress extends FrontendController
      */
     public function cleanUpSession()
     {
-        $oSession = oxRegistry::getSession();
+        $oSession = Registry::getSession();
         $oSession->deleteVariable('sCountryISO');
         $oSession->deleteVariable('klarna_checkout_order_id');
         $oSession->deleteVariable('klarna_checkout_user_email');
@@ -406,11 +407,11 @@ class KlarnaExpress extends FrontendController
     protected function redirectForNonKlarnaCountry($sCountryISO, $blShippingOptionsSet = true)
     {
         if ($blShippingOptionsSet === false) {
-            $sUrl = oxRegistry::getConfig()->getShopSecureHomeUrl() . 'cl=basket';
+            $sUrl = Registry::getConfig()->getShopSecureHomeUrl() . 'cl=basket';
         } else {
-            $sUrl = oxRegistry::getConfig()->getShopSecureHomeUrl() . 'cl=user&non_kco_global_country=' . $sCountryISO;
+            $sUrl = Registry::getConfig()->getShopSecureHomeUrl() . 'cl=user&non_kco_global_country=' . $sCountryISO;
         }
-        oxRegistry::getUtils()->redirect($sUrl, false, 302);
+        Registry::getUtils()->redirect($sUrl, false, 302);
     }
 
     /**
@@ -418,9 +419,9 @@ class KlarnaExpress extends FrontendController
      */
     public function setKlarnaDeliveryAddress()
     {
-        $oxidAddress = $this->_oRequest->getRequestParameter('klarna_address_id');
-        oxRegistry::getSession()->setVariable('deladrid', $oxidAddress);
-        oxRegistry::getSession()->setVariable('blshowshipaddress', 1);
-        oxRegistry::getSession()->deleteVariable('klarna_checkout_order_id');
+        $oxidAddress = $this->_oRequest->getRequestEscapedParameter('klarna_address_id');
+        Registry::getSession()->setVariable('deladrid', $oxidAddress);
+        Registry::getSession()->setVariable('blshowshipaddress', 1);
+        Registry::getSession()->deleteVariable('klarna_checkout_order_id');
     }
 }

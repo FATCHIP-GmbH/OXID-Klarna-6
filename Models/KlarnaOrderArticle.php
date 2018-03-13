@@ -1,9 +1,11 @@
 <?php
+
 namespace Klarna\Klarna\Models;
 
+
 use Klarna\Klarna\Core\KlarnaUtils;
-use OxidEsales\Eshop\Core\Registry as oxRegistry;
-use OxidEsales\Eshop\Core\Field as oxField;
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Field;
 
 class KlarnaOrderArticle extends KlarnaOrderArticle_parent
 {
@@ -28,17 +30,17 @@ class KlarnaOrderArticle extends KlarnaOrderArticle_parent
      */
     public function kl_setTitle($index, $iOrderLang = '')
     {
-        $name = KlarnaUtils::getShopConfVar('sKlarnaAnonymizedProductTitle_' . $this->getLangTag($iOrderLang));
-        $this->oxorderarticles__kltitle = new oxField(html_entity_decode( "$name $index", ENT_QUOTES));
+        $name                           = KlarnaUtils::getShopConfVar('sKlarnaAnonymizedProductTitle_' . $this->getLangTag($iOrderLang));
+        $this->oxorderarticles__kltitle = new Field(html_entity_decode("$name $index", ENT_QUOTES));
     }
 
     public function kl_setArtNum()
     {
-        $this->oxorderarticles__klartnum = new oxField( md5($this->oxorderarticles__oxartnum->value));
+        $this->oxorderarticles__klartnum = new Field(md5($this->oxorderarticles__oxartnum->value));
     }
 
     protected function getLangTag($iOrderLang)
     {
-        return strtoupper(oxRegistry::getLang()->getLanguageAbbr($iOrderLang));
+        return strtoupper(Registry::getLang()->getLanguageAbbr($iOrderLang));
     }
 }

@@ -1,13 +1,13 @@
 <?php
+
 namespace Klarna\Klarna\Models;
+
 
 use Klarna\Klarna\Core\KlarnaUtils;
 use Klarna\Klarna\Models\EmdPayload\KlarnaCustomerAccountInfo;
 use Klarna\Klarna\Models\EmdPayload\KlarnaPassThrough;
 use Klarna\Klarna\Models\EmdPayload\KlarnaPaymentHistoryFull;
 use OxidEsales\Eshop\Application\Model\User;
-
-
 
 /**
  * Class KlarnaEMD

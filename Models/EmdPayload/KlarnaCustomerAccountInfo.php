@@ -1,5 +1,8 @@
 <?php
+
 namespace Klarna\Klarna\Models\EmdPayload;
+
+
 use Klarna\Klarna\Models\KlarnaEMD;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\ShopVersion;

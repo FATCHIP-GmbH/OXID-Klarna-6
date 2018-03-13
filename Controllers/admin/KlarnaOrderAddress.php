@@ -3,10 +3,12 @@
 namespace Klarna\Klarna\Controllers\Admin;
 
 
+use Klarna\Klarna\Models\KlarnaPayment;
+
 /**
  * Class Klarna_Order_Address
  */
-class KlarnaOrderAddress extends klarna_order_address_parent
+class KlarnaOrderAddress extends KlarnaOrderAddress_parent
 {
     /**
      * Executes parent method parent::render(), creates oxorder and
@@ -30,7 +32,7 @@ class KlarnaOrderAddress extends klarna_order_address_parent
      */
     protected function setReadonlyValue($paymentId)
     {
-        $this->setViewDataElement('readonly', klarna_oxpayment::isKlarnaPayment( $paymentId ));
+        $this->setViewDataElement('readonly', KlarnaPayment::isKlarnaPayment( $paymentId ));
     }
 
     /**
