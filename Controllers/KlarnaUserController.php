@@ -1,5 +1,5 @@
 <?php
-namespace Klarna\Klarna\Controlelrs;
+namespace Klarna\Klarna\Controllers;
 
 
 use Klarna\Klarna\Core\KlarnaUtils;

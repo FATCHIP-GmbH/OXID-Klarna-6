@@ -2,7 +2,7 @@
 
 use Klarna\Klarna\Components\KlarnaBasketComponent;
 use Klarna\Klarna\Components\KlarnaUserComponent;
-use Klarna\Klarna\Controlelrs\KlarnaUserController;
+use Klarna\Klarna\Controllers\KlarnaUserController;
 use Klarna\Klarna\Controllers\KlarnaAcknowledgeController;
 use Klarna\Klarna\Controllers\KlarnaAjaxController;
 use Klarna\Klarna\Controllers\KlarnaBasketController;

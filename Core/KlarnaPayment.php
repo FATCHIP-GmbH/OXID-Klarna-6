@@ -1,9 +1,10 @@
 <?php
 namespace Klarna\Klarna\Core;
 use OxidEsales\Eshop\Application\Model\Basket;
+use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Model\BaseModel;
-use OxidEsales\Eshop\Core\Registry as oxRegistry;
+use OxidEsales\Eshop\Core\Registry;
 
 /**
  * Class KlarnaPayment represents Klarna Payment Order.
@@ -56,7 +57,7 @@ class KlarnaPayment extends BaseModel
     /** @var string Current order status to send in ajax response */
     protected $status;
 
-    /** @var klarna_oxuser|oxUser  */
+    /** @var \Klarna\Klarna\Models\KlarnaUser|User  */
     protected $oUser;
 
 
@@ -85,6 +86,8 @@ class KlarnaPayment extends BaseModel
      * @param Basket $oBasket
      * @param User $oUser
      * @param array $aPost used to pass ajax request data like selected payment method
+     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
+     * @throws \ReflectionException
      * @throws \oxSystemComponentException
      */
     public function __construct(Basket $oBasket, User $oUser, $aPost = array())
@@ -94,7 +97,7 @@ class KlarnaPayment extends BaseModel
         }
 
         $controllerName = $this->isAuthorized() ? 'order' : 'payment';
-        $this->refreshUrl = oxRegistry::getConfig()->getShopSecureHomeUrl() . "cl=$controllerName";
+        $this->refreshUrl = Registry::getConfig()->getShopSecureHomeUrl() . "cl=$controllerName";
 
         $this->aUpdateData            = array();
         $this->oUser                  = $oUser;
@@ -105,7 +108,7 @@ class KlarnaPayment extends BaseModel
         $this->action = $aPost['action'];
 
         if (!(isset($aPost['paymentId']) && $this->_sPaymentMethod = $aPost['paymentId'])) {
-            $this->_sPaymentMethod = oxRegistry::getSession()->getVariable('paymentid');
+            $this->_sPaymentMethod = Registry::getSession()->getVariable('paymentid');
         }
 
         $sCountryISO = $oUser->resolveCountry();
@@ -116,14 +119,14 @@ class KlarnaPayment extends BaseModel
             $this->currencyToCountryMatch = false;
         }
 
-        $oSession          = oxRegistry::getSession();
+        $oSession          = Registry::getSession();
         $sToken            = $oSession->getSessionChallengeToken();
         $this->_aOrderData = array(
             "purchase_country"  => $sCountryISO,
             "purchase_currency" => $currencyISO,
             "locale"            => $sLocale, //'de-DE',
             "merchant_urls"     => array(
-                "confirmation" => oxRegistry::getConfig()->getSslShopUrl() . "?cl=order&oxdownloadableproductsagreement=1&fnc=execute&stoken=" . $sToken,
+                "confirmation" => Registry::getConfig()->getSslShopUrl() . "?cl=order&oxdownloadableproductsagreement=1&fnc=execute&stoken=" . $sToken,
             ),
         );
 
@@ -135,7 +138,7 @@ class KlarnaPayment extends BaseModel
         $this->checksumCheck();
 
         if(!(KlarnaUtils::is_ajax()) && $this->isAuthorized() && $this->aUpdateData){
-            oxRegistry::getSession()->setVariable('reauthorizeRequired', true);
+            Registry::getSession()->setVariable('reauthorizeRequired', true);
         }
 
         $this->validateSessionTimeout();
@@ -166,7 +169,7 @@ class KlarnaPayment extends BaseModel
      */
     public function getPaymentMethodCategory()
     {
-        $oPayment = oxRegistry::get('oxPayment');
+        $oPayment = Registry::get(Payment::class);
         $oPayment->load($this->_sPaymentMethod);
 
         return $oPayment->getPaymentCategoryName();
@@ -209,7 +212,7 @@ class KlarnaPayment extends BaseModel
      */
     public function isAuthorized()
     {
-        return oxRegistry::getSession()->hasVariable('sAuthToken') || $this->requiresFinalization();
+        return Registry::getSession()->hasVariable('sAuthToken') || $this->requiresFinalization();
     }
 
     /**
@@ -234,7 +237,7 @@ class KlarnaPayment extends BaseModel
             return true;
         }
 
-        $tStamp = oxRegistry::getSession()->getVariable('sTokenTimeStamp');
+        $tStamp = Registry::getSession()->getVariable('sTokenTimeStamp');
 
         if ($tStamp) {
             $dt = new \DateTime();
@@ -281,7 +284,7 @@ class KlarnaPayment extends BaseModel
      */
     public static function countryWasChanged($oUser)
     {
-        $savedCountryISO    = oxRegistry::getSession()->getVariable('sCountryISO');
+        $savedCountryISO    = Registry::getSession()->getVariable('sCountryISO');
         $sCurrentCountryISO = $oUser->resolveCountry();
         if ($savedCountryISO && $savedCountryISO !== $sCurrentCountryISO) {
             return true;
@@ -298,7 +301,7 @@ class KlarnaPayment extends BaseModel
      */
     public function validateClientToken($requestClientToken)
     {
-        $oSession = oxRegistry::getSession();
+        $oSession = Registry::getSession();
         $aKPSessionData = $oSession->getVariable('klarna_session_data');
         if($requestClientToken !== $aKPSessionData['client_token']){
             $this->errors[] = "KL_INVALID_CLIENT_TOKEN";
@@ -314,7 +317,7 @@ class KlarnaPayment extends BaseModel
      */
     static function cleanUpSession()
     {
-        $oSession = oxRegistry::getSession();
+        $oSession = Registry::getSession();
         foreach (self::$aSessionKeys as $key) {
             $oSession->deleteVariable($key);
         }
@@ -394,8 +397,8 @@ class KlarnaPayment extends BaseModel
     protected function validateSessionTimeout()
     {
         $this->sessionValid = true;
-        $sessionData = oxRegistry::getSession()->getVariable('klarna_session_data');
-        $tStamp = oxRegistry::getSession()->getVariable('sSessionTimeStamp');
+        $sessionData = Registry::getSession()->getVariable('klarna_session_data');
+        $tStamp = Registry::getSession()->getVariable('sSessionTimeStamp');
 
         // skip if there is no session initialize
         if(!$sessionData)
@@ -433,7 +436,7 @@ class KlarnaPayment extends BaseModel
      */
     public function addErrorMessage($translationKey)
     {
-        $message        = oxRegistry::getLang()->translateString($translationKey);
+        $message        = Registry::getLang()->translateString($translationKey);
         $this->errors[] = $message;
     }
 
@@ -441,7 +444,7 @@ class KlarnaPayment extends BaseModel
     public function displayErrors()
     {
         foreach ($this->errors as $message) {
-            oxRegistry::get("oxUtilsView")->addErrorToDisplay($message);
+            Registry::get("oxUtilsView")->addErrorToDisplay($message);
         }
     }
 
@@ -451,7 +454,7 @@ class KlarnaPayment extends BaseModel
      */
     public function requiresFinalization()
     {
-        return oxRegistry::getSession()->getVariable('finalizeRequired');
+        return Registry::getSession()->getVariable('finalizeRequired');
     }
 
     /**
@@ -504,7 +507,7 @@ class KlarnaPayment extends BaseModel
                 continue;
             }
         }
-        oxRegistry::getSession()->setVariable('kpCheckSums', $aOrderCheckSums);
+        Registry::getSession()->setVariable('kpCheckSums', $aOrderCheckSums);
     }
 
     /** Gets error messages array */
@@ -519,7 +522,7 @@ class KlarnaPayment extends BaseModel
      */
     public function fetchCheckSums()
     {
-        $checkSums = oxRegistry::getSession()->getVariable('kpCheckSums');
+        $checkSums = Registry::getSession()->getVariable('kpCheckSums');
         if(!$checkSums){
             $checkSums = array('_aOrderLines' => false, '_aUserData' => false, '_sPaymentMethod' => false);
         }
@@ -535,6 +538,6 @@ class KlarnaPayment extends BaseModel
     {
         $checkSums = $this->fetchCheckSums();
         $checkSums[$propertyName] = $value;
-        oxRegistry::getSession()->setVariable('kpCheckSums', $checkSums);
+        Registry::getSession()->setVariable('kpCheckSums', $checkSums);
     }
 }

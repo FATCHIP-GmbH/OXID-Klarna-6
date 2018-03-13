@@ -3,7 +3,7 @@ namespace Klarna\Klarna\Models;
 
 use Klarna\Klarna\Core\KlarnaConsts;
 
-class KlarnaUserPayment extends UserPayment_parent
+class KlarnaUserPayment extends KlarnaUserPayment_parent
 {
     private $klarnaBadgeUrl = "//cdn.klarna.com/1.0/shared/image/generic/badge/%s/%s/standard/pink.svg";
 
