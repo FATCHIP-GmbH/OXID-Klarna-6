@@ -63,8 +63,11 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     /**
      *
      * @return string
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
+     * @throws StandardException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
+     * @throws \oxSystemComponentException
      */
     public function init()
     {
@@ -137,7 +140,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
     /**
      * @return KlarnaCheckoutClient|KlarnaClientBase
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     protected function getKlarnaCheckoutClient()
     {
@@ -146,7 +148,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
     /**
      * @return KlarnaPaymentsClient|KlarnaClientBase
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     protected function getKlarnaPaymentsClient()
     {
@@ -182,6 +183,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      *
      * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
+     * @throws \ReflectionException
      * @throws \oxSystemComponentException
      */
     public function kpBeforeExecute()
@@ -189,7 +191,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
         // downloadable product validation for sofort
         if (!$termsValid = $this->_validateTermsAndConditions()) {
-            Registry::get('oxUtilsView::class')->addErrorToDisplay('KL_PLEASE_AGREE_TO_TERMS');
+            Registry::get(UtilsView::class)->addErrorToDisplay('KL_PLEASE_AGREE_TO_TERMS');
             Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=order', false, 302);
         }
 
@@ -262,7 +264,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      * Check if user is logged in, if not check if user is in oxid and log them in
      * or create a user
      * @return bool
-     * @throws \oxSystemComponentException
      * @throws \oxUserException
      */
     protected function _validateUser()
@@ -284,7 +285,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     /**
      * Create a user in oxid from klarna checkout data
      * @return bool
-     * @throws \oxSystemComponentException
      * @throws \oxUserException
      */
     protected function _createUser()
@@ -372,8 +372,14 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     /**
      * General Ajax entry point for this controller
      * @throws KlarnaClientException
+     * @throws StandardException
+     * @throws \Klarna\Klarna\Exception\KlarnaOrderNotFoundException
+     * @throws \Klarna\Klarna\Exception\KlarnaOrderReadOnlyException
+     * @throws \Klarna\Klarna\Exception\KlarnaWrongCredentialsException
+     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      * @throws \ReflectionException
+     * @throws \oxSystemComponentException
      */
     public function updateKlarnaAjax()
     {
@@ -423,8 +429,13 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      * @param $aPost
      * @return string
      * @throws KlarnaClientException
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
+     * @throws StandardException
+     * @throws \Klarna\Klarna\Exception\KlarnaOrderNotFoundException
+     * @throws \Klarna\Klarna\Exception\KlarnaOrderReadOnlyException
+     * @throws \Klarna\Klarna\Exception\KlarnaWrongCredentialsException
+     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      * @throws \ReflectionException
+     * @throws \oxSystemComponentException
      */
     protected function checkOrderStatus($aPost)
     {
@@ -502,8 +513,14 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      * @param $aPost
      * @return string
      * @throws KlarnaClientException
+     * @throws StandardException
+     * @throws \Klarna\Klarna\Exception\KlarnaOrderNotFoundException
+     * @throws \Klarna\Klarna\Exception\KlarnaOrderReadOnlyException
+     * @throws \Klarna\Klarna\Exception\KlarnaWrongCredentialsException
+     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      * @throws \ReflectionException
+     * @throws \oxSystemComponentException
      */
     protected function addUserData($aPost)
     {
@@ -629,7 +646,9 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     /**
      * Sends update request to checkout API
      * @return array order data
+     * @throws \Klarna\Klarna\Exception\KlarnaConfigException
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
+     * @throws \oxSystemComponentException
      * @internal param Basket $oBasket
      * @internal param User $oUser
      */
@@ -653,7 +672,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
     /**
      * Initialize oxUser object and get order data from Klarna
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      */
     protected function _initUser()
     {
@@ -677,7 +696,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
     /**
      * Update oxUser object
-     * @throws \oxSystemComponentException
      */
     protected function updateUserObject()
     {
@@ -950,7 +968,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     /**
      * @param null $sCountryISO
      * @return \Klarna\Klarna\Core\KlarnaClientBase
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     protected function getKlarnaOrderClient($sCountryISO = null)
     {
@@ -961,7 +978,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      *
      * @param $oUser
      * @return bool
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      */
     public function isCountryHasKlarnaPaymentsAvailable($oUser = null)
     {
