@@ -183,7 +183,7 @@ var KlarnaApi;
                 if (response.action === 'updateSession') {
                     console.log('updating vouchers...');
                     setTimeout(function () {
-                        $.get('?cl=klarna_ajax&fnc=updateVouchers', vouchersWidget.updateWidget.bind(vouchersWidget));
+                        $.get('?cl=KlarnaAjax&fnc=updateVouchers', vouchersWidget.updateWidget.bind(vouchersWidget));
                     }, 500);
                 }
             });

@@ -20,7 +20,7 @@ use OxidEsales\Eshop\Core\Registry as oxRegistry;
 use OxidEsales\Eshop\Core\Field as oxField;
 use OxidEsales\Eshop\Core\Request;
 
-class KlarnaExpress extends FrontendController
+class KlarnaExpressController extends FrontendController
 {
     /**
      * @var string

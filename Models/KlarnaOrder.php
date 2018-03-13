@@ -1,6 +1,8 @@
 <?php
 namespace Klarna\Klarna\Models;
 
+use OxidEsales\Eshop\Application\Model\User;
+
 class KlarnaOrder extends KlarnaOrder_parent
 {
 
@@ -426,7 +428,7 @@ class KlarnaOrder extends KlarnaOrder_parent
         }
 
         // loading user
-        $oUser = oxNew('oxuser');
+        $oUser = oxNew(User::class);
         $oUser->load($this->oxorder__oxuserid->value);
 
         // user info
@@ -568,7 +570,7 @@ class KlarnaOrder extends KlarnaOrder_parent
         }
 
         // loading user info
-        $oUser = oxNew('oxuser');
+        $oUser = oxNew(User::class);
         $oUser->load($this->oxorder__oxuserid->value);
 
         // user info

@@ -7,7 +7,7 @@
                 [{oxmultilang ident="COUPON"}]&nbsp;([{oxmultilang ident="NUMBER_2"}] [{$sVoucher->sVoucherNr}])
             </span>
 
-            <a href="[{$oViewConf->getSslSelfLink()}]&amp;cl=klarna_ajax&amp;fnc=removeVoucher&amp;voucherId=[{$sVoucher->sVoucherId}]" class="removeFn text-danger" rel="nofollow">
+            <a href="[{$oViewConf->getSslSelfLink()}]&amp;cl=KlarnaAjax&amp;fnc=removeVoucher&amp;voucherId=[{$sVoucher->sVoucherId}]" class="removeFn text-danger" rel="nofollow">
                 <i class="fa fa-times"></i>
                 [{oxmultilang ident="REMOVE"}]
             </a>

@@ -1,17 +1,27 @@
 <?php
 namespace Klarna\Klarna\Controllers;
 
+use Klarna\Klarna\Core\KlarnaOrderManagementClient;
+use Klarna\Klarna\Core\KlarnaUtils;
+
 use OxidEsales\Eshop\Application\Controller\FrontendController;
+use OxidEsales\Eshop\Application\Model\Order;
+use OxidEsales\Eshop\Core\DatabaseProvider;
+use OxidEsales\Eshop\Core\Exception\StandardException;
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\UtilsObject;
+
 /**
  * Controller for Klarna Checkout Acknowledge push request
  */
-class KlarnaAcknowledge extends FrontendController
+class KlarnaAcknowledgeController extends FrontendController
 {
     protected $aOrder;
 
     /**
      * @param string $sCountryISO
-     * @return KlarnaOrderManagementClient|KlarnaClientBase $klarnaClient
+     * @return \Klarna\Klarna\Core\KlarnaClientBase | KlarnaOrderManagementClient
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     protected function getKlarnaClient($sCountryISO)
     {
@@ -19,14 +29,14 @@ class KlarnaAcknowledge extends FrontendController
     }
 
     /**
-     * @throws oxConnectionException
-     * @throws oxException
+     * @throws StandardException
+     * @throws \Exception
      */
     public function init()
     {
         parent::init();
 
-        $orderId = oxRegistry::getConfig()->getRequestParameter('klarna_order_id');
+        $orderId = Registry::getConfig()->getRequestParameter('klarna_order_id');
 
         if (empty($orderId)) {
             return;
@@ -41,7 +51,7 @@ class KlarnaAcknowledge extends FrontendController
             } elseif ($this->getKlarnaAckCount($orderId) > 1) {
                 $this->getKlarnaClient($countryISO)->cancelOrder($orderId);
             }
-        } catch (oxException $e) {
+        } catch (StandardException $e) {
             $e->debugOut();
 
             return;
@@ -50,14 +60,13 @@ class KlarnaAcknowledge extends FrontendController
 
     /**
      * @param $orderId
-     * @return oxOrder
-     * @throws oxConnectionException
-     * @throws oxSystemComponentException
+     * @return Order
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      */
     protected function loadOrderByKlarnaId($orderId)
     {
-        $oOrder = oxNew('oxorder');
-        $oxid   = oxDb::getDb()->getOne('SELECT oxid from oxorder where klorderid=?', array($orderId));
+        $oOrder = oxNew(Order::class);
+        $oxid   = DatabaseProvider::getDb()->getOne('SELECT oxid from oxorder where klorderid=?', array($orderId));
         $oOrder->load($oxid);
 
         return $oOrder;
@@ -67,14 +76,15 @@ class KlarnaAcknowledge extends FrontendController
     /**
      * Register Klarna request in DB
      * @param $orderId
-     * @throws oxConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
      */
     protected function registerKlarnaAckRequest($orderId)
     {
         $sql = 'INSERT INTO `kl_ack` (`oxid`, `klreceived`, `klorderid`) VALUES (?,?,?)';
-        oxDb::getDb()->Execute(
+        DatabaseProvider::getDb()->Execute(
             $sql,
-            array(oxUtilsObject::getInstance()->generateUID(), date('Y-m-d H:i:s'), $orderId)
+            array(UtilsObject::getInstance()->generateUID(), date('Y-m-d H:i:s'), $orderId)
         );
     }
 
@@ -83,12 +93,12 @@ class KlarnaAcknowledge extends FrontendController
      *
      * @param $orderId
      * @return string
-     * @throws oxConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      */
     protected function getKlarnaAckCount($orderId)
     {
         $sql = 'SELECT COUNT(*) FROM `kl_ack` WHERE `klorderid` = ?';
 
-        return oxDb::getDb()->getOne($sql, array($orderId));
+        return DatabaseProvider::getDb()->getOne($sql, array($orderId));
     }
 }

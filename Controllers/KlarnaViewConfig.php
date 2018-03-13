@@ -3,7 +3,8 @@ namespace Klarna\Klarna\Controllers;
 
 use Klarna\Klarna\Core\KlarnaConsts;
 use Klarna\Klarna\Core\KlarnaUtils;
-use OxidEsales\Eshop\Core\Registry as oxRegistry;
+use OxidEsales\Eshop\Application\Model\CountryList;
+use OxidEsales\Eshop\Core\Registry;
 
 class KlarnaViewConfig extends KlarnaViewConfig_parent
 {
@@ -99,7 +100,7 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
     public function getKlarnaHomepageBanner()
     {
         if (KlarnaUtils::getShopConfVar('blKlarnaDisplayBanner')) {
-            $oLang = oxRegistry::getLang();
+            $oLang = Registry::getLang();
             $lang  = $oLang->getLanguageAbbr();
 
             $varName = 'sKlarnaBannerSrc' . '_' . strtoupper($lang);
@@ -151,12 +152,13 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
 
     /**
      *
-     * @throws oxSystemComponentException
+     * @return bool
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function isKlarnaCheckoutEnabled()
     {
         return KlarnaUtils::isKlarnaCheckoutEnabled()
-               && KlarnaUtils::isCountryActiveInKlarnaCheckout(oxRegistry::getSession()->getVariable('sCountryISO'));
+               && KlarnaUtils::isCountryActiveInKlarnaCheckout(Registry::getSession()->getVariable('sCountryISO'));
     }
 
     /**
@@ -167,17 +169,8 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
         return KlarnaUtils::isKlarnaPaymentsEnabled();
     }
 
-//    /**
-//     *
-//     */
-//    public function getKlarnaAllowedExternalPayments()
-//    {
-//        return KlarnaUtils::getKlarnaAllowedExternalPayments();
-//    }
-
     /**
      *
-     * @throws oxSystemComponentException
      */
     public function isKlarnaExternalPayment()
     {
@@ -185,13 +178,14 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
     }
 
     /**
+     * @param bool $blShipping
      * @return mixed
-     * @throws oxSystemComponentException
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function getCountryList($blShipping = false)
     {
         if ($this->isCheckoutNonKlarnaCountry() && $this->getActiveClassName() !== 'account_user' && !$blShipping) {
-            $this->_oCountryList = oxNew('oxcountrylist');
+            $this->_oCountryList = oxNew(CountryList::class);
             $this->_oCountryList->loadActiveNonKlarnaCheckoutCountries();
 
             return $this->_oCountryList;
@@ -204,12 +198,13 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
 
     /**
      *
-     * @throws oxSystemComponentException
+     * @return bool
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function isCheckoutNonKlarnaCountry()
     {
         return KlarnaUtils::isKlarnaCheckoutEnabled() &&
-               !KlarnaUtils::isCountryActiveInKlarnaCheckout(oxRegistry::getSession()->getVariable('sCountryISO'));
+               !KlarnaUtils::isCountryActiveInKlarnaCheckout(Registry::getSession()->getVariable('sCountryISO'));
     }
 
     /**
@@ -218,7 +213,7 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
     public function isUserLoggedIn()
     {
         if ($user = $this->getUser()) {
-            return $user->oxuser__oxid->value == oxRegistry::getSession()->getVariable('usr');
+            return $user->oxuser__oxid->value == Registry::getSession()->getVariable('usr');
         }
 
         return false;
@@ -264,7 +259,7 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
 
     /**
      * @return bool
-     * @throws oxSystemComponentException
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function showCheckoutTerms()
     {
@@ -284,7 +279,7 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
      */
     public function getLawNotificationsLinkKco()
     {
-        $sCountryISO = oxRegistry::getSession()->getVariable('sCountryISO');
+        $sCountryISO = Registry::getSession()->getVariable('sCountryISO');
         $mid = KlarnaUtils::getAPICredentials($sCountryISO);
         preg_match('/^(?P<mid>(.)+)(\_)/', $mid['mid'], $matches);
 

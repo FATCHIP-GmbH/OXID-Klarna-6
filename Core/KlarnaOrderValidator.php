@@ -1,6 +1,10 @@
 <?php
+namespace Klarna\Klarna\Core;
 
-class KlarnaOrderValidator extends oxBase
+use OxidEsales\Eshop\Application\Model\Article;
+use OxidEsales\Eshop\Core\Model\BaseModel;
+
+class KlarnaOrderValidator extends BaseModel
 {
     protected $aOrderData;
 
@@ -51,8 +55,6 @@ class KlarnaOrderValidator extends oxBase
 
     /**
      * @return bool
-     * @throws oxConnectionException
-     * @throws oxSystemComponentException
      */
     public function validateOrder()
     {
@@ -88,8 +90,6 @@ class KlarnaOrderValidator extends oxBase
      *
      * @param array $aItems
      * @return void
-     * @throws oxSystemComponentException
-     * @throws oxConnectionException
      */
     protected function _validateItemsBuyable($aItems)
     {
@@ -106,14 +106,11 @@ class KlarnaOrderValidator extends oxBase
     /**
      * Check if provided products with requested amount are buyable
      *
-     * @param $mergedProducts
-     * @throws oxSystemComponentException
-     * @throws oxConnectionException
+     * @param array $mergedProducts
      */
     protected function _validateOxidProductsBuyable($mergedProducts)
     {
-        $oArticleObject = oxNew('oxarticle');
-        $oLang          = oxRegistry::getLang();
+        $oArticleObject = oxNew(Article::class);
 
         foreach ($mergedProducts as $itemKey => $itemAmount) {
             $oArticleObject->klarna_loadByArtNum($itemKey);

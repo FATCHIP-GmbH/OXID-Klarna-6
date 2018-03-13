@@ -1,6 +1,7 @@
 <?php
 namespace Klarna\Klarna\Core;
 use OxidEsales\Eshop\Application\Model\Address;
+use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
@@ -57,7 +58,7 @@ class KlarnaFormatter
         $aAddressData['street_name']   = $matches[0];
         $aAddressData['street_number'] = str_replace($aAddressData['street_name'], '', $aAddressData['street_address']);
 
-        $oCountry                = oxNew('oxCountry');
+        $oCountry                = oxNew(Country::class);
         $aAddressData['country'] = $oCountry->getIdByCode(strtoupper($aAddressData['country']));
 
         $aUserData = array();
@@ -83,8 +84,7 @@ class KlarnaFormatter
     /**
      * @param $oxObject oxUser|oxAddress
      * @return array
-     * @throws TypeError
-     * @throws oxSystemComponentException
+     * @throws \TypeError
      */
     public static function oxidToKlarnaAddress($oxObject)
     {

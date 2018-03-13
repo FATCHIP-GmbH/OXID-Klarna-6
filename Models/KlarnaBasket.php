@@ -12,7 +12,7 @@ use OxidEsales\Eshop\Application\Model\DeliverySet;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Application\Model\OrderArticle;
 use OxidEsales\Eshop\Core\Price;
-use OxidEsales\Eshop\Core\Registry as oxRegistry;
+use OxidEsales\Eshop\Core\Registry;
 
 
 
@@ -77,7 +77,7 @@ class KlarnaBasket extends KlarnaBasket_parent
         usort($aItems, array($this, 'sortOrderLines'));
 
         $counter = 0;
-        /* @var $oItem oxBasketItem */
+        /* @var BasketItem $oItem  */
         foreach ($aItems as $oItem) {
             $counter++;
 
@@ -173,7 +173,6 @@ class KlarnaBasket extends KlarnaBasket_parent
      *
      * @param bool $orderMgmtId
      * @return void
-     * @throws oxSystemComponentException
      */
     protected function _addServicesAsProducts($orderMgmtId = false)
     {
@@ -222,7 +221,7 @@ class KlarnaBasket extends KlarnaBasket_parent
             $this->klarnaOrderLines[] = array(
                 'type'                  => 'physical',
                 'reference'             => 'SRV_WRAPPING',
-                'name'                  => html_entity_decode(oxRegistry::getLang()->translateString('KL_GIFT_WRAPPING_TITLE', $iLang), ENT_QUOTES),
+                'name'                  => html_entity_decode(Registry::getLang()->translateString('KL_GIFT_WRAPPING_TITLE', $iLang), ENT_QUOTES),
                 'quantity'              => 1,
                 'total_amount'          => $unit_price,
                 'total_discount_amount' => 0,
@@ -244,7 +243,7 @@ class KlarnaBasket extends KlarnaBasket_parent
             $this->klarnaOrderLines[] = array(
                 'type'                  => 'physical',
                 'reference'             => 'SRV_GIFTCARD',
-                'name'                  => html_entity_decode(oxRegistry::getLang()->translateString('KL_GIFT_CARD_TITLE', $iLang), ENT_QUOTES),
+                'name'                  => html_entity_decode(Registry::getLang()->translateString('KL_GIFT_CARD_TITLE', $iLang), ENT_QUOTES),
                 'quantity'              => 1,
                 'total_amount'          => $unit_price,
                 'total_discount_amount' => 0,
@@ -261,7 +260,6 @@ class KlarnaBasket extends KlarnaBasket_parent
      * @param null $oOrder
      * @param null $iLang
      * @return void
-     * @throws oxSystemComponentException
      */
     protected function _addDiscountsAsProducts($oOrder = null, $iLang = null)
     {
@@ -328,14 +326,15 @@ class KlarnaBasket extends KlarnaBasket_parent
      */
     public function saveHash()
     {
-        oxRegistry::getSession()->setVariable('orderHash', $this->_orderHash);
+        Registry::getSession()->setVariable('orderHash', $this->_orderHash);
     }
 
     /**
      * Check if order configuration has changed
      * @return bool
      * @throws KlarnaBasketTooLargeException
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
+     * @throws \OxidEsales\Eshop\Core\Exception\ArticleInputException
+     * @throws \OxidEsales\Eshop\Core\Exception\NoArticleException
      */
     public function orderHasChanged()
     {
@@ -354,7 +353,7 @@ class KlarnaBasket extends KlarnaBasket_parent
      * @param Price $oPrice
      *
      * @param bool $oOrder
-     * @param oxDeliverySet|null $oDeliverySet
+     * @param DeliverySet $oDeliverySet
      * @return array
      */
     public function getKlarnaPaymentDelivery(Price $oPrice, $oOrder = null, DeliverySet $oDeliverySet = null)
@@ -397,7 +396,7 @@ class KlarnaBasket extends KlarnaBasket_parent
         $aItem = array(
             'type'             => 'discount',
             'reference'        => 'SRV_COUPON',
-            'name'             => html_entity_decode(oxRegistry::getLang()->translateString('KL_VOUCHER_DISCOUNT', $iLang), ENT_QUOTES),
+            'name'             => html_entity_decode(Registry::getLang()->translateString('KL_VOUCHER_DISCOUNT', $iLang), ENT_QUOTES),
             'quantity'         => 1,
             'total_amount'     => $unit_price,
             'unit_price'       => $unit_price,
@@ -424,7 +423,7 @@ class KlarnaBasket extends KlarnaBasket_parent
         $aItem = array(
             'type'             => 'discount',
             'reference'        => 'SRV_DISCOUNT',
-            'name'             => html_entity_decode(oxRegistry::getLang()->translateString('KL_DISCOUNT_TITLE', $iLang), ENT_QUOTES),
+            'name'             => html_entity_decode(Registry::getLang()->translateString('KL_DISCOUNT_TITLE', $iLang), ENT_QUOTES),
             'quantity'         => 1,
             'total_amount'     => $unit_price,
             'unit_price'       => -KlarnaUtils::parseFloatAsInt($oPrice->getBruttoPrice() * 100),
@@ -441,7 +440,6 @@ class KlarnaBasket extends KlarnaBasket_parent
      * @param int $iInDays
      *
      * @return boolean
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function isPreorderArticlesWillExpire($iInDays = null)
     {
@@ -478,8 +476,8 @@ class KlarnaBasket extends KlarnaBasket_parent
     {
         if ($iInDays === null) {
             // check if feature is not disabled (not 0 or empty)
-            if (oxRegistry::getConfig()->getConfigParam('iKlarnaMaxDaysForPreorder')) {
-                $iInDays = (int)oxRegistry::getConfig()->getConfigParam('iKlarnaMaxDaysForPreorder');
+            if (Registry::getConfig()->getConfigParam('iKlarnaMaxDaysForPreorder')) {
+                $iInDays = (int)Registry::getConfig()->getConfigParam('iKlarnaMaxDaysForPreorder');
             }
         }
 
@@ -488,23 +486,23 @@ class KlarnaBasket extends KlarnaBasket_parent
 
     /**
      * Original OXID method _calcDeliveryCost
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
+     * @return object
      */
     public function kl_calculateDeliveryCost()
     {
         /*
          TODO: Calculation may differ for old OXID versions. Check if we need this below implemented here
-            if (version_compare(oxRegistry::getConfig()->getVersion(), '4.8.0') == -1) { //if OXID version < 4.8.0
+            if (version_compare(Registry::getConfig()->getVersion(), '4.8.0') == -1) { //if OXID version < 4.8.0
                 return $this->getCosts('oxdelivery');
             }
          */
         if ($this->_oDeliveryPrice !== null) {
             return $this->_oDeliveryPrice;
         }
-        $myConfig       = oxRegistry::getConfig();
+        $myConfig       = Registry::getConfig();
         $oDeliveryPrice = oxNew(Price::class);
 
-        if (oxRegistry::getConfig()->getConfigParam('blDeliveryVatOnTop')) {
+        if (Registry::getConfig()->getConfigParam('blDeliveryVatOnTop')) {
             $oDeliveryPrice->setNettoPriceMode();
         } else {
             $oDeliveryPrice->setBruttoPriceMode();
@@ -522,7 +520,7 @@ class KlarnaBasket extends KlarnaBasket_parent
 
         // list of active delivery costs
         if ($myConfig->getConfigParam('bl_perfLoadDelivery')) {
-            /** @var oxDeliveryList Create new oxDeliveryList to get proper content */
+            /** @var DeliveryList Create new oxDeliveryList to get proper content */
             $oDeliveryList = oxNew(DeliveryList::class);
             $aDeliveryList = $oDeliveryList->getDeliveryList(
                 $this,
@@ -587,6 +585,8 @@ class KlarnaBasket extends KlarnaBasket_parent
     /**
      * @param $oArt
      * @return bool|null|string
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
      */
     protected function getArtNum($oArt)
     {
@@ -613,7 +613,7 @@ class KlarnaBasket extends KlarnaBasket_parent
         // if OXID version < 4.8.0
         if (version_compare($this->getConfig()->getVersion(), '4.8.0') == -1) {
             // _calcBasketWrapping problem, that in old oxid wrapping cost is included gift price, so recalculate wrapping only
-            $oWrappingPrice = oxNew('Price');
+            $oWrappingPrice = oxNew(Price::class);
             $oWrappingPrice->setBruttoPriceMode();
             // calculating basket items wrapping
             /** @var BasketItem $oBasketItem */

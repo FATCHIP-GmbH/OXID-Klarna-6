@@ -1,12 +1,19 @@
 <?php
 namespace Klarna\Klarna\Core;
 
+use Klarna\Klarna\Exception\KlarnaConfigException;
 use Klarna\Klarna\Models\KlarnaEMD;
+use Klarna\Klarna\Models\KlarnaUser;
 use OxidEsales\Eshop\Application\Controller\PaymentController;
 use OxidEsales\Eshop\Application\Model\Basket;
+use OxidEsales\Eshop\Application\Model\Country;
+use OxidEsales\Eshop\Application\Model\CountryList;
+use OxidEsales\Eshop\Application\Model\Payment;
+use OxidEsales\Eshop\Application\Model\PaymentList;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Model\BaseModel;
-use OxidEsales\Eshop\Core\Registry as oxRegistry;
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\ViewConfig;
 
 
 class KlarnaOrder extends BaseModel
@@ -51,6 +58,7 @@ class KlarnaOrder extends BaseModel
      * KlarnaOrder constructor.
      * @param Basket $oBasket
      * @param User $oUser
+     * @throws KlarnaConfigException
      * @throws \oxSystemComponentException
      */
     public function __construct(Basket $oBasket, User $oUser)
@@ -59,22 +67,22 @@ class KlarnaOrder extends BaseModel
 
         $this->_oUser = $oUser;
 
-        $sSSLShopURL       = oxRegistry::getConfig()->getSslShopUrl();
+        $sSSLShopURL       = Registry::getConfig()->getSslShopUrl();
         $sCountryISO       = $this->_oUser->resolveCountry();
         $currencyName      = $oBasket->getBasketCurrency()->name;
         $sLocale           = $this->_oUser->resolveLocale($sCountryISO);
-        $lang              = strtoupper(oxRegistry::getLang()->getLanguageAbbr());
+        $lang              = strtoupper(Registry::getLang()->getLanguageAbbr());
         $klarnaUserData    = $this->_oUser->getKlarnaData();
         $cancellationTerms = KlarnaUtils::getShopConfVar('sKlarnaCancellationRightsURI_' . $lang);
         $terms             = KlarnaUtils::getShopConfVar('sKlarnaTermsConditionsURI_' . $lang);
 
         if (empty($cancellationTerms) || empty($terms)) {
-            oxRegistry::getSession()->setVariable('wrong_merchant_urls', true);
+            Registry::getSession()->setVariable('wrong_merchant_urls', true);
 
             return false;
         }
 
-        $sessionId         = oxRegistry::getSession()->getId();
+        $sessionId         = Registry::getSession()->getId();
         $this->_aOrderData = array(
             "purchase_country"  => $sCountryISO,
             "purchase_currency" => $currencyName,
@@ -87,14 +95,14 @@ class KlarnaOrder extends BaseModel
                 "confirmation" =>
                     $sSSLShopURL . "?cl=order&fnc=execute&klarna_order_id={checkout.order.id}",
                 "push"         =>
-                    $sSSLShopURL . "?cl=klarna_acknowledge&klarna_order_id={checkout.order.id}",
+                    $sSSLShopURL . "?cl=KlarnaAcknowledge&klarna_order_id={checkout.order.id}",
 
             ),
         );
 
         if ($this->isValidationEnabled()) {
             $this->_aOrderData["merchant_urls"]["validation"] =
-                $sSSLShopURL . "?cl=klarna_validate&s=$sessionId&klarna_order_id={checkout.order.id}";
+                $sSSLShopURL . "?cl=KlarnaValidate&s=$sessionId&klarna_order_id={checkout.order.id}";
         }
 
         if (!empty($cancellationTerms)) {
@@ -107,7 +115,7 @@ class KlarnaOrder extends BaseModel
         );
 
         //clean up in case of returning to the iframe with an open order
-        oxRegistry::getSession()->deleteVariable('externalCheckout');
+        Registry::getSession()->deleteVariable('externalCheckout');
 
         // merge with order_lines and totals
         $this->_aOrderData = array_merge(
@@ -139,20 +147,15 @@ class KlarnaOrder extends BaseModel
         }
     }
 
-    protected function setMode($sMode)
-    {
-        $this->_sMode = $sMode;
-    }
-
     /**
      * Template variable getter. Returns all delivery sets
      *
-     * @param oxBasket $oBasket
+     * @param Basket $oBasket
      * @return mixed :
-     * @throws oxSystemComponentException
      * @throws KlarnaConfigException
+     * @throws \oxSystemComponentException
      */
-    public function kl_getAllSets(oxBasket $oBasket)
+    public function kl_getAllSets(Basket $oBasket)
     {
         if (is_null($this->_klarnaShippingSets)) {
             $this->_klarnaShippingSets = $this->getSupportedShippingMethods($oBasket);
@@ -164,15 +167,15 @@ class KlarnaOrder extends BaseModel
 
     /**
      * Get shipping methods that support Klarna Checkout payment
-     * @param oxBasket $oBasket
+     * @param Basket $oBasket
      * @return array
-     * @throws oxSystemComponentException
      * @throws KlarnaConfigException
+     * @throws \oxSystemComponentException
      */
-    protected function getSupportedShippingMethods(oxBasket $oBasket)
+    protected function getSupportedShippingMethods(Basket $oBasket)
     {
         $allSets  = $this->_getPayment()->getCheckoutShippingSets();
-        $currency = oxRegistry::getConfig()->getActShopCurrencyObject();
+        $currency = Registry::getConfig()->getActShopCurrencyObject();
 
         $methods = array();
         if (!is_array($allSets)) {
@@ -212,11 +215,11 @@ class KlarnaOrder extends BaseModel
 
         if (empty($shippingOptions)) {
 
-            $oCountry = oxNew('oxcountry');
+            $oCountry = oxNew(Country::class);
             $oCountry->load($this->getUser()->getActiveCountry());
 
             throw new KlarnaConfigException(sprintf(
-                oxRegistry::getLang()->translateString('KL_ERROR_NO_SHIPPING_METHODS_SET_UP'),
+                Registry::getLang()->translateString('KL_ERROR_NO_SHIPPING_METHODS_SET_UP'),
                 $oCountry->oxcountry__oxtitle->value
             ));
         }
@@ -228,12 +231,11 @@ class KlarnaOrder extends BaseModel
      * Creates new payment object
      *
      * @return null|object
-     * @throws oxSystemComponentException
      */
     protected function _getPayment()
     {
         if ($this->_oPayment === null) {
-            $this->_oPayment = oxNew('payment');
+            $this->_oPayment = oxNew(PaymentController::class);
         }
 
         return $this->_oPayment;
@@ -246,7 +248,7 @@ class KlarnaOrder extends BaseModel
      */
     protected function doesShippingMethodSupportKCO($shippingId, $basketPrice)
     {
-        $oPayList    = oxRegistry::get("oxPaymentList");
+        $oPayList    = Registry::get(PaymentList::class);
         $paymentList = $oPayList->getPaymentList($shippingId, $basketPrice, $this->_oUser);
 
         return count($paymentList) && in_array('klarna_checkout', array_keys($paymentList));
@@ -255,11 +257,10 @@ class KlarnaOrder extends BaseModel
 
     /**
      *
-     * @throws oxSystemComponentException
      */
     public function getKlarnaCountryList()
     {
-        $oCountryList = oxNew('oxCountryList');
+        $oCountryList = oxNew(CountryList::class);
         $oCountryList->loadActiveKlarnaCheckoutCountries();
 
         $aCountriesISO = array();
@@ -273,11 +274,11 @@ class KlarnaOrder extends BaseModel
     /**
      * Gets an array of all countries the given payment type can be used in.
      *
-     * @param oxPayment $oPayment
+     * @param Payment $oPayment
      * @param $aActiveCountries
      * @return array
      */
-    public function getKlarnaCountryListByPayment(oxPayment $oPayment, $aActiveCountries)
+    public function getKlarnaCountryListByPayment(Payment $oPayment, $aActiveCountries)
     {
         $result            = array();
         $aPaymentCountries = $oPayment->getCountries();
@@ -290,14 +291,13 @@ class KlarnaOrder extends BaseModel
     }
 
     /**
-     * @param oxBasket $oBasket
-     * @param oxUser $oUser
+     * @param Basket $oBasket
+     * @param User $oUser
      * @return array
-     * @throws oxSystemComponentException
      */
-    public function getExternalPaymentMethods(oxBasket $oBasket, oxUser $oUser)
+    public function getExternalPaymentMethods(Basket $oBasket, User $oUser)
     {
-        $oPayList     = oxRegistry::get("oxPaymentList");
+        $oPayList     = Registry::get(PaymentList::class);
         $dBasketPrice = $oBasket->getPriceForPayment();
 
         $externalPaymentMethods  = array();
@@ -322,7 +322,7 @@ class KlarnaOrder extends BaseModel
 
                 $externalPaymentMethods[] = array(
                     'name'         => $oPayment->oxpayments__klexternalname->value,
-                    'redirect_url' => oxRegistry::getConfig()->getSslShopUrl() .
+                    'redirect_url' => Registry::getConfig()->getSslShopUrl() .
                                       'index.php?cl=order&fnc=klarnaExternalPayment&payment_id=' . $paymentId . $requestParams,
                     'image_url'    => $this->resolveImageUrl($oPayment),
                     'fee'          => KlarnaUtils::parseFloatAsInt($oPrice->getBruttoPrice() * 100),
@@ -335,7 +335,7 @@ class KlarnaOrder extends BaseModel
                 $requestParams             = '&externalCheckout=1';
                 $externalCheckoutMethods[] = array(
                     'name'         => $oPayment->oxpayments__klexternalname->value,
-                    'redirect_url' => oxRegistry::getConfig()->getSslShopUrl() .
+                    'redirect_url' => Registry::getConfig()->getSslShopUrl() .
                                       'index.php?cl=order&fnc=klarnaExternalPayment&payment_id=' . $paymentId . $requestParams,
                     'image_url'    => $this->resolveImageUrl($oPayment, true),
                     'fee'          => KlarnaUtils::parseFloatAsInt($oPrice->getBruttoPrice() * 100),
@@ -363,7 +363,7 @@ class KlarnaOrder extends BaseModel
         $options['shipping_details']                  =
             $this->getShippingDetailsMsg();
 
-        $sCountryISO = strtoupper(oxRegistry::getSession()->getVariable('sCountryISO'));
+//        $sCountryISO = strtoupper(Registry::getSession()->getVariable('sCountryISO'));
 //        if ($sCountryISO == 'GB') {
 //            $options['title_mandatory'] = $this->isSalutationMandatory();
 //        }
@@ -390,19 +390,20 @@ class KlarnaOrder extends BaseModel
      */
     public function getShippingDetailsMsg()
     {
-        $langTag = strtoupper(oxRegistry::getLang()->getLanguageAbbr());
+        $langTag = strtoupper(Registry::getLang()->getLanguageAbbr());
 
         return KlarnaUtils::getShopConfVar('sKlarnaShippingDetails_' . $langTag);
     }
 
     /**
      * @return int
+     * @throws \oxSystemComponentException
      */
     protected function getAdditionalCheckbox()
     {
         $iActiveCheckbox = KlarnaUtils::getShopConfVar('iKlarnaActiveCheckbox');
 
-        if (!$this->getUser()->isFake() || $this->getUser()->kl_getType() === klarna_oxuser::REGISTERED) {
+        if (!$this->getUser()->isFake() || $this->getUser()->kl_getType() === KlarnaUser::REGISTERED) {
             if ($this->getUser()->getNewsSubscription()->getOptInStatus() == 1) {
 
                 return KlarnaConsts::EXTRA_CHECKBOX_NONE;
@@ -422,7 +423,7 @@ class KlarnaOrder extends BaseModel
 
     /**
      *
-     * @throws oxSystemComponentException
+     * @throws \oxSystemComponentException
      */
     protected function setAttachmentsData()
     {
@@ -470,21 +471,21 @@ class KlarnaOrder extends BaseModel
                 break;
             case 1:
                 return array(
-                    'text'     => oxRegistry::getLang()->translateString('KL_CREATE_USER_ACCOUNT'),
+                    'text'     => Registry::getLang()->translateString('KL_CREATE_USER_ACCOUNT'),
                     'checked'  => false,
                     'required' => false,
                 );
                 break;
             case 2:
                 return array(
-                    'text'     => oxRegistry::getLang()->translateString('KL_SUBSCRIBE_TO_NEWSLETTER'),
+                    'text'     => Registry::getLang()->translateString('KL_SUBSCRIBE_TO_NEWSLETTER'),
                     'checked'  => false,
                     'required' => false,
                 );
                 break;
             case 3:
                 return array(
-                    'text'     => oxRegistry::getLang()->translateString('KL_CREATE_USER_ACCOUNT_AND_SUBSCRIBE'),
+                    'text'     => Registry::getLang()->translateString('KL_CREATE_USER_ACCOUNT_AND_SUBSCRIBE'),
                     'checked'  => false,
                     'required' => false,
                 );
@@ -529,12 +530,12 @@ class KlarnaOrder extends BaseModel
 
     /**
      * @param $oPayment
+     * @param bool $checkoutImgUrl
      * @return mixed
-     * @throws oxSystemComponentException
      */
     protected function resolveImageUrl($oPayment, $checkoutImgUrl = false)
     {
-        $viewConfig = oxNew('oxViewConfig');
+        $viewConfig = oxNew(ViewConfig::class);
         if ($checkoutImgUrl) {
             $url = $viewConfig->resolveFullAssetUrl($oPayment->oxpayments__klcheckoutimageurl->value);
         } else {
