@@ -7,7 +7,6 @@ use Klarna\Klarna\Exception\KlarnaClientException;
 use Klarna\Klarna\Exception\KlarnaOrderNotFoundException;
 use Klarna\Klarna\Exception\KlarnaOrderReadOnlyException;
 use Klarna\Klarna\Exception\KlarnaWrongCredentialsException;
-
 use OxidEsales\Eshop\Core\Base;
 use OxidEsales\Eshop\Core\Module\Module;
 use OxidEsales\Eshop\Core\Registry;
@@ -42,7 +41,6 @@ abstract class KlarnaClientBase extends Base
     /**
      * @param null $sCountryISO
      * @return KlarnaClientBase
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     static function getInstance($sCountryISO = null)
     {
