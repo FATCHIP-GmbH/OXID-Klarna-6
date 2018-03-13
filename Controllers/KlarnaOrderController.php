@@ -13,7 +13,6 @@ use Klarna\Klarna\Core\KlarnaUtils;
 use Klarna\Klarna\Exception\KlarnaClientException;
 use Klarna\Klarna\Models\KlarnaUser;
 use Klarna\Klarna\Models\KlarnaPayment as KlarnaPaymentModel;
-use KlarnaOrderManagementClient;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\Order;
