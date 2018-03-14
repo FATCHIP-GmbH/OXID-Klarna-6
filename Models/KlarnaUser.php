@@ -42,7 +42,6 @@ class KlarnaUser extends KlarnaUser_parent
 
     /**
      * @return array
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      */
     public function getKlarnaData()
     {
@@ -101,7 +100,6 @@ class KlarnaUser extends KlarnaUser_parent
 
     /**
      * @return array
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      */
     public function getKlarnaPaymentData()
     {
@@ -372,7 +370,6 @@ class KlarnaUser extends KlarnaUser_parent
 
     /**
      * @return bool
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      */
     public function userDataChanged()
     {
@@ -386,7 +383,6 @@ class KlarnaUser extends KlarnaUser_parent
     /**
      * Gets and saves to the session user data hash
      * @return string
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      */
     protected function recalculateHash()
     {
@@ -454,8 +450,6 @@ class KlarnaUser extends KlarnaUser_parent
 
     /**
      * @return array
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
-     * @throws \oxSystemComponentException
      */
     public function addAttachmentsData()
     {
