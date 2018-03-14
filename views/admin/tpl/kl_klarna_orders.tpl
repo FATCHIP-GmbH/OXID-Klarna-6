@@ -136,7 +136,7 @@
 <form name="transfer" id="transfer" action="[{ $oViewConf->getSelfLink() }]" method="post">
     [{ $oViewConf->getHiddenSid() }]
     <input type="hidden" name="oxid" value="[{ $oxid }]">
-    <input type="hidden" name="cl" value="klarna_orders">
+    <input type="hidden" name="cl" value="KlarnaOrders">
 </form>
 [{if $wrongCredentials}]
     [{assign var=alertMessage value=$wrongCredentials }]
@@ -242,7 +242,7 @@
         <div class="portal-button">
             <form name="capture" id="capture" action="[{ $oViewConf->getSelfLink() }]" method="post">
                 [{ $oViewConf->getHiddenSid() }]
-                <input type="hidden" name="cl" value="klarna_orders">
+                <input type="hidden" name="cl" value="KlarnaOrders">
                 <input type="hidden" name="oxid" value="[{ $oxid }]">
                 <input type="hidden" name="fnc" value="captureFullOrder">
 
@@ -252,7 +252,7 @@
         <div class="portal-button">
             <form name="cancel" id="cancel" action="[{ $oViewConf->getSelfLink() }]" method="post">
                 [{ $oViewConf->getHiddenSid() }]
-                <input type="hidden" name="cl" value="klarna_orders">
+                <input type="hidden" name="cl" value="KlarnaOrders">
                 <input type="hidden" name="oxid" value="[{ $oxid }]">
                 <input type="hidden" name="fnc" value="cancelOrder">
 
