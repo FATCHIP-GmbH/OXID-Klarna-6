@@ -3,8 +3,6 @@
 namespace Klarna\Klarna\Core;
 
 
-use Doctrine\DBAL\Exception\NonUniqueFieldNameException;
-use OxidEsales\DoctrineMigrationWrapper\MigrationsBuilder;
 use OxidEsales\Eshop\Application\Controller\Admin\ShopConfiguration;
 use OxidEsales\Eshop\Application\Model\Actions;
 use OxidEsales\Eshop\Application\Model\Payment;
@@ -13,9 +11,10 @@ use OxidEsales\Eshop\Core\DbMetaDataHandler;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Database\Adapter\Doctrine\Database;
-use Klarna\Klarna\Models\KlarnaPayment;
+use OxidEsales\DoctrineMigrationWrapper\MigrationsBuilder;
 use OxidEsales\Facts\Config\ConfigFile;
 use OxidEsales\Facts\Facts;
+use Klarna\Klarna\Models\KlarnaPayment;
 
 class KlarnaInstaller extends ShopConfiguration
 {
@@ -52,16 +51,13 @@ class KlarnaInstaller extends ShopConfiguration
     }
 
     /**
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
+     * Activation sequence
      */
     public static function onActivate()
     {
         $instance = self::getInstance();
 
-        $instance->extendDbTables();
-
-        $instance->updateViews();
+        $instance->performMigrations();
 
         $instance->addKlarnaPaymentsMethods();
 
@@ -72,8 +68,6 @@ class KlarnaInstaller extends ShopConfiguration
 
     /**
      *
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      */
     public static function onDeactivate()
     {
@@ -184,7 +178,7 @@ class KlarnaInstaller extends ShopConfiguration
     }
 
     /**
-     * Add Klarna Checkout to payments
+     * Add Klarna payment options
      * @throws \Exception
      */
     protected function addKlarnaPaymentsMethods()
@@ -240,37 +234,6 @@ class KlarnaInstaller extends ShopConfiguration
                 $sort += 1;
             }
         }
-    }
-
-    /**
-     *
-     * @throws \Exception
-     */
-    protected function getModuleMigrations()
-    {
-        //$sPath = 'modules/klarna/klarna/migrations';
-
-        $config = new ConfigFile();
-        $config->setVar(ConfigFile::PARAMETER_SOURCE_PATH, $config->sShopDir . '/modules/klarna/klarna');
-        $migrationsBuilder = new MigrationsBuilder();
-
-        return $migrationsBuilder->build(new Facts($config->getVar(ConfigFile::PARAMETER_SOURCE_PATH) . '/migration', $config));
-    }
-
-    /**
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
-     */
-    protected function extendDbTables()
-    {
-        try{
-            $migrations = $this->getModuleMigrations();
-            $migrations->execute('migrations:migrate');
-
-        } catch (\Exception $e){
-            Registry::getUtilsView()->addErrorToDisplay($e->getMessage() .  $e->getCode());
-        }
-
-        $this->updateViews();
 
         $updateOxPayments =
             array(
@@ -280,8 +243,35 @@ class KlarnaInstaller extends ShopConfiguration
         foreach ($updateOxPayments as $sQuery) {
             $this->db->execute($sQuery);
         }
+    }
 
+    /**
+     * Migration setup
+     * @return \OxidEsales\DoctrineMigrationWrapper\Migrations
+     * @throws \Exception
+     */
+    protected function getModuleMigrations()
+    {
+        $config = new ConfigFile();
+        $config->setVar(ConfigFile::PARAMETER_SOURCE_PATH, $config->sShopDir . '/modules/klarna/klarna');
+        $migrationsBuilder = new MigrationsBuilder();
 
+        return $migrationsBuilder->build(new Facts($config->getVar(ConfigFile::PARAMETER_SOURCE_PATH) . '/migration', $config));
+    }
+
+    /**
+     * Runs awaiting module migrations
+     */
+    protected function performMigrations()
+    {
+        try{
+            $migrations = $this->getModuleMigrations();
+            $migrations->execute('migrations:migrate');
+            $this->updateViews();
+
+        } catch (\Exception $e){
+            Registry::getUtilsView()->addErrorToDisplay($e->getMessage() .  $e->getCode());
+        }
     }
 
 
