@@ -3,6 +3,8 @@
 namespace Klarna\Klarna\Core;
 
 
+use Doctrine\DBAL\Exception\NonUniqueFieldNameException;
+use OxidEsales\DoctrineMigrationWrapper\MigrationsBuilder;
 use OxidEsales\Eshop\Application\Controller\Admin\ShopConfiguration;
 use OxidEsales\Eshop\Application\Model\Actions;
 use OxidEsales\Eshop\Application\Model\Payment;
@@ -12,6 +14,8 @@ use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Database\Adapter\Doctrine\Database;
 use Klarna\Klarna\Models\KlarnaPayment;
+use OxidEsales\Facts\Config\ConfigFile;
+use OxidEsales\Facts\Facts;
 
 class KlarnaInstaller extends ShopConfiguration
 {
@@ -239,77 +243,32 @@ class KlarnaInstaller extends ShopConfiguration
     }
 
     /**
+     *
+     * @throws \Exception
+     */
+    protected function getModuleMigrations()
+    {
+        //$sPath = 'modules/klarna/klarna/migrations';
+
+        $config = new ConfigFile();
+        $config->setVar(ConfigFile::PARAMETER_SOURCE_PATH, $config->sShopDir . '/modules/klarna/klarna');
+        $migrationsBuilder = new MigrationsBuilder();
+
+        return $migrationsBuilder->build(new Facts($config->getVar(ConfigFile::PARAMETER_SOURCE_PATH) . '/migration', $config));
+    }
+
+    /**
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
      */
     protected function extendDbTables()
     {
-        /*
-        $sql      = file_get_contents(__DIR__ . '/../install/install.sql');
-        $sqlArray = explode(';', trim($sql));
-        foreach ($sqlArray as $sql) {
-            if ($sql === '') {
-                break;
-            }
-            $this->db->execute($sql);
+        try{
+            $migrations = $this->getModuleMigrations();
+            $migrations->execute('migrations:migrate');
+
+        } catch (\Exception $e){
+            Registry::getUtilsView()->addErrorToDisplay($e->getMessage() .  $e->getCode());
         }
-
-        $aStructure = array(
-            'oxorder'         => array(
-                'KLMERCHANTID' => 'ADD COLUMN `KLMERCHANTID` VARCHAR(128)  DEFAULT \'\' NOT NULL',
-                'KLSERVERMODE' => 'ADD COLUMN `KLSERVERMODE` VARCHAR(16) NOT NULL DEFAULT \'\'',
-                'KLORDERID'    => 'ADD COLUMN `KLORDERID` VARCHAR(128)  DEFAULT \'\' NOT NULL',
-                'KLSYNC'       => 'ADD COLUMN `KLSYNC` TINYINT UNSIGNED NOT NULL DEFAULT \'1\'',
-            ),
-            'oxorderarticles' => array(
-                'KLTITLE'  => 'ADD COLUMN  `KLTITLE` VARCHAR(255) NOT NULL DEFAULT \'\'',
-                'KLARTNUM' => 'ADD COLUMN  `KLARTNUM` VARCHAR(255) NOT NULL DEFAULT \'\'',
-            ),
-            'oxpayments'      => array(
-                'KLPAYMENTTYPES'           => 'ADD COLUMN `KLPAYMENTTYPES` SET(\'payment\',\'checkout\') NULL DEFAULT \'\'',
-                'KLEXTERNALNAME'           => 'ADD COLUMN `KLEXTERNALNAME` VARCHAR(255) NULL DEFAULT \'\'',
-                'KLEXTERNALPAYMENT'        => 'ADD COLUMN `KLEXTERNALPAYMENT` TINYINT(1) UNSIGNED NOT NULL DEFAULT \'0\'',
-                'KLEXTERNALCHECKOUT'       => 'ADD COLUMN `KLEXTERNALCHECKOUT` TINYINT(1) UNSIGNED NOT NULL DEFAULT \'0\'',
-                'KLPAYMENTIMAGEURL'        => 'ADD COLUMN `KLPAYMENTIMAGEURL` VARCHAR(255) NULL DEFAULT \'\'',
-                'KLPAYMENTIMAGEURL_1'      => 'ADD COLUMN `KLPAYMENTIMAGEURL_1` VARCHAR(255) NULL DEFAULT \'\'',
-                'KLCHECKOUTIMAGEURL'       => 'ADD COLUMN `KLCHECKOUTIMAGEURL` VARCHAR(255) NULL DEFAULT \'\'',
-                'KLCHECKOUTIMAGEURL_1'     => 'ADD COLUMN `KLCHECKOUTIMAGEURL_1` VARCHAR(255) NULL DEFAULT \'\'',
-                'KLPAYMENTOPTION'          => 'ADD COLUMN `KLPAYMENTOPTION` SET(\'card\',\'direct banking\',\'other\') NOT NULL DEFAULT \'other\'',
-                'KLEMDPURCHASEHISTORYFULL' => 'ADD COLUMN `KLEMDPURCHASEHISTORYFULL` TINYINT(1) UNSIGNED NOT NULL DEFAULT \'0\'',
-
-            ),
-            'kl_logs'         => array(
-                'KLORDERID'    => 'ADD COLUMN `KLORDERID` VARCHAR(128) CHARACTER SET utf8 DEFAULT \'\' NOT NULL AFTER `OXID`',
-                'KLMID'        => 'ADD COLUMN `KLMID` VARCHAR(50) CHARACTER SET utf8 NOT NULL AFTER `OXSHOPID`',
-                'KLSTATUSCODE' => 'ADD COLUMN `KLSTATUSCODE` VARCHAR(16) CHARACTER SET utf8 NOT NULL AFTER `KLMID`',
-                'KLURL'        => 'ADD COLUMN `KLURL` VARCHAR(256) CHARACTER SET utf8 AFTER `KLMETHOD`',
-            ),
-            'kl_ack'          => array(
-                'KLORDERID' => 'ADD COLUMN `KLORDERID` VARCHAR(128) CHARACTER SET utf8 DEFAULT \'\' NOT NULL AFTER `OXID`, ADD KEY `KLORDERID` (`KLORDERID`)',
-            ),
-        );
-
-        foreach ($aStructure as $sTableName => $aColumns) {
-            $query = "ALTER IGNORE TABLE `$sTableName` ";
-            $first = true;
-            foreach ($aColumns as $sColumnName => $queryPart) {
-
-                if (!$this->dbColumnExist($sTableName, $sColumnName)) {
-                    if (!$first) {
-                        $query .= ', ';
-                    }
-                    $query .= $queryPart;
-                    $first = false;
-                }
-            }
-
-            $this->db->execute($query);
-        }
-        */
-
-
-
-
-
 
         $this->updateViews();
 
