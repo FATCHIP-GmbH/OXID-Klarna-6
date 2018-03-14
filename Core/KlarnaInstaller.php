@@ -243,6 +243,7 @@ class KlarnaInstaller extends ShopConfiguration
      */
     protected function extendDbTables()
     {
+        /*
         $sql      = file_get_contents(__DIR__ . '/../install/install.sql');
         $sqlArray = explode(';', trim($sql));
         foreach ($sqlArray as $sql) {
@@ -303,6 +304,13 @@ class KlarnaInstaller extends ShopConfiguration
 
             $this->db->execute($query);
         }
+        */
+
+
+
+
+
+
         $this->updateViews();
 
         $updateOxPayments =
