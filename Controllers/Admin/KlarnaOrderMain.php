@@ -289,7 +289,6 @@ class KlarnaOrderMain extends KlarnaOrderMain_parent
         return false;
     }
 
-
     /**
      * Returns editable order object
      *
