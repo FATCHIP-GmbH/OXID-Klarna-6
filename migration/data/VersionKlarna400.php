@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Auto-generated Migration: Please modify to your needs!
+ * Updates DB structure for Klarna Module 4.0.0
  */
 class VersionKlarna400 extends AbstractMigration
 {
@@ -64,41 +64,6 @@ class VersionKlarna400 extends AbstractMigration
         );
 
         $this->addAlterTables();
-//
-//        $this->addSql("ALTER TABLE `oxorder`
-//            ADD COLUMN `KLMERCHANTID` VARCHAR(128)  DEFAULT '' NOT NULL,
-//            ADD COLUMN `KLSERVERMODE` VARCHAR(16) NOT NULL DEFAULT '',
-//            ADD COLUMN `KLORDERID` VARCHAR(128)  DEFAULT '' NOT NULL,
-//            ADD COLUMN `KLSYNC` TINYINT UNSIGNED NOT NULL DEFAULT '1';
-//        ");
-//
-//        $this->addSql("ALTER TABLE `oxorderarticles`
-//            ADD COLUMN  `KLTITLE` VARCHAR(255) NOT NULL DEFAULT '',
-//            ADD COLUMN  `KLARTNUM` VARCHAR(255) NOT NULL DEFAULT '';
-//        ");
-//
-//        $this->addSql("ALTER TABLE `oxpayments`
-//            ADD COLUMN `KLPAYMENTTYPES` SET('payment', 'checkout') NULL DEFAULT '',
-//            ADD COLUMN `KLEXTERNALNAME` VARCHAR(255) NULL DEFAULT '',
-//            ADD COLUMN `KLEXTERNALPAYMENT` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-//            ADD COLUMN `KLEXTERNALCHECKOUT` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-//            ADD COLUMN `KLPAYMENTIMAGEURL` VARCHAR(255) NULL DEFAULT '',
-//            ADD COLUMN `KLPAYMENTIMAGEURL_1` VARCHAR(255) NULL DEFAULT '',
-//            ADD COLUMN `KLCHECKOUTIMAGEURL` VARCHAR(255) NULL DEFAULT '',
-//            ADD COLUMN `KLCHECKOUTIMAGEURL_1` VARCHAR(255) NULL DEFAULT '',
-//            ADD COLUMN `KLPAYMENTOPTION` SET('card', 'direct banking', 'other') NOT NULL DEFAULT 'other',
-//            ADD COLUMN `KLEMDPURCHASEHISTORYFULL` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0';
-//        ");
-//
-//        $this->addSql("ALTER TABLE `kl_logs`
-//            ADD COLUMN `KLORDERID` VARCHAR(128) CHARACTER SET utf8 DEFAULT '' NOT NULL AFTER `OXID`,
-//            ADD COLUMN `KLMID` VARCHAR(50) CHARACTER SET utf8 NOT NULL AFTER `OXSHOPID`,
-//            ADD COLUMN `KLSTATUSCODE` VARCHAR(16) CHARACTER SET utf8 NOT NULL AFTER `KLMID`,
-//            ADD COLUMN `KLURL` VARCHAR(256) CHARACTER SET utf8 AFTER `KLMETHOD`;
-//        ");
-//        $this->addSql("ALTER TABLE `kl_ack`
-//             ADD COLUMN `KLORDERID` VARCHAR(128) CHARACTER SET utf8 DEFAULT '' NOT NULL AFTER `OXID`, ADD KEY `KLORDERID` (`KLORDERID`);
-//        ");
     }
 
     /**
@@ -111,6 +76,7 @@ class VersionKlarna400 extends AbstractMigration
     }
 
     /**
+     * Checks if specific column exists in the table
      * @param $sTableName
      * @param $sColumnName
      * @return bool
