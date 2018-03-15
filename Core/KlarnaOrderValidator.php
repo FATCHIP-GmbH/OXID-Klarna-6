@@ -5,7 +5,12 @@ namespace Klarna\Klarna\Core;
 
 use OxidEsales\Eshop\Application\Model\Article;
 use OxidEsales\Eshop\Core\Base;
+use OxidEsales\Eshop\Core\Registry;
 
+/**
+ * Class KlarnaOrderValidator
+ * @package Klarna\Klarna\Core
+ */
 class KlarnaOrderValidator extends Base
 {
     protected $aOrderData;
@@ -108,27 +113,31 @@ class KlarnaOrderValidator extends Base
     /**
      * Check if provided products with requested amount are buyable
      *
-     * @param array $mergedProducts
+     * @param $mergedProducts
      */
     protected function _validateOxidProductsBuyable($mergedProducts)
     {
         $oArticleObject = oxNew(Article::class);
 
         foreach ($mergedProducts as $itemKey => $itemAmount) {
+            /** @var Article $oArticleObject */
             $oArticleObject->klarna_loadByArtNum($itemKey);
 
             if ($oArticleObject->checkForStock($itemAmount) !== true) {
-                $this->_aResultErrors['KL_ERROR_NOT_ENOUGH_IN_STOCK'] = $itemKey;
+                $this->_aResultErrors['KL_ERROR_NOT_ENOUGH_IN_STOCK'] = $oArticleObject->getFieldData('oxartnum');
+
                 return;
             }
 
             if (!$oArticleObject->isLoaded()) {
-                $this->_aResultErrors['ERROR_MESSAGE_ARTICLE_ARTICLE_DOES_NOT_EXIST'] = $itemKey;
+                $this->_aResultErrors['ERROR_MESSAGE_ARTICLE_ARTICLE_DOES_NOT_EXIST'] = $oArticleObject->getFieldData('oxartnum');
+
                 return;
             }
 
             if (!$oArticleObject->isBuyable()) {
-                $this->_aResultErrors['ERROR_MESSAGE_ARTICLE_ARTICLE_NOT_BUYABLE'] = $itemKey;
+                $this->_aResultErrors['ERROR_MESSAGE_ARTICLE_ARTICLE_NOT_BUYABLE'] = $oArticleObject->getFieldData('oxartnum');
+
                 return;
             }
         }
@@ -146,5 +155,4 @@ class KlarnaOrderValidator extends Base
     {
         return strpos($item['reference'], $this->_sReferencePrefix) === 0;
     }
-
 }
