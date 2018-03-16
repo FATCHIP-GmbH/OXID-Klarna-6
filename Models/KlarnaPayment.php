@@ -72,6 +72,7 @@ class KlarnaPayment extends KlarnaPayment_parent
     }
 
     /**
+     * Returns Klarna Payment Category Name
      * @return bool|mixed
      */
     public function getPaymentCategoryName()
@@ -141,5 +142,22 @@ class KlarnaPayment extends KlarnaPayment_parent
         }
     }
 
+    /**
+     * Fetch badge url from klarna session data kept in the user session object.
+     * @param string $variant
+     * @return string
+     */
+    public function getBadgeUrl($variant = 'standard')
+    {
+        $klName = $this->getPaymentCategoryName();
 
+        $oSession = Registry::getSession();
+        if($sessionData = $oSession->getVariable('klarna_session_data')){
+            $methodData = array_search($klName, array_column($sessionData['payment_method_categories'], 'identifier'));
+            if($methodData !== null){
+
+                return $sessionData['payment_method_categories'][$methodData]['asset_urls'][$variant];
+            }
+        }
+    }
 }

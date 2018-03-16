@@ -143,6 +143,7 @@ class KlarnaInstaller extends ShopConfiguration
                 'sKlarnaDefaultEURCountry'         => 'DE',
                 'sKlarnaFooterDisplay'             => 0,
 
+
                 // Multilang Data
                 'sKlarnaAnonymizedProductTitle_EN' => 'Product name',
                 'sKlarnaAnonymizedProductTitle_DE' => 'Produktname',
@@ -184,6 +185,7 @@ class KlarnaInstaller extends ShopConfiguration
     protected function addKlarnaPaymentsMethods()
     {
         $oPayment = oxNew(Payment::class);
+
         $oPayment->load('oxidinvoice');
         $de_prefix = $oPayment->getFieldData('oxdesc') === 'Rechnung' ? 0 : 1;
         $en_prefix = $de_prefix === 1 ? 0 : 1;
