@@ -9,7 +9,7 @@ use OxidEsales\Eshop\Application\Model\User;
 
 /**
  * Class KlarnaEmail
- * @package Klarna\Klarna\Core
+ * @package TopConcepts\Klarna\Core
  */
 class KlarnaEmail extends KlarnaEmail_parent
 {

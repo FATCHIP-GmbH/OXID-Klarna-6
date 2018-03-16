@@ -373,9 +373,9 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      * General Ajax entry point for this controller
      * @throws KlarnaClientException
      * @throws StandardException
-     * @throws \Klarna\Klarna\Exception\KlarnaOrderNotFoundException
-     * @throws \Klarna\Klarna\Exception\KlarnaOrderReadOnlyException
-     * @throws \Klarna\Klarna\Exception\KlarnaWrongCredentialsException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderNotFoundException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaWrongCredentialsException
      * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      * @throws \ReflectionException
@@ -430,9 +430,9 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      * @return string
      * @throws KlarnaClientException
      * @throws StandardException
-     * @throws \Klarna\Klarna\Exception\KlarnaOrderNotFoundException
-     * @throws \Klarna\Klarna\Exception\KlarnaOrderReadOnlyException
-     * @throws \Klarna\Klarna\Exception\KlarnaWrongCredentialsException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderNotFoundException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaWrongCredentialsException
      * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      * @throws \ReflectionException
      * @throws \oxSystemComponentException
@@ -514,9 +514,9 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      * @return string
      * @throws KlarnaClientException
      * @throws StandardException
-     * @throws \Klarna\Klarna\Exception\KlarnaOrderNotFoundException
-     * @throws \Klarna\Klarna\Exception\KlarnaOrderReadOnlyException
-     * @throws \Klarna\Klarna\Exception\KlarnaWrongCredentialsException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderNotFoundException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaWrongCredentialsException
      * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      * @throws \ReflectionException
@@ -646,7 +646,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     /**
      * Sends update request to checkout API
      * @return array order data
-     * @throws \Klarna\Klarna\Exception\KlarnaConfigException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaConfigException
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      * @throws \oxSystemComponentException
      * @internal param Basket $oBasket
@@ -967,7 +967,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
     /**
      * @param null $sCountryISO
-     * @return \Klarna\Klarna\Core\KlarnaClientBase
+     * @return \TopConcepts\Klarna\Core\KlarnaClientBase
      */
     protected function getKlarnaOrderClient($sCountryISO = null)
     {

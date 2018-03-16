@@ -47,7 +47,7 @@ class KlarnaThankYouController extends KlarnaThankYouController_parent
 
     /**
      * @param null $sCountryISO
-     * @return KlarnaCheckoutClient | \Klarna\Klarna\Core\KlarnaClientBase
+     * @return KlarnaCheckoutClient | \TopConcepts\Klarna\Core\KlarnaClientBase
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function getKlarnaClient($sCountryISO = null)

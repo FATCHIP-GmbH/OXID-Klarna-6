@@ -9,7 +9,7 @@ use OxidEsales\Eshop\Core\Registry;
 
 /**
  * Class KlarnaOrderValidator
- * @package Klarna\Klarna\Core
+ * @package TopConcepts\Klarna\Core
  */
 class KlarnaOrderValidator extends Base
 {

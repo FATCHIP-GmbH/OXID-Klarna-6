@@ -32,7 +32,7 @@ class KlarnaExpressController extends FrontendController
     protected $_sThisTemplate = 'kl_klarna_checkout.tpl';
 
     /**
-     * @var \Klarna\Klarna\Core\KlarnaOrder
+     * @var \TopConcepts\Klarna\Core\KlarnaOrder
      */
     protected $_oKlarnaOrder;
 
@@ -275,7 +275,7 @@ class KlarnaExpressController extends FrontendController
     }
 
     /**
-     * @return KlarnaCheckoutClient | \Klarna\Klarna\Core\KlarnaClientBase
+     * @return KlarnaCheckoutClient | \TopConcepts\Klarna\Core\KlarnaClientBase
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function getKlarnaClient()

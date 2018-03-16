@@ -36,7 +36,7 @@ class KlarnaPaymentsClient extends KlarnaClientBase
      * @throws KlarnaClientException
      * @throws KlarnaOrderNotFoundException
      * @throws KlarnaWrongCredentialsException
-     * @throws \Klarna\Klarna\Exception\KlarnaOrderReadOnlyException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException
      * @throws \OxidEsales\Eshop\Core\Exception\StandardException
      * @throws \ReflectionException
      */
@@ -82,9 +82,9 @@ class KlarnaPaymentsClient extends KlarnaClientBase
      * @param string $session_id
      * @return array
      * @throws KlarnaClientException
-     * @throws \Klarna\Klarna\Exception\KlarnaOrderNotFoundException
-     * @throws \Klarna\Klarna\Exception\KlarnaOrderReadOnlyException
-     * @throws \Klarna\Klarna\Exception\KlarnaWrongCredentialsException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderNotFoundException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaWrongCredentialsException
      * @throws \OxidEsales\Eshop\Core\Exception\StandardException
      * @throws \Exception
      */
@@ -108,9 +108,9 @@ class KlarnaPaymentsClient extends KlarnaClientBase
      * @param $updateData array
      * @return array
      * @throws KlarnaClientException
-     * @throws \Klarna\Klarna\Exception\KlarnaOrderNotFoundException
-     * @throws \Klarna\Klarna\Exception\KlarnaOrderReadOnlyException
-     * @throws \Klarna\Klarna\Exception\KlarnaWrongCredentialsException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderNotFoundException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaWrongCredentialsException
      * @throws \OxidEsales\Eshop\Core\Exception\StandardException
      */
     public function updateSession($updateData)

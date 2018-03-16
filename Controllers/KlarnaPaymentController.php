@@ -27,7 +27,7 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
     private $aPaymentList;
 
     /**
-     * @var \Klarna\Klarna\Core\KlarnaPayment
+     * @var \TopConcepts\Klarna\Core\KlarnaPayment
      */
     private $oKlarnaPayment;
 
