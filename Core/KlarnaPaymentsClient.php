@@ -1,11 +1,11 @@
 <?php
 
-namespace Klarna\Klarna\Core;
+namespace TopConcepts\Klarna\Core;
 
 
-use Klarna\Klarna\Exception\KlarnaClientException;
-use Klarna\Klarna\Exception\KlarnaOrderNotFoundException;
-use Klarna\Klarna\Exception\KlarnaWrongCredentialsException;
+use TopConcepts\Klarna\Exception\KlarnaClientException;
+use TopConcepts\Klarna\Exception\KlarnaOrderNotFoundException;
+use TopConcepts\Klarna\Exception\KlarnaWrongCredentialsException;
 use OxidEsales\Eshop\Core\Registry;
 
 class KlarnaPaymentsClient extends KlarnaClientBase

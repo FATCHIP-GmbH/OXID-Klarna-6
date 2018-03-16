@@ -1,6 +1,6 @@
 <?php
 
-namespace Klarna\Klarna\Controllers;
+namespace TopConcepts\Klarna\Controllers;
 
 
 use OxidEsales\Eshop\Core\Registry as oxRegistry;

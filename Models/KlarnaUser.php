@@ -1,11 +1,11 @@
 <?php
 
-namespace Klarna\Klarna\Models;
+namespace TopConcepts\Klarna\Models;
 
 
-use Klarna\Klarna\Core\KlarnaConsts;
-use Klarna\Klarna\Core\KlarnaFormatter;
-use Klarna\Klarna\Core\KlarnaUtils;
+use TopConcepts\Klarna\Core\KlarnaConsts;
+use TopConcepts\Klarna\Core\KlarnaFormatter;
+use TopConcepts\Klarna\Core\KlarnaUtils;
 use OxidEsales\Eshop\Application\Model\Address;
 use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Core\DatabaseProvider;

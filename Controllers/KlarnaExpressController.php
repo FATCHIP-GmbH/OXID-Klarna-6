@@ -1,15 +1,16 @@
 <?php
 
-namespace Klarna\Klarna\Controllers;
+namespace TopConcepts\Klarna\Controllers;
 
-use Klarna\Klarna\Core\KlarnaCheckoutClient;
-use Klarna\Klarna\Core\KlarnaConsts;
-use Klarna\Klarna\Core\KlarnaOrder;
-use Klarna\Klarna\Core\KlarnaUtils;
-use Klarna\Klarna\Exception\KlarnaBasketTooLargeException;
-use Klarna\Klarna\Exception\KlarnaConfigException;
-use Klarna\Klarna\Exception\KlarnaWrongCredentialsException;
-use Klarna\Klarna\Models\KlarnaUser;
+
+use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
+use TopConcepts\Klarna\Core\KlarnaConsts;
+use TopConcepts\Klarna\Core\KlarnaOrder;
+use TopConcepts\Klarna\Core\KlarnaUtils;
+use TopConcepts\Klarna\Exception\KlarnaBasketTooLargeException;
+use TopConcepts\Klarna\Exception\KlarnaConfigException;
+use TopConcepts\Klarna\Exception\KlarnaWrongCredentialsException;
+use TopConcepts\Klarna\Models\KlarnaUser;
 
 use OxidEsales\Eshop\Application\Model\CountryList;
 use OxidEsales\Eshop\Core\DatabaseProvider;

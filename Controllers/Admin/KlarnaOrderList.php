@@ -1,9 +1,9 @@
 <?php
 
-namespace Klarna\Klarna\Controllers\Admin;
+namespace TopConcepts\Klarna\Controllers\Admin;
 
 
-use Klarna\Klarna\Core\KlarnaUtils;
+use TopConcepts\Klarna\Core\KlarnaUtils;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;

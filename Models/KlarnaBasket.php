@@ -1,10 +1,10 @@
 <?php
 
-namespace Klarna\Klarna\Models;
+namespace TopConcepts\Klarna\Models;
 
 
-use Klarna\Klarna\Core\KlarnaUtils;
-use Klarna\Klarna\Exception\KlarnaBasketTooLargeException;
+use TopConcepts\Klarna\Core\KlarnaUtils;
+use TopConcepts\Klarna\Exception\KlarnaBasketTooLargeException;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Application\Model\Article;
 use OxidEsales\Eshop\Application\Model\BasketItem;

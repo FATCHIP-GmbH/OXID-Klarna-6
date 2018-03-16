@@ -1,9 +1,9 @@
 <?php
 
-namespace Klarna\Klarna\Components;
+namespace TopConcepts\Klarna\Components;
 
 
-use Klarna\Klarna\Core\KlarnaUtils;
+use TopConcepts\Klarna\Core\KlarnaUtils;
 use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Request;
 use OxidEsales\Eshop\Core\ViewConfig;

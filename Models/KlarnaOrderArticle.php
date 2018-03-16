@@ -1,9 +1,9 @@
 <?php
 
-namespace Klarna\Klarna\Models;
+namespace TopConcepts\Klarna\Models;
 
 
-use Klarna\Klarna\Core\KlarnaUtils;
+use TopConcepts\Klarna\Core\KlarnaUtils;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Field;
 
