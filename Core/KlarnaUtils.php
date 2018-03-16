@@ -17,7 +17,7 @@ use OxidEsales\Eshop\Core\DatabaseProvider;
 
 /**
  * Class KlarnaUtils
- * @package Klarna\Klarna\Core
+ * @package TopConcepts\Klarna\Core
  */
 class KlarnaUtils
 {
@@ -153,7 +153,7 @@ class KlarnaUtils
             return true;
         }
 
-        /** @var CountryList | \Klarna\Klarna\Models\KlarnaCountryList $activeKlarnaCountries */
+        /** @var CountryList | \TopConcepts\Klarna\Models\KlarnaCountryList $activeKlarnaCountries */
         $activeKlarnaCountries = oxNew(CountryList::class);
         $activeKlarnaCountries->loadActiveKlarnaCheckoutCountries();
         if (!count($activeKlarnaCountries)) {

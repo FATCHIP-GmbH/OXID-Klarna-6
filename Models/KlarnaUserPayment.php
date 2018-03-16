@@ -3,6 +3,7 @@
 namespace TopConcepts\Klarna\Models;
 
 
+use OxidEsales\Eshop\Application\Model\Payment;
 use TopConcepts\Klarna\Core\KlarnaConsts;
 
 class KlarnaUserPayment extends KlarnaUserPayment_parent
