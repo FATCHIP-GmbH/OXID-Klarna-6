@@ -14,7 +14,7 @@ use OxidEsales\Eshop\Core\Database\Adapter\Doctrine\Database;
 use OxidEsales\DoctrineMigrationWrapper\MigrationsBuilder;
 use OxidEsales\Facts\Config\ConfigFile;
 use OxidEsales\Facts\Facts;
-use Klarna\Klarna\Models\KlarnaPayment;
+use TopConcepts\Klarna\Models\KlarnaPayment;
 
 class KlarnaInstaller extends ShopConfiguration
 {
