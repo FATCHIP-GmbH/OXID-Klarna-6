@@ -29,11 +29,9 @@ class KlarnaUserPayment extends KlarnaUserPayment_parent
         $oPayment = oxNew(Payment::class);
         $oPayment->load($paymentId);
 
-        return sprintf("cdn.klarna.com/1.0/shared/image/generic/badge/%s/%s/standard/pink.svg",
+        return sprintf("cdn.klarna.com/1.0/shared/image/generic/badge/%s/%s/standard/pink.png",
             str_replace('-', '_', strtolower(KlarnaConsts::getLocale())),
             $oPayment->getPaymentCategoryName()
         );
-
-
     }
 }
