@@ -5,7 +5,6 @@ namespace TopConcepts\Klarna\Models;
 
 use TopConcepts\Klarna\Core\KlarnaConsts;
 
-
 class KlarnaUserPayment extends KlarnaUserPayment_parent
 {
     /**
