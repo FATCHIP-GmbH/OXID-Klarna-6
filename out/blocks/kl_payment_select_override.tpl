@@ -13,7 +13,7 @@
                            value="[{$sPaymentID}]"
                            [{if $is_checked}]checked[{/if}]>
                     <label for="kp-pl"><b>[{$oView->removeKlarnaPrefix($paymentmethod->oxpayments__oxdesc->value)}]</b></label>
-                    <img src="[{"//cdn.klarna.com/1.0/shared/image/generic/badge/%s/pay_later/standard/pink.svg"|sprintf:$sLocale}]">
+                    <img src="[{$paymentmethod->getBadgeUrl()}]">
 
                 </dt>
                 <dt style="font-weight: normal">[{oxmultilang ident="KL_PAY_LATER_SUBTITLE"}]</dt>
@@ -36,7 +36,7 @@
                            value="[{$sPaymentID}]"
                            [{if $is_checked}]checked[{/if}]>
                     <label for="kp-pot"><b>[{$oView->removeKlarnaPrefix($paymentmethod->oxpayments__oxdesc->value)}]</b></label>
-                    <img src="[{"//cdn.klarna.com/1.0/shared/image/generic/badge/%s/slice_it/standard/pink.svg"|sprintf:$sLocale}]">
+                    <img src="[{$paymentmethod->getBadgeUrl()}]">
                 </dt>
                 <dt style="font-weight: normal">[{oxmultilang ident="KL_SLICE_IT_SUBTITLE"}]</dt>
                 <dt>
@@ -58,7 +58,7 @@
                            value="[{$sPaymentID}]"
                            [{if $is_checked}]checked[{/if}]>
                     <label for="kp-pn"><b>[{$oView->removeKlarnaPrefix($paymentmethod->oxpayments__oxdesc->value)}]</b></label>
-                    <img src="[{"//cdn.klarna.com/1.0/shared/image/generic/badge/%s/pay_now/standard/pink.svg"|sprintf:$sLocale}]">
+                    <img src="[{$paymentmethod->getBadgeUrl()}]">
                 </dt>
                 <dt style="font-weight: normal">[{oxmultilang ident="KL_PAY_NOW_SUBTITLE"}]</dt>
                 <dt>

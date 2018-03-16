@@ -4,19 +4,10 @@ namespace Klarna\Klarna\Models;
 
 
 use Klarna\Klarna\Core\KlarnaConsts;
-
+use OxidEsales\Eshop\Application\Model\Payment;
 
 class KlarnaUserPayment extends KlarnaUserPayment_parent
 {
-    private $klarnaBadgeUrl = "//cdn.klarna.com/1.0/shared/image/generic/badge/%s/%s/standard/pink.svg";
-
-    private $klarnaPaymentsMap = array(
-        'klarna_pay_later'    => 'pay_later',
-        'klarna_slice_it'     => 'slice_it',
-        'klarna_direct_debit' => 'pay_now',
-        'klarna_sofort'       => 'pay_now',
-    );
-
     /**
      * @return bool
      */
@@ -26,17 +17,23 @@ class KlarnaUserPayment extends KlarnaUserPayment_parent
     }
 
     /**
-     * @param $paymentId
      * @return string
      */
-    public function getKlarnaBadge($paymentId)
+    public function getBadgeUrl()
     {
+        $paymentId = $this->oxuserpayments__oxpaymentsid->value;
         if ($paymentId === 'klarna_checkout') {
             return '//cdn.klarna.com/1.0/shared/image/generic/logo/en_gb/basic/logo_black.png';
         }
 
-        $paymentSlug = $this->klarnaPaymentsMap[$paymentId];
+        $oPayment = oxNew(Payment::class);
+        $oPayment->load($paymentId);
 
-        return sprintf($this->klarnaBadgeUrl, strtolower(KlarnaConsts::getLocale()), $paymentSlug);
+        return sprintf("cdn.klarna.com/1.0/shared/image/generic/badge/%s/%s/standard/pink.svg",
+            str_replace('-', '_', strtolower(KlarnaConsts::getLocale())),
+            $oPayment->getPaymentCategoryName()
+        );
+
+
     }
 }

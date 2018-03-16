@@ -3,7 +3,7 @@
 namespace Klarna\Klarna\Core;
 
 
-use OxidEsales\Eshop\Core\Registry as oxRegistry;
+use OxidEsales\Eshop\Core\Registry;
 
 class KlarnaConsts
 {
@@ -100,9 +100,9 @@ class KlarnaConsts
     public static function getEmdPaymentTypeOptions()
     {
         return array(
-            'other'          => oxRegistry::getLang()->translateString('KL_OTHER_PAYMENT'),
-            'direct banking' => oxRegistry::getLang()->translateString('KL_DIRECT_BANKING'),
-            'card'           => oxRegistry::getLang()->translateString('KL_CARD'),
+            'other'          => Registry::getLang()->translateString('KL_OTHER_PAYMENT'),
+            'direct banking' => Registry::getLang()->translateString('KL_DIRECT_BANKING'),
+            'card'           => Registry::getLang()->translateString('KL_CARD'),
         );
     }
 
@@ -112,9 +112,9 @@ class KlarnaConsts
     public static function getFullHistoryOrdersOptions()
     {
         return array(
-            self::EMD_ORDER_HISTORY_ALL  => oxRegistry::getLang()->translateString('KL_EMD_ORDER_HISTORY_ALL'),
-            self::EMD_ORDER_HISTORY_PAID => oxRegistry::getLang()->translateString('KL_EMD_ORDER_HISTORY_PAID'),
-            self::EMD_ORDER_HISTORY_NONE => oxRegistry::getLang()->translateString('KL_EMD_ORDER_HISTORY_NONE'),
+            self::EMD_ORDER_HISTORY_ALL  => Registry::getLang()->translateString('KL_EMD_ORDER_HISTORY_ALL'),
+            self::EMD_ORDER_HISTORY_PAID => Registry::getLang()->translateString('KL_EMD_ORDER_HISTORY_PAID'),
+            self::EMD_ORDER_HISTORY_NONE => Registry::getLang()->translateString('KL_EMD_ORDER_HISTORY_NONE'),
         );
     }
 
@@ -141,11 +141,12 @@ class KlarnaConsts
 
     /**
      * @param bool $isAdmin
+     * @param bool $byCountry
      * @return mixed
      */
-    public static function getLocale($isAdmin = false)
+    public static function getLocale($isAdmin = false, $byCountry = false)
     {
-        $oLang = oxRegistry::getLang();
+        $oLang = Registry::getLang();
 
         $lang = $oLang->getLanguageAbbr();
         if($isAdmin){
@@ -153,35 +154,26 @@ class KlarnaConsts
             $lang = $langArray[$oLang->getTplLanguage()]->abbr;
         }
 
-        /* Klarna don't support all valid signatures */
-//        $sCountryISO = oxRegistry::getSession()->getVariable('sCountryISO');
-//
-//        $locs = array();
-//        $res = '';
-//        exec('locale -a', $locs, $res);
-//        if($res === 0) {
-//            foreach ($locs as $l) {
-//                $regex = "/$lang\_[A-Z]{2}$/";
-//                if (preg_match($regex, $l, $o)) {
-//                    var_dump($l);
-//                    $regexC = "/[a-z]{2}\_$sCountryISO$/";
-//                    if (preg_match($regexC, $l)) {
-//                        return $l;
-//                    }
-//                }
-//            }
-//        }
-
         $defaultLocales = array(
-            'en' => 'en_GB',
-            'nb' => 'nb_NO',
-            'da' => 'da_DK',
-            'de' => 'de_DE',
-            'nl' => 'nl_NL',
-            'fi' => 'fi_FI',
-            'sv' => 'sv_SE'
+            'en' => 'en-GB',
+            'nb' => 'nb-NO',
+            'da' => 'da-DK',
+            'de' => 'de-DE',
+            'nl' => 'nl-NL',
+            'fi' => 'fi-FI',
+            'sv' => 'sv-SE'
         );
-        return isset($defaultLocales[$lang]) ? $defaultLocales[$lang] : 'en_GB';
+        if($byCountry){
+            $sCountryISO = Registry::getSession()->getVariable('sCountryISO');
+
+            $result = array_filter($defaultLocales, function($value) use($sCountryISO){
+                return strpos($value, $sCountryISO) !== false;
+            });
+
+            return $result ? reset($result) : 'en-GB';
+        }
+
+        return isset($defaultLocales[$lang]) ? $defaultLocales[$lang] : 'en-GB';
     }
 
     /**
