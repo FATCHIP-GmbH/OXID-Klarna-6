@@ -27,7 +27,7 @@ class KlarnaOrderList extends KlarnaOrderList_parent
             $sCountryISO = KlarnaUtils::getCountryISO($oOrder->getFieldData('oxbillcountryid'));
 
             try {
-                $result                                 = $oOrder->cancelKlarnaOrder($orderId, $sCountryISO);
+                $oOrder->cancelKlarnaOrder($orderId, $sCountryISO);
                 $this->getEditObject()->oxorder__klsync = new Field(1);
                 $this->getEditObject()->save();
             } catch (StandardException $e) {
@@ -58,8 +58,7 @@ class KlarnaOrderList extends KlarnaOrderList_parent
             $sCountryISO = KlarnaUtils::getCountryISO($oOrder->getFieldData('oxbillcountryid'));
 
             try {
-                $result = $oOrder->cancelKlarnaOrder($orderId, $sCountryISO);
-
+                $oOrder->cancelKlarnaOrder($orderId, $sCountryISO);
                 $this->getEditObject()->oxorder__klsync = new Field(1);
                 $this->getEditObject()->save();
             } catch (StandardException $e) {
@@ -74,5 +73,23 @@ class KlarnaOrderList extends KlarnaOrderList_parent
         } else {
             parent::storno();
         }
+    }
+
+
+    /**
+     * Returns editable order object
+     *
+     * @param bool $reset
+     * @return Order
+     */
+    public function getEditObject($reset = false)
+    {
+        $soxId = $this->getEditObjectId();
+        if (($this->_oEditObject === null && isset($soxId) && $soxId != '-1') || $reset) {
+            $this->_oEditObject = oxNew(Order::class);
+            $this->_oEditObject->load($soxId);
+        }
+
+        return $this->_oEditObject;
     }
 }

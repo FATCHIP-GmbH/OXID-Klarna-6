@@ -1,5 +1,5 @@
 {
-  "name": "klarna/klarna",
+  "name": "topconcepts/klarna",
   "type": "oxideshop-module",
 
   "extra": {
@@ -23,7 +23,7 @@
 
   "autoload": {
     "psr-4": {
-      "Klarna\\Klarna\\": "./"
+      "TopConcepts\\Klarna\\": "./"
     }
   }
 }
