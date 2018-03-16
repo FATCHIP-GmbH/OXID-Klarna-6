@@ -209,9 +209,9 @@ class KlarnaOrder extends KlarnaOrder_parent
      * @return mixed
      * @throws KlarnaOrderNotFoundException
      * @throws KlarnaWrongCredentialsException
-     * @throws \Klarna\Klarna\Exception\KlarnaCaptureNotAllowedException
-     * @throws \Klarna\Klarna\Exception\KlarnaClientException
-     * @throws \Klarna\Klarna\Exception\KlarnaOrderReadOnlyException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaCaptureNotAllowedException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaClientException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function cancelKlarnaOrder($orderId = null, $sCountryISO = null)
@@ -274,9 +274,9 @@ class KlarnaOrder extends KlarnaOrder_parent
      * @return array
      * @throws KlarnaOrderNotFoundException
      * @throws KlarnaWrongCredentialsException
-     * @throws \Klarna\Klarna\Exception\KlarnaCaptureNotAllowedException
-     * @throws \Klarna\Klarna\Exception\KlarnaClientException
-     * @throws \Klarna\Klarna\Exception\KlarnaOrderReadOnlyException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaCaptureNotAllowedException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaClientException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function captureKlarnaOrder($data, $orderId, $sCountryISO = null)
@@ -295,9 +295,9 @@ class KlarnaOrder extends KlarnaOrder_parent
      * @return array
      * @throws KlarnaOrderNotFoundException
      * @throws KlarnaWrongCredentialsException
-     * @throws \Klarna\Klarna\Exception\KlarnaCaptureNotAllowedException
-     * @throws \Klarna\Klarna\Exception\KlarnaClientException
-     * @throws \Klarna\Klarna\Exception\KlarnaOrderReadOnlyException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaCaptureNotAllowedException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaClientException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function getAllCaptures($orderId, $sCountryISO = null)
@@ -312,7 +312,7 @@ class KlarnaOrder extends KlarnaOrder_parent
      * @param null $sCountryISO
      * @return mixed
      * @throws StandardException
-     * @throws \Klarna\Klarna\Exception\KlarnaClientException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaClientException
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function retrieveKlarnaOrder($orderId, $sCountryISO = null)
@@ -329,9 +329,9 @@ class KlarnaOrder extends KlarnaOrder_parent
      * @return array
      * @throws KlarnaOrderNotFoundException
      * @throws KlarnaWrongCredentialsException
-     * @throws \Klarna\Klarna\Exception\KlarnaCaptureNotAllowedException
-     * @throws \Klarna\Klarna\Exception\KlarnaClientException
-     * @throws \Klarna\Klarna\Exception\KlarnaOrderReadOnlyException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaCaptureNotAllowedException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaClientException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function createOrderRefund($data, $orderId, $sCountryISO = null)
@@ -349,9 +349,9 @@ class KlarnaOrder extends KlarnaOrder_parent
      * @return array
      * @throws KlarnaOrderNotFoundException
      * @throws KlarnaWrongCredentialsException
-     * @throws \Klarna\Klarna\Exception\KlarnaCaptureNotAllowedException
-     * @throws \Klarna\Klarna\Exception\KlarnaClientException
-     * @throws \Klarna\Klarna\Exception\KlarnaOrderReadOnlyException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaCaptureNotAllowedException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaClientException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function addShippingToCapture($data, $orderId, $captureId, $sCountryISO = null)

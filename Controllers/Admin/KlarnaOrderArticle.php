@@ -270,7 +270,7 @@ class KlarnaOrderArticle extends KlarnaOrderArticle_parent
      * @param null $sCountryISO
      * @return mixed
      * @throws StandardException
-     * @throws \Klarna\Klarna\Exception\KlarnaClientException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaClientException
      * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */

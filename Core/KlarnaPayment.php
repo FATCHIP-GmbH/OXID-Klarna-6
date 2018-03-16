@@ -282,7 +282,7 @@ class KlarnaPayment extends BaseModel
 
     /**
      * Compares current country ISO with country ISO stored in the session
-     * @param $oUser User | \Klarna\Klarna\Models\KlarnaUser
+     * @param $oUser User | \TopConcepts\Klarna\Models\KlarnaUser
      * @return bool
      */
     public static function countryWasChanged($oUser)

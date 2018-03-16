@@ -9,7 +9,7 @@ use OxidEsales\Eshop\Core\UtilsView;
 
 /**
  * Class KlarnaBasketController
- * @package Klarna\Klarna\Controllers
+ * @package TopConcepts\Klarna\Controllers
  */
 class KlarnaBasketController extends KlarnaBasketController_parent
 {

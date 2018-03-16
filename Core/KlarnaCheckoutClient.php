@@ -82,7 +82,7 @@ class KlarnaCheckoutClient extends KlarnaClientBase
      * @throws KlarnaOrderNotFoundException
      * @throws KlarnaOrderReadOnlyException
      * @throws KlarnaWrongCredentialsException
-     * @throws \Klarna\Klarna\Exception\KlarnaClientException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaClientException
      * @throws \OxidEsales\Eshop\Core\Exception\StandardException
      * @throws \Exception
      */
@@ -112,7 +112,7 @@ class KlarnaCheckoutClient extends KlarnaClientBase
      * @throws KlarnaOrderNotFoundException
      * @throws KlarnaOrderReadOnlyException
      * @throws KlarnaWrongCredentialsException
-     * @throws \Klarna\Klarna\Exception\KlarnaClientException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaClientException
      * @throws \OxidEsales\Eshop\Core\Exception\StandardException
      * @throws \Exception
      */

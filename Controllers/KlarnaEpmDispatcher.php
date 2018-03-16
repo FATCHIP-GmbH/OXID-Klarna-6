@@ -7,7 +7,7 @@ use OxidEsales\Eshop\Application\Controller\FrontendController;
 
 /**
  * Class klarnaEpmDispatcher
- * @package Klarna\Klarna\Controllers
+ * @package TopConcepts\Klarna\Controllers
  */
 class klarnaEpmDispatcher extends FrontendController
 {
