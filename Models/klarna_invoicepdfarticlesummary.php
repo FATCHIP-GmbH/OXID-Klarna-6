@@ -1,5 +1,5 @@
 <?php
-namespace Klarna\Klarna\Models;
+namespace TopConcepts\Klarna\Models;
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Request;

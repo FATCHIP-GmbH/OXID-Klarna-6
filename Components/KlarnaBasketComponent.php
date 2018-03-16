@@ -1,6 +1,6 @@
 <?php
 
-namespace Klarna\Klarna\Components;
+namespace TopConcepts\Klarna\Components;
 
 
 use Klarna\Klarna\Core\KlarnaClientBase;

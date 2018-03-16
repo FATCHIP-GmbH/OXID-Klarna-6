@@ -1,6 +1,6 @@
 <?php
 
-namespace Klarna\Klarna\Components\Widgets;
+namespace TopConcepts\Klarna\Components\Widgets;
 
 
 /**

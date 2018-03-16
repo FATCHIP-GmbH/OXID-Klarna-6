@@ -1,6 +1,6 @@
 <?php
 
-namespace Klarna\Klarna\Controllers\Admin;
+namespace TopConcepts\Klarna\Controllers\Admin;
 
 
 use Klarna\Klarna\Core\KlarnaUtils;
