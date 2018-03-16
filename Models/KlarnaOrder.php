@@ -1,11 +1,11 @@
 <?php
 
-namespace Klarna\Klarna\Models;
+namespace TopConcepts\Klarna\Models;
 
 
-use Klarna\Klarna\Core\KlarnaClientBase;
-use Klarna\Klarna\Core\KlarnaOrderManagementClient;
-use Klarna\Klarna\Core\KlarnaUtils;
+use TopConcepts\Klarna\Core\KlarnaClientBase;
+use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
+use TopConcepts\Klarna\Core\KlarnaUtils;
 use Klarna\Klarna\Exception\KlarnaOrderNotFoundException;
 use Klarna\Klarna\Exception\KlarnaWrongCredentialsException;
 use OxidEsales\Eshop\Application\Model\Basket;

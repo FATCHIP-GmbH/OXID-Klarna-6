@@ -1,11 +1,11 @@
 <?php
 
-namespace Klarna\Klarna\Controllers;
+namespace TopConcepts\Klarna\Controllers;
 
 
-use Klarna\Klarna\Core\KlarnaClientBase;
-use Klarna\Klarna\Core\KlarnaOrderManagementClient;
-use Klarna\Klarna\Core\KlarnaUtils;
+use TopConcepts\Klarna\Core\KlarnaClientBase;
+use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
+use TopConcepts\Klarna\Core\KlarnaUtils;
 use OxidEsales\Eshop\Application\Controller\FrontendController;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\DatabaseProvider;

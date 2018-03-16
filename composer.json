@@ -1,26 +1,22 @@
 {
   "name": "topconcepts/klarna",
   "type": "oxideshop-module",
-
   "extra": {
     "oxideshop": {
       "blacklist-filter": [
         "documentation/**/*.*"
       ],
-      "target-directory": "klarna/klarna"
+      "target-directory": "tc/klarna"
     }
   },
-
   "require": {
     "php": ">=5.6",
     "rmccue/requests": ">=1.0"
   },
-
   "require-dev": {
     "phpunit/phpunit": "*",
     "phpunit/phpunit-selenium": ">=1.2"
   },
-
   "autoload": {
     "psr-4": {
       "TopConcepts\\Klarna\\": "./"

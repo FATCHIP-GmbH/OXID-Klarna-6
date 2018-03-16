@@ -1,21 +1,21 @@
 <?php
 
-namespace Klarna\Klarna\Controllers;
+namespace TopConcepts\Klarna\Controllers;
 
 
-use Klarna\Klarna\Core\KlarnaCheckoutClient;
-use Klarna\Klarna\Core\KlarnaClientBase;
-use Klarna\Klarna\Core\KlarnaConsts;
-use Klarna\Klarna\Core\KlarnaFormatter;
-use Klarna\Klarna\Core\KlarnaLogs;
-use Klarna\Klarna\Core\KlarnaOrder;
-use Klarna\Klarna\Core\KlarnaOrderManagementClient;
-use Klarna\Klarna\Core\KlarnaPayment;
-use Klarna\Klarna\Core\KlarnaPaymentsClient;
-use Klarna\Klarna\Core\KlarnaUtils;
-use Klarna\Klarna\Exception\KlarnaClientException;
-use Klarna\Klarna\Models\KlarnaUser;
-use Klarna\Klarna\Models\KlarnaPayment as KlarnaPaymentModel;
+use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
+use TopConcepts\Klarna\Core\KlarnaClientBase;
+use TopConcepts\Klarna\Core\KlarnaConsts;
+use TopConcepts\Klarna\Core\KlarnaFormatter;
+use TopConcepts\Klarna\Core\KlarnaLogs;
+use TopConcepts\Klarna\Core\KlarnaOrder;
+use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
+use TopConcepts\Klarna\Core\KlarnaPayment;
+use TopConcepts\Klarna\Core\KlarnaPaymentsClient;
+use TopConcepts\Klarna\Core\KlarnaUtils;
+use TopConcepts\Klarna\Exception\KlarnaClientException;
+use TopConcepts\Klarna\Models\KlarnaUser;
+use TopConcepts\Klarna\Models\KlarnaPayment as KlarnaPaymentModel;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\Order;

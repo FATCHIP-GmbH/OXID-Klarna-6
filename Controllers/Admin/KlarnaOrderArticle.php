@@ -1,12 +1,12 @@
 <?php
 
-namespace Klarna\Klarna\Controllers\Admin;
+namespace TopConcepts\Klarna\Controllers\Admin;
 
 
-use Klarna\Klarna\Core\KlarnaUtils;
-use Klarna\Klarna\Exception\KlarnaOrderNotFoundException;
-use Klarna\Klarna\Exception\KlarnaWrongCredentialsException;
-use Klarna\Klarna\Models\KlarnaOrder;
+use TopConcepts\Klarna\Core\KlarnaUtils;
+use TopConcepts\Klarna\Exception\KlarnaOrderNotFoundException;
+use TopConcepts\Klarna\Exception\KlarnaWrongCredentialsException;
+use TopConcepts\Klarna\Models\KlarnaOrder;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;

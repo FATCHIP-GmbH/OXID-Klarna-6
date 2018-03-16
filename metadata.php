@@ -1,41 +1,41 @@
 <?php
 
-use Klarna\Klarna\Components\KlarnaBasketComponent;
-use Klarna\Klarna\Components\KlarnaUserComponent;
-use Klarna\Klarna\Components\Widgets\KlarnaServiceMenu;
-use Klarna\Klarna\Controllers\Admin\KlarnaConfiguration;
-use Klarna\Klarna\Controllers\Admin\KlarnaDesign;
-use Klarna\Klarna\Controllers\Admin\KlarnaEmdAdmin;
-use Klarna\Klarna\Controllers\Admin\KlarnaExternalPayments;
-use Klarna\Klarna\Controllers\Admin\KlarnaGeneral;
-use Klarna\Klarna\Controllers\Admin\KlarnaOrderAddress;
-use Klarna\Klarna\Controllers\Admin\KlarnaOrderArticle as KlarnaAdminOrderArticle;
-use Klarna\Klarna\Controllers\Admin\KlarnaOrderList;
-use Klarna\Klarna\Controllers\Admin\KlarnaOrderMain;
-use Klarna\Klarna\Controllers\Admin\KlarnaOrderOverview;
-use Klarna\Klarna\Controllers\Admin\KlarnaOrders;
-use Klarna\Klarna\Controllers\Admin\KlarnaStart;
-use Klarna\Klarna\Controllers\KlarnaUserController;
-use Klarna\Klarna\Controllers\KlarnaAcknowledgeController;
-use Klarna\Klarna\Controllers\KlarnaAjaxController;
-use Klarna\Klarna\Controllers\KlarnaBasketController;
-use Klarna\Klarna\Controllers\KlarnaEpmDispatcher;
-use Klarna\Klarna\Controllers\KlarnaExpressController;
-use Klarna\Klarna\Controllers\KlarnaOrderController;
-use Klarna\Klarna\Controllers\KlarnaPaymentController;
-use Klarna\Klarna\Controllers\KlarnaThankYouController;
-use Klarna\Klarna\Controllers\KlarnaValidationController;
-use Klarna\Klarna\Controllers\KlarnaViewConfig;
-use Klarna\Klarna\Core\KlarnaEmail;
-use Klarna\Klarna\Models\KlarnaAddress;
-use Klarna\Klarna\Models\KlarnaArticle;
-use Klarna\Klarna\Models\KlarnaBasket;
-use Klarna\Klarna\Models\KlarnaCountryList;
-use Klarna\Klarna\Models\KlarnaOrder;
-use Klarna\Klarna\Models\KlarnaOrderArticle;
-use Klarna\Klarna\Models\KlarnaPayment;
-use Klarna\Klarna\Models\KlarnaUser;
-use Klarna\Klarna\Models\KlarnaUserPayment;
+use TopConcepts\Klarna\Components\KlarnaBasketComponent;
+use TopConcepts\Klarna\Components\KlarnaUserComponent;
+use TopConcepts\Klarna\Components\Widgets\KlarnaServiceMenu;
+use TopConcepts\Klarna\Controllers\Admin\KlarnaConfiguration;
+use TopConcepts\Klarna\Controllers\Admin\KlarnaDesign;
+use TopConcepts\Klarna\Controllers\Admin\KlarnaEmdAdmin;
+use TopConcepts\Klarna\Controllers\Admin\KlarnaExternalPayments;
+use TopConcepts\Klarna\Controllers\Admin\KlarnaGeneral;
+use TopConcepts\Klarna\Controllers\Admin\KlarnaOrderAddress;
+use TopConcepts\Klarna\Controllers\Admin\KlarnaOrderArticle as KlarnaAdminOrderArticle;
+use TopConcepts\Klarna\Controllers\Admin\KlarnaOrderList;
+use TopConcepts\Klarna\Controllers\Admin\KlarnaOrderMain;
+use TopConcepts\Klarna\Controllers\Admin\KlarnaOrderOverview;
+use TopConcepts\Klarna\Controllers\Admin\KlarnaOrders;
+use TopConcepts\Klarna\Controllers\Admin\KlarnaStart;
+use TopConcepts\Klarna\Controllers\KlarnaUserController;
+use TopConcepts\Klarna\Controllers\KlarnaAcknowledgeController;
+use TopConcepts\Klarna\Controllers\KlarnaAjaxController;
+use TopConcepts\Klarna\Controllers\KlarnaBasketController;
+use TopConcepts\Klarna\Controllers\KlarnaEpmDispatcher;
+use TopConcepts\Klarna\Controllers\KlarnaExpressController;
+use TopConcepts\Klarna\Controllers\KlarnaOrderController;
+use TopConcepts\Klarna\Controllers\KlarnaPaymentController;
+use TopConcepts\Klarna\Controllers\KlarnaThankYouController;
+use TopConcepts\Klarna\Controllers\KlarnaValidationController;
+use TopConcepts\Klarna\Controllers\KlarnaViewConfig;
+use TopConcepts\Klarna\Core\KlarnaEmail;
+use TopConcepts\Klarna\Models\KlarnaAddress;
+use TopConcepts\Klarna\Models\KlarnaArticle;
+use TopConcepts\Klarna\Models\KlarnaBasket;
+use TopConcepts\Klarna\Models\KlarnaCountryList;
+use TopConcepts\Klarna\Models\KlarnaOrder;
+use TopConcepts\Klarna\Models\KlarnaOrderArticle;
+use TopConcepts\Klarna\Models\KlarnaPayment;
+use TopConcepts\Klarna\Models\KlarnaUser;
+use TopConcepts\Klarna\Models\KlarnaUserPayment;
 
 use OxidEsales\Eshop\Application\Component\BasketComponent;
 use OxidEsales\Eshop\Application\Component\UserComponent;
@@ -86,7 +86,6 @@ $aModule = array(
         'KlarnaExternalPayments' => KlarnaExternalPayments::class,
         'KlarnaEmdAdmin'         => KlarnaEmdAdmin::class,
         'KlarnaOrders'           => KlarnaOrders::class,
-
         // controllers
         'KlarnaExpress'          => KlarnaExpressController::class,
         'KlarnaAjax'             => KlarnaAjaxController::class,
@@ -94,8 +93,7 @@ $aModule = array(
         'KlarnaAcknowledge'      => KlarnaAcknowledgeController::class,
         'KlarnaValidate'         => KlarnaValidationController::class,
     ),
-
-    'extend' => array(
+    'extend'      => array(
         Email::class              => KlarnaEmail::class,
         // models
         Basket::class             => KlarnaBasket::class,
@@ -107,7 +105,6 @@ $aModule = array(
         CountryList::class        => KlarnaCountryList::class,
         OrderArticle::class       => KlarnaOrderArticle::class,
         UserPayment::class        => KlarnaUserPayment::class,
-
         // controllers
         ThankYouController::class => KlarnaThankYouController::class,
         ViewConfig::class         => KlarnaViewConfig::class,
@@ -115,51 +112,46 @@ $aModule = array(
         UserController::class     => KlarnaUserController::class,
         PaymentController::class  => KlarnaPaymentController::class,
         BasketController::class   => KlarnaBasketController::class,
-
         // admin
         OrderAddress::class       => KlarnaOrderAddress::class,
         OrderList::class          => KlarnaOrderList::class,
         AdminOrderArticle::class  => KlarnaAdminOrderArticle::class,
         OrderMain::class          => KlarnaOrderMain::class,
         OrderOverview::class      => KlarnaOrderOverview::class,
-
         //components
         BasketComponent::class    => KlarnaBasketComponent::class,
         UserComponent::class      => KlarnaUserComponent::class,
         ServiceMenu::class        => KlarnaServiceMenu::class,
     ),
-
-    'templates' => array(
-        'kl_klarna_checkout.tpl'                => 'klarna/klarna/views/checkout/kl_klarna_checkout.tpl',
-        'kl_amazon_login.tpl'                   => 'klarna/klarna/views/checkout/kl_amazon_login.tpl',
-        'changepwd.tpl'                         => 'klarna/klarna/views/emails/html/changepwd.tpl',
-        'changepwd_plain.tpl'                   => 'klarna/klarna/views/emails/plain/changepwd.tpl',
-        'kl_klarna_servicemenu.tpl'             => 'klarna/klarna/views/widget/header/kl_klarna_servicemenu.tpl',
-        'kl_klarna_checkout_voucher_data.tpl'   => 'klarna/klarna/views/checkout/inc/kl_klarna_checkout_voucher_data.tpl',
-        'kl_klarna_checkout_voucher_box.tpl'    => 'klarna/klarna/views/checkout/inc/kl_klarna_checkout_voucher_box.tpl',
-        'kl_klarna_checkout_voucher_errors.tpl' => 'klarna/klarna/views/checkout/inc/kl_klarna_checkout_voucher_errors.tpl',
-        'kl_klarna_json.tpl'                    => 'klarna/klarna/views/checkout/inc/kl_klarna_json.tpl',
-        'kl_klarna_country_select_popup.tpl'    => 'klarna/klarna/views/checkout/inc/kl_klarna_country_select_popup.tpl',
-        'kl_klarna_checkout_login_box.tpl'      => 'klarna/klarna/views/checkout/inc/kl_klarna_checkout_login_box.tpl',
-        'kl_klarna_checkout_address_box.tpl'    => 'klarna/klarna/views/checkout/inc/kl_klarna_checkout_address_box.tpl',
-        'kl_klarna_notice.tpl'                  => 'klarna/klarna/views/widget/kl_klarna_notice.tpl',
-
+    'templates'   => array(
+        'kl_klarna_checkout.tpl'                => 'tc/klarna/views/checkout/kl_klarna_checkout.tpl',
+        'kl_amazon_login.tpl'                   => 'tc/klarna/views/checkout/kl_amazon_login.tpl',
+        'changepwd.tpl'                         => 'tc/klarna/views/emails/html/changepwd.tpl',
+        'changepwd_plain.tpl'                   => 'tc/klarna/views/emails/plain/changepwd.tpl',
+        'kl_klarna_servicemenu.tpl'             => 'tc/klarna/views/widget/header/kl_klarna_servicemenu.tpl',
+        'kl_klarna_checkout_voucher_data.tpl'   => 'tc/klarna/views/checkout/inc/kl_klarna_checkout_voucher_data.tpl',
+        'kl_klarna_checkout_voucher_box.tpl'    => 'tc/klarna/views/checkout/inc/kl_klarna_checkout_voucher_box.tpl',
+        'kl_klarna_checkout_voucher_errors.tpl' => 'tc/klarna/views/checkout/inc/kl_klarna_checkout_voucher_errors.tpl',
+        'kl_klarna_json.tpl'                    => 'tc/klarna/views/checkout/inc/kl_klarna_json.tpl',
+        'kl_klarna_country_select_popup.tpl'    => 'tc/klarna/views/checkout/inc/kl_klarna_country_select_popup.tpl',
+        'kl_klarna_checkout_login_box.tpl'      => 'tc/klarna/views/checkout/inc/kl_klarna_checkout_login_box.tpl',
+        'kl_klarna_checkout_address_box.tpl'    => 'tc/klarna/views/checkout/inc/kl_klarna_checkout_address_box.tpl',
+        'kl_klarna_notice.tpl'                  => 'tc/klarna/views/widget/kl_klarna_notice.tpl',
         //admin
-        'kl_klarna_general.tpl'                 => 'klarna/klarna/views/admin/tpl/kl_klarna_general.tpl',
-        'kl_klarna_design.tpl'                  => 'klarna/klarna/views/admin/tpl/kl_klarna_design.tpl',
-        'kl_klarna_kco_config.tpl'              => 'klarna/klarna/views/admin/tpl/kl_klarna_kco_config.tpl',
-        'kl_klarna_kp_config.tpl'               => 'klarna/klarna/views/admin/tpl/kl_klarna_kp_config.tpl',
-        'kl_klarna_start.tpl'                   => 'klarna/klarna/views/admin/tpl/kl_klarna_start.tpl',
-        'kl_klarna_external_payments.tpl'       => 'klarna/klarna/views/admin/tpl/kl_klarna_external_payments.tpl',
-        'kl_klarna_emd_admin.tpl'               => 'klarna/klarna/views/admin/tpl/kl_klarna_emd_admin.tpl',
-        'kl_klarna_orders.tpl'                  => 'klarna/klarna/views/admin/tpl/kl_klarna_orders.tpl',
+        'kl_klarna_general.tpl'                 => 'tc/klarna/views/admin/tpl/kl_klarna_general.tpl',
+        'kl_klarna_design.tpl'                  => 'tc/klarna/views/admin/tpl/kl_klarna_design.tpl',
+        'kl_klarna_kco_config.tpl'              => 'tc/klarna/views/admin/tpl/kl_klarna_kco_config.tpl',
+        'kl_klarna_kp_config.tpl'               => 'tc/klarna/views/admin/tpl/kl_klarna_kp_config.tpl',
+        'kl_klarna_start.tpl'                   => 'tc/klarna/views/admin/tpl/kl_klarna_start.tpl',
+        'kl_klarna_external_payments.tpl'       => 'tc/klarna/views/admin/tpl/kl_klarna_external_payments.tpl',
+        'kl_klarna_emd_admin.tpl'               => 'tc/klarna/views/admin/tpl/kl_klarna_emd_admin.tpl',
+        'kl_klarna_orders.tpl'                  => 'tc/klarna/views/admin/tpl/kl_klarna_orders.tpl',
         //admin partial
-        'kl_country_creds.tpl'                  => 'klarna/klarna/views/admin/tpl/kl_country_creds.tpl',
-        'kl_header.tpl'                         => 'klarna/klarna/views/admin/tpl/kl_header.tpl',
-        'kl_lang_spec_conf.tpl'                 => 'klarna/klarna/views/admin/tpl/kl_lang_spec_conf.tpl',
+        'kl_country_creds.tpl'                  => 'tc/klarna/views/admin/tpl/kl_country_creds.tpl',
+        'kl_header.tpl'                         => 'tc/klarna/views/admin/tpl/kl_header.tpl',
+        'kl_lang_spec_conf.tpl'                 => 'tc/klarna/views/admin/tpl/kl_lang_spec_conf.tpl',
     ),
-
-    'blocks' => array(
+    'blocks'      => array(
         array(
             'template' => 'widget/minibasket/minibasket.tpl',
             'block'    => 'widget_minibasket',
@@ -256,11 +248,10 @@ $aModule = array(
             'file'     => 'kl_admin_list_order_filter',
         ),
     ),
-
-    'settings' => array(),
-    'events'   => array(
-        'onActivate'   => '\Klarna\Klarna\Core\KlarnaInstaller::onActivate',
-        'onDeactivate' => '\Klarna\Klarna\Core\KlarnaInstaller::onDeactivate',
+    'settings'    => array(),
+    'events'      => array(
+        'onActivate'   => '\TopConcepts\Klarna\Core\KlarnaInstaller::onActivate',
+        'onDeactivate' => '\TopConcepts\Klarna\Core\KlarnaInstaller::onDeactivate',
     ),
 );
 

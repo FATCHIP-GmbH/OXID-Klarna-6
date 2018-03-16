@@ -1,6 +1,6 @@
 <?php
 
-namespace Klarna\Klarna\Core;
+namespace TopConcepts\Klarna\Core;
 
 
 use OxidEsales\Eshop\Application\Model\Address;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Klarna\Klarna\Exception;
+namespace TopConcepts\Klarna\Exception;
 
 
 class KlarnaWrongCredentialsException extends KlarnaClientException

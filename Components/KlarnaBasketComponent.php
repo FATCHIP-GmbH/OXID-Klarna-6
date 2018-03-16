@@ -1,12 +1,12 @@
 <?php
 
-namespace Klarna\Klarna\Components;
+namespace TopConcepts\Klarna\Components;
 
 
-use Klarna\Klarna\Core\KlarnaClientBase;
-use Klarna\Klarna\Core\KlarnaOrderManagementClient;
-use Klarna\Klarna\Core\KlarnaUtils;
-use Klarna\Klarna\Core\KlarnaCheckoutClient;
+use TopConcepts\Klarna\Core\KlarnaClientBase;
+use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
+use TopConcepts\Klarna\Core\KlarnaUtils;
+use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Registry;
 

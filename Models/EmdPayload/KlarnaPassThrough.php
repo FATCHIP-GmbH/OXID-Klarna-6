@@ -1,6 +1,6 @@
 <?php
 
-namespace Klarna\Klarna\Models\EmdPayload;
+namespace TopConcepts\Klarna\Models\EmdPayload;
 
 
 class KlarnaPassThrough
