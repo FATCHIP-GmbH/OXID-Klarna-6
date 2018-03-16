@@ -30,7 +30,7 @@ class KlarnaInstaller extends ShopConfiguration
     /** @var  database name */
     protected $dbName;
 
-    protected $moduleRelativePath = 'modules/klarna/klarna';
+    protected $moduleRelativePath = 'modules/tc/klarna';
     protected $modulePath;
 
     /**
@@ -253,7 +253,7 @@ class KlarnaInstaller extends ShopConfiguration
     protected function getModuleMigrations()
     {
         $config = new ConfigFile();
-        $config->setVar(ConfigFile::PARAMETER_SOURCE_PATH, $config->sShopDir . '/modules/klarna/klarna');
+        $config->setVar(ConfigFile::PARAMETER_SOURCE_PATH, $config->sShopDir . '/modules/tc/klarna');
         $migrationsBuilder = new MigrationsBuilder();
 
         return $migrationsBuilder->build(new Facts($config->getVar(ConfigFile::PARAMETER_SOURCE_PATH) . '/migration', $config));

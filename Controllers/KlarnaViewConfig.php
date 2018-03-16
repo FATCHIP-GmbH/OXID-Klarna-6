@@ -61,7 +61,7 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
         $sUrl = str_replace(
             rtrim($this->getConfig()->getConfigParam('sShopDir'), '/'),
             rtrim($this->getConfig()->getSslShopUrl(), '/'),
-            $this->getConfig()->getConfigParam('sShopDir') . 'modules/klarna/klarna/' . $sPath
+            $this->getConfig()->getConfigParam('sShopDir') . 'modules/tc/klarna/' . $sPath
         );
 
         return $sUrl;
