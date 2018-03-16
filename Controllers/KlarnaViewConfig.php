@@ -3,9 +3,9 @@
 namespace TopConcepts\Klarna\Controllers;
 
 
-use Klarna\Klarna\Core\KlarnaConsts;
-use Klarna\Klarna\Core\KlarnaUtils;
-use Klarna\Klarna\Models\KlarnaUser;
+use TopConcepts\Klarna\Core\KlarnaConsts;
+use TopConcepts\Klarna\Core\KlarnaUtils;
+use TopConcepts\Klarna\Models\KlarnaUser;
 use OxidEsales\Eshop\Application\Model\CountryList;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Registry;

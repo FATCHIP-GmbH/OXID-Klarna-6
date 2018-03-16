@@ -3,13 +3,13 @@
 namespace TopConcepts\Klarna\Controllers;
 
 
-use Klarna\Klarna\Core\KlarnaClientBase;
-use Klarna\Klarna\Core\KlarnaPaymentsClient;
-use Klarna\Klarna\Models\KlarnaPayment as KlarnaPaymentModel;
-use Klarna\Klarna\Core\KlarnaConsts;
-use Klarna\Klarna\Core\KlarnaPayment;
-use Klarna\Klarna\Core\KlarnaUtils;
-use Klarna\Klarna\Models\KlarnaUser;
+use TopConcepts\Klarna\Core\KlarnaClientBase;
+use TopConcepts\Klarna\Core\KlarnaPaymentsClient;
+use TopConcepts\Klarna\Models\KlarnaPayment as KlarnaPaymentModel;
+use TopConcepts\Klarna\Core\KlarnaConsts;
+use TopConcepts\Klarna\Core\KlarnaPayment;
+use TopConcepts\Klarna\Core\KlarnaUtils;
+use TopConcepts\Klarna\Models\KlarnaUser;
 use OxidEsales\Eshop\Application\Model\DeliverySetList;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Exception\StandardException;

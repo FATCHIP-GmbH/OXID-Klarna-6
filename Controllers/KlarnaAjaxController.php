@@ -3,13 +3,13 @@
 namespace TopConcepts\Klarna\Controllers;
 
 
-use Klarna\Klarna\Core\KlarnaCheckoutClient;
-use Klarna\Klarna\Core\KlarnaClientBase;
-use Klarna\Klarna\Core\KlarnaFormatter;
-use Klarna\Klarna\Core\KlarnaOrder;
-use Klarna\Klarna\Core\KlarnaUtils;
-use Klarna\Klarna\Exception\KlarnaClientException;
-use Klarna\Klarna\Models\KlarnaUser;
+use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
+use TopConcepts\Klarna\Core\KlarnaClientBase;
+use TopConcepts\Klarna\Core\KlarnaFormatter;
+use TopConcepts\Klarna\Core\KlarnaOrder;
+use TopConcepts\Klarna\Core\KlarnaUtils;
+use TopConcepts\Klarna\Exception\KlarnaClientException;
+use TopConcepts\Klarna\Models\KlarnaUser;
 use OxidEsales\Eshop\Application\Controller\BasketController;
 use OxidEsales\Eshop\Application\Controller\FrontendController;
 use OxidEsales\Eshop\Application\Model\Country;

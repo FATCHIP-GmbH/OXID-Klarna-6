@@ -3,8 +3,8 @@
 namespace TopConcepts\Klarna\Controllers;
 
 
-use Klarna\Klarna\Core\KlarnaLogs;
-use Klarna\Klarna\Core\KlarnaOrderValidator;
+use TopConcepts\Klarna\Core\KlarnaLogs;
+use TopConcepts\Klarna\Core\KlarnaOrderValidator;
 use OxidEsales\Eshop\Application\Controller\FrontendController;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Request;

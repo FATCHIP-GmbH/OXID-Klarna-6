@@ -3,7 +3,7 @@
 namespace TopConcepts\Klarna\Models;
 
 
-use Klarna\Klarna\Core\KlarnaConsts;
+use TopConcepts\Klarna\Core\KlarnaConsts;
 
 class KlarnaCountryList extends KlarnaCountryList_parent
 {

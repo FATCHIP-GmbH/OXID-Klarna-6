@@ -3,8 +3,8 @@
 namespace TopConcepts\Klarna\Models\EmdPayload;
 
 
-use Klarna\Klarna\Core\KlarnaConsts;
-use Klarna\Klarna\Models\KlarnaEMD;
+use TopConcepts\Klarna\Core\KlarnaConsts;
+use TopConcepts\Klarna\Models\KlarnaEMD;
 use OxidEsales\Eshop\Application\Model\PaymentList;
 use OxidEsales\Eshop\Core\DatabaseProvider as oxDb;
 use OxidEsales\Eshop\Application\Model\Payment;

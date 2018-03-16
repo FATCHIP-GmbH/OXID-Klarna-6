@@ -3,7 +3,7 @@
 namespace TopConcepts\Klarna\Controllers\Admin;
 
 
-use Klarna\Klarna\Models\KlarnaPayment;
+use TopConcepts\Klarna\Models\KlarnaPayment;
 
 /**
  * Class Klarna_Order_Address

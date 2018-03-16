@@ -3,8 +3,8 @@
 namespace TopConcepts\Klarna\Controllers\Admin;
 
 
-use Klarna\Klarna\Core\KlarnaConsts;
-use Klarna\Klarna\Core\KlarnaUtils;
+use TopConcepts\Klarna\Core\KlarnaConsts;
+use TopConcepts\Klarna\Core\KlarnaUtils;
 use OxidEsales\Eshop\Application\Model\Actions;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Field;
