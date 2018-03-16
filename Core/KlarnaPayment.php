@@ -3,7 +3,7 @@
 namespace TopConcepts\Klarna\Core;
 
 
-use Klarna\Klarna\Models\KlarnaUser;
+use TopConcepts\Klarna\Models\KlarnaUser;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Application\Model\User;

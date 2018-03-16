@@ -3,8 +3,8 @@
 namespace TopConcepts\Klarna\Core;
 
 
-use Klarna\Klarna\Models\KlarnaCountryList;
-use Klarna\Klarna\Models\KlarnaUser;
+use TopConcepts\Klarna\Models\KlarnaCountryList;
+use TopConcepts\Klarna\Models\KlarnaUser;
 use OxidEsales\Eshop\Application\Model\Category;
 use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\CountryList;

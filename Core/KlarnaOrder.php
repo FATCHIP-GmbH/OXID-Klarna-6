@@ -3,9 +3,9 @@
 namespace TopConcepts\Klarna\Core;
 
 
-use Klarna\Klarna\Exception\KlarnaConfigException;
-use Klarna\Klarna\Models\KlarnaEMD;
-use Klarna\Klarna\Models\KlarnaUser;
+use TopConcepts\Klarna\Exception\KlarnaConfigException;
+use TopConcepts\Klarna\Models\KlarnaEMD;
+use TopConcepts\Klarna\Models\KlarnaUser;
 use OxidEsales\Eshop\Application\Controller\PaymentController;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Country;
