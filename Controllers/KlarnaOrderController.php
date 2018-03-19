@@ -3,6 +3,8 @@
 namespace TopConcepts\Klarna\Controllers;
 
 
+use OxidEsales\PayPalModule\Controller\ExpressCheckoutDispatcher;
+use OxidEsales\PayPalModule\Controller\StandardDispatcher;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
 use TopConcepts\Klarna\Core\KlarnaClientBase;
 use TopConcepts\Klarna\Core\KlarnaConsts;
@@ -768,7 +770,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . "cl=KlarnaEpmDispatcher&fnc=amazonLogin", false);
         }
         if ($paymentId === 'oxidpaypal') {
-            Registry::get('oePayPalStandardDispatcher')->setExpressCheckout();
+            Registry::get(ExpressCheckoutDispatcher::class)->setExpressCheckout();//todo: check if other options possible. user not available.
         }
     }
 
@@ -780,7 +782,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         if ($paymentId === 'bestitamazon') {
             Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . "cl=KlarnaEpmDispatcher&fnc=amazonLogin", false);
         } else if ($paymentId === 'oxidpaypal') {
-            Registry::get('oePayPalExpressCheckoutDispatcher')->setExpressCheckout();
+            Registry::get(ExpressCheckoutDispatcher::class)->setExpressCheckout();
         } else {
             KlarnaUtils::fullyResetKlarnaSession();
             Registry::get(UtilsView::class)->addErrorToDisplay('KLARNA_WENT_WRONG_TRY_AGAIN', false, true);

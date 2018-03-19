@@ -244,7 +244,7 @@ $aModule = array(
         ),
         array(
             'template' => 'order_list.tpl',
-            'block'    => 'admin_list_order_filter',
+            'block'    => 'admin_order_list_filter',
             'file'     => 'kl_admin_list_order_filter',
         ),
     ),
