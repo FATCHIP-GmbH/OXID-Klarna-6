@@ -55,7 +55,7 @@ class VersionKlarna400 extends AbstractMigration
                 
             CREATE TABLE IF NOT EXISTS `kl_anon_lookup` (
                   `KLARTNUM` VARCHAR(32) NOT NULL,
-                  `OXARTID`  VARCHAR(32) NOT NULL,
+                  `OXARTID`  VARCHAR(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
                   PRIMARY KEY (`KLARTNUM`)
                 )
                   ENGINE = MyISAM
