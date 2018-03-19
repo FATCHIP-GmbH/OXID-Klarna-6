@@ -19,11 +19,11 @@ class VersionKlarna400 extends AbstractMigration
             "
             CREATE TABLE IF NOT EXISTS `kl_logs` (
                   `OXID`          CHAR(32)
-                                  CHARACTER SET utf8
+                                  CHARACTER SET latin1 COLLATE latin1_general_ci
                                NOT NULL DEFAULT '',
                 
                   `OXSHOPID`      CHAR(32)
-                                  CHARACTER SET utf8
+                                  CHARACTER SET latin1 COLLATE latin1_general_ci
                                NOT NULL DEFAULT '',
                   `KLMETHOD`      VARCHAR(128)
                                   CHARACTER SET utf8
@@ -43,7 +43,7 @@ class VersionKlarna400 extends AbstractMigration
 
             CREATE TABLE IF NOT EXISTS `kl_ack` (
                   `OXID`       VARCHAR(32)
-                               CHARACTER SET utf8
+                               CHARACTER SET latin1 COLLATE latin1_general_ci
                                         NOT NULL,
                   `KLRECEIVED` DATETIME NOT NULL,
                   PRIMARY KEY (`OXID`)
