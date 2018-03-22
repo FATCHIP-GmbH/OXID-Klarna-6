@@ -43,8 +43,6 @@ class KlarnaPaymentHistoryFull
      *
      * @param User $user
      * @return array
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
-     * @throws \oxSystemComponentException
      */
     public function getPaymentHistoryFull(User $user)
     {
@@ -72,7 +70,6 @@ class KlarnaPaymentHistoryFull
      * @param Payment $payment
      * @param $userId
      * @return bool
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      */
     protected function isFullPaymentHistoryPossible(Payment $payment, $userId)
     {
@@ -171,7 +168,6 @@ class KlarnaPaymentHistoryFull
      * @param Payment $payment
      * @param $userId
      * @return bool
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      */
     protected function doesPaymentHasAnyOrder(Payment $payment, $userId)
     {
@@ -232,7 +228,7 @@ class KlarnaPaymentHistoryFull
     }
 
     /**
-     * Checks if user is not fake and has a payment history
+     * Checks if user is not fake and there are active payments methods.
      *
      * @param User $user
      * @param $paymentList
@@ -241,7 +237,7 @@ class KlarnaPaymentHistoryFull
      */
     protected function hasPaymentHistory(User $user, $paymentList)
     {
-        return !$user->isFake() && is_array($paymentList);
+        return !$user->isFake() && count($paymentList);
     }
 
     /**
@@ -251,7 +247,6 @@ class KlarnaPaymentHistoryFull
      * @param $payment
      * @param $userId
      * @return array
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      */
     protected function addPaymentStatisticsToHistory($historyRecords, $payment, $userId)
     {
