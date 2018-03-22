@@ -78,7 +78,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         $this->oRequest = Registry::get(Request::class);
 
         if (KlarnaUtils::isKlarnaCheckoutEnabled()) {
-//            $aErrors = array();
+
             if ($this->oRequest->getRequestEscapedParameter('externalCheckout') == 1) {
                 Registry::getSession()->setVariable('externalCheckout', true);
             }
@@ -97,19 +97,15 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                     $this->_aOrderData = $oClient->getOrder();
                 } catch (KlarnaClientException $oEx) {
                     $oEx->debugOut();
-//                    $aErrors[] = $oEx->getMessage();
+
                     if ($oEx->getCode() == 401 || $oEx->getCode() == 404) {
                         // create new order. restart session.
                         if (KlarnaUtils::is_ajax()) {
                             return $this->jsonResponse(__FUNCTION__, 'restart needed', $data = null);
                         }
+                        Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=KlarnaExpress', true, 302);
                     }
                 }
-
-//                if (!empty($aErrors)) {
-//                    Registry::get(UtilsView::class)->addErrorToDisplay($aErrors[0]);
-//                    Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=KlarnaExpress', true, 302);
-//                }
 
                 $this->_initUser();
                 $this->updateUserObject();

@@ -2,7 +2,6 @@
 
 namespace TopConcepts\Klarna\Core;
 
-
 use OxidEsales\Eshop\Application\Model\Address;
 use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\User;

@@ -117,6 +117,9 @@ class VersionKlarna400 extends AbstractMigration
                 'KLEMDPURCHASEHISTORYFULL' => 'ADD COLUMN `KLEMDPURCHASEHISTORYFULL` TINYINT(1) UNSIGNED NOT NULL DEFAULT \'0\'',
 
             ),
+            'oxaddress' => array(
+                'KLTEMPORARY' => 'ADD COLUMN `KLTEMPORARY` TINYINT(1) UNSIGNED NOT NULL DEFAULT \'0\'',
+            ),
             'kl_logs'         => array(
                 'KLORDERID'    => 'ADD COLUMN `KLORDERID` VARCHAR(128) CHARACTER SET utf8 DEFAULT \'\' NOT NULL AFTER `OXID`',
                 'KLMID'        => 'ADD COLUMN `KLMID` VARCHAR(50) CHARACTER SET utf8 NOT NULL AFTER `OXSHOPID`',

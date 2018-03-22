@@ -316,9 +316,13 @@ class KlarnaUser extends KlarnaUser_parent
         $oAddress->oxaddress__oxuserid  = new Field($this->getId(), Field::T_RAW);
         $oAddress->oxaddress__oxcountry = $this->getUserCountry($oAddress->oxaddress__oxcountryid->value);
 
-        if ($oAddress->isValid() && $this->kl_getType() !== self::REGISTERED) {
-            if (!$sAddressOxid = $oAddress->exists()){
+        if ($oAddress->isValid()) {
+            // save only unique address for 
+            if (!$sAddressOxid = $oAddress->klExists()){
                 $sAddressOxid = $oAddress->save();
+                if($this->isFake()){
+                    $oAddress->oxaddress__kltemporary = new Field(1, Field::T_RAW);
+                }
             }
             $this->updateSessionDeliveryAddressId($sAddressOxid);
         }
@@ -331,6 +335,7 @@ class KlarnaUser extends KlarnaUser_parent
     public function updateSessionDeliveryAddressId($sAddressOxid = null)
     {
         $oSession = Registry::getSession();
+        // keep only one address record for fake user, remove old
         if ($this->isFake() && $oSession->hasVariable('deladrid')) {
             $this->clearDeliveryAddress();
         }
@@ -351,8 +356,9 @@ class KlarnaUser extends KlarnaUser_parent
         $oAddress->load(Registry::getSession()->getVariable('deladrid'));
         Registry::getSession()->setVariable('deladrid', null);
         Registry::getSession()->setVariable('blshowshipaddress', 0);
-        if ($this->isFake())
+        if ($oAddress->isTemporary()){
             $oAddress->delete();
+        }
     }
 
     /**

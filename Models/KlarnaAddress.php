@@ -19,7 +19,7 @@ class KlarnaAddress extends KlarnaAddress_parent
      * @return bool
      * @throws StandardException
      */
-    public function exists()
+    public function klExists()
     {
         // get user address list
         $oUser     = oxNew(User::class);
@@ -115,5 +115,11 @@ class KlarnaAddress extends KlarnaAddress_parent
         }
 
         return true;
+    }
+
+
+    public function isTemporary()
+    {
+        return $this->oxaddress__kltemporary->value;
     }
 }
