@@ -226,6 +226,7 @@ $aLang = array(
     'KLARNA_SEE_ORDER_IN_PORTAL'             => '<a href="%s" target="_blank" class="alert-link">Diese Bestellung im Klarna Portal aufrufen</a>',
     'KLARNA_ORDER_NOT_IN_SYNC'               => '<strong>Achtung!</strong> Die Daten dieser Bestellung weichen von den bei Klarna gespeicherten Daten ab. ',
     'KL_ORDER_UPDATE_CANT_BE_SENT_TO_KLARNA' => 'Achtung! Aufgrund des aktuellen Bestellstatus kann diese Anpassung nicht an Klarna übermittelt werden. Führen Sie die entsprechende Anpassung ggf. direkt im Klarna Merchant Portal von Hand durch.',
+    'KL_ORDER_UPDATE_REJECTED_BY_KLARNA'     => 'Achtung! Ihre letzten Änderungen an dieser Bestellung konnten nicht von Klarna verarbeitet werden (Grund: %s). Bitte machen Sie Ihre kürzlichen Änderungen im OXID eShop rückgängig oder führen Sie die entsprechende Anpassung von Hand im Klarna Merchant Portal durch falls erforderlich.',
     'KLARNA_UNAUTHORIZED_REQUEST'            => 'Unerlaubte Anfrage. Prüfen Sie die Einstellungen des Klarna Moduls und die Merchant ID sowie das zugehörige Passwort',
     'KLARNA_ORDER_NOT_FOUND'                 => 'Diese Bestellung konnte bei Klarna im System nicht gefunden werden. Änderungen an den Bestelldaten werden daher nicht an Klarna übertragen.',
     'KLARNA_MID_CHANGED_FOR_COUNTRY'         => '<strong>Wrong credentials!</strong> This order has been placed using <strong>%s</strong> merchant id. Currently configured merchant id for <strong>%s</strong> is <strong>%s</strong>.',
