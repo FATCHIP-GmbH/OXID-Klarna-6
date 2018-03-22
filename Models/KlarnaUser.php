@@ -317,9 +317,9 @@ class KlarnaUser extends KlarnaUser_parent
         $oAddress->oxaddress__oxcountry = $this->getUserCountry($oAddress->oxaddress__oxcountryid->value);
 
         if ($oAddress->isValid() && $this->kl_getType() !== self::REGISTERED) {
-            Registry::getSession()->setVariable('blshowshipaddress', 1);
-
-            $sAddressOxid = $oAddress->save();
+            if (!$sAddressOxid = $oAddress->exists()){
+                $sAddressOxid = $oAddress->save();
+            }
             $this->updateSessionDeliveryAddressId($sAddressOxid);
         }
     }

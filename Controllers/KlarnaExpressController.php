@@ -69,12 +69,10 @@ class KlarnaExpressController extends FrontendController
      */
     public function init()
     {
-
         $oSession        = Registry::getSession();
         $oBasket         = $oSession->getBasket();
         $this->_oRequest = Registry::get(Request::class);
         $oUtils          = Registry::getUtils();
-
 
         /**
          * KCO is not enabled. redirect to legacy oxid checkout
@@ -82,6 +80,14 @@ class KlarnaExpressController extends FrontendController
         if (KlarnaUtils::getShopConfVar('sKlarnaActiveMode') !== 'KCO') {
             $oUtils->redirect(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=order', false, 302);
         }
+
+        /**
+         * Reset Klarna session if flag set by changing user address data in the User Controller earlier.
+         */
+        if (Registry::getSession()->getVariable('resetKlarnaSession') == 1) {
+            KlarnaUtils::fullyResetKlarnaSession();
+        }
+        
         /**
          * A country has been selected from the country popup.
          */

@@ -78,6 +78,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         $this->oRequest = Registry::get(Request::class);
 
         if (KlarnaUtils::isKlarnaCheckoutEnabled()) {
+//            $aErrors = array();
             if ($this->oRequest->getRequestEscapedParameter('externalCheckout') == 1) {
                 Registry::getSession()->setVariable('externalCheckout', true);
             }
@@ -95,6 +96,8 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                 try {
                     $this->_aOrderData = $oClient->getOrder();
                 } catch (KlarnaClientException $oEx) {
+                    $oEx->debugOut();
+//                    $aErrors[] = $oEx->getMessage();
                     if ($oEx->getCode() == 401 || $oEx->getCode() == 404) {
                         // create new order. restart session.
                         if (KlarnaUtils::is_ajax()) {
@@ -102,6 +105,11 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                         }
                     }
                 }
+
+//                if (!empty($aErrors)) {
+//                    Registry::get(UtilsView::class)->addErrorToDisplay($aErrors[0]);
+//                    Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=KlarnaExpress', true, 302);
+//                }
 
                 $this->_initUser();
                 $this->updateUserObject();
@@ -456,11 +464,11 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         /** @var KlarnaPayment $oKlarnaPayment */
         $oKlarnaPayment = new KlarnaPayment($oBasket, $oUser, $aPost);
 
-        if(!$oKlarnaPayment->isSessionValid()){
+        if (!$oKlarnaPayment->isSessionValid()) {
             $this->resetKlarnaPaymentSession();
         }
 
-        if(!$oKlarnaPayment->validateClientToken($aPost['client_token'])){
+        if (!$oKlarnaPayment->validateClientToken($aPost['client_token'])) {
             return $this->jsonResponse(
                 __METHOD__,
                 'refresh',
@@ -501,7 +509,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         $responseData = array(
             'update'        => $aPost,
             'paymentMethod' => $oKlarnaPayment->getPaymentMethodCategory(),
-            'refreshUrl'      => $oKlarnaPayment->refreshUrl,
+            'refreshUrl'    => $oKlarnaPayment->refreshUrl,
         );
 
         return $this->jsonResponse(
@@ -535,13 +543,13 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         }
 
         /** @var  $oKlarnaPayment KlarnaPayment */
-        $oKlarnaPayment         = new KlarnaPayment($oBasket, $oUser, $aPost);
+        $oKlarnaPayment = new KlarnaPayment($oBasket, $oUser, $aPost);
 
-        if(!$oKlarnaPayment->isSessionValid()){
+        if (!$oKlarnaPayment->isSessionValid()) {
             $this->resetKlarnaPaymentSession();
         }
 
-        if(!$oKlarnaPayment->validateClientToken($aPost['client_token'])){
+        if (!$oKlarnaPayment->validateClientToken($aPost['client_token'])) {
             return $this->jsonResponse(
                 __METHOD__,
                 'refresh',
@@ -551,7 +559,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
         $responseData           = array();
         $responseData['update'] = $oKlarnaPayment->getChangedData();
-        $savedCheckSums = $oKlarnaPayment->fetchCheckSums();
+        $savedCheckSums         = $oKlarnaPayment->fetchCheckSums();
         if ($savedCheckSums['_aUserData'] === false) {
             $oKlarnaPayment->setCheckSum('_aUserData', true);
         }
@@ -694,6 +702,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                 Field::T_RAW
             );
         }
+
     }
 
     /**

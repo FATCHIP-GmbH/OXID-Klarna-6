@@ -7,7 +7,7 @@ use TopConcepts\Klarna\Core\KlarnaUtils;
 use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Request;
 use OxidEsales\Eshop\Core\ViewConfig;
-use OxidEsales\Eshop\Core\Registry as oxRegistry;
+use OxidEsales\Eshop\Core\Registry;
 
 /**
  * Class KlarnaOxCmp_User user component
@@ -34,11 +34,11 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
     {
         $this->login_noredirectParent();
 
-        oxRegistry::getSession()->setVariable("iShowSteps", 1);
+        Registry::getSession()->setVariable("iShowSteps", 1);
         $oViewConfig = oxNew(ViewConfig::class);
         if ($oViewConfig->isKlarnaCheckoutEnabled()) {
             if ($this->klarnaRedirect()) {
-                oxRegistry::getUtils()->redirect(
+                Registry::getUtils()->redirect(
                     $this->getConfig()->getShopSecureHomeUrl() . 'cl=KlarnaExpress',
                     false,
                     302
@@ -54,7 +54,7 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
      */
     public function klarnaRedirect()
     {
-        $sClass = oxRegistry::get(Request::class)->getRequestParameter('cl');
+        $sClass = Registry::get(Request::class)->getRequestParameter('cl');
 
         return in_array($sClass, $this->_aClasses);
     }
@@ -115,12 +115,14 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
         $result = parent::changeuser_testvalues();
         if (KlarnaUtils::isKlarnaCheckoutEnabled() && $result === 'account_user') {
 
-            KlarnaUtils::fullyResetKlarnaSession();
-            if (oxRegistry::get(Request::class)->getRequestParameter('blshowshipaddress')) {
-                oxRegistry::getSession()->setVariable('blshowshipaddress', 1);
-                oxRegistry::getSession()->setVariable('deladrid', oxRegistry::get(Request::class)->getRequestEscapedParameter('oxaddressid'));
+//            KlarnaUtils::fullyResetKlarnaSession();
+            Registry::getSession()->setVariable('resetKlarnaSession', 1);
+
+            if (Registry::get(Request::class)->getRequestParameter('blshowshipaddress')) {
+                Registry::getSession()->setVariable('blshowshipaddress', 1);
+                Registry::getSession()->setVariable('deladrid', Registry::get(Request::class)->getRequestEscapedParameter('oxaddressid'));
             } else {
-                oxRegistry::getSession()->deleteVariable('deladrid');
+                Registry::getSession()->deleteVariable('deladrid');
             }
         }
 

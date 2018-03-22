@@ -19,7 +19,7 @@ class KlarnaAddress extends KlarnaAddress_parent
      * @return bool
      * @throws StandardException
      */
-    public function isNew()
+    public function exists()
     {
         // get user address list
         $oUser     = oxNew(User::class);
@@ -33,11 +33,12 @@ class KlarnaAddress extends KlarnaAddress_parent
             // compare
             foreach ($aAddressList as $oAddress) {
                 if ($this->compareObjectFields($oAddress)) {
-                    return false;
+
+                    return $oAddress->getId();
                 }
             }
 
-            return true;
+            return false;
 
         } else {
             throw new StandardException('oxaddress_oxuserid is empty');
@@ -109,10 +110,10 @@ class KlarnaAddress extends KlarnaAddress_parent
             }
         }
 
-        if ($aInvalidFields)
+        if ($aInvalidFields) {
             return false;
+        }
 
-        if ($this->isNew())
-            return true;
+        return true;
     }
 }

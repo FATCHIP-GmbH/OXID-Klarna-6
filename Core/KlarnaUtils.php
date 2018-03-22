@@ -340,14 +340,14 @@ class KlarnaUtils
         Registry::getSession()->deleteVariable('kp_order_id');
         Registry::getSession()->deleteVariable('amazonOrderReferenceId');
         Registry::getSession()->deleteVariable('klarna_checkout_user_email');
-        Registry::getSession()->deleteVariable('deladrid');
+//        Registry::getSession()->deleteVariable('deladrid');
         Registry::getSession()->deleteVariable('externalCheckout');
         Registry::getSession()->deleteVariable('sFakeUserId');
         Registry::getSession()->deleteVariable('sAuthToken');
         Registry::getSession()->deleteVariable('klarna_session_data');
         Registry::getSession()->deleteVariable('finalizeRequired');
         Registry::getSession()->deleteVariable('sCountryISO');
-        Registry::getSession()->setVariable('blshowshipaddress', 0);
+//        Registry::getSession()->setVariable('blshowshipaddress', 0);
     }
 
     /**
