@@ -1,0 +1,130 @@
+Insert into oxobject2group set oxid = 'f9cfaecdc7407ef7b2d492fd1c7e8f83',oxshopid = '1',oxobjectid = 'klarna_checkout',oxgroupsid = 'oxidforeigncustomer';
+Insert into oxobject2group set oxid = '555af1a5813deff89ebcf0a785031666',oxshopid = '1',oxobjectid = 'klarna_checkout',oxgroupsid = 'oxidsmallcust';
+Insert into oxobject2group set oxid = '24d980f108a5d5116a0c029add8ce6a8',oxshopid = '1',oxobjectid = 'klarna_checkout',oxgroupsid = 'oxidgoodcust';
+Insert into oxobject2group set oxid = 'aa688c851d95893ea62c3d0f67de897c',oxshopid = '1',oxobjectid = 'klarna_checkout',oxgroupsid = 'oxiddealer';
+Insert into oxobject2group set oxid = '7795b0a18b3f765eae2945bf8535af02',oxshopid = '1',oxobjectid = 'klarna_checkout',oxgroupsid = 'oxidnewcustomer';
+Insert into oxobject2group set oxid = 'b228afd82364b7ecf162d46e1e57b7cf',oxshopid = '1',oxobjectid = 'klarna_checkout',oxgroupsid = 'oxidcustomer';
+Insert into oxobject2group set oxid = 'e6436b702cb96414a845b033787ddc5c',oxshopid = '1',oxobjectid = 'klarna_checkout',oxgroupsid = 'oxidmiddlecust';
+Insert into oxobject2group set oxid = '388d094bdb9e8086c914c54b4062915f',oxshopid = '1',oxobjectid = 'klarna_checkout',oxgroupsid = 'oxidnewsletter';
+Insert into oxobject2group set oxid = 'f59a8c2c5540c3d5a5ea8371b5459382',oxshopid = '1',oxobjectid = 'klarna_checkout',oxgroupsid = 'oxidnotyetordered';
+Insert into oxobject2group set oxid = '1efc7c25a6a313357c20881703730516',oxshopid = '1',oxobjectid = 'klarna_checkout',oxgroupsid = 'oxidpowershopper';
+Insert into oxobject2group set oxid = 'f3802278871f8d3c7ae01e4c421f1571',oxshopid = '1',oxobjectid = 'klarna_checkout',oxgroupsid = 'oxidpricea';
+Insert into oxobject2group set oxid = '59bd4145b32e793a41f054591cb34a2d',oxshopid = '1',oxobjectid = 'klarna_checkout',oxgroupsid = 'oxidpriceb';
+Insert into oxobject2group set oxid = 'fafb982bda51903451e57947d5366f55',oxshopid = '1',oxobjectid = 'klarna_checkout',oxgroupsid = 'oxidpricec';
+Insert into oxobject2group set oxid = '3fee7fdf3e3717afdffc768bbbdb3a38',oxshopid = '1',oxobjectid = 'klarna_checkout',oxgroupsid = 'oxidadmin';
+Insert into oxobject2group set oxid = '9f22095a65bb7430b8e3792c74448f04',oxshopid = '1',oxobjectid = 'klarna_slice_it',oxgroupsid = 'oxidforeigncustomer';
+Insert into oxobject2group set oxid = '68335a8dd269958bd65b43aced855b7e',oxshopid = '1',oxobjectid = 'klarna_slice_it',oxgroupsid = 'oxidsmallcust';
+Insert into oxobject2group set oxid = 'f3c44f2aebb35d675d99859437487e78',oxshopid = '1',oxobjectid = 'klarna_slice_it',oxgroupsid = 'oxidgoodcust';
+Insert into oxobject2group set oxid = '84eae97216cb07bee0aa1869cbba25a7',oxshopid = '1',oxobjectid = 'klarna_slice_it',oxgroupsid = 'oxiddealer';
+Insert into oxobject2group set oxid = '43872ac5d77960deb1bca5822595e9e6',oxshopid = '1',oxobjectid = 'klarna_slice_it',oxgroupsid = 'oxidnewcustomer';
+Insert into oxobject2group set oxid = '6e56b3bd5ab9e93365a60a6fbae807a7',oxshopid = '1',oxobjectid = 'klarna_slice_it',oxgroupsid = 'oxidcustomer';
+Insert into oxobject2group set oxid = '88c019ad599ba0275d01022defe924d6',oxshopid = '1',oxobjectid = 'klarna_slice_it',oxgroupsid = 'oxidmiddlecust';
+Insert into oxobject2group set oxid = '220a36c1934dcbd78c3d1fa82a9cac74',oxshopid = '1',oxobjectid = 'klarna_slice_it',oxgroupsid = 'oxidnewsletter';
+Insert into oxobject2group set oxid = '2a180f082ad122cde21f33f2492151a5',oxshopid = '1',oxobjectid = 'klarna_slice_it',oxgroupsid = 'oxidnotyetordered';
+Insert into oxobject2group set oxid = 'dca27b7fd2a28133ef7658b098a82ea4',oxshopid = '1',oxobjectid = 'klarna_slice_it',oxgroupsid = 'oxidpowershopper';
+Insert into oxobject2group set oxid = '406487608c935a41fd47cb353b74fa75',oxshopid = '1',oxobjectid = 'klarna_slice_it',oxgroupsid = 'oxidpricea';
+Insert into oxobject2group set oxid = 'fb44bbe1609bcfdf6ccc6b1b48626b6a',oxshopid = '1',oxobjectid = 'klarna_slice_it',oxgroupsid = 'oxidpriceb';
+Insert into oxobject2group set oxid = '3e7498409b78616416a39242e06a0853',oxshopid = '1',oxobjectid = 'klarna_slice_it',oxgroupsid = 'oxidpricec';
+Insert into oxobject2group set oxid = '935872b7c10c6a38b166591ffc5d164a',oxshopid = '1',oxobjectid = 'klarna_slice_it',oxgroupsid = 'oxidadmin';
+Insert into oxobject2group set oxid = 'f54348b847f390d5a0ecc1ddf1800e8b',oxshopid = '1',oxobjectid = 'klarna_pay_later',oxgroupsid = 'oxidforeigncustomer';
+Insert into oxobject2group set oxid = 'db47126d364effdada7100e44871681d',oxshopid = '1',oxobjectid = 'klarna_pay_later',oxgroupsid = 'oxidsmallcust';
+Insert into oxobject2group set oxid = 'b32081485e094955ed0c74535f125de7',oxshopid = '1',oxobjectid = 'klarna_pay_later',oxgroupsid = 'oxidgoodcust';
+Insert into oxobject2group set oxid = '542b082f6c24d2b2cf85b6b759c37ac8',oxshopid = '1',oxobjectid = 'klarna_pay_later',oxgroupsid = 'oxiddealer';
+Insert into oxobject2group set oxid = 'dacb3e9ea03e22f48c1e8bfd39f7bd50',oxshopid = '1',oxobjectid = 'klarna_pay_later',oxgroupsid = 'oxidnewcustomer';
+Insert into oxobject2group set oxid = 'a548acd8db1eb1730fbe2da5fe3527ba',oxshopid = '1',oxobjectid = 'klarna_pay_later',oxgroupsid = 'oxidcustomer';
+Insert into oxobject2group set oxid = 'da91f646ec7da6e360b73fd753eb4c1b',oxshopid = '1',oxobjectid = 'klarna_pay_later',oxgroupsid = 'oxidmiddlecust';
+Insert into oxobject2group set oxid = '743ef9e4beff451fef7a0f9887847c48',oxshopid = '1',oxobjectid = 'klarna_pay_later',oxgroupsid = 'oxidnewsletter';
+Insert into oxobject2group set oxid = '6a25e8efbf3b65f9ab584d70790638a6',oxshopid = '1',oxobjectid = 'klarna_pay_later',oxgroupsid = 'oxidnotyetordered';
+Insert into oxobject2group set oxid = '3536c816cd7b230feaf061924ff868e1',oxshopid = '1',oxobjectid = 'klarna_pay_later',oxgroupsid = 'oxidpowershopper';
+Insert into oxobject2group set oxid = 'bf9099a0e1dd8063c01d0fb9630d8703',oxshopid = '1',oxobjectid = 'klarna_pay_later',oxgroupsid = 'oxidpricea';
+Insert into oxobject2group set oxid = 'bc42c04ec3691fc0eeb0520c359a855c',oxshopid = '1',oxobjectid = 'klarna_pay_later',oxgroupsid = 'oxidpriceb';
+Insert into oxobject2group set oxid = '8628279d19d1ed444848766778d5d3b6',oxshopid = '1',oxobjectid = 'klarna_pay_later',oxgroupsid = 'oxidpricec';
+Insert into oxobject2group set oxid = '35374adf96c4b5ab9cdb9d31754c2680',oxshopid = '1',oxobjectid = 'klarna_pay_later',oxgroupsid = 'oxidadmin';
+Insert into oxobject2group set oxid = '48607f29b17cdc0861cfc901d538a1bd',oxshopid = '1',oxobjectid = 'klarna_pay_now',oxgroupsid = 'oxidforeigncustomer';
+Insert into oxobject2group set oxid = 'be103aab157a4429a2173f072201f07a',oxshopid = '1',oxobjectid = 'klarna_pay_now',oxgroupsid = 'oxidsmallcust';
+Insert into oxobject2group set oxid = '2d2f5c2f962fbdd2782c87b733d17f2c',oxshopid = '1',oxobjectid = 'klarna_pay_now',oxgroupsid = 'oxidgoodcust';
+Insert into oxobject2group set oxid = 'f34ef2babf20cac11ad808e7032f9664',oxshopid = '1',oxobjectid = 'klarna_pay_now',oxgroupsid = 'oxiddealer';
+Insert into oxobject2group set oxid = 'b8a08f94cbcc56f8f2042e83dc7f4f93',oxshopid = '1',oxobjectid = 'klarna_pay_now',oxgroupsid = 'oxidnewcustomer';
+Insert into oxobject2group set oxid = '5f3d915b47e382434fb406637216c607',oxshopid = '1',oxobjectid = 'klarna_pay_now',oxgroupsid = 'oxidcustomer';
+Insert into oxobject2group set oxid = 'f7071ac1ab00ab9749d44da060bc52b5',oxshopid = '1',oxobjectid = 'klarna_pay_now',oxgroupsid = 'oxidmiddlecust';
+Insert into oxobject2group set oxid = 'd70201269fb31b840ade1cc7e85aa7f2',oxshopid = '1',oxobjectid = 'klarna_pay_now',oxgroupsid = 'oxidnewsletter';
+Insert into oxobject2group set oxid = '6db119c51150dda91666c81aabdbf1c8',oxshopid = '1',oxobjectid = 'klarna_pay_now',oxgroupsid = 'oxidnotyetordered';
+Insert into oxobject2group set oxid = 'c1c058bde7a20f5f9c4d235cede72a77',oxshopid = '1',oxobjectid = 'klarna_pay_now',oxgroupsid = 'oxidpowershopper';
+Insert into oxobject2group set oxid = '2d838e80e5dd92726cdc5d6736b84667',oxshopid = '1',oxobjectid = 'klarna_pay_now',oxgroupsid = 'oxidpricea';
+Insert into oxobject2group set oxid = '6af230ab9820fdb8d24a0a0484db60b1',oxshopid = '1',oxobjectid = 'klarna_pay_now',oxgroupsid = 'oxidpriceb';
+Insert into oxobject2group set oxid = '5d447d09d0238f40579932846958f224',oxshopid = '1',oxobjectid = 'klarna_pay_now',oxgroupsid = 'oxidpricec';
+Insert into oxobject2group set oxid = 'a94b24ca6b11718ff60b8e0d4c18a99f',oxshopid = '1',oxobjectid = 'klarna_pay_now',oxgroupsid = 'oxidadmin';
+
+
+
+update oxconfig set oxvarvalue =ENCODE( 'a:2:{s:2:\"de\";s:7:\"Deutsch\";s:2:\"en\";s:7:\"English\";}', 'fq45QS09_fqyx09239QQ') where oxvarname='aLanguages' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blIsKlarnaTestMode' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaLoggingEnabled' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaSendProductUrls' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaSendImageUrls' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaEnableAnonymization' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( 'KCO', 'fq45QS09_fqyx09239QQ') where oxvarname='sKlarnaActiveMode' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( 'K501664_9c5b3285c29f', 'fq45QS09_fqyx09239QQ') where oxvarname='sKlarnaMerchantId' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '7NvBzZ5irjFqXcbA', 'fq45QS09_fqyx09239QQ') where oxvarname='sKlarnaPassword' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( 'Produktname', 'fq45QS09_fqyx09239QQ') where oxvarname='sKlarnaAnonymizedProductTitle_DE' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( 'Product name', 'fq45QS09_fqyx09239QQ') where oxvarname='sKlarnaAnonymizedProductTitle_EN' and oxshopid=1;
+
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaAllowSeparateDeliveryAddress' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaMandatoryPhone' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaMandatoryBirthDate' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaEnableAutofocus' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaEnablePreFilling' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaPreFillNotification' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( 'DE', 'fq45QS09_fqyx09239QQ') where oxvarname='sKlarnaDefaultCountry' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '2', 'fq45QS09_fqyx09239QQ') where oxvarname='iKlarnaActiveCheckbox' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '2', 'fq45QS09_fqyx09239QQ') where oxvarname='iKlarnaValidation' and oxshopid=1;
+
+insert into oxconfig (oxid, oxshopid, oxmodule, oxvarname, oxvartype, oxvarvalue) values('669f53a8778b395e8b02ba711374f05b', '1', 'klarna', 'sKlarnaTermsConditionsURI_DE', 'str', ENCODE( 'https://demohost.topconcepts.net/henrik/4_0_0/ce_601/source/AGB/', 'fq45QS09_fqyx09239QQ') );
+insert into oxconfig (oxid, oxshopid, oxmodule, oxvarname, oxvartype, oxvarvalue) values('550b1b135330a4dc04dbea59cdcad076', '1', 'klarna', 'sKlarnaCancellationRightsURI_DE', 'str', ENCODE( 'https://demohost.topconcepts.net/henrik/4_0_0/ce_601/source/Widerrufsrecht/', 'fq45QS09_fqyx09239QQ') );
+insert into oxconfig (oxid, oxshopid, oxmodule, oxvarname, oxvartype, oxvarvalue) values('dadb50653184eda34746b9b900b84fcc', '1', 'klarna', 'sKlarnaShippingDetails_DE', 'str', ENCODE( 'Wir kümmern uns schnellstens um den Versand!', 'fq45QS09_fqyx09239QQ') );
+insert into oxconfig (oxid, oxshopid, oxmodule, oxvarname, oxvartype, oxvarvalue) values('dc95164913be4015fc570a2e80ee1468', '1', 'klarna', 'sKlarnaTermsConditionsURI_EN', 'str', ENCODE( 'https://demohost.topconcepts.net/henrik/4_0_0/ce_601/source/terms/', 'fq45QS09_fqyx09239QQ') );
+insert into oxconfig (oxid, oxshopid, oxmodule, oxvarname, oxvartype, oxvarvalue) values('744e20e55593c0fe3a752f706f10c3de', '1', 'klarna', 'sKlarnaCancellationRightsURI_EN', 'str', ENCODE( 'https://demohost.topconcepts.net/henrik/4_0_0/ce_601/source/withdrawal/', 'fq45QS09_fqyx09239QQ') );
+insert into oxconfig (oxid, oxshopid, oxmodule, oxvarname, oxvartype, oxvarvalue) values('0ddcd4b8df2950a85402157e5c21ebe3', '1', 'klarna', 'sKlarnaShippingDetails_EN', 'str', ENCODE( 'We\'ll take care of quick shipping!', 'fq45QS09_fqyx09239QQ') );
+
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaDisplayBanner' and oxshopid=1;
+insert into oxconfig (oxid, oxshopid, oxmodule, oxvarname, oxvartype, oxvarvalue) values('3344c6128d6cbf3c1bc04c285a0e6e0a', '1', 'klarna', 'blKlarnaDisplayBuyNow', 'bool', ENCODE( '1', 'fq45QS09_fqyx09239QQ') );
+
+update oxconfig set oxvarvalue=ENCODE( '<script src=\"https://embed.bannerflow.com/599d7ec18d988017005eb27d?targeturl=https%3A//www.klarna.com&politeloading=off&merchantid={{merchantid}}&responsive=on\" async></script>', 'fq45QS09_fqyx09239QQ') where oxvarname='sKlarnaBannerSrc_EN' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='sKlarnaFooterDisplay' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '<script src=\"https://embed.bannerflow.com/599d7ec18d988017005eb279?targeturl=https%3A//www.klarna.com&politeloading=off&merchantid={{merchantid}}&responsive=on\" async></script>', 'fq45QS09_fqyx09239QQ') where oxvarname='sKlarnaBannerSrc_DE' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( 'longBlack', 'fq45QS09_fqyx09239QQ') where oxvarname='sKlFooterValue' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( 'a:0:{}', 'fq45QS09_fqyx09239QQ') where oxvarname='aKlarnaDesign' and oxshopid=1;
+
+update oxcountry set oxactive = '1' where oxcountry.oxid = 'a7c40f631fc920687.20179984'; # DE
+update oxcountry set oxactive = '1' where oxcountry.oxid = 'a7c40f6320aeb2ec2.72885259'; # AT
+
+Insert into oxobject2payment set oxid = 'a91137a798f381fc9ff3186a8118edeb',oxpaymentid = 'klarna_checkout',oxobjectid = 'oxidstandard',oxtype = 'oxdelset';
+Insert into oxobject2payment set oxid = 'e667f3a2469ce4b0e4cfde8a3c87a31f',oxpaymentid = 'klarna_slice_it',oxobjectid = 'oxidstandard',oxtype = 'oxdelset';
+Insert into oxobject2payment set oxid = 'b514901f764f7a7ab80b4a9e0fae4f88',oxpaymentid = 'klarna_pay_later',oxobjectid = 'oxidstandard',oxtype = 'oxdelset';
+Insert into oxobject2payment set oxid = '8dfdf7adfd765ef5f7417301a8355fa5',oxpaymentid = 'klarna_pay_now',oxobjectid = 'oxidstandard',oxtype = 'oxdelset';
+Insert into oxobject2payment set oxid = 'b03b358a40933adcfb1af61a65675faa',oxpaymentid = 'klarna_checkout',oxobjectid = '1b842e732a23255b1.91207750',oxtype = 'oxdelset';
+Insert into oxobject2payment set oxid = '134ce13d455e23f29a0c36faf44c19e0',oxpaymentid = 'klarna_slice_it',oxobjectid = '1b842e732a23255b1.91207750',oxtype = 'oxdelset';
+Insert into oxobject2payment set oxid = '6ba9ff0cb4433d0b320188ba3359afe0',oxpaymentid = 'klarna_pay_later',oxobjectid = '1b842e732a23255b1.91207750',oxtype = 'oxdelset';
+Insert into oxobject2payment set oxid = '6c18199d3e1d71f9ced52b0e45df1c49',oxpaymentid = 'klarna_pay_now',oxobjectid = '1b842e732a23255b1.91207750',oxtype = 'oxdelset';
+Insert into oxobject2payment set oxid = '596423d183fe0c4e08dd098c9a321a7e',oxpaymentid = 'klarna_checkout',oxobjectid = '1b842e732a23255b1.91207751',oxtype = 'oxdelset';
+Insert into oxobject2payment set oxid = '395b879300be94bc4a69f3e42661951f',oxpaymentid = 'klarna_slice_it',oxobjectid = '1b842e732a23255b1.91207751',oxtype = 'oxdelset';
+Insert into oxobject2payment set oxid = '545686ac66ef18c496161203e7a131b1',oxpaymentid = 'klarna_pay_later',oxobjectid = '1b842e732a23255b1.91207751',oxtype = 'oxdelset';
+Insert into oxobject2payment set oxid = '039e9f03b01ad423f8faff7ff548d342',oxpaymentid = 'klarna_pay_now',oxobjectid = '1b842e732a23255b1.91207751',oxtype = 'oxdelset';
+
+update oxactions set oxid = 'klarna_teaser_1',oxshopid = '1',oxtype = '3',oxtitle = 'Klarna Teaser',oxlongdesc = '',oxactive = '1',oxactivefrom = '0000-00-00 00:00:00',oxactiveto = '0000-00-00 00:00:00',oxpic = 'de_klarna-banner.png',oxlink = '',oxsort = '0' where oxactions.oxid = 'klarna_teaser_1';
+
+
+-- update oxpayments set klpaymenttypes = '',klexternalname = 'Nachnahme',klexternalpayment = '1',klexternalcheckout = '0',klpaymentimageurl = 'https://www.bronze-shop.com/media/unknown/42/19/72/bronze-shop_zahlung-nachname.svg',klpaymentoption = 'other',klemdpurchasehistoryfull = '0',klpaymentimageurl_1 = 'klemdpurchasehistoryfull' where oxpayments.oxid = 'oxidcashondel';
+-- update oxpayments set klpaymenttypes = '',klexternalname = 'Vorkasse',klexternalpayment = '1',klexternalcheckout = '0',klpaymentimageurl = 'https://www.bronze-shop.com/media/unknown/d3/35/08/bronze-shop_zahlung-vorkasse.svg',klpaymentoption = 'other',klemdpurchasehistoryfull = '0',klpaymentimageurl_1 = 'https://www.bronze-shop.com/media/unknown/d3/35/08/bronze-shop_zahlung-vorkasse.svg' where oxpayments.oxid = 'oxidpayadvance';
+
+
+
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaEmdCustomerAccountInfo' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaEmdPaymentHistoryFull' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaEmdPassThrough' and oxshopid=1;
+
+replace into oxuser set oxid = '92ebae5067055431aeaaa6f75bd9a131',oxactive = '1',oxshopid = '1',oxusername = 'steffen@topconcepts.de',oxpassword = 'c25361e25237112e0c584f9816dfd3975ffe150abc7db2cc1d1b4231c8171991b4e732556ab0cf0dadf4733f72442aba066fba1fa55af8479a9384b4dc57592a',oxpasssalt = '3d96584d0378f0a7ecb95db0086a2f70',oxustid = '',oxcompany = '',oxfname = 'Henrik',oxlname = 'Steffen',oxstreet = 'Karnapp',oxstreetnr = '25',oxaddinfo = '',oxcity = 'Hamburg',oxcountryid = 'a7c40f631fc920687.20179984',oxstateid = '',oxzip = '21079',oxfon = '040/30306900',oxfax = '',oxsal = 'MR',oxboni = '1000',oxregister = '2018-03-22 17:56:04',oxprivfon = '',oxmobfon = '',oxbirthdate = '1978-03-06',oxurl = '',oxupdatekey = '',oxupdateexp = '0',oxpoints = '0';
+replace into oxobject2group set oxid = '68ba74e29a0cc7f6618606bf623b6941',oxshopid = '1',oxobjectid = '92ebae5067055431aeaaa6f75bd9a131',oxgroupsid = 'oxidnewcustomer';
+replace into oxobject2group set oxid = '2d3bb655a05283ced8b2739af1cb62fd',oxshopid = '1',oxobjectid = '92ebae5067055431aeaaa6f75bd9a131',oxgroupsid = 'oxidnotyetordered';
+Insert into oxobject2payment set oxid = '59e77f69092c584bb1b26426184653b7',oxpaymentid = 'klarna_checkout',oxobjectid = 'a7c40f631fc920687.20179984',oxtype = 'oxcountry';
+Insert into oxobject2payment set oxid = '2a8ccf084fd92557af37be1930cafd88',oxpaymentid = 'klarna_checkout',oxobjectid = 'a7c40f6320aeb2ec2.72885259',oxtype = 'oxcountry';

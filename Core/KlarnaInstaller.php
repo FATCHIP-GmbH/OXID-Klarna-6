@@ -59,11 +59,11 @@ class KlarnaInstaller extends ShopConfiguration
 
         $instance->performMigrations();
 
-        $instance->addKlarnaPaymentsMethods();
-
         $instance->addConfigVars();
 
         $instance->addActions();
+
+        $instance->addKlarnaPaymentsMethods();
     }
 
     /**
@@ -269,11 +269,13 @@ class KlarnaInstaller extends ShopConfiguration
         try{
             $migrations = $this->getModuleMigrations();
             $migrations->execute('migrations:migrate');
-            $this->updateViews();
+
 
         } catch (\Exception $e){
             Registry::getUtilsView()->addErrorToDisplay($e->getMessage() .  $e->getCode());
         }
+
+        $this->updateViews();
     }
 
 
@@ -282,11 +284,12 @@ class KlarnaInstaller extends ShopConfiguration
      */
     protected function updateViews()
     {
+
         //preventing edit for anyone except malladmin
-        if (Registry::getSession()->getVariable("malladmin")) {
+        //if (Registry::getSession()->getVariable("malladmin")) {
             $oMetaData = oxNew(DbMetaDataHandler::class);
             $oMetaData->updateViews();
-        }
+        //}
     }
 
     /**
