@@ -43,7 +43,7 @@ class KlarnaDesign extends KlarnaBaseConfig
 
         $this->addTplParam('settings', $this->getAdditionalSettings());
         $this->addTplParam('mode', $this->getActiveKlarnaMode());
-        $this->addTplParam('locale', strtolower(KlarnaConsts::getLocale(true)));
+        $this->addTplParam('locale', str_replace('-', '_', strtolower(KlarnaConsts::getLocale(true))));
         $this->addTplParam('aKlarnaFooterImgUrls', KlarnaConsts::getFooterImgUrls());
 
         return $this->_sThisTemplate;
@@ -53,7 +53,6 @@ class KlarnaDesign extends KlarnaBaseConfig
      * Save configuration values
      *
      * @return void
-     * @throws oxSystemComponentException
      */
     public function save()
     {
@@ -62,7 +61,7 @@ class KlarnaDesign extends KlarnaBaseConfig
     }
 
     /**
-     * @throws oxSystemComponentException
+     *
      */
     protected function saveAdditionalSetting()
     {
