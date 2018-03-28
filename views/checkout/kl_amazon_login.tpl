@@ -1,4 +1,4 @@
-<script type="text/javascript" src="[{ $oViewConf->getKlarnaModuleUrl('out/js/libs/jquery-1.12.4.min.js') }]"></script>
+<script type="text/javascript" src="[{ $oViewConf->getModuleUrl('klarna', 'out/js/libs/jquery-1.12.4.min.js') }]"></script>
 <script type="text/javascript" src="[{ $sAmazonWidgetUrl|cat:'?sellerId='|cat:$sAmazonSellerId }]"></script>
 [{capture append="oxidBlock_content"}]
     <style>

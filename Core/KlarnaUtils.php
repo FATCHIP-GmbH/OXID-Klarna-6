@@ -227,9 +227,6 @@ class KlarnaUtils
 
     /**
      * @return bool
-     * @throws SystemComponentException
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
      */
     public static function isKlarnaExternalPaymentMethod()
     {

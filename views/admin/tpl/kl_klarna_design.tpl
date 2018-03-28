@@ -1,12 +1,12 @@
 [{assign var="lang_tag" value=$languages.$editlanguage->abbr|oxupper}]
 <link rel="stylesheet" href="[{$oViewConf->getResourceUrl()}]main.css">
-<link rel="stylesheet" href="[{ $oViewConf->getKlarnaModuleUrl('out/admin/css/kl_klarna_admin2.css') }]">
-<link rel="stylesheet" href="[{ $oViewConf->getKlarnaModuleUrl('out/admin/css/tooltipster.bundle.min.css') }]">
-<link rel="stylesheet" href="[{ $oViewConf->getKlarnaModuleUrl('out/admin/css/tooltipster-sideTip-light.min.css') }]">
-<script type="text/javascript" src="[{ $oViewConf->getKlarnaModuleUrl('out/js/libs/jquery-1.12.4.min.js') }]"></script>
+<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/css/kl_klarna_admin2.css') }]">
+<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/css/tooltipster.bundle.min.css') }]">
+<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/css/tooltipster-sideTip-light.min.css') }]">
+<script type="text/javascript" src="[{ $oViewConf->getModuleUrl('klarna', 'out/js/libs/jquery-1.12.4.min.js') }]"></script>
 <script type="text/javascript"
-        src="[{ $oViewConf->getKlarnaModuleUrl('out/js/libs/tooltipster.bundle.min.js') }]"></script>
-<script src="[{ $oViewConf->getKlarnaModuleUrl('out/js/libs/jscolor/jscolor.js') }]"></script>
+        src="[{ $oViewConf->getModuleUrl('klarna', 'out/js/libs/tooltipster.bundle.min.js') }]"></script>
+<script src="[{ $oViewConf->getModuleUrl('klarna', 'out/js/libs/jscolor/jscolor.js') }]"></script>
 
 <div class="[{$box|default:'box'}]" style="[{if !$box && !$bottom_buttons}]height: 100%;[{/if}]">
     <div class="main-container">
@@ -814,7 +814,7 @@
         </div>
     </div>
 </div>
-<script src="[{ $oViewConf->getKlarnaModuleUrl('out/admin/js/kl_admin_lib.js') }]"></script>
-<script src="[{ $oViewConf->getKlarnaModuleUrl('out/admin/js/klarna_design.js') }]"></script>
+<script src="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/js/kl_admin_lib.js') }]"></script>
+<script src="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/js/klarna_design.js') }]"></script>
 
 

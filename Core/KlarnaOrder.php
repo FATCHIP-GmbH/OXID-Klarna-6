@@ -532,11 +532,10 @@ class KlarnaOrder extends BaseModel
      */
     protected function resolveImageUrl($oPayment, $checkoutImgUrl = false)
     {
-        $viewConfig = oxNew(ViewConfig::class);
         if ($checkoutImgUrl) {
-            $url = $viewConfig->resolveFullAssetUrl($oPayment->oxpayments__klcheckoutimageurl->value);
+            $url = $oPayment->oxpayments__klcheckoutimageurl->value;
         } else {
-            $url = $viewConfig->resolveFullAssetUrl($oPayment->oxpayments__klpaymentimageurl->value);
+            $url = $oPayment->oxpayments__klpaymentimageurl->value;
         }
 
         $result = preg_replace('/http:/', 'https:', $url);
