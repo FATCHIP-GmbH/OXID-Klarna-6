@@ -6,10 +6,10 @@ namespace TopConcepts\Klarna\Controllers;
 use OxidEsales\Eshop\Application\Controller\FrontendController;
 
 /**
- * Class klarnaEpmDispatcher
+ * Class KlarnaEpmDispatcher
  * @package TopConcepts\Klarna\Controllers
  */
-class klarnaEpmDispatcher extends FrontendController
+class KlarnaEpmDispatcher extends FrontendController
 {
 
     public function init()

@@ -1,7 +1,7 @@
 [{capture append="oxidBlock_content"}]
-    <link rel="stylesheet" type="text/css" href="[{$oViewConf->getKlarnaModuleUrl('out/css/bootstrap.min.css')}]"/>
+    <link rel="stylesheet" type="text/css" href="[{$oViewConf->getModuleUrl('klarna', 'out/css/bootstrap.min.css')}]"/>
     [{if !$confError}]
-        [{oxstyle include=$oViewConf->getKlarnaModuleUrl('out/css/kl_klarna_style.css')}]
+        [{oxstyle include=$oViewConf->getModuleUrl('klarna', 'out/css/kl_klarna_style.css')}]
 
         [{include file='kl_klarna_country_select_popup.tpl'}]
         [{if $sKlarnaIframe}]

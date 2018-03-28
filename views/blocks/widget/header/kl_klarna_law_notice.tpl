@@ -1,10 +1,10 @@
 [{$smarty.block.parent}]
 
 [{if $oViewConf->getActiveTheme() === 'azure'}]
-    [{oxscript include=$oViewConf->getKlarnaModuleUrl('out/js/azure_patch.js') priority=3}]
+    [{oxscript include=$oViewConf->getModuleUrl('klarna', 'out/js/azure_patch.js') priority=3}]
 [{/if}]
 [{if $oViewConf->showCheckoutTerms() }]
-    <link rel="stylesheet" type="text/css" href="[{$oViewConf->getKlarnaModuleUrl('out/css/bootstrap.min.css')}]"/>
+    <link rel="stylesheet" type="text/css" href="[{$oViewConf->getModuleUrl('klarna', 'out/css/bootstrap.min.css')}]"/>
     [{assign var=klarnaLawNotifUrl value=$oViewConf->getLawNotificationsLinkKco()}]
     <style>
         #legalModal iframe {

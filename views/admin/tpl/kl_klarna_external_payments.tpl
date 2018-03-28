@@ -1,9 +1,9 @@
 <link rel="stylesheet" href="[{$oViewConf->getResourceUrl()}]main.css">
-<link rel="stylesheet" href="[{ $oViewConf->getKlarnaModuleUrl('out/admin/css/kl_klarna_admin2.css') }]">
-<link rel="stylesheet" href="[{ $oViewConf->getKlarnaModuleUrl('out/admin/css/tooltipster.bundle.min.css') }]">
-<link rel="stylesheet" href="[{ $oViewConf->getKlarnaModuleUrl('out/admin/css/tooltipster-sideTip-light.min.css') }]">
-<script type="text/javascript" src="[{ $oViewConf->getKlarnaModuleUrl('out/js/libs/jquery-1.12.4.min.js') }]"></script>
-<script type="text/javascript" src="[{ $oViewConf->getKlarnaModuleUrl('out/js/libs/tooltipster.bundle.min.js') }]"></script>
+<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/css/kl_klarna_admin2.css') }]">
+<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/css/tooltipster.bundle.min.css') }]">
+<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/css/tooltipster-sideTip-light.min.css') }]">
+<script type="text/javascript" src="[{ $oViewConf->getModuleUrl('klarna', 'out/js/libs/jquery-1.12.4.min.js') }]"></script>
+<script type="text/javascript" src="[{ $oViewConf->getModuleUrl('klarna', 'out/js/libs/tooltipster.bundle.min.js') }]"></script>
 
 <div class="[{$box|default:'box'}]" style="[{if !$box && !$bottom_buttons}]height: 100%;[{/if}]">
     <div class="main-container">
@@ -198,7 +198,7 @@
                                                                                        value="[{$payment.klpaymentimageurl}]">
                                                                                 [{if $payment.klpaymentimageurl}]
                                                                                     <div class="preview_69_24">
-                                                                                        <img src="[{ $oViewConf->resolveFullAssetUrl($payment.klpaymentimageurl) }]"
+                                                                                        <img src="[{ $payment.klpaymentimageurl }]"
                                                                                              width="69" height="24">
                                                                                     </div>
                                                                                 [{/if}]
@@ -238,7 +238,7 @@
 
                                                                                     [{if $payment.klcheckoutimageurl}]
                                                                                         <div class="preview_276_48">
-                                                                                            <img src="[{ $oViewConf->resolveFullAssetUrl($payment.klcheckoutimageurl) }]"
+                                                                                            <img src="[{ $payment.klcheckoutimageurl }]"
                                                                                                  width="276" height="48">
                                                                                         </div>
                                                                                     [{/if}]
@@ -274,8 +274,8 @@
                            id="form-save-button" [{$readonly}]>
                 </div>
             </form>
-            <script src="[{ $oViewConf->getKlarnaModuleUrl('out/admin/js/kl_admin_lib.js') }]"></script>
-            <script src="[{ $oViewConf->getKlarnaModuleUrl('out/admin/js/klarna_external_payments.js') }]"></script>
+            <script src="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/js/kl_admin_lib.js') }]"></script>
+            <script src="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/js/klarna_external_payments.js') }]"></script>
         </div>
         [{ else }]
             [{ "KL_NO_OPTIONS_MODE"|oxmultilangassign }]

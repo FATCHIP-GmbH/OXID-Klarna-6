@@ -52,7 +52,7 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
      *
      * @return bool
      */
-    public function klarnaRedirect()
+    protected function klarnaRedirect()
     {
         $sClass = Registry::get(Request::class)->getRequestParameter('cl');
 
@@ -112,7 +112,8 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
      */
     public function changeuser_testvalues()
     {
-        $result = parent::changeuser_testvalues();
+        $result = $this->getParent();
+
         if (KlarnaUtils::isKlarnaCheckoutEnabled() && $result === 'account_user') {
 
 //            KlarnaUtils::fullyResetKlarnaSession();
