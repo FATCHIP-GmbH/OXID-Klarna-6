@@ -34,8 +34,6 @@ class KlarnaOrder extends KlarnaOrder_parent
         if ($oBasket->getPaymentId() == 'klarna_checkout') {
             return $this->_klarnaValidate($oBasket);
         } else {
-            $_POST['sDeliveryAddressMD5'] = Registry::getSession()->getVariable('sDelAddrMD5');
-
             return parent::validateOrder($oBasket, $oUser);
         }
     }
