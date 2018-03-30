@@ -178,9 +178,9 @@ class KlarnaExpressController extends FrontendController
     public function render()
     {
         $result   = parent::render();
-        $oConfig  = Registry::getConfig();
+        $oConfig  = $this->getConfig();
         $oUtils   = Registry::getUtils();
-        $oSession = Registry::getSession();
+        $oSession = $this->getSession();
         $oBasket  = $oSession->getBasket();
 
         $blAlreadyRedirected = $this->_oRequest->getRequestEscapedParameter('sslredirect') == 'forced';
@@ -188,6 +188,7 @@ class KlarnaExpressController extends FrontendController
         if ($oConfig->getCurrentShopURL() != $oConfig->getSSLShopURL() && !$blAlreadyRedirected) {
             $sUrl = $oConfig->getShopSecureHomeUrl() . 'sslredirect=forced&cl=KlarnaExpress';
             $oUtils->redirect($sUrl, false, 302);
+            return;
         }
 
         if ($this->_oUser = $this->getUser()) {
@@ -200,6 +201,8 @@ class KlarnaExpressController extends FrontendController
             $email        = $oSession->getVariable('klarna_checkout_user_email');
             $this->_oUser = KlarnaUtils::getFakeUser($email);
         }
+
+        return;
 
         $this->blShowPopup = KlarnaUtils::isNonKlarnaCountryActive() &&
                              ($this->getUser()->kl_getType() !== KlarnaUser::LOGGED_IN &&
@@ -282,7 +285,6 @@ class KlarnaExpressController extends FrontendController
 
     /**
      * @return KlarnaCheckoutClient | \TopConcepts\Klarna\Core\KlarnaClientBase
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function getKlarnaClient()
     {

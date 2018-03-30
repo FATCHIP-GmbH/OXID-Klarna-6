@@ -10,17 +10,48 @@ namespace TopConcepts\Klarna\Tests\Unit;
 
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Core\Field;
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\ConfigFile;
+
+use OxidEsales\TestingLibrary\Services\Library\DatabaseHandler;
+use OxidEsales\TestingLibrary\TestConfig;
 use OxidEsales\TestingLibrary\UnitTestCase;
 
 
 class ModuleUnitTestCase extends UnitTestCase
 {
-    protected function setUp()
-    {
-        parent::setUp();
 
-        require_once TEST_LIBRARY_HELPERS_PATH . 'oxUtilsHelper.php';
-        oxAddClassModule(\oxUtilsHelper::class, "oxutils");
+    /** @var string */
+    protected $moduleName;
+
+    /** @var DatabaseHandler */
+    protected $dbHandler;
+
+    /** @var TestConfig  */
+    protected $testConfig;
+
+
+    /**
+     * ModuleUnitTestCase constructor.
+     * @param null $name
+     * @param array $data
+     * @param string $dataName
+     * @throws \Exception
+     */
+    public function __construct($name = null, array $data = array(), $dataName = '')
+    {
+        parent::__construct($name, $data, $dataName);
+
+        $this->moduleName = 'klarna';
+        $this->testConfig = new TestConfig();
+        /** @var ConfigFile $configFile */
+        $configFile = Registry::get(ConfigFile::class);
+        $this->dbHandler = new DatabaseHandler($configFile);
+    }
+
+    public function setUpBeforeTestSuite()
+    {
+        parent::setUpBeforeTestSuite();
     }
 
     protected function removeQueryString($url)
@@ -71,4 +102,38 @@ class ModuleUnitTestCase extends UnitTestCase
     {
         $this->getConfig()->saveShopConfVar(null, $name, $value, $this->getShopId(), 'klarna');
     }
+
+    /**
+     * @throws \Exception
+     */
+    public function insertOrderData()
+    {
+        $this->dbHandler->import($this->getModuleTestDataDir() . "insert_orders.sql");
+    }
+
+    /**
+     * @param $tableName
+     * @throws \Exception
+     */
+    public function truncateTable($tableName)
+    {
+        $this->dbHandler->execSql("TRUNCATE $tableName");
+    }
+
+    /** Gets test path for current module */
+    protected function getModuleTestDir()
+    {
+        foreach($this->testConfig->getPartialModulePaths() as $modulePartialPath){
+            if(strpos($modulePartialPath, $this->moduleName)){
+                return $this->testConfig->getShopPath() . 'modules/' . $modulePartialPath .'/Tests/';
+            }
+        }
+    }
+
+    protected function getModuleTestDataDir()
+    {
+        return $this->getModuleTestDir() . "Unit/Testdata/";
+    }
+
+
 }
