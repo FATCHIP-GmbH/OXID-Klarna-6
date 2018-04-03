@@ -59,7 +59,6 @@ class KlarnaOrder extends BaseModel
      * KlarnaOrder constructor.
      * @param Basket $oBasket
      * @param User $oUser
-     * @throws KlarnaConfigException
      * @throws \oxSystemComponentException
      */
     public function __construct(Basket $oBasket, User $oUser)
@@ -153,8 +152,6 @@ class KlarnaOrder extends BaseModel
      *
      * @param Basket $oBasket
      * @return mixed :
-     * @throws KlarnaConfigException
-     * @throws \oxSystemComponentException
      */
     public function kl_getAllSets(Basket $oBasket)
     {
@@ -175,7 +172,7 @@ class KlarnaOrder extends BaseModel
      */
     protected function getSupportedShippingMethods(Basket $oBasket)
     {
-        $allSets  = $this->_getPayment()->getCheckoutShippingSets();
+        $allSets  = $this->_getPayment()->getCheckoutShippingSets($this->_oUser);
         $currency = Registry::getConfig()->getActShopCurrencyObject();
 
         $methods = array();
@@ -217,7 +214,7 @@ class KlarnaOrder extends BaseModel
         if (empty($shippingOptions)) {
 
             $oCountry = oxNew(Country::class);
-            $oCountry->load($this->getUser()->getActiveCountry());
+            $oCountry->load($this->_oUser->getActiveCountry());
 
             throw new KlarnaConfigException(sprintf(
                 Registry::getLang()->translateString('KL_ERROR_NO_SHIPPING_METHODS_SET_UP'),
@@ -400,8 +397,8 @@ class KlarnaOrder extends BaseModel
     {
         $iActiveCheckbox = KlarnaUtils::getShopConfVar('iKlarnaActiveCheckbox');
 
-        if (!$this->getUser()->isFake() || $this->getUser()->kl_getType() === KlarnaUser::REGISTERED) {
-            if ($this->getUser()->getNewsSubscription()->getOptInStatus() == 1) {
+        if (!$this->_oUser->isFake() || $this->_oUser->kl_getType() === KlarnaUser::REGISTERED) {
+            if ($this->_oUser->getNewsSubscription()->getOptInStatus() == 1) {
 
                 return KlarnaConsts::EXTRA_CHECKBOX_NONE;
             }

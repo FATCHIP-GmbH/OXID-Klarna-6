@@ -103,13 +103,21 @@ class ModuleUnitTestCase extends UnitTestCase
         $this->getConfig()->saveShopConfVar(null, $name, $value, $this->getShopId(), 'klarna');
     }
 
-    /**
-     * @throws \Exception
-     */
-    public function insertOrderData()
-    {
-        $this->dbHandler->import($this->getModuleTestDataDir() . "insert_orders.sql");
-    }
+//    /**
+//     * @throws \Exception
+//     */
+//    public function insertOrderData()
+//    {
+//        $this->dbHandler->import($this->getModuleTestDataDir() . "insert_orders.sql");
+//    }
+//
+//    /**
+//     * @throws \Exception
+//     */
+//    public function insertArticle()
+//    {
+//        $this->dbHandler->import($this->getModuleTestDataDir() . "add_article_3102.sql");
+//    }
 
     /**
      * @param $tableName
@@ -135,5 +143,20 @@ class ModuleUnitTestCase extends UnitTestCase
         return $this->getModuleTestDir() . "Unit/Testdata/";
     }
 
+    public function prepareBasketWithProduct()
+    {
+
+        $oBasket = oxNew('oxBasket');
+//        $oBasket->setBasketUser($oUser);
+        $this->setConfigParam('blAllowUnevenAmounts', true);
+        $oBasket->addToBasket('adc5ee42bd3c37a27a488769d22ad9ed', 1);
+        $oBasket->calculateBasket();
+
+        //basket name in session will be "basket"
+        $this->getConfig()->setConfigParam('blMallSharedBasket', 1);
+        //$oSession->setBasket($oBasket);
+
+        return $oBasket;
+    }
 
 }

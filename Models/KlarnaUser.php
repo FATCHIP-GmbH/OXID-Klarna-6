@@ -514,7 +514,18 @@ class KlarnaUser extends KlarnaUser_parent
                 $this->getUserCountryISO2()
             );
             Registry::getSession()->deleteVariable('klarna_checkout_user_email');
-            $this->kl_setType(self::LOGGED_IN);
+            $this->_type = self::LOGGED_IN;
         }
+    }
+
+    public function kl_checkUserType()
+    {
+        if($this->getId() === Registry::getSession()->getVariable('usr')){
+
+            return $this->_type = self::LOGGED_IN;
+        }
+
+        return $this->_type = self::NOT_REGISTERED;
+
     }
 }

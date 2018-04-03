@@ -9,20 +9,21 @@
 namespace TopConcepts\Klarna\Testes\Unit\Controllers;
 
 
+use OxidEsales\Eshop\Application\Controller\PaymentController;
+use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Config;
+use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\UtilsView;
 use OxidEsales\Eshop\Core\ViewConfig;
 use TopConcepts\Klarna\Controllers\KlarnaExpressController;
+use TopConcepts\Klarna\Core\KlarnaOrder;
+use TopConcepts\Klarna\Exception\KlarnaConfigException;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaExpressControllerTest extends ModuleUnitTestCase
 {
-
-//    public function testGetKlarnaClient()
-//    {
-//
-//    }
 
     /**
      * @dataProvider getBreadCrumbDataProvider
@@ -61,6 +62,167 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
         $this->assertEquals(0, count($result));
     }
 
+    /**
+     * @dataProvider userDataProvider
+     * @param $isFake
+     * @param $userId
+     * @param $expectedResult
+     */
+    public function testGetFormattedUserAddresses($isFake, $userId, $expectedResult)
+    {
+        $oUser = $this->getMock(User::class, ['isFake', 'getId']);
+        $oUser->expects($this->once())
+            ->method('isFake')->willReturn($isFake);
+        $oUser->expects($this->any())
+            ->method('getId')->willReturn($userId);
+
+        $kcoController = oxNew($this->getProxyClassName(KlarnaExpressController::class));
+        $kcoController->setNonPublicVar('_oUser', $oUser);
+
+        $result = $kcoController->getFormattedUserAddresses();
+
+        $this->assertEquals($expectedResult, $result);
+
+    }
+
+    public function userDataProvider()
+    {
+        $address = ["41b545c65fe99ca2898614e563a7108a" => "Gregory Dabrowski, Karnapp 25, 21079 Hamburg"];
+
+        return [
+            [ true, null, false ],
+            [ false, '92ebae5067055431aeaaa6f75bd9a131', $address],
+            [false, 'fake-id', false]
+        ];
+    }
+
+    public function testSetKlarnaDeliveryAddress()
+    {
+        $this->setRequestParameter('klarna_address_id', 'delAddressId');
+        $kcoController = new KlarnaExpressController();
+        $kcoController->init();
+        $kcoController->setKlarnaDeliveryAddress();
+
+        $this->assertEquals('delAddressId', $this->getSessionParam('deladrid'));
+        $this->assertEquals(1, $this->getSessionParam('blshowshipaddress'));
+        $this->assertTrue($this->getSessionParam('klarna_checkout_order_id') === null);
+
+
+    }
+
+    public function testGetKlarnaModalOtherCountries()
+    {
+        $kcoController = new KlarnaExpressController();
+        $result = $kcoController->getKlarnaModalOtherCountries();
+
+        $this->assertEquals(0, count($result));
+
+    }
+
+    public function testCleanUpSession()
+    {
+        $this->setSessionParam('sCountryISO', 'val1');
+        $this->setSessionParam('klarna_checkout_order_id', 'val2');
+        $this->setSessionParam('klarna_checkout_user_email', 'val3');
+
+        $kcoController = new KlarnaExpressController();
+        $kcoController->cleanUpSession();
+
+        $this->assertTrue($this->getSessionParam('sCountryISO') === null);
+        $this->assertTrue($this->getSessionParam('klarna_checkout_order_id') === null);
+        $this->assertTrue($this->getSessionParam('klarna_checkout_user_email') === null);
+
+    }
+
+    public function testGetActiveShopCountries()
+    {
+        $kcoController = new KlarnaExpressController();
+        $result = $kcoController->getActiveShopCountries();
+
+        $this->assertEquals(5, count($result));
+
+        $active = ['DE', 'AT', 'CH', 'US', 'GB'];
+        foreach($result as $country){
+            $index = array_search($country->oxcountry__oxisoalpha2->value, $active);
+            if($index !== null){
+                unset($active[$index]);
+            }
+        }
+        $this->assertEquals(0, count($active));
+    }
+
+    public function testInit_KP_mode()
+    {
+        $this->setModuleMode('KP');
+        $kcoController = new KlarnaExpressController();
+        $kcoController->init();
+
+        $this->assertEquals($this->getConfig()->getShopSecureHomeUrl() . 'cl=order', \oxUtilsHelper::$sRedirectUrl);
+    }
+
+    public function testInit_reset()
+    {
+        $this->setModuleMode('KCO');
+        $this->setSessionParam('klarna_checkout_order_id', 'fake_id');
+        $this->setSessionParam('resetKlarnaSession', 1);
+
+        $kcoController = new KlarnaExpressController();
+        $kcoController->init();
+
+        $this->assertEquals(null, $this->getSessionParam('klarna_checkout_order_id'));
+    }
+
+
+    public function initPopup()
+    {
+        $oUser = oxNew(User::class);
+        $oUser->oxuser__oxcountryid = new Field('fake-country-id');
+        $baseUrl = $this->getConfig()->getSSLShopURL() . 'index.php?cl=KlarnaExpress';
+        $nonKCOUrl = $this->getConfig()->getSSLShopURL() . 'index.php?cl=user&non_kco_global_country=AF';
+        return [
+            ['AT', $oUser, null, $baseUrl],
+            ['DE', $oUser, null, $baseUrl],
+            ['AF', $oUser, 'fake-value', $nonKCOUrl],
+        ];
+    }
+
+    /**
+     * @dataProvider initPopup
+     * @param $selectedCountry
+     * @param $oUser
+     * @param $expectedKlarnaSessionId
+     */
+    public function testInit_popupSelection($selectedCountry, $oUser, $expectedKlarnaSessionId, $redirectUrl)
+    {
+        $this->setSessionParam('klarna_checkout_order_id', 'fake-value');
+        $this->setRequestParameter('selected-country', $selectedCountry);
+        $this->setSessionParam('blshowshipaddress', 1);
+
+        $kcoController = $this->getMock(KlarnaExpressController::class, ['getUser']);
+        $kcoController->expects($this->any())
+            ->method('getUser')->willReturn($oUser);
+
+        $kcoController->init();
+
+        $this->assertEquals(0, $this->getSessionParam('blshowshipaddress'));
+        $this->assertEquals($selectedCountry, $this->getSessionParam('sCountryISO'));
+
+        if($oUser){
+            $oCountry = oxNew(Country::class);
+            $oCountry->load($oUser->oxuser__oxcountryid);
+            $this->assertEquals($selectedCountry, $oCountry->oxcountry__oxisoalpha2);
+        }
+
+        $this->assertEquals($expectedKlarnaSessionId , $this->getSessionParam('klarna_checkout_order_id'));
+        $this->assertEquals($redirectUrl , \oxUtilsHelper::$sRedirectUrl);
+
+
+
+
+
+
+    }
+
     public function testRender_forceSsl()
     {
         $url = $this->getConfig()->getCurrentShopURL();
@@ -82,85 +244,79 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
     public function renderDataProvider()
     {
         $ssl_url = $this->getConfig()->getSSLShopURL();
-        $userUrl = $this->getConfig()->getSSLShopURL() . 'index.php?cl=user';
-        $orderUrl = $this->getConfig()->getSSLShopURL() . 'index.php?cl=order';
         $oUser = oxNew(User::class);
         $email = 'info@topconcepts.de';
+        $apiCreds = [];
+
         return [
-            [$ssl_url, $orderUrl, $oUser, null],
-            [$ssl_url, $orderUrl, null, $email],
-//            [$ssl_url, $orderUrl, $oUser, $email],
-            [$ssl_url, $orderUrl, null, null]
+            [$ssl_url, $oUser, null, false, $apiCreds],
+            [$ssl_url, null, $email, true],
+            [$ssl_url, null, null, true]
         ];
     }
 
     /**
      * @dataProvider renderDataProvider
-     * @param $curentUrl
-     * @param $redirectUrl
+     * @param $currentUrl
      * @param $oUser User
      * @param $email
+     * @param $expectedShowPopUp
      */
-    public function testRender($curentUrl, $redirectUrl, $oUser, $email)
+    public function testRender_noShippingSet($currentUrl, $oUser, $email, $expectedShowPopUp)
     {
+        $oBasket = $this->prepareBasketWithProduct();
+        $this->getSession()->setBasket($oBasket);
+        $this->setSessionParam('sShipSet', '1b842e732a23255b1.91207751');
         $this->setSessionParam('klarna_checkout_user_email', $email);
+
         $oConfig = $this->getMock(Config::class, ['getCurrentShopURL']);
-        $oConfig->expects($this->once())->method('getCurrentShopURL')->willReturn($curentUrl);
+        $oConfig->expects($this->once())->method('getCurrentShopURL')->willReturn($currentUrl);
 
-//        $oViewConfig = $this->getMock(ViewConfig::class, ['isUserLoggedIn']);
-//        $oViewConfig->expects($this->once())
-//            ->method('isUserLoggedIn')->willReturn($isUserLoggedIn);
-
-        $kcoController = $this->getMock(KlarnaExpressController::class, ['getConfig', 'getUser']);
+        $kcoController = $this->getMock($this->getProxyClassName(KlarnaExpressController::class), ['getConfig', 'getUser']);
         $kcoController->expects($this->atLeastOnce())
             ->method('getConfig')->willReturn($oConfig);
         $kcoController->expects($this->any())
             ->method('getUser')->willReturn($oUser);
-//        $kcoController->expects($this->any())
-//            ->method('getViewConfig')->willReturn($oViewConfig);
+
+
+        \oxTestModules::addFunction('oxutilsview', 'addErrorToDisplay', '{$this->selectArgs = $aA[0]; return $aA[0];}');
+        $this->setLanguage(1);
 
         $kcoController->init();
         $kcoController->render();
 
-        $this->assertEquals($redirectUrl, \oxUtilsHelper::$sRedirectUrl);
+        $oException = Registry::get(UtilsView::class)->selectArgs;
+
+        $this->assertTrue($oException instanceof KlarnaConfigException);
 
         if($kcoController->getUser() && $email){
-            $this->assertEquals($email, $this->User->oxuser__oxemail->rawValue);
+            $this->assertEquals($email, $this->User->oxuser__oxemail->rawValue, "User email mismatch.");
         }
-
+        $this->assertEquals($expectedShowPopUp, $kcoController->getNonPublicVar('blShowPopup'), "Show popup mismatch.");
     }
-//
-//    public function testGetFormattedUserAddresses()
+
+    public function testRender()
+    {
+
+        $userUrl = $this->getConfig()->getSSLShopURL() . 'index.php?cl=user';
+        $orderUrl = $this->getConfig()->getSSLShopURL() . 'index.php?cl=order';
+
+//        $testShippingList = array('testId' => new \stdClass());
+//        $oPayment = $this->getMock(PaymentController::class, ['getCheckoutShippingSets']);
+//        $oPayment->expects($this->once())
+//            ->method('getCheckoutShippingSets')->willReturn($testShippingList);
+//        \oxTestModules::addModuleObject(PaymentController::class, $oPayment);
+
+
+        $this->markTestIncomplete("Render method requires more tests");
+        //$this->assertEquals($redirectUrl, \oxUtilsHelper::$sRedirectUrl, "Redirect url mismatch.");
+    }
+
+//    public function testGetKlarnaClient()
 //    {
 //
 //    }
-//
-//    public function testSetKlarnaDeliveryAddress()
-//    {
-//
-//    }
-//
-//    public function testGetKlarnaModalOtherCountries()
-//    {
-//
-//    }
-//
 //    public function testIsUserLoggedIn()
-//    {
-//
-//    }
-//
-//    public function testInit()
-//    {
-//
-//    }
-//
-//    public function testCleanUpSession()
-//    {
-//
-//    }
-//
-//    public function testGetActiveShopCountries()
 //    {
 //
 //    }
