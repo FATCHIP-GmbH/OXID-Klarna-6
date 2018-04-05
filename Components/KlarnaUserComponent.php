@@ -49,7 +49,7 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
 
     /**
      * Redirect to klarna checkout
-     *
+     * @codeCoverageIgnore
      * @return bool
      */
     protected function klarnaRedirect()
@@ -61,7 +61,7 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
 
     /**
      * Calls createUser parent
-     *
+     * @codeCoverageIgnore
      * @return mixed
      * @codeCoverageIgnore
      */
@@ -90,6 +90,7 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
     }
 
     /**
+     * @codeCoverageIgnore
      */
     protected function _getLogoutLink()
     {

@@ -14,7 +14,6 @@ use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 /**
  * Class KlarnaBasketComponentTest
  * @package TopConcepts\Klarna\Tests\Unit\Components
- * @covers \TopConcepts\Klarna\Components\KlarnaBasketComponent
  */
 class KlarnaBasketComponentTest extends ModuleUnitTestCase
 {

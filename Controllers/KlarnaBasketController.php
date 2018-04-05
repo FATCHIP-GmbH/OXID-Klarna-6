@@ -36,6 +36,7 @@ class KlarnaBasketController extends KlarnaBasketController_parent
 
     /**
      *
+     * @codeCoverageIgnore
      */
     protected function displayKlarnaValidationErrors()
     {

@@ -66,6 +66,7 @@ class KlarnaValidationController extends FrontendController
 
     /**
      * Logging push state message to database
+     * @codeCoverageIgnore
      * @param $action
      * @param $order_id
      * @param string $requestBody
@@ -92,12 +93,17 @@ class KlarnaValidationController extends FrontendController
         $oKlarnaLog->save();
     }
 
+    /**
+     * @codeCoverageIgnore
+     * @return bool|string
+     */
     protected function getRequestBody()
     {
         return file_get_contents('php://input');
     }
 
     /**
+     * @codeCoverageIgnore
      * @return KlarnaOrderValidator
      */
     protected function getValidator()

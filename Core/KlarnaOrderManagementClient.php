@@ -26,8 +26,6 @@ class KlarnaOrderManagementClient extends KlarnaClientBase
     /**
      * @param string $order_id
      * @return mixed
-     * @throws KlarnaClientException
-     * @throws StandardException
      */
     public function getOrder($order_id)
     {
@@ -49,11 +47,6 @@ class KlarnaOrderManagementClient extends KlarnaClientBase
     /**
      * @param string $order_id
      * @return mixed
-     * @throws KlarnaCaptureNotAllowedException
-     * @throws KlarnaClientException
-     * @throws KlarnaOrderNotFoundException
-     * @throws KlarnaOrderReadOnlyException
-     * @throws KlarnaWrongCredentialsException
      */
     public function acknowledgeOrder($order_id)
     {

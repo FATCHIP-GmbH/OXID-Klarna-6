@@ -20,6 +20,7 @@ class KlarnaEpmDispatcher extends FrontendController
 
     /**
      * @throws \oxFileException
+     * @throws \oxSystemComponentException
      */
     public function amazonLogin()
     {

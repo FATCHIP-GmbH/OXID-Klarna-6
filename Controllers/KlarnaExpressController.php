@@ -271,6 +271,11 @@ class KlarnaExpressController extends FrontendController
         return $result;
     }
 
+    /**
+     *
+     * @codeCoverageIgnore
+     * @return bool
+     */
     protected function showCountryPopup()
     {
         $sCountryISO = $this->getSession()->getVariable('sCountryISO');
@@ -295,6 +300,12 @@ class KlarnaExpressController extends FrontendController
         return true;
     }
 
+    /**
+     *
+     * @codeCoverageIgnore
+     * @return bool
+     * @throws \oxSystemComponentException
+     */
     protected function isKLUserLoggedIn()
     {
         $oUser = $this->getUser();
@@ -434,6 +445,8 @@ class KlarnaExpressController extends FrontendController
     }
 
     /**
+     *
+     * @codeCoverageIgnore
      * @param $sCountryISO
      */
     protected function redirectForNonKlarnaCountry($sCountryISO, $blShippingOptionsSet = true)
@@ -457,6 +470,12 @@ class KlarnaExpressController extends FrontendController
         Registry::getSession()->deleteVariable('klarna_checkout_order_id');
     }
 
+    /**
+     *
+     * @codeCoverageIgnore
+     * @param $oBasket
+     * @return KlarnaOrder
+     */
     protected function getKlarnaOrder($oBasket){
 
         return new KlarnaOrder($oBasket, $this->_oUser);

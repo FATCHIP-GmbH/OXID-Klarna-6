@@ -115,6 +115,8 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
     /**
      * Logging push state message to database
+     *
+     * @codeCoverageIgnore
      * @param $action
      * @param string $requestBody
      * @param $url
@@ -145,6 +147,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     }
 
     /**
+     * @codeCoverageIgnore
      * @return KlarnaCheckoutClient|KlarnaClientBase
      */
     protected function getKlarnaCheckoutClient()
@@ -153,6 +156,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     }
 
     /**
+     * @codeCoverageIgnore
      * @return KlarnaPaymentsClient|KlarnaClientBase
      */
     protected function getKlarnaPaymentsClient()
@@ -237,6 +241,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     }
 
     /**
+     * @codeCoverageIgnore
      * @throws StandardException
      */
     protected function kcoBeforeExecute()
@@ -269,8 +274,9 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     /**
      * Check if user is logged in, if not check if user is in oxid and log them in
      * or create a user
+     *
+     * @codeCoverageIgnore
      * @return bool
-     * @throws \oxUserException
      */
     protected function _validateUser()
     {
@@ -290,6 +296,8 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
     /**
      * Create a user in oxid from klarna checkout data
+     *
+     * @codeCoverageIgnore
      * @return bool
      * @throws \oxUserException
      */
@@ -338,8 +346,8 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     /**
      * Save order to database, delete order_id from session and redirect to thank you page
      *
+     * @codeCoverageIgnore
      * @param Basket $oBasket
-     * @throws \oxSystemComponentException
      */
     protected function kcoExecute(Basket $oBasket)
     {
@@ -377,15 +385,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
     /**
      * General Ajax entry point for this controller
-     * @throws KlarnaClientException
-     * @throws StandardException
-     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderNotFoundException
-     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException
-     * @throws \TopConcepts\Klarna\Exception\KlarnaWrongCredentialsException
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
-     * @throws \ReflectionException
-     * @throws \oxSystemComponentException
      */
     public function updateKlarnaAjax()
     {
@@ -432,16 +431,10 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
     /**
      * Ajax call for Klarna Payment. Tracks changes and controls frontend Widget by status message
+     *
+     * @codeCoverageIgnore
      * @param $aPost
      * @return string
-     * @throws KlarnaClientException
-     * @throws StandardException
-     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderNotFoundException
-     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException
-     * @throws \TopConcepts\Klarna\Exception\KlarnaWrongCredentialsException
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
-     * @throws \ReflectionException
-     * @throws \oxSystemComponentException
      */
     protected function checkOrderStatus($aPost)
     {
@@ -516,17 +509,10 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     }
 
     /**
+     *
+     * @codeCoverageIgnore
      * @param $aPost
      * @return string
-     * @throws KlarnaClientException
-     * @throws StandardException
-     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderNotFoundException
-     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException
-     * @throws \TopConcepts\Klarna\Exception\KlarnaWrongCredentialsException
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
-     * @throws \ReflectionException
-     * @throws \oxSystemComponentException
      */
     protected function addUserData($aPost)
     {
