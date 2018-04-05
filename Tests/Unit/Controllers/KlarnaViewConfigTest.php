@@ -16,6 +16,11 @@ use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\ViewConfig;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
+/**
+ * Class KlarnaViewConfigTest
+ * @package TopConcepts\Klarna\Testes\Unit\Controllers
+ * @covers \TopConcepts\Klarna\Controllers\KlarnaViewConfig
+ */
 class KlarnaViewConfigTest extends ModuleUnitTestCase
 {
 

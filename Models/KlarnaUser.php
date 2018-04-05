@@ -85,13 +85,9 @@ class KlarnaUser extends KlarnaUser_parent
 
         if ($sCountryISO = Registry::get(Request::class)->getRequestEscapedParameter('selected-country')) {
             if (Registry::getSession()->hasVariable('invadr')) {
-                $result['billing_address']['country'] = $sCountryISO;
                 Registry::getSession()->deleteVariable('invadr');
-            } else {
-                $result['billing_address'] = array(
-                    'country' => $sCountryISO,
-                );
             }
+            $result['billing_address']['country'] = $sCountryISO;
             Registry::getSession()->setVariable('sCountryISO', $sCountryISO);
         }
 
@@ -337,7 +333,7 @@ class KlarnaUser extends KlarnaUser_parent
         $oSession = Registry::getSession();
         // keep only one address record for fake user, remove old
         if ($this->isFake() && $oSession->hasVariable('deladrid')) {
-            $this->clearDeliveryAddress();
+            $this->clearDeliveryAddress(); // remove old address from db
         }
         if ($sAddressOxid) {
             $oSession->setVariable('deladrid', $sAddressOxid);
@@ -413,9 +409,11 @@ class KlarnaUser extends KlarnaUser_parent
     public function getKlarnaPaymentCurrency()
     {
         $country2currency = KlarnaConsts::getCountry2CurrencyArray();
-        $currencyISO      = $country2currency[$this->resolveCountry()];
+        $cur = $this->resolveCountry();
+        if(isset($country2currency[$cur])){
 
-        return $currencyISO;
+            return $country2currency[$cur];
+        }
     }
 
     /**

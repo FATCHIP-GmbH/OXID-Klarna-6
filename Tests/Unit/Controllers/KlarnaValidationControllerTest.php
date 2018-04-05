@@ -13,6 +13,11 @@ use TopConcepts\Klarna\Controllers\KlarnaValidationController;
 use TopConcepts\Klarna\Core\KlarnaOrderValidator;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
+/**
+ * Class KlarnaValidationControllerTest
+ * @package TopConcepts\Klarna\Testes\Unit\Controllers
+ * @covers \TopConcepts\Klarna\Controllers\KlarnaValidationController
+ */
 class KlarnaValidationControllerTest extends ModuleUnitTestCase
 {
 

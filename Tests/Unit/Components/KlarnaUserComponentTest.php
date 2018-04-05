@@ -11,6 +11,11 @@ namespace TopConcepts\Klarna\Tests\Unit\Components;
 use OxidEsales\Eshop\Application\Component\UserComponent;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
+/**
+ * Class KlarnaUserComponentTest
+ * @package TopConcepts\Klarna\Tests\Unit\Components
+ * @covers \TopConcepts\Klarna\Components\KlarnaUserComponent
+ */
 class KlarnaUserComponentTest extends ModuleUnitTestCase
 {
 

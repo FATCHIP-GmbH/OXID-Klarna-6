@@ -14,6 +14,11 @@ use OxidEsales\Eshop\Application\Model\BasketItem;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
+/**
+ * Class KlarnaThankYouControllerTest
+ * @covers \TopConcepts\Klarna\Controllers\KlarnaThankYouController
+ * @package TopConcepts\Klarna\Testes\Unit\Controllers
+ */
 class KlarnaThankYouControllerTest extends ModuleUnitTestCase
 {
 

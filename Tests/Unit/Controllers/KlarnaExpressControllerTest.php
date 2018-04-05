@@ -8,20 +8,21 @@
 
 namespace TopConcepts\Klarna\Testes\Unit\Controllers;
 
-
-use OxidEsales\Eshop\Application\Controller\PaymentController;
 use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\UtilsView;
-use OxidEsales\Eshop\Core\ViewConfig;
 use TopConcepts\Klarna\Controllers\KlarnaExpressController;
-use TopConcepts\Klarna\Core\KlarnaOrder;
 use TopConcepts\Klarna\Exception\KlarnaConfigException;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
+/**
+ * Class KlarnaExpressControllerTest
+ * @package TopConcepts\Klarna\Testes\Unit\Controllers
+ * @covers \TopConcepts\Klarna\Controllers\KlarnaExpressController
+ */
 class KlarnaExpressControllerTest extends ModuleUnitTestCase
 {
 
@@ -173,13 +174,14 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
     }
 
 
-    public function initPopup()
+    public function initPopupDataProvider()
     {
         $oUser = oxNew(User::class);
-        $oUser->oxuser__oxcountryid = new Field('fake-country-id');
+        $oUser->oxuser__oxcountryid = new Field('a7c40f6320aeb2ec2.72885259');
         $baseUrl = $this->getConfig()->getSSLShopURL() . 'index.php?cl=KlarnaExpress';
         $nonKCOUrl = $this->getConfig()->getSSLShopURL() . 'index.php?cl=user&non_kco_global_country=AF';
         return [
+            ['AT', null, null, $baseUrl],
             ['AT', $oUser, null, $baseUrl],
             ['DE', $oUser, null, $baseUrl],
             ['AF', $oUser, 'fake-value', $nonKCOUrl],
@@ -187,7 +189,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
     }
 
     /**
-     * @dataProvider initPopup
+     * @dataProvider initPopupDataProvider
      * @param $selectedCountry
      * @param $oUser
      * @param $expectedKlarnaSessionId
@@ -215,13 +217,13 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
 
         $this->assertEquals($expectedKlarnaSessionId , $this->getSessionParam('klarna_checkout_order_id'));
         $this->assertEquals($redirectUrl , \oxUtilsHelper::$sRedirectUrl);
-
-
-
-
-
-
     }
+
+    public function testInit_next()
+    {
+        $this->markTestIncomplete("More tests");
+    }
+
 
     public function testRender_forceSsl()
     {

@@ -11,6 +11,11 @@ use OxidEsales\Eshop\Application\Component\BasketComponent;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
+/**
+ * Class KlarnaBasketComponentTest
+ * @package TopConcepts\Klarna\Tests\Unit\Components
+ * @covers \TopConcepts\Klarna\Components\KlarnaBasketComponent
+ */
 class KlarnaBasketComponentTest extends ModuleUnitTestCase
 {
 

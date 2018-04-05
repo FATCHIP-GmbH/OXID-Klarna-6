@@ -44,14 +44,13 @@ class ModuleUnitTestCase extends UnitTestCase
 
         $this->moduleName = 'klarna';
         $this->testConfig = new TestConfig();
-        /** @var ConfigFile $configFile */
-        $configFile = Registry::get(ConfigFile::class);
-        $this->dbHandler = new DatabaseHandler($configFile);
     }
 
     public function setUpBeforeTestSuite()
     {
         parent::setUpBeforeTestSuite();
+        $configFile = Registry::get(ConfigFile::class);
+        $this->dbHandler = new DatabaseHandler($configFile);
     }
 
     protected function removeQueryString($url)

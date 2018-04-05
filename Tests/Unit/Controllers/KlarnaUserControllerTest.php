@@ -6,12 +6,17 @@
  * Time: 13:53
  */
 
-namespace TopConcepts\Klarna\Controllers;
+namespace TopConcepts\Klarna\Tests\Unit\Controllers;
 
 
 use OxidEsales\Eshop\Application\Controller\UserController;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
+/**
+ * Class KlarnaUserControllerTest
+ * @package TopConcepts\Klarna\Tests\Unit\Controllers
+ * @covers \TopConcepts\Klarna\Controllers\KlarnaUserController
+ */
 class KlarnaUserControllerTest extends ModuleUnitTestCase
 {
 
