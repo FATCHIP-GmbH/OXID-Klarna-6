@@ -9,6 +9,7 @@
 namespace TopConcepts\Klarna\Tests\Unit\Components;
 
 use OxidEsales\Eshop\Application\Component\UserComponent;
+use OxidEsales\Eshop\Core\ViewConfig;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 /**
@@ -89,5 +90,36 @@ class KlarnaUserComponentTest extends ModuleUnitTestCase
         $this->assertEquals($resetResult, $this->getSessionParam('resetKlarnaSession'));
         $this->assertEquals($showShippingAddressResult, $this->getSessionParam('blshowshipaddress'));
         $this->assertEquals($addressIdResult, $this->getSessionParam('deladrid'));
+    }
+
+    /**
+     * covers \TopConcepts\Klarna\Components\KlarnaUserComponent::_getLogoutLink
+     */
+    public function testLogout()
+    {
+        \oxTestModules::addFunction("oxUtils", "redirect", "{ return true;}");
+        \oxTestModules::addFunction("oxUser", "logout", "{ return true;}");
+
+
+        $this->setRequestParameter('cl', 'KlarnaExpress');
+        $oParent = $this->getMock(\OxidEsales\Eshop\Application\Controller\FrontendController::class, array("isEnabledPrivateSales"));
+        $oParent->expects($this->once())->method('isEnabledPrivateSales')->will($this->returnValue(false));
+
+        $aMockFnc = array('_afterLogout', 'getParent');
+        $oUserView = $this->getMock(\OxidEsales\Eshop\Application\Component\UserComponent::class, $aMockFnc);
+        $oUserView->expects($this->once())->method('_afterLogout');
+
+        $oUserView->expects($this->any())->method('getParent')->will($this->returnValue($oParent));
+
+        $this->setRequestParameter('redirect', true);
+        $oViewConfig = $this->getMock(ViewConfig::class, ['isKlarnaCheckoutEnabled']);
+        $oViewConfig->expects($this->any())
+            ->method('isKlarnaCheckoutEnabled')->willReturn(true);
+       \oxTestModules::addModuleObject(ViewConfig::class, $oViewConfig);
+
+        $oUserView->logout();
+
+        $this->markTestIncomplete("Capture and check redirect link. UserComponent:336 _getLogoutLink call");
+
     }
 }

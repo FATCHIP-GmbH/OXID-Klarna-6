@@ -120,4 +120,5 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
     {
         return KlarnaOrderManagementClient::getInstance();
     }
+
 }

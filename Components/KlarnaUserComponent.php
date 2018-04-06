@@ -60,25 +60,6 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
     }
 
     /**
-     * Calls createUser parent
-     * @codeCoverageIgnore
-     * @return mixed
-     * @codeCoverageIgnore
-     */
-    protected function getCreateUserParent()
-    {
-        return parent::createUser();
-    }
-
-    /**
-     * Logout action
-     */
-    public function logout()
-    {
-        parent::logout();
-    }
-
-    /**
      * Calls login_noredirect parent
      *
      * @return mixed

@@ -118,7 +118,7 @@ class KlarnaUser extends KlarnaUser_parent
             'billing_address'  => $billingAddress,
             'shipping_address' => isset($shippingAddress) ? $shippingAddress : $billingAddress,
             'customer'         => $customer,
-            'attachment'       => $this->addAttachmentsData(),
+            'attachment'       => $this->getAttachmentsData(),
         );
 
         if (!Registry::getSession()->getVariable('userDataHash'))
@@ -371,18 +371,6 @@ class KlarnaUser extends KlarnaUser_parent
     }
 
     /**
-     * @return bool
-     */
-    public function userDataChanged()
-    {
-        $oldHash = Registry::getSession()->getVariable('userDataHash');
-        if ($this->recalculateHash() != $oldHash)
-            return true;
-
-        return false;
-    }
-
-    /**
      * Gets and saves to the session user data hash
      * @return string
      */
@@ -455,12 +443,10 @@ class KlarnaUser extends KlarnaUser_parent
     /**
      * @return array
      */
-    public function addAttachmentsData()
+    public function getAttachmentsData()
     {
         if (!$this->isFake()) {
-            /** @var KlarnaEMD $klarnaEmd */
-            $klarnaEmd = new KlarnaEMD;
-            $emd       = $klarnaEmd->getAttachments($this);
+            $emd = $this->getEMD();
             if (!empty($emd)) {
                 return array(
                     'content_type' => 'application/vnd.klarna.internal.emd-v2+json',
@@ -468,6 +454,16 @@ class KlarnaUser extends KlarnaUser_parent
                 );
             }
         }
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    protected function getEMD()
+    {
+        $klarnaEmd = new KlarnaEMD();
+
+        return $klarnaEmd->getAttachments($this);
     }
 
     /**

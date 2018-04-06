@@ -9,6 +9,7 @@
 namespace TopConcepts\Klarna\Models;
 
 
+use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Field;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
@@ -91,34 +92,90 @@ class KlarnaUserTest extends ModuleUnitTestCase
 
     }
 
-    public function testGetKlarnaDeliveryCountry()
+    public function deliveryCountryDataProvider()
     {
 
+    }
+
+    /**
+     * @dataProvider deliveryCountryDataProvider
+     * @param $mode
+     * @param $countryISO
+     * @param $expectedId
+     */
+    public function testGetKlarnaDeliveryCountry($mode, $countryISO, $expectedId)
+    {
+        $this->setModuleMode($mode);
+        $this->setSessionParam('sCountryISO', $countryISO);
+
+        $oUser = oxNew(User::class);
+
+        $oCountry = oxNew(Country::class);
+        $this->assertEquals($oCountry->load($expectedId), $oUser->getKlarnaDeliveryCountry());
     }
 
     public function testKl_setType()
     {
-
+        $oUser = oxNew(User::class);
+        $oUser->kl_setType('myType');
+        $this->assertEquals('myType', $oUser->kl_getType());
     }
 
-    public function testIsFake()
+    public function isFakeDataProvider()
     {
-
+        return [
+            [KlarnaUser::NOT_EXISTING, '', true],
+            [KlarnaUser::REGISTERED, 'aaa', true],
+            [KlarnaUser::NOT_REGISTERED, '', true],
+            [KlarnaUser::LOGGED_IN, '', true],
+            [KlarnaUser::LOGGED_IN, 'aaa', false],
+        ];
     }
 
-    public function testAddAttachmentsData()
+    /**
+     * @dataProvider isFakeDataProvider
+     * @param $type
+     * @param $pass
+     * @param $result
+     */
+    public function testIsFake($type, $pass, $result)
     {
+        $oUser = oxNew(User::class);
+        $oUser->kl_setType($type);
+        $oUser->oxuser__oxpassword = new Field($pass);
+        $this->assertEquals($result,  $oUser->isFake());
+    }
+
+    public function getAttachmentsDataProvider()
+    {
+        return [
+            [false, ['content_type' => 'application/vnd.klarna.internal.emd-v2+json',
+                    'body'         => json_encode(['one', 'two'])]],
+            [true, null],
+        ];
+    }
+
+    /**
+     * @dataProvider getAttachmentsDataProvider
+     * @param $isFake
+     * @param $expectedResult
+     */
+    public function testGetAttachmentsData($isFake, $expectedResult)
+    {
+        $oUser = $this->getMock(User::class, ['isFake', 'getEMD']);
+        $oUser->expects($this->any())->method('isFake')->willReturn($isFake);
+        $oUser->expects($this->any())->method('getEMD')->willReturn(['one', 'two']);
+
+        $this->assertEquals($expectedResult, $oUser->getAttachmentsData());
 
     }
 
     public function testSaveHash()
     {
-
-    }
-
-    public function testUserDataChanged()
-    {
-
+        $toSave = 'hash';
+        $oUser  = oxNew(User::class);
+        $oUser->saveHash($toSave);
+        $this->assertEquals('hash', $this->getSessionParam('userDataHash'));
     }
 
     /**
@@ -132,6 +189,9 @@ class KlarnaUserTest extends ModuleUnitTestCase
         $oUser = oxNew(User::class);
         $oUser->load('oxdefaultadmin');
         $this->setLanguage(1);
+
+
+        $this->markTestIncomplete();
         $oUser->changeUserData('name', 'pass', 'pass', [], []);
 
         $this->assertEquals($oUser->getUserCountryISO2(), $this->getSessionParam('sCountryISO'));
@@ -150,13 +210,13 @@ class KlarnaUserTest extends ModuleUnitTestCase
      * @param $selectedCountry
      * @param $invadr
      */
-    public function testGetKlarnaData($selectedCountry, $invadr, $resultKeys )
+    public function testGetKlarnaData($selectedCountry, $invadr, $resultKeys)
     {
         $this->setModuleConfVar('blKlarnaEnablePreFilling', false);
         $this->setRequestParameter('selected-country', $selectedCountry);
         $this->setSessionParam('invadr', $invadr);
 
-        $oUser = oxNew(User::class);
+        $oUser  = oxNew(User::class);
         $result = $oUser->getKlarnaData();
 
         $this->assertEquals(array_keys($result), $resultKeys);
@@ -208,7 +268,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
         $this->setSessionParam('blshowshipaddress', $showShippingAddress);
         $this->setSessionParam('deladrid', $addressId);
 
-        $oUser = oxNew(User::class);
+        $oUser  = oxNew(User::class);
         $result = $oUser->getDelAddressInfo();
 
         $this->assertEquals($isLoaded, $result->isLoaded());
@@ -220,7 +280,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
     {
         return [
             [1, '41b545c65fe99ca2898614e563a7108a', true],
-            [1, '41b545c65fe99ca2898614e563a7108f', true]
+            [1, '41b545c65fe99ca2898614e563a7108f', true],
         ];
     }
 
@@ -229,7 +289,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
         $this->setSessionParam('blshowshipaddress', 0);
         $this->setSessionParam('deladrid', 'dawdawdawd');
 
-        $oUser = oxNew(User::class);
+        $oUser  = oxNew(User::class);
         $result = $oUser->getDelAddressInfo();
 
         $this->assertNull($result);
@@ -254,7 +314,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
 
     public function userTypeDataProvider()
     {
-        return[
+        return [
             ['id', null, KlarnaUser::NOT_REGISTERED],
             ['id', 'id', KlarnaUser::LOGGED_IN],
         ];
@@ -267,7 +327,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
      * @param $isFake
      * @param $showShippingAddress
      */
-    public function testUpdateSessionDeliveryAddressId( $resAddressId, $newAddressId, $isFake, $showShippingAddress)
+    public function testUpdateSessionDeliveryAddressId($resAddressId, $newAddressId, $isFake, $showShippingAddress)
     {
         $oUser = $this->getMock(User::class, ['isFake']);
         $oUser->expects($this->once())
@@ -301,9 +361,9 @@ class KlarnaUserTest extends ModuleUnitTestCase
     public function testGetKlarnaPaymentCurrency($countryId, $expectedCurrency)
     {
 
-        $oUser = oxNew(User::class);
+        $oUser                      = oxNew(User::class);
         $oUser->oxuser__oxcountryid = new Field($countryId, Field::T_RAW);
-        $result = $oUser->getKlarnaPaymentCurrency();
+        $result                     = $oUser->getKlarnaPaymentCurrency();
 
         $this->assertEquals($result, $expectedCurrency);
     }
@@ -329,7 +389,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
     {
         return [
             ['KP'],
-            ['KCO']
+            ['KCO'],
         ];
     }
 }
