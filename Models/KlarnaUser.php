@@ -305,12 +305,7 @@ class KlarnaUser extends KlarnaUser_parent
      */
     public function updateDeliveryAddress($aDelAddress)
     {
-        $oAddress = oxNew(Address::class);
-        $oAddress->setId();
-        $oAddress->assign($aDelAddress);
-
-        $oAddress->oxaddress__oxuserid  = new Field($this->getId(), Field::T_RAW);
-        $oAddress->oxaddress__oxcountry = $this->getUserCountry($oAddress->oxaddress__oxcountryid->value);
+        $oAddress = $this->buildAddress($aDelAddress);
 
         if ($oAddress->isValid()) {
             // save only unique address for 
@@ -322,6 +317,18 @@ class KlarnaUser extends KlarnaUser_parent
             }
             $this->updateSessionDeliveryAddressId($sAddressOxid);
         }
+    }
+
+    protected function buildAddress($aDelAddress)
+    {
+        $oAddress = oxNew(Address::class);
+        $oAddress->setId();
+        $oAddress->assign($aDelAddress);
+
+        $oAddress->oxaddress__oxuserid  = new Field($this->getId(), Field::T_RAW);
+        $oAddress->oxaddress__oxcountry = $this->getUserCountry($oAddress->oxaddress__oxcountryid->value);
+
+        return $oAddress;
     }
 
     /**

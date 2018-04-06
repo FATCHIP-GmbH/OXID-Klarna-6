@@ -9,6 +9,7 @@
 namespace TopConcepts\Klarna\Models;
 
 
+use OxidEsales\Eshop\Application\Model\Address;
 use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Field;
@@ -82,36 +83,94 @@ class KlarnaUserTest extends ModuleUnitTestCase
 
     }
 
-    public function testUpdateDeliveryAddress()
+    public function updateDeliveryAddressDataProvider()
     {
+        $aAddress = [
+            'name' => 'Zyggy',
+            'street' => 'qwdqw'
+        ];
+
+        return [
+            [$aAddress, true, 'addressId', true]
+        ];
+    }
+
+    /**
+     * @dataProvider updateDeliveryAddressDataProvider
+     * @param $aAddressData
+     * @param $isValid
+     * @param $klExists
+     * @param $isFake
+     */
+    public function testUpdateDeliveryAddress($aAddressData, $isValid, $klExists, $isFake)
+    {
+        $oAddress = $this->getMock(Address::class, ['isValid', 'klExists']);
+        $oAddress->expects($this->once())
+            ->method('isValid')->willReturn($isValid);
+        $oAddress->expects($this->once())
+            ->method('klExists')->willReturn($klExists);
+
+
+        $oUser = $this->getMock(User::class, ['buildAddress','isFake', 'updateSessionDeliveryAddressId']);
+        $oUser->expects($this->once())->method('buildAddress')->willReturn($oAddress);
+        $oUser->expects($this->any())->method('isFake')->willReturn($isFake);
+        $oUser->expects($this->once())->method('updateSessionDeliveryAddressId');
+
+        $oUser->updateDeliveryAddress($aAddressData);
 
     }
 
-    public function testKl_getType()
-    {
+//    /**
+//     * @covers \TopConcepts\Klarna\Models\KlarnaUser::buildAddress()
+//     */
+//    public function testBuildAddress()
+//    {
+//        $oUser = oxNew(User::class);
+//        $oUser->updateDeliveryAddress($aAddressData);
+//    }
 
+    /**
+     * @dataProvider isFakeDataProvider
+     * @param $type
+     */
+    public function testKl_getType($type)
+    {
+        $oUser = oxNew(User::class);
+        $oUser->kl_setType($type);
+        $this->assertEquals($type, $oUser->kl_getType());
     }
 
     public function deliveryCountryDataProvider()
     {
-
+        return [
+            ['KCO', 'DE', null, 'a7c40f631fc920687.20179984'],
+            ['KCO', null, 'a7c40f631fc920687.20179984', 'a7c40f631fc920687.20179984'],
+            ['KCO', null, null, 'a7c40f631fc920687.20179984'],
+            ['KP', 'AT', 'a7c40f6320aeb2ec2.72885259', 'a7c40f6320aeb2ec2.72885259'],
+            ['KP', null, null, 'a7c40f631fc920687.20179984'],
+        ];
     }
 
     /**
      * @dataProvider deliveryCountryDataProvider
      * @param $mode
      * @param $countryISO
+     * @param $userCountryId
      * @param $expectedId
      */
-    public function testGetKlarnaDeliveryCountry($mode, $countryISO, $expectedId)
+    public function testGetKlarnaDeliveryCountry($mode, $countryISO, $userCountryId, $expectedId)
     {
         $this->setModuleMode($mode);
+        $this->setModuleConfVar('sKlarnaDefaultCountry', 'DE');
         $this->setSessionParam('sCountryISO', $countryISO);
 
         $oUser = oxNew(User::class);
+        $oUser->oxuser__oxcountryid = new Field($userCountryId, Field::T_RAW);
+        $result =$oUser->getKlarnaDeliveryCountry();
 
         $oCountry = oxNew(Country::class);
-        $this->assertEquals($oCountry->load($expectedId), $oUser->getKlarnaDeliveryCountry());
+        $oCountry->load($expectedId);
+        $this->assertEquals($oCountry, $result);
     }
 
     public function testKl_setType()
