@@ -7,6 +7,7 @@
 
 /**
  * Helper class for \OxidEsales\Eshop\Core\Utils
+ * @codeCoverageIgnore
  */
 class oxUtilsHelper extends \OxidEsales\Eshop\Core\Utils
 {

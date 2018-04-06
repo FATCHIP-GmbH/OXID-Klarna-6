@@ -7,6 +7,7 @@ use Doctrine\DBAL\Schema\Schema;
 
 /**
  * Updates DB structure for Klarna Module 4.0.0
+ * @codeCoverageIgnore
  */
 class VersionKlarna400 extends AbstractMigration
 {

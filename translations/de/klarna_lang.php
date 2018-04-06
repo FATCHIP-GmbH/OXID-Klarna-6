@@ -1,5 +1,5 @@
 <?php
-
+// @codeCoverageIgnoreStart
 $sLangName = "Deutsch";
 // -------------------------------
 // RESOURCE IDENTITFIER = STRING
@@ -64,3 +64,4 @@ $aLang = array(
     'KL_ANONYMIZED_PRODUCT'                  => 'Anonymisierter Produkttitel:',
 
 );
+// @codeCoverageIgnoreEnd
