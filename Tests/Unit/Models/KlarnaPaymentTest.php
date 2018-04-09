@@ -40,14 +40,14 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
 
     }
 
-    /**
-     *
-     */
-    public function testGetKlarnaPaymentsIds($filter, $expectedResult)
-    {
-        $result = KlarnaPayment::getKlarnaPaymentsIds($filter);
-        $this->assertEquals($expectedResult, $result);
-    }
+//    /**
+//     *
+//     */
+//    public function testGetKlarnaPaymentsIds($filter, $expectedResult)
+//    {
+//        $result = KlarnaPayment::getKlarnaPaymentsIds($filter);
+//        $this->assertEquals($expectedResult, $result);
+//    }
 
     /**
      * @dataProvider getBadgeUrlDataProvider
