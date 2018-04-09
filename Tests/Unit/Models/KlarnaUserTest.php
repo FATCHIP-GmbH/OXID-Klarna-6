@@ -50,34 +50,131 @@ class KlarnaUserTest extends ModuleUnitTestCase
         $this->assertEquals($result,  $oUser->isCreatable());
     }
 
-    public function testSave()
+    public function saveDataProvider()
     {
-
+        return [
+            ['KP', null],
+            ['KCO', 'DE']
+        ];
     }
 
-    public function testLogin()
+    /**
+     * @dataProvider saveDataProvider
+     * @param $mode
+     * @param $expectedISO
+     */
+    public function testSave($mode, $expectedISO)
     {
+        $this->setModuleMode($mode);
+        $this->setSessionParam('sCountryISO', null);
+        $oUser = oxNew(User::class);
+        $oUser->oxuser__oxcountryid = new Field('a7c40f631fc920687.20179984', Field::T_RAW);
+        $oUser->save();
 
+        $this->assertEquals($expectedISO, $this->getSessionParam('sCountryISO'));
     }
 
-    public function testResolveLocale()
+    public function loginDataProvider()
     {
+        return [
+            ['KP', null, 'fake@email', null],
+            ['KCO', 'DE', null, KlarnaUser::LOGGED_IN]
+        ];
+    }
 
+    /**
+     * @dataProvider  loginDataProvider
+     * @param $mode
+     * @param $sessionISO
+     * @param $sessionEmail
+     * @param $userType
+     */
+    public function testLogin($mode, $sessionISO, $sessionEmail, $userType)
+    {
+        $this->setModuleMode($mode);
+        $this->setSessionParam('sCountryISO', null);
+        $this->setSessionParam('klarna_checkout_user_email', 'fake@email');
+        $oUser = oxNew(User::class);
+        $oUser->oxuser__oxcountry = new Field('a7c40f631fc920687.20179984', Field::T_RAW);
+        $oUser->login('info@topconcepts.de', 'muhipo2015');
+
+        $this->assertEquals($sessionISO, $this->getSessionParam('sCountryISO'));
+        $this->assertEquals($sessionEmail, $this->getSessionParam('klarna_checkout_user_email'));
+        $this->assertEquals($userType, $oUser->kl_getType());
+    }
+
+    public function resolveLocaleDataProvider()
+    {
+        return [
+            ['DE', 'de', 'de-DE'],
+            ['AT', 'de', 'de-AT'],
+            ['AF', 'de', 'de-AF'],
+        ];
+    }
+
+    /**
+     * @dataProvider resolveLocaleDataProvider
+     * @param $iso
+     * @param $langId
+     * @param $expectedResult
+     */
+    public function testResolveLocale($iso, $langId,  $expectedResult)
+    {
+        $oUser = oxNew(User::class);
+        $this->setLanguage($langId);
+
+        $this->assertEquals($expectedResult, $oUser->resolveLocale($iso));
+    }
+
+    public function testGetCountryISO_notSet()
+    {
+        $oUser = $this->getMock(User::class, ['resolveCountry']);
+        $oUser->expects($this->once())->method('resolveCountry')->willReturn('DE');
+
+        $result = $oUser->getCountryISO();
+        $this->assertEquals('DE', $result);
     }
 
     public function testGetCountryISO()
     {
+        $oUser = $this->getMock($this->getProxyClassName(User::class), ['resolveCountry']);
+        $oUser->expects($this->never())->method('resolveCountry');
+        $oUser->setNonPublicVar('_countryISO', 'DE');
+
+        $result = $oUser->getCountryISO();
+        $this->assertEquals('DE', $result);
 
     }
 
-    public function testLoadByEmail()
+    public function testLoadByEmail_loggedIn()
     {
+        $oUser = $this->getMock(User::class, ['load']);
+        $oUser->expects($this->never())->method('load');
+        $oUser->kl_setType(KlarnaUser::LOGGED_IN);
 
+        $this->assertEquals($oUser, $oUser->loadByEmail('steffen@topconcepts.de'));
+    }
+
+    /**
+     * @dataProvider loadByEmailDataProvider
+     * @param $email
+     * @param $expectedType
+     */
+    public function testLoadByEmail($email, $expectedType)
+    {
+        $oUser = oxNew(User::class);
+
+        $this->assertEquals($oUser, $oUser->loadByEmail($email));
+        $this->assertEquals($expectedType, $oUser->kl_getType());
     }
 
     public function loadByEmailDataProvider()
     {
-
+        return [
+            ['info@topconcepts.de', KlarnaUser::REGISTERED],
+            ['not_registered@topconcepts.de', KlarnaUser::NOT_REGISTERED],
+            ['not_existing@topconcepts.de', KlarnaUser::NOT_EXISTING]
+        ];
     }
 
     public function testLogout()
@@ -196,13 +293,11 @@ class KlarnaUserTest extends ModuleUnitTestCase
         $oUser->load('oxdefaultadmin');
         $oUser->oxuser__oxbirthdate = new Field($bday, Field::T_RAW);
         $this->setSessionParam('deladrid', $deladrid);
-        $this->setSessionParam('userDataHash', null);
 
         $result = $oUser->getKlarnaPaymentData();
 
         $this->assertTrue($bday_resultIsNull === is_null($result['customer']['date_of_birth']));
         $this->assertEquals($result['billing_address'] !== $result['shipping_address'],  boolval($deladrid));
-        $this->assertNotNull($this->getSessionParam('userDataHash'));
     }
 
     public function isWritableDataProvider()
@@ -377,31 +472,45 @@ class KlarnaUserTest extends ModuleUnitTestCase
 
     }
 
-    public function testSaveHash()
+    public function changeUserDataDataProvider()
     {
-        $toSave = 'hash';
-        $oUser  = oxNew(User::class);
-        $oUser->saveHash($toSave);
-        $this->assertEquals('hash', $this->getSessionParam('userDataHash'));
+        return [
+            ['KP', null],
+            ['KCO', 'DE']
+        ];
     }
 
     /**
-     * @dataProvider modeDataProvider
+     * @dataProvider changeUserDataDataProvider
      * @param $mode
+     * @param $expectedResult
      */
-    public function testChangeUserData($mode)
+    public function testChangeUserData($mode, $expectedResult)
     {
+
         $this->setModuleMode($mode);
-
         $oUser = oxNew(User::class);
-        $oUser->load('oxdefaultadmin');
-        $this->setLanguage(1);
+        $oUser->setId('_testUser');
+        $oUser->oxuser__oxactive = new Field(1, Field::T_RAW);
+        $oUser->oxuser__oxshopid = new Field($this->getConfig()->getBaseShopId(), Field::T_RAW);
+        $oUser->oxuser__oxusername = new Field('aaa@bbb.lt', Field::T_RAW);
+        $oUser->oxuser__oxfname = new Field('a', Field::T_RAW);
+        $oUser->oxuser__oxlname = new Field('b', Field::T_RAW);
+        $oUser->oxuser__oxusername = new Field('aaa@bbb.lt', Field::T_RAW);
+        $oUser->oxuser__oxpassword = new Field('pass', Field::T_RAW);
+        $oUser->oxuser__oxactive = new Field(1, Field::T_RAW);
+        $oUser->save();
 
+        $aInvAdress = array('oxuser__oxfname'     => 'xxx',
+                            'oxuser__oxlname'     => 'yyy',
+                            'oxuser__oxstreetnr'  => '11',
+                            'oxuser__oxstreet'    => 'zzz',
+                            'oxuser__oxzip'       => '22',
+                            'oxuser__oxcity'      => 'ooo',
+                            'oxuser__oxcountryid' => 'a7c40f631fc920687.20179984');
 
-        $this->markTestIncomplete();
-        $oUser->changeUserData('name', 'pass', 'pass', [], []);
-
-        $this->assertEquals($oUser->getUserCountryISO2(), $this->getSessionParam('sCountryISO'));
+        $oUser->changeUserData($oUser->oxuser__oxusername->value, $oUser->oxuser__oxpassword->value, $oUser->oxuser__oxpassword->value, $aInvAdress, array());
+        $this->assertEquals($expectedResult, $this->getSessionParam('sCountryISO'));
     }
 
     public function getKlarnaDataProvider()

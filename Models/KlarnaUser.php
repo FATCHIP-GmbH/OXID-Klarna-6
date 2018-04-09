@@ -31,11 +31,6 @@ class KlarnaUser extends KlarnaUser_parent
     protected $_type;
 
     /**
-     * @var string user data checksum
-     */
-    protected $_userDataHash = '';
-
-    /**
      * @var string user country ISO
      */
     protected $_countryISO;
@@ -120,9 +115,6 @@ class KlarnaUser extends KlarnaUser_parent
             'customer'         => $customer,
             'attachment'       => $this->getAttachmentsData(),
         );
-
-        if (!Registry::getSession()->getVariable('userDataHash'))
-            $this->saveHash(md5(json_encode($aUserData)));
 
         return $aUserData;
     }
@@ -247,7 +239,6 @@ class KlarnaUser extends KlarnaUser_parent
             }
         } else {
             $this->_type = self::NOT_EXISTING;
-            $this->setFakeUserId();
         }
 
         $this->addToGroup('oxidnotyetordered');
@@ -319,6 +310,11 @@ class KlarnaUser extends KlarnaUser_parent
         }
     }
 
+    /**
+     * @codeCoverageIgnore
+     * @param $aDelAddress
+     * @return object
+     */
     protected function buildAddress($aDelAddress)
     {
         $oAddress = oxNew(Address::class);
@@ -362,40 +358,6 @@ class KlarnaUser extends KlarnaUser_parent
         if ($oAddress->isTemporary()){
             $oAddress->delete();
         }
-    }
-
-    /**
-     *
-     */
-    protected function setFakeUserId()
-    {
-        if (Registry::getSession()->hasVariable('sFakeUserId')) {
-            $this->setId(Registry::getSession()->getVariable('sFakeUserId'));
-        } else {
-            $this->setId();
-            Registry::getSession()->setVariable('sFakeUserId', $this->getId());
-        }
-    }
-
-    /**
-     * Gets and saves to the session user data hash
-     * @return string
-     */
-    protected function recalculateHash()
-    {
-        $currentHash = md5(json_encode($this->getKlarnaPaymentData()));
-        $this->saveHash($currentHash);
-
-        return $currentHash;
-    }
-
-    /**
-     * Save new user data hash to the session
-     * @param $currentHash
-     */
-    public function saveHash($currentHash)
-    {
-        Registry::getSession()->setVariable('userDataHash', $currentHash);
     }
 
     /**
