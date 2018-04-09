@@ -10,7 +10,7 @@
 
 <div class="[{$box|default:'box'}]" style="[{if !$box && !$bottom_buttons}]height: 100%;[{/if}]">
     <div class="main-container">
-        [{include file="kl_header.tpl" title="KL_KLARNADESIGN"|oxmultilangassign }]
+        [{include file="kl_header.tpl" title="KL_KLARNADESIGN"|oxmultilangassign desc="KL_DESIGN_SETTINGS_ADMIN_DESC"|oxmultilangassign }]
         <hr>
         <div class="klarna-expandable-list">
             <form name="myedit" id="myedit" method="post"

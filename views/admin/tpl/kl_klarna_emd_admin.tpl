@@ -15,7 +15,7 @@
 
 <div class="[{$box|default:'box'}]" style="[{if !$box && !$bottom_buttons}]height: 100%;[{/if}]">
     <div class="main-container">
-        [{include file="kl_header.tpl" title="KL_EXTRA_MERCHANT_DATA"|oxmultilangassign}]
+        [{include file="kl_header.tpl" title="KL_EXTRA_MERCHANT_DATA"|oxmultilangassign desc="KL_EXTRA_MERCHANT_DATA_ADMIN_DESC"|oxmultilangassign}]
         <hr>
 
         <form name="myedit" id="myedit" method="post" action="[{$oViewConf->getSelfLink()}]"

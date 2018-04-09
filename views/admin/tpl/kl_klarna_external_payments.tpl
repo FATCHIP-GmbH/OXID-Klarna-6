@@ -7,7 +7,7 @@
 
 <div class="[{$box|default:'box'}]" style="[{if !$box && !$bottom_buttons}]height: 100%;[{/if}]">
     <div class="main-container">
-        [{include file="kl_header.tpl" title="KL_EXTERNAL_PAYMENTS"|oxmultilangassign }]
+        [{include file="kl_header.tpl" title="KL_EXTERNAL_PAYMENTS"|oxmultilangassign desc="KL_EXTERNAL_PAYMENTS_ADMIN_DESC"|oxmultilangassign }]
         <hr>
         [{ if $mode === 'KCO' }]
         <div class="klarna-expandable-list">

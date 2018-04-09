@@ -11,6 +11,8 @@ $aLang = array(
     'KL_START'               => 'Start',
     'KL_GENERAL_SETTINGS'    => 'Allgemein',
     'KL_CONFIGURATION'       => 'Konfiguration',
+    'KL_CONFIGURATION_KCO'   => 'Konfiguration für Klarna Checkout',
+    'KL_CONFIGURATION_KP'    => 'Konfiguration für Klarna Payment Methods',
     'KL_KLARNADESIGN'        => 'Design Settings',
     'KL_EXTERNAL_PAYMENTS'   => 'External Payment Methods',
     'KL_EXTRA_MERCHANT_DATA' => 'Extra Merchant Data',
@@ -57,7 +59,7 @@ $aLang = array(
 
     'KL_CREATE_USER_ACCOUNT'               => 'Kundenkonto im OXID eShop anlegen',
     'KL_SUBSCRIBE_TO_NEWSLETTER'           => 'Newsletter-Anmeldung',
-    'KL_CREATE_USER_ACCOUNT_AND_SUBSCRIBE' => 'Kundenkonto anlegen UND Newsletter-Abmeldung',
+    'KL_CREATE_USER_ACCOUNT_AND_SUBSCRIBE' => 'Kundenkonto anlegen UND Newsletter-Anmeldung',
     'KL_NO_CHECKBOX'                       => 'Keine Checkbox anzeigen',
 
     /* design */
@@ -116,29 +118,40 @@ $aLang = array(
     'KL_SUCCESSFUL_VALIDATION_NEEDED'      => 'Erfolgreiche Validierung erforderlich',
     'KL_ORDER_VALIDATION'                  => 'Bestell-Validierung',
 
-    'KL_CHOOSE_KP_OPTIONS'            => 'Bitte wählen Sie die Klarna Payment Optionen, die Sie Ihren Kunden anbieten möchten:',
-    'KL_PAY_LATER'                    => 'Pay later',
-    'KL_PAY_LATER_TEXT'               => 'Die Option “Später bezahlen” macht Kunden den Bezahlvorgang einfach und schnell, ohne dabei persönliche Daten oder komplizierte Nummern eingeben zu müssen. Der Kunde hat die Wahl zwischen Rechnung und im Monat X bezahlen.',
-    'KL_SLICE_IT'                     => 'Slice it',
-    'KL_SLICE_IT_TEXT'                => 'Mit “in Raten bezahlen” können Kunden die Einkaufssumme bei geringen Zinsen in Häppchen aufteilen. Das erhöht den Investitionsrahmen und die Kaufkraft. Klarna´s einzigartige Kreditbearbeitung erfordert nur wenige Augenblicke und minimale Dateneingabe. Der Kunde hat die Wahl zwischen fixen und flexiblen Raten.',
-    'KL_PAY_NOW'                      => 'Sofort bezahlen',
-    'KL_PAY_NOW_TEXT'                 => 'Kunden, die Beträge sofort vollständig beim Bestellabschluss bezahlen möchten, können Klarna´s pay now nutzen. Zur Auswahl steht Lastschrift und das Direktüberweisungsverfahren Sofort.',
-    'KL_EXTERNAL_PAYMENTS_ADMIN_DESC' => 'Hier können Sie die External Payment Methods zur Verwendung mit dem Klarna Modul für den OXID eShop konfigurieren. Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips <i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="#doc-url">Handbuch</a> oder wenden Sie sich an den Klarna Integration Support.',
-
-    'KL_EXTRA_MERCHANT_DATA_ADMIN_DESC' => 'Hier können Sie konfigurieren, ob ggf. Extra Merchant Data an Klarna übertragen werden soll. Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips <i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> oder wenden Sie sich an den Klarna Integration Support.',
-
-    'KL_DESIGN_SETTINGS_ADMIN_DESC' => 'Hier können Sie die Design Einstellungen zur Verwendung mit dem Klarna Modul für den OXID eShop konfigurieren. Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips <i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> oder wenden Sie sich an den Klarna Integration Support.',
-
-    'KL_GENERAL_SETTINGS_ADMIN_DESC' => 'Hier können Sie die %s zur Verwendung mit dem Klarna Modul für den OXID eShop konfigurieren. Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips <i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> oder wenden Sie sich an den Klarna Integration Support.',
-
-    'KL_PAYMENT_METHOD'          => 'Zahlungsart',
-    'KL_EXTERNAL_PAYMENT_METHOD' => 'External Payment Method',
-    'KL_EXTERNAL_CHECKOUT'       => 'External Checkout',
-    'KL_IMAGE_URI_EXT_PAYMENT'   => 'Bild URI für External Payment Method',
-    'KL_IMAGE_URI_EXT_CHECKOUT'  => 'Bild URI für External Checkout',
-    'KL_IMAGE_TIP_69x24'         => 'Bildgröße: 69x24 Pixel',
-    'KL_IMAGE_TIP_276x48'        => 'Bildgröße: 276x48 Pixel',
-    'KL_USER_GUIDE_DESCRIPTION'  => 'Laden Sie hier das Benutzerhandbuch für das Klarna Modul für den OXID eShop als PDF-Dokument herunter.',
+    'KL_CHOOSE_KP_OPTIONS'              => 'Bitte wählen Sie die Klarna Payment Optionen, die Sie Ihren Kunden anbieten möchten:',
+    'KL_PAY_LATER'                      => 'Pay later',
+    'KL_PAY_LATER_TEXT'                 => 'Die Option “Später bezahlen” macht Kunden den Bezahlvorgang einfach und schnell, ohne dabei persönliche Daten oder komplizierte Nummern eingeben zu müssen. Der Kunde hat die Wahl zwischen Rechnung und im Monat X bezahlen.',
+    'KL_SLICE_IT'                       => 'Slice it',
+    'KL_SLICE_IT_TEXT'                  => 'Mit “in Raten bezahlen” können Kunden die Einkaufssumme bei geringen Zinsen in Häppchen aufteilen. Das erhöht den Investitionsrahmen und die Kaufkraft. Klarna´s einzigartige Kreditbearbeitung erfordert nur wenige Augenblicke und minimale Dateneingabe. Der Kunde hat die Wahl zwischen fixen und flexiblen Raten.',
+    'KL_PAY_NOW'                        => 'Sofort bezahlen',
+    'KL_PAY_NOW_TEXT'                   => 'Kunden, die Beträge sofort vollständig beim Bestellabschluss bezahlen möchten, können Klarna´s pay now nutzen. Zur Auswahl steht Lastschrift und das Direktüberweisungsverfahren Sofort.',
+    'KL_EXTERNAL_PAYMENTS_ADMIN_DESC'   => 'Hier können Sie die External Payment Methods zur Verwendung mit dem Klarna Modul für den OXID eShop konfigurieren. 
+Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips 
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> oder wenden Sie sich an den Klarna Integration Support.',
+    'KL_EXTRA_MERCHANT_DATA_ADMIN_DESC' => 'Hier können Sie konfigurieren, ob ggf. Extra Merchant Data an Klarna übertragen werden soll. 
+Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips 
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> oder wenden Sie sich an den Klarna Integration Support.',
+    'KL_DESIGN_SETTINGS_ADMIN_DESC'     => 'Hier können Sie die Design Einstellungen zur Verwendung mit dem Klarna Modul für den OXID eShop konfigurieren. 
+Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips 
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> oder wenden Sie sich an den Klarna Integration Support.',
+    'KL_GENERAL_SETTINGS_ADMIN_DESC'    => 'Treffen Sie hier die Auswahl zwischen Klarna Checkout und Klarna Payment Methods, und nehmen Sie übergreifende 
+Einstellungen vor. Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips <i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> oder wenden Sie sich an den Klarna Integration Support.',
+    'KL_CONFIGURATION_KCO_ADMIN_DESC'   => 'Auf dieser Seite können Sie die Klarna Checkout spezifischen Einstellungen konfigurieren. 
+Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips 
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> 
+oder wenden Sie sich an den Klarna Integration Support.',
+    'KL_CONFIGURATION_KP_ADMIN_DESC'    => 'Auf dieser Seite wählen Sie, welche Klarna Payment Methods Sie anbieten möchten. 
+Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips 
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> 
+oder wenden Sie sich an den Klarna Integration Support.',
+    'KL_PAYMENT_METHOD'                 => 'Zahlungsart',
+    'KL_EXTERNAL_PAYMENT_METHOD'        => 'External Payment Method',
+    'KL_EXTERNAL_CHECKOUT'              => 'External Checkout',
+    'KL_IMAGE_URI_EXT_PAYMENT'          => 'Bild URI für External Payment Method',
+    'KL_IMAGE_URI_EXT_CHECKOUT'         => 'Bild URI für External Checkout',
+    'KL_IMAGE_TIP_69x24'                => 'Bildgröße: 69x24 Pixel',
+    'KL_IMAGE_TIP_276x48'               => 'Bildgröße: 276x48 Pixel',
+    'KL_USER_GUIDE_DESCRIPTION'         => 'Laden Sie hier das Benutzerhandbuch für das Klarna Modul für den OXID eShop als PDF-Dokument herunter.',
 
     'KL_CHOOSE' => 'Wählen',
 
@@ -158,7 +171,7 @@ $aLang = array(
     'KL_TEST_MODE_TOOLTIP'                       => 'Wählen Sie zwischen Playground (Test-Betrieb) und Live (Produktiv-Betrieb). Schalten Sie den Produktiv-Betrieb nur nach erfolgreicher Durchführung von Integrations-Tests und nach Rücksprache mit Ihrem Klarna Integration Manager aktiv.',
     'KL_GLOBAL_MERCHANT_ID_TOOLTIP'              => 'Hinterlegen Sie hier bitte Ihre Klarna Merchant ID. Diese haben Sie in der Willkommens E-Mail von Klarna erhalten. Diese Merchant ID samt Passwort gilt global für alle Länder. Nur falls Sie verschiedene Merchant IDs für unterschiedliche Länder erhalten haben, können Sie weiter unten länderspezifische Zugangsdaten je Land hinzufügen.',
     'KL_GLOBAL_PASSWORD_TOOLTIP'                 => 'Geben Sie hier Ihr Passwort passend zur verwendeten Merchant ID ein. Dieses Passwort haben Sie in der Willkommens E-Mail von Klarna erhalten.',
-    'KL_CREDENTIALS_COUNTRY_SELECTOR_TOOLTIP'    => 'Wählen Sie aus der Auswahl link das Land aus, für das Sie länderspezifische Zugangsdaten von Klarna erhalten haben.',
+    'KL_CREDENTIALS_COUNTRY_SELECTOR_TOOLTIP'    => 'Wählen Sie aus der Auswahl links das Land aus, für das Sie länderspezifische Zugangsdaten von Klarna erhalten haben.',
     'KL_CREDENTIALS_COUNTRY_MERCHANT_ID_TOOLTIP' => 'Bitte geben Sie hier die zugehörige Merchant ID für dieses Land ein.',
     'KL_CREDENTIALS_COUNTRY_PASSWORD_TOOLTIP'    => 'Bitte geben Sie hier das zugehörige Passwort für dieses Land ein.',
     'KL_KLARNA_DEFAULT_COUNTRY_TOOLTIP'          => 'Bitte wählen Sie aus der Liste aus, für welches Land die Klarna Bezahlmethoden standardmäßig geladen werden sollen, solange der Kunde sein Land noch nicht angegeben hat.',
@@ -254,4 +267,6 @@ $aLang = array(
     'KL_CAPUTRE_FAIL_ORDER_CANCELLED' => ' Die Bestellung konnte nicht abgebucht werden, da sie bereits storniert wurde.',
     'KL_ANONYMIZED_PRODUCT_TOOLTIP'   => 'Geben Sie hier die Zeichenfolge ein, die anstatt des tatsächlichen Produkttitels an Klarna gesendet werden soll.',
     'KL_NO_REQUESTS_WILL_BE_SENT'     => 'Ihre Änderungen an dieser Bestellung werden nicht an Klarna übertragen.',
+    'KL_USER_GUIDE'                   => 'Benutzerhandbuch',
+
 );

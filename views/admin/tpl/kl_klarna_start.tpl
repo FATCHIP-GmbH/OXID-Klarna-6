@@ -99,7 +99,7 @@
         </div>
 
         <div class="user-guide-text">
-            <h2>User Guide</h2>
+            <h2>[{ "KL_USER_GUIDE"|oxmultilangassign }]</h2>
             <p>[{ "KL_USER_GUIDE_DESCRIPTION"|oxmultilangassign }]</p>
         </div>
 

@@ -26,7 +26,7 @@
 <div class="[{$box|default:'box'}]" style="[{if !$box && !$bottom_buttons}]height: 100%;[{/if}]">
     <div class="main-container">
         [{assign var="tabName" value="KL_BASIC_SETTINGS"|oxmultilangassign }]
-        [{include file="kl_header.tpl" title="KL_GENERAL_SETTINGS"|oxmultilangassign}]
+        [{include file="kl_header.tpl" title="KL_GENERAL_SETTINGS"|oxmultilangassign desc="KL_GENERAL_SETTINGS_ADMIN_DESC"|oxmultilangassign }]
         <hr>
         <h4>[{oxmultilang ident="KL_CHOOSE_KLARNA_MODULE_MODE"}]:</h4>
 

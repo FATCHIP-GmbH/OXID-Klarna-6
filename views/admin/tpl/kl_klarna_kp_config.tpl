@@ -16,7 +16,7 @@
 
     <div class="main-container">
         [{assign var="tabName" value="KL_BASIC_SETTINGS"|oxmultilangassign }]
-        [{include file="kl_header.tpl" title="KL_CONFIGURATION"|oxmultilangassign}]
+        [{include file="kl_header.tpl" title="KL_CONFIGURATION_KP"|oxmultilangassign desc="KL_CONFIGURATION_KP_ADMIN_DESC"|oxmultilangassign }]
 
         <hr>
         <h2>[{oxmultilang ident="KL_CHOOSE_KP_OPTIONS"}]</h2>

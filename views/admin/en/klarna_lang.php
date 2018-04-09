@@ -11,6 +11,8 @@ $aLang = array(
     'KL_START'               => 'Start',
     'KL_GENERAL_SETTINGS'    => 'General Settings',
     'KL_CONFIGURATION'       => 'Configuration',
+    'KL_CONFIGURATION_KCO'   => 'Configuration for Klarna Checkout',
+    'KL_CONFIGURATION_KP'    => 'Configuration for Klarna Payment Methods',
     'KL_KLARNADESIGN'        => 'Design Settings',
     'KL_EXTERNAL_PAYMENTS'   => 'External Payment Methods',
     'KL_EXTRA_MERCHANT_DATA' => 'Extra Merchant Data',
@@ -123,27 +125,33 @@ $aLang = array(
     'KL_PAY_LATER_TEXT'    => 'The option to pay later makes buying quicker and easier for customers: no need to fill out lengthy personal details or card number online.',
     'KL_SLICE_IT'          => 'Slice it',
     'KL_SLICE_IT_TEXT'     => 'Your customers can spread the cost of their purchases at a low interest rate, giving them flexibility and increased purchasing power. Our unique credit application requires minimal information and takes just seconds to complete.',
-    'KL_PAY_NOW'      => 'Pay Now',
-    'KL_PAY_NOW_TEXT' => 'Customers who want to pay in full at checkout can do it quickly and securely with Klarnas Pay now-option - using credit/debit card or Direct bank transfer: Klarna Direkt, Sofort, SEPA Direct Debit.',
+    'KL_PAY_NOW'           => 'Pay Now',
+    'KL_PAY_NOW_TEXT'      => 'Customers who want to pay in full at checkout can do it quickly and securely with Klarnas Pay now-option - using credit/debit card or Direct bank transfer: Klarna Direkt, Sofort, SEPA Direct Debit.',
 
-
-
-    'KL_EXTERNAL_PAYMENTS_ADMIN_DESC' => 'Here you can configure the External Payment Methods to use with the Klarna extension 
+    'KL_EXTERNAL_PAYMENTS_ADMIN_DESC'   => 'Here you can configure the External Payment Methods to use with the Klarna extension 
 for OXID. For a detailed description of the different settings please see the tool-tip function 
 <i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s" target="_blank">documentation</a> 
 or contact Klarna Integration Support.',
-
     'KL_EXTRA_MERCHANT_DATA_ADMIN_DESC' => 'Here you can configure the Extra Merchant Data to use with the Klarna extension 
 for OXID. For a detailed description of the different settings please see the tool-tip function 
 <i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s" target="_blank">documentation</a> 
 or contact Klarna Integration Support.',
-
-    'KL_DESIGN_SETTINGS_ADMIN_DESC' => 'Here you can configure the design settings to use with the Klarna extension 
+    'KL_DESIGN_SETTINGS_ADMIN_DESC'     => 'Here you can configure the Design Settings to use with the Klarna extension 
 for OXID. For a detailed description of the different settings please see the tool-tip function 
 <i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s" target="_blank">documentation</a> 
 or contact Klarna Integration Support.',
-
-    'KL_GENERAL_SETTINGS_ADMIN_DESC' => 'Here you can configure the %s to use with the Klarna extension for OXID. For a detailed description of the different settings please see the tool-tip function <i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s" target="_blank">documentation</a> or contact Klarna Integration Support.',
+    'KL_GENERAL_SETTINGS_ADMIN_DESC'    => 'Choose between Klarna Checkout and Klarna Payment Methods, and make some overall settings. 
+For a detailed description of the different settings please see the tool-tip function 
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s" target="_blank">documentation</a> 
+or contact Klarna Integration Support.',
+    'KL_CONFIGURATION_KCO_ADMIN_DESC'   => 'On this page you can configure the Klarna Checkout specific settings. 
+For a detailed description of the different settings please see the tool-tip function 
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s" target="_blank">documentation</a> 
+or contact Klarna Integration Support.',
+    'KL_CONFIGURATION_KP_ADMIN_DESC'    => 'On this page you can choose which Klarna Payment Methods you want to offer. 
+For a detailed description of the different settings please see the tool-tip function 
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s" target="_blank">documentation</a> 
+or contact Klarna Integration Support.',
 
     'KL_PAYMENT_METHOD'          => 'Payment method',
     'KL_EXTERNAL_PAYMENT_METHOD' => 'External Payment Method',
@@ -268,5 +276,5 @@ or contact Klarna Integration Support.',
     'KL_CAPUTRE_FAIL_ORDER_CANCELLED' => 'Order could not be captured, because it was already cancelled.',
     'KL_NO_REQUESTS_WILL_BE_SENT'     => 'Changes to this order will not be transmitted to Klarna.',
     'KL_ANONYMIZED_PRODUCT_TOOLTIP'   => 'Please enter the string which should be transmitted to Klarna instead of the real product title.',
-
+    'KL_USER_GUIDE'                   => 'User Guide',
 );
