@@ -179,6 +179,7 @@ class KlarnaPaymentHistoryFull
     /**
      * Checks if payment date is required
      *
+     * @codeCoverageIgnore
      * @param Payment $payment
      * @return bool
      */
