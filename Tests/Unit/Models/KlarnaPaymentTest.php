@@ -40,9 +40,13 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
 
     }
 
-    public function testGetKlarnaPaymentsIds()
+    /**
+     *
+     */
+    public function testGetKlarnaPaymentsIds($filter, $expectedResult)
     {
-
+        $result = KlarnaPayment::getKlarnaPaymentsIds($filter);
+        $this->assertEquals($expectedResult, $result);
     }
 
     /**
@@ -60,7 +64,7 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
 
         $result = $oPayment->getBadgeUrl();
 
-        //$this->assertEquals($expectedResult, $result);
+        $this->assertEquals($expectedResult, $result);
     }
 
     public function getBadgeUrlDataProvider()
@@ -83,7 +87,6 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
                         'standard' => 'https://cdn.klarna.com/1.0/shared/image/generic/badge/de_de/slice_it/standard/pink.svg'
                     ]
                 ]
-
             ]
         ];
 
