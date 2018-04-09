@@ -2,8 +2,10 @@
 <link rel="stylesheet" href="[{$oViewConf->getResourceUrl()}]main.css">
 <link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/css/kl_klarna_admin2.css') }]">
 <link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/css/tooltipster.bundle.min.css') }]">
-<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/css/tooltipster-sideTip-light.min.css') }]">
-<script type="text/javascript" src="[{ $oViewConf->getModuleUrl('klarna', 'out/js/libs/jquery-1.12.4.min.js') }]"></script>
+<link rel="stylesheet"
+      href="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/css/tooltipster-sideTip-light.min.css') }]">
+<script type="text/javascript"
+        src="[{ $oViewConf->getModuleUrl('klarna', 'out/js/libs/jquery-1.12.4.min.js') }]"></script>
 <script type="text/javascript"
         src="[{ $oViewConf->getModuleUrl('klarna', 'out/js/libs/tooltipster.bundle.min.js') }]"></script>
 <script src="[{ $oViewConf->getModuleUrl('klarna', 'out/js/libs/jscolor/jscolor.js') }]"></script>
@@ -167,7 +169,8 @@
                                             <tr>
                                                 <td></td>
                                                 <td>
-                                                    <a href="http://banner.klarna.com/" target="_blank">Klarna Banner Portal</a>
+                                                    <a href="http://banner.klarna.com/" target="_blank">Klarna Banner
+                                                        Portal</a>
                                                 </td>
                                                 <td></td>
                                             </tr>
@@ -387,142 +390,146 @@
                 </div>
 
                 <!-- Product details page and basket -->
-                <div class="klarna-row">
-                    <div class="row-label">
-                        <div class="sign plus"></div>
-                        <div class="text ">
-                            [{ oxmultilang ident="KL_DETAILS_AND_BASKET" }]
+                [{ if $mode === 'KCO' }]
+                    <div class="klarna-row">
+                        <div class="row-label">
+                            <div class="sign plus"></div>
+                            <div class="text ">
+                                [{ oxmultilang ident="KL_DETAILS_AND_BASKET" }]
+                            </div>
                         </div>
-                    </div>
-                    <div class="clear"></div>
-                    <div class="rows-wrapper">
-                        <table class="config-options">
-                            <tbody>
-                            [{ assign var="showKPWidgetOptions" value=false }]
-                            [{ if $showKPWidgetOptions }]
-                                [{* Klarna Payment Method Widget *}]
-                                <tr class="no-t-border">
-                                    <td>
-                                        <table class="inner">
-                                            <tbody>
-                                            <tr class="dark">
-                                                <td class="name-bold" colspan="3">
-                                                    [{ oxmultilang ident="KL_DISPLAY_PAYMENT_WIDGET" }]
-                                                </td>
-                                            </tr>
-                                            <tr class="dark">
-                                                <td class="name">
-                                                    [{ oxmultilang ident="KL_ON_PROD_PAGE" }]
-                                                </td>
-                                                <td class="input w460">
-                                                    <div class="input">
-                                                        <div class="display">
-                                                            <label class="label toggle" for="DisplayWidgetOnProdPage">
-                                                                <input type="hidden"
-                                                                       name="confbools[blKlarnaDisplayWidgetOnProdPage]"
-                                                                       value="0">
-                                                                <input type="checkbox" class="toggle_input"
-                                                                       name="confbools[blKlarnaDisplayWidgetOnProdPage]"
-                                                                       value="1"
-                                                                       [{if ($confbools.blKlarnaDisplayWidgetOnProdPage)}]checked[{/if}] [{ $readonly}]/>
-                                                                <div class="toggle-control"
-                                                                     id="DisplayWidgetOnProdPage"></div>
-                                                            </label>
+                        <div class="clear"></div>
+                        <div class="rows-wrapper">
+                            <table class="config-options">
+                                <tbody>
+                                [{ assign var="showKPWidgetOptions" value=false }]
+                                [{ if $showKPWidgetOptions }]
+                                    [{* Klarna Payment Method Widget *}]
+                                    <tr class="no-t-border">
+                                        <td>
+                                            <table class="inner">
+                                                <tbody>
+                                                <tr class="dark">
+                                                    <td class="name-bold" colspan="3">
+                                                        [{ oxmultilang ident="KL_DISPLAY_PAYMENT_WIDGET" }]
+                                                    </td>
+                                                </tr>
+                                                <tr class="dark">
+                                                    <td class="name">
+                                                        [{ oxmultilang ident="KL_ON_PROD_PAGE" }]
+                                                    </td>
+                                                    <td class="input w460">
+                                                        <div class="input">
+                                                            <div class="display">
+                                                                <label class="label toggle"
+                                                                       for="DisplayWidgetOnProdPage">
+                                                                    <input type="hidden"
+                                                                           name="confbools[blKlarnaDisplayWidgetOnProdPage]"
+                                                                           value="0">
+                                                                    <input type="checkbox" class="toggle_input"
+                                                                           name="confbools[blKlarnaDisplayWidgetOnProdPage]"
+                                                                           value="1"
+                                                                           [{if ($confbools.blKlarnaDisplayWidgetOnProdPage)}]checked[{/if}] [{ $readonly}]/>
+                                                                    <div class="toggle-control"
+                                                                         id="DisplayWidgetOnProdPage"></div>
+                                                                </label>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </td>
-                                                <td class="info-block">
+                                                    </td>
+                                                    <td class="info-block">
                                                         <span class="kl-tooltip"
                                                               title="[{oxmultilang ident="KL_WIDGET_ON_BASKET_PAGE_TOOLTIP"}]">
                                                             <i class="fa fa-question fa-lg" aria-hidden="true"></i>
                                                         </span>
-                                                </td>
-                                            </tr>
-                                            <tr class="dark">
-                                                <td class="name">
-                                                    [{ oxmultilang ident="KL_ON_BASKET_PAGE" }]
-                                                </td>
-                                                <td class="input w460">
-                                                    <div class="input">
-                                                        <div class="display">
-                                                            <label class="label toggle" for="DisplayWidgetOnBasketPage">
-                                                                <input type="hidden"
-                                                                       name="confbools[blKlarnaDisplayWidgetOnBasketPage]"
-                                                                       value="0">
-                                                                <input type="checkbox" class="toggle_input"
-                                                                       name="confbools[blKlarnaDisplayWidgetOnBasketPage]"
-                                                                       value="1" id="DisplayWidgetOnBasketPage"
-                                                                       [{if ($confbools.blKlarnaDisplayWidgetOnBasketPage)}]checked[{/if}] [{ $readonly}]/>
-                                                                <div class="toggle-control"></div>
-                                                            </label>
+                                                    </td>
+                                                </tr>
+                                                <tr class="dark">
+                                                    <td class="name">
+                                                        [{ oxmultilang ident="KL_ON_BASKET_PAGE" }]
+                                                    </td>
+                                                    <td class="input w460">
+                                                        <div class="input">
+                                                            <div class="display">
+                                                                <label class="label toggle"
+                                                                       for="DisplayWidgetOnBasketPage">
+                                                                    <input type="hidden"
+                                                                           name="confbools[blKlarnaDisplayWidgetOnBasketPage]"
+                                                                           value="0">
+                                                                    <input type="checkbox" class="toggle_input"
+                                                                           name="confbools[blKlarnaDisplayWidgetOnBasketPage]"
+                                                                           value="1" id="DisplayWidgetOnBasketPage"
+                                                                           [{if ($confbools.blKlarnaDisplayWidgetOnBasketPage)}]checked[{/if}] [{ $readonly}]/>
+                                                                    <div class="toggle-control"></div>
+                                                                </label>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </td>
-                                                <td class="info-block">
+                                                    </td>
+                                                    <td class="info-block">
                                                         <span class="kl-tooltip"
                                                               title="[{oxmultilang ident="KL_WIDGET_ON_PROD_PAGE_TOOLTIP"}]">
                                                             <i class="fa fa-question fa-lg" aria-hidden="true"></i>
                                                         </span>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                            [{/if}]
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                [{/if}]
 
-                            [{ if $mode === 'KCO' }]
-                                <tr class="no-t-border no-b-border">
-                                    <td>
-                                        <table class="inner">
-                                            <tbody>
-                                            <tr class="dark">
-                                                <td class="name-bold" colspan="3">
-                                                    [{ oxmultilang ident="KL_DISPLAY_BUY_NOW" }]
-                                                </td>
-                                            </tr>
-                                            <tr class="dark">
-                                                <td class="name">
-                                                    [{ oxmultilang ident="KL_ON_PROD_PAGE" }]
-                                                </td>
-                                                <td class="input w460">
-                                                    <div class="input">
-                                                        <div class="display">
-                                                            <label class="label toggle" for="DisplayBuyNow">
-                                                                <input type="hidden"
-                                                                       name="confbools[blKlarnaDisplayBuyNow]"
-                                                                       value="0">
-                                                                <input type="checkbox" class="toggle_input"
-                                                                       name="confbools[blKlarnaDisplayBuyNow]"
-                                                                       value="1" id="DisplayBuyNow"
-                                                                       [{if ($confbools.blKlarnaDisplayBuyNow)}]checked[{/if}] [{ $readonly}]/>
-                                                                <div class="toggle-control"></div>
-                                                            </label>
+                                [{ if $mode === 'KCO' }]
+                                    <tr class="no-t-border no-b-border">
+                                        <td>
+                                            <table class="inner">
+                                                <tbody>
+                                                <tr class="dark">
+                                                    <td class="name-bold" colspan="3">
+                                                        [{ oxmultilang ident="KL_DISPLAY_BUY_NOW" }]
+                                                    </td>
+                                                </tr>
+                                                <tr class="dark">
+                                                    <td class="name">
+                                                        [{ oxmultilang ident="KL_ON_PROD_PAGE" }]
+                                                    </td>
+                                                    <td class="input w460">
+                                                        <div class="input">
+                                                            <div class="display">
+                                                                <label class="label toggle" for="DisplayBuyNow">
+                                                                    <input type="hidden"
+                                                                           name="confbools[blKlarnaDisplayBuyNow]"
+                                                                           value="0">
+                                                                    <input type="checkbox" class="toggle_input"
+                                                                           name="confbools[blKlarnaDisplayBuyNow]"
+                                                                           value="1" id="DisplayBuyNow"
+                                                                           [{if ($confbools.blKlarnaDisplayBuyNow)}]checked[{/if}] [{ $readonly}]/>
+                                                                    <div class="toggle-control"></div>
+                                                                </label>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </td>
-                                                <td class="info-block">
+                                                    </td>
+                                                    <td class="info-block">
                                                 <span class="kl-tooltip"
                                                       title="[{oxmultilang ident="KL_BUY_NOW_ON_PROD_PAGE_TOOLTIP"}]">
                                                     <i class="fa fa-question fa-lg" aria-hidden="true"></i>
                                                 </span>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                            [{ elseif !$showKPWidgetOptions }]
-                                <tr class="no-t-border no-b-border">
-                                    <td>
-                                        [{ "KL_NO_OPTIONS_MODE"|oxmultilangassign }]
-                                    </td>
-                                </tr>
-                            [{/if}]
-                            </tbody>
-                        </table>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                [{ elseif !$showKPWidgetOptions }]
+                                    <tr class="no-t-border no-b-border">
+                                        <td>
+                                            [{ "KL_NO_OPTIONS_MODE"|oxmultilangassign }]
+                                        </td>
+                                    </tr>
+                                [{/if}]
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
+                [{/if}]
 
                 <!-- Design options -->
                 <div class="klarna-row">
