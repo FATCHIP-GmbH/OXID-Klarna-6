@@ -340,7 +340,6 @@ class KlarnaUtils
         Registry::getSession()->deleteVariable('klarna_checkout_user_email');
 //        Registry::getSession()->deleteVariable('deladrid');
         Registry::getSession()->deleteVariable('externalCheckout');
-        Registry::getSession()->deleteVariable('sFakeUserId');
         Registry::getSession()->deleteVariable('sAuthToken');
         Registry::getSession()->deleteVariable('klarna_session_data');
         Registry::getSession()->deleteVariable('finalizeRequired');
