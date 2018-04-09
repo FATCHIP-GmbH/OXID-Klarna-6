@@ -128,9 +128,10 @@ $aLang = array(
     'KL_PAY_NOW'           => 'Pay Now',
     'KL_PAY_NOW_TEXT'      => 'Customers who want to pay in full at checkout can do it quickly and securely with Klarnas Pay now-option - using credit/debit card or Direct bank transfer: Klarna Direkt, Sofort, SEPA Direct Debit.',
 
-    'KL_EXTERNAL_PAYMENTS_ADMIN_DESC'   => 'Here you can configure the External Payment Methods to use with the Klarna extension 
-for OXID. For a detailed description of the different settings please see the tool-tip function 
-<i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s" target="_blank">documentation</a> 
+    'KL_EXTERNAL_PAYMENTS_ADMIN_DESC'   =>
+        'Here you can configure External Payment Methods and External Checkouts to be included inside the Klarna Checkout Iframe. 
+For a detailed description of the different settings please see the tool-tip function
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s" target="_blank">documentation</a>
 or contact Klarna Integration Support.',
     'KL_EXTRA_MERCHANT_DATA_ADMIN_DESC' => 'Here you can configure the Extra Merchant Data to use with the Klarna extension 
 for OXID. For a detailed description of the different settings please see the tool-tip function 
@@ -223,7 +224,7 @@ or contact Klarna Integration Support.',
     'KL_BORDER_SELECTED_TOOLTIP'                 => 'Color of the frame, which appears in the shop frontend in the case of various available sub-options after selecting the Klarna payment method. This color value is used to highlight the currently active sub-option.',
     'KL_BUTTON_TOOLTIP'                          => 'This setting has no effect at the time of publishing this module.',
     'KL_BUTTON_TEXT_TOOLTIP'                     => 'This setting has no effect at the time of publishing this module.',
-    'KL_DESIGN_CHECKBOX_TOOLTIP'                 => 'This setting has no effect at the time of publishing this module.',
+    'KL_DESIGN_CHECKBOX_TOOLTIP'                 => 'Background color of the radio-buttons, which appear in the shop frontend in the case of various available sub-options after selecting the Klarna payment method',
     'KL_DESIGN_CHECKBOX_CHECKMARK_TOOLTIP'       => 'This setting has no effect at the time of publishing this module.',
     'KL_DETAILS_TOOLTIP'                         => 'Color of bullets in the presentation of payment details on the payment methods selection page.',
     'KL_HEADER_TOOLTIP'                          => 'Color of the headline / title of the payment methods on the payment methods selection page.',

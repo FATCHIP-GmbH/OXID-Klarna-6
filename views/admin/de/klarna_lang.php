@@ -125,9 +125,11 @@ $aLang = array(
     'KL_SLICE_IT_TEXT'                  => 'Mit “in Raten bezahlen” können Kunden die Einkaufssumme bei geringen Zinsen in Häppchen aufteilen. Das erhöht den Investitionsrahmen und die Kaufkraft. Klarna´s einzigartige Kreditbearbeitung erfordert nur wenige Augenblicke und minimale Dateneingabe. Der Kunde hat die Wahl zwischen fixen und flexiblen Raten.',
     'KL_PAY_NOW'                        => 'Sofort bezahlen',
     'KL_PAY_NOW_TEXT'                   => 'Kunden, die Beträge sofort vollständig beim Bestellabschluss bezahlen möchten, können Klarna´s pay now nutzen. Zur Auswahl steht Lastschrift und das Direktüberweisungsverfahren Sofort.',
-    'KL_EXTERNAL_PAYMENTS_ADMIN_DESC'   => 'Hier können Sie die External Payment Methods zur Verwendung mit dem Klarna Modul für den OXID eShop konfigurieren. 
+    'KL_EXTERNAL_PAYMENTS_ADMIN_DESC'   =>
+        'Hier können Sie externe Bezahlarten und externe Checkouts zur Einbindung innerhalb des Klarna Checkout Iframes konfigurieren. 
 Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips 
-<i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> oder wenden Sie sich an den Klarna Integration Support.',
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="#doc-url">Handbuch</a> 
+oder wenden Sie sich an den Klarna Integration Support.',
     'KL_EXTRA_MERCHANT_DATA_ADMIN_DESC' => 'Hier können Sie konfigurieren, ob ggf. Extra Merchant Data an Klarna übertragen werden soll. 
 Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips 
 <i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> oder wenden Sie sich an den Klarna Integration Support.',
@@ -214,7 +216,7 @@ oder wenden Sie sich an den Klarna Integration Support.',
     'KL_BORDER_SELECTED_TOOLTIP'                 => 'Farbe des Rahmens, der im Falle verschiedener zur Verfügung stehender Unter-Optionen nach Auswahl der Klarna Zahlungsart im Shop-Frontend erscheint. Dieser Farbwert wird zur Hervorhebung der zur Zeit aktiv ausgewählten Unter-Option verwendet.',
     'KL_BUTTON_TOOLTIP'                          => 'Diese Einstellung hat zum Zeitpunkt der Veröffentlichung dieses Moduls noch keine Auswirkung.',
     'KL_BUTTON_TEXT_TOOLTIP'                     => 'Diese Einstellung hat zum Zeitpunkt der Veröffentlichung dieses Moduls noch keine Auswirkung.',
-    'KL_DESIGN_CHECKBOX_TOOLTIP'                 => 'Diese Einstellung hat zum Zeitpunkt der Veröffentlichung dieses Moduls noch keine Auswirkung.',
+    'KL_DESIGN_CHECKBOX_TOOLTIP'                 => 'Hintergrundfarbe der Radio-Buttons, die im Falle verschiedener zur Verfügung stehender Unter-Optionen nach Auswahl der Klarna Zahlungsart im Shop-Frontend erscheinen',
     'KL_DESIGN_CHECKBOX_CHECKMARK_TOOLTIP'       => 'Diese Einstellung hat zum Zeitpunkt der Veröffentlichung dieses Moduls noch keine Auswirkung.',
     'KL_DETAILS_TOOLTIP'                         => 'Farbe der Aufzählungszeichen bei der Darstellung der Zahlungs-Details auf der Zahlungsarten-Auswahlseite.',
     'KL_HEADER_TOOLTIP'                          => 'Farbe der Überschrift / Titel der Zahlungsarten auf der Zahlungsarten-Auswahlseite.',
