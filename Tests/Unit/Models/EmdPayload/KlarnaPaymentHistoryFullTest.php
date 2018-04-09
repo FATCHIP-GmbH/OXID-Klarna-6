@@ -26,7 +26,8 @@ class KlarnaPaymentHistoryFullTest extends ModuleUnitTestCase
         $oUser->expects($this->at(1))
             ->method('isFake')->willReturn(false);
 
-        $paymentHistoryFull = new KlarnaPaymentHistoryFull();
+        $paymentHistoryFull = $this->getMock(KlarnaPaymentHistoryFull::class, ['isPaymentDateRequired']);
+
         $history = $paymentHistoryFull->getPaymentHistoryFull($oUser);
 
         $expected = [
@@ -34,6 +35,9 @@ class KlarnaPaymentHistoryFullTest extends ModuleUnitTestCase
         ];
 
         $this->assertEquals($expected, $history);
+
+        $paymentHistoryFull->expects($this->any())
+            ->method('isPaymentDateRequired')->willReturn(true);
 
         $history = $paymentHistoryFull->getPaymentHistoryFull($oUser);
 
