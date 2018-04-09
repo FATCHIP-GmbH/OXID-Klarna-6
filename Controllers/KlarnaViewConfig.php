@@ -51,6 +51,23 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
     }
 
     /**
+     * Get Klarna module url with added path
+     *
+     * @param string $sPath
+     * @return string
+     */
+    public function getKlarnaModuleUrl($sPath = '')
+    {
+        $sUrl = str_replace(
+            rtrim($this->getConfig()->getConfigParam('sShopDir'), '/'),
+            rtrim($this->getConfig()->getSslShopUrl(), '/'),
+            $this->getConfig()->getConfigParam('sShopDir') . 'modules/tc/klarna/' . $sPath
+        );
+
+        return $sUrl;
+    }
+
+    /**
      *
      */
     public function getKlarnaFooterContent()
@@ -111,6 +128,25 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
     }
 
     /**
+     * @param $value
+     * @return null|string
+     */
+    public function resolveFullAssetUrl($value)
+    {
+        if (!$value) {
+            return $value;
+        }
+
+        $urlPattern = '/^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\x{00a1}-\x{ffff}0-9]-*)*[a-z\x{00a1}-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}-\x{ffff}0-9]-*)*[a-z\x{00a1}-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}-\x{ffff}]{2,}))\.?)(?::\d{2,5})?(?:[\/?#]\S*)?$/u';
+
+        if (preg_match($urlPattern, $value)) {
+            return $value;
+        }
+
+        return $this->getKlarnaModuleUrl($value);
+    }
+
+    /**
      *
      */
     public function getMode()
@@ -119,7 +155,10 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
     }
 
     /**
+     *
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      * @return bool
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function isKlarnaCheckoutEnabled()
     {
@@ -146,6 +185,7 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
     /**
      * @param bool $blShipping
      * @return mixed
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function getCountryList($blShipping = false)
     {
@@ -207,7 +247,7 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
     /**
      * Show Checkout terms
      *
-     * @return bool true if current country is Austria
+     * @return bool true if current country is Austria or Germany
      */
     public function getIsAustria()
     {
@@ -226,6 +266,7 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
 
     /**
      * @return bool
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function showCheckoutTerms()
     {
@@ -248,6 +289,7 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
         $sCountryISO = Registry::getSession()->getVariable('sCountryISO');
         $mid         = KlarnaUtils::getAPICredentials($sCountryISO);
         preg_match('/^(?P<mid>(.)+)(\_)/', $mid['mid'], $matches);
+
         return sprintf(KlarnaConsts::KLARNA_PREFILL_NOTIF_URL, $matches['mid'], $this->getActLanguageAbbr(), strtolower($sCountryISO));
     }
 
