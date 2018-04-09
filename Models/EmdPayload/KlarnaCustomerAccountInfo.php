@@ -59,7 +59,7 @@ class KlarnaCustomerAccountInfo
      */
     public function getCustomerAccountInfo(User $user)
     {
-       if($user->oxuser__oxcreate->value){
+        if($user->oxuser__oxcreate->value){
             $registration = new \DateTime($user->oxuser__oxcreate->value);
         } else {
             $registration = new \DateTime($user->oxuser__oxregister->value);
