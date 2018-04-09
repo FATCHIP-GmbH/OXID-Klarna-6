@@ -63,7 +63,7 @@ class KlarnaUser extends KlarnaUser_parent
 
             $blShowShippingAddress = (bool)Registry::getSession()->getVariable('blshowshipaddress');
 
-            if ($this->_type == self::LOGGED_IN || $this->_type == self::NOT_REGISTERED) {
+            if ($this->isWritable()) {
                 $billingAddress            = KlarnaFormatter::oxidToKlarnaAddress($this);
                 $result['billing_address'] = isset($billingAddress) ? $billingAddress : null;
 

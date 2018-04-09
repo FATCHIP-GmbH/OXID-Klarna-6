@@ -23,9 +23,31 @@ use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 class KlarnaUserTest extends ModuleUnitTestCase
 {
 
-    public function testIsCreatable()
+    public function setUp()
     {
+        parent::setUp();
+    }
 
+    public function isCreatableDataProvider()
+    {
+        return [
+            [KlarnaUser::NOT_EXISTING, true],
+            [KlarnaUser::REGISTERED, false],
+            [KlarnaUser::NOT_REGISTERED, true],
+            [KlarnaUser::LOGGED_IN, false]
+        ];
+    }
+
+    /**
+     * @dataProvider isCreatableDataProvider
+     * @param $type
+     * @param $result
+     */
+    public function testIsCreatable($type, $result)
+    {
+        $oUser = oxNew(User::class);
+        $oUser->kl_setType($type);
+        $this->assertEquals($result,  $oUser->isCreatable());
     }
 
     public function testSave()
@@ -53,34 +75,156 @@ class KlarnaUserTest extends ModuleUnitTestCase
 
     }
 
+    public function loadByEmailDataProvider()
+    {
+
+    }
+
     public function testLogout()
     {
+        $this->setSessionParam('klarna_checkout_order_id', 'some_fake_id');
+
+        $oUser = oxNew(User::class);
+        $result = $oUser->logout();
+
+        $this->assertNull($this->getSessionParam('klarna_checkout_order_id'));
+        $this->assertTrue($result);
 
     }
 
-    public function testResolveCountry()
+    public function resolveCountryDataProvider()
     {
+        return [
+            ['a7c40f631fc920687.20179984', 'DE'],
+            ['a7c40f6320aeb2ec2.72885259', 'AT'],
+            ['8f241f11095306451.36998225', 'AF'],
 
+        ];
     }
 
-    public function testClearDeliveryAddress()
+    /**
+     * @dataProvider resolveCountryDataProvider
+     * @param $countryId
+     * @param $iso
+     */
+    public function testResolveCountry($countryId, $iso)
     {
+        $oUser = oxNew(User::class);
+        $oUser->oxuser__oxcountryid = new Field($countryId, Field::T_RAW);
 
+        $this->assertEquals($iso, $oUser->resolveCountry());
     }
 
-    public function testGetUserCountryISO2()
+    public function clearDeliveryAddressDataProvider()
     {
-
+        return [
+            ['41b545c65fe99ca2898614e563a7108b', 1, false],
+            ['41b545c65fe99ca2898614e563a7108a', 0, true]
+        ];
     }
 
-    public function testGetKlarnaPaymentData()
+    /**
+     * @dataProvider clearDeliveryAddressDataProvider
+     * @param $addressId
+     * @param $isTemp
+     * @param $loaded
+     */
+    public function testClearDeliveryAddress($addressId, $isTemp, $loaded)
     {
+        $this->setSessionParam('deladrid', $addressId);
+        $this->setSessionParam('blshowshipaddress', 1);
 
+        // Prepare temporary address
+        $oAddress = oxNew(Address::class);
+        $oAddress->load('41b545c65fe99ca2898614e563a7108b');
+        $oAddress->oxaddress__kltemporary = new Field($isTemp, Field::T_RAW);
+        $oAddress->save();
+
+
+        $oUser = oxNew(User::class);
+        $oUser->clearDeliveryAddress();
+
+        $this->assertNull($this->getSessionParam('deladrid'));
+        $this->assertEquals(0, $this->getSessionParam('blshowshipaddress'));
+
+        $oAddress = oxNew(Address::class);
+        $oAddress->load($addressId);
+        $this->assertEquals($loaded, $oAddress->isLoaded());
     }
 
-    public function testIsWritable()
+    public function countryISOProvider()
     {
+        return [
+            ['8f241f110953facc6.31621036', 'AW'],
+            ['a7c40f632a0804ab5.18804076', 'GB']
+        ];
+    }
 
+    /**
+     * @dataProvider countryISOProvider
+     * @param $countryId
+     * @param $expectedResult
+     */
+    public function testGetUserCountryISO2($countryId, $expectedResult)
+    {
+        $oUser = oxNew(User::class);
+        $oUser->oxuser__oxcountryid = new Field($countryId, Field::T_RAW);
+
+        $result = $oUser->getUserCountryISO2();
+
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    public function paymentDataProvider()
+    {
+        return [
+            ['0000-00-00', null, true],
+            ['1988-01-01', null, false],
+            ['1988-01-01', '41b545c65fe99ca2898614e563a7108f', false]
+        ];
+    }
+
+    /**
+     * @dataProvider paymentDataProvider
+     * @param $bday
+     * @param $deladrid
+     * @param $bday_resultIsNull
+     */
+    public function testGetKlarnaPaymentData($bday, $deladrid, $bday_resultIsNull)
+    {
+        $oUser = oxNew(User::class);
+        $oUser->load('oxdefaultadmin');
+        $oUser->oxuser__oxbirthdate = new Field($bday, Field::T_RAW);
+        $this->setSessionParam('deladrid', $deladrid);
+        $this->setSessionParam('userDataHash', null);
+
+        $result = $oUser->getKlarnaPaymentData();
+
+        $this->assertTrue($bday_resultIsNull === is_null($result['customer']['date_of_birth']));
+        $this->assertEquals($result['billing_address'] !== $result['shipping_address'],  boolval($deladrid));
+        $this->assertNotNull($this->getSessionParam('userDataHash'));
+    }
+
+    public function isWritableDataProvider()
+    {
+        return [
+            [KlarnaUser::NOT_EXISTING, false],
+            [KlarnaUser::REGISTERED, false],
+            [KlarnaUser::NOT_REGISTERED, true],
+            [KlarnaUser::LOGGED_IN, true],
+        ];
+    }
+
+    /**
+     * @dataProvider isWritableDataProvider
+     * @param $type
+     * @param $result
+     */
+    public function testIsWritable($type, $result)
+    {
+        $oUser = oxNew(User::class);
+        $oUser->kl_setType($type);
+        $this->assertEquals($result,  $oUser->isWritable());
     }
 
     public function updateDeliveryAddressDataProvider()
@@ -91,7 +235,8 @@ class KlarnaUserTest extends ModuleUnitTestCase
         ];
 
         return [
-            [$aAddress, true, 'addressId', true]
+            [$aAddress, true, 'addressId', true],
+            [$aAddress, true, false, true],
         ];
     }
 
@@ -121,12 +266,15 @@ class KlarnaUserTest extends ModuleUnitTestCase
     }
 
 //    /**
-//     * @covers \TopConcepts\Klarna\Models\KlarnaUser::buildAddress()
+//     * @covers       \TopConcepts\Klarna\Models\KlarnaUser::buildAddress()
+//     * @dataProvider updateDeliveryAddressDataProvider
+//     * @param $aAddressData
 //     */
-//    public function testBuildAddress()
+//    public function testBuildAddress($aAddressData)
 //    {
 //        $oUser = oxNew(User::class);
 //        $oUser->updateDeliveryAddress($aAddressData);
+//
 //    }
 
     /**
