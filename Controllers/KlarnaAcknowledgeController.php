@@ -22,6 +22,7 @@ class KlarnaAcknowledgeController extends FrontendController
     protected $aOrder;
 
     /**
+     * @codeCoverageIgnore
      * @param string $sCountryISO
      * @return KlarnaOrderManagementClient|KlarnaClientBase $klarnaClient
      */
@@ -60,6 +61,7 @@ class KlarnaAcknowledgeController extends FrontendController
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $orderId
      * @return Order
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
@@ -75,6 +77,7 @@ class KlarnaAcknowledgeController extends FrontendController
 
 
     /**
+     * @codeCoverageIgnore
      * Register Klarna request in DB
      * @param $orderId
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
@@ -92,6 +95,7 @@ class KlarnaAcknowledgeController extends FrontendController
     /**
      * Get count of Klarna ACK requests for location ID
      *
+     * @codeCoverageIgnore
      * @param $orderId
      * @return string
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException

@@ -88,6 +88,7 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
 
     /**
      * Sends update request to checkout API
+     * @codeCoverageIgnore
      * @return array order data
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      * @throws \oxSystemComponentException
@@ -103,6 +104,7 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
     }
 
     /**
+     * @codeCoverageIgnore
      * @return KlarnaCheckoutClient|KlarnaClientBase
      */
     protected function getKlarnaCheckoutClient()
@@ -111,10 +113,12 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
     }
 
     /**
+     * @codeCoverageIgnore
      * @return KlarnaOrderManagementClient|KlarnaClientBase
      */
     protected function getKlarnaOrderClient()
     {
         return KlarnaOrderManagementClient::getInstance();
     }
+
 }

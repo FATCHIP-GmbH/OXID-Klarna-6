@@ -13,7 +13,6 @@ class KlarnaThankYouController extends KlarnaThankYouController_parent
 {
     /**
      * @return mixed
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      */
     public function render()
     {
@@ -48,7 +47,6 @@ class KlarnaThankYouController extends KlarnaThankYouController_parent
     /**
      * @param null $sCountryISO
      * @return KlarnaCheckoutClient | \TopConcepts\Klarna\Core\KlarnaClientBase
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function getKlarnaClient($sCountryISO = null)
     {

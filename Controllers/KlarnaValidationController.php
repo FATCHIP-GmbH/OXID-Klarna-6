@@ -11,6 +11,12 @@ use OxidEsales\Eshop\Core\Request;
 
 class KlarnaValidationController extends FrontendController
 {
+    /** @var string */
+    protected $order_id;
+
+    /** @var string */
+    protected $requestBody;
+
     /**
      * Klarna order validation callback
      * @throws \Exception
@@ -19,19 +25,17 @@ class KlarnaValidationController extends FrontendController
     {
         parent::init();
 
-        $requestBody      = file_get_contents('php://input');
-        $aKlarnaOrderData = json_decode($requestBody, true);
-        $order_id         = $aKlarnaOrderData['order_id'];
-        $validator        = new KlarnaOrderValidator($aKlarnaOrderData);
         $redirectUrl      = null;
+        $this->requestBody = $this->getRequestBody();
+        $validator        = $this->getValidator();
         $validator->validateOrder();
 
         if ($validator->isValid()) {
             $responseStatus = 200;
             $this->logKlarnaData(
                 'Validate Order',
-                $order_id,
-                'FROMKLARNA: ' . $requestBody,
+                $this->order_id,
+                'FROMKLARNA: ' . $this->requestBody,
                 $_SERVER['REQUEST_URI'],
                 $responseStatus,
                 $validator->getResultErrors() ?: '',
@@ -48,8 +52,8 @@ class KlarnaValidationController extends FrontendController
 
             $this->logKlarnaData(
                 'Validate Order',
-                $order_id,
-                'FROMKLARNA: ' . $requestBody,
+                $this->order_id,
+                'FROMKLARNA: ' . $this->requestBody,
                 $_SERVER['REQUEST_URI'],
                 $responseStatus,
                 $validator->getResultErrors(),
@@ -62,6 +66,7 @@ class KlarnaValidationController extends FrontendController
 
     /**
      * Logging push state message to database
+     * @codeCoverageIgnore
      * @param $action
      * @param $order_id
      * @param string $requestBody
@@ -86,5 +91,25 @@ class KlarnaValidationController extends FrontendController
         );
         $oKlarnaLog->assign($aData);
         $oKlarnaLog->save();
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return bool|string
+     */
+    protected function getRequestBody()
+    {
+        return file_get_contents('php://input');
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return KlarnaOrderValidator
+     */
+    protected function getValidator()
+    {
+        $aKlarnaOrderData = json_decode($this->requestBody, true);
+        $this->order_id         = $aKlarnaOrderData['order_id'];
+        return new KlarnaOrderValidator($aKlarnaOrderData);
     }
 }

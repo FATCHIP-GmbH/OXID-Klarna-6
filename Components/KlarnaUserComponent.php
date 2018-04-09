@@ -49,7 +49,7 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
 
     /**
      * Redirect to klarna checkout
-     *
+     * @codeCoverageIgnore
      * @return bool
      */
     protected function klarnaRedirect()
@@ -57,25 +57,6 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
         $sClass = Registry::get(Request::class)->getRequestParameter('cl');
 
         return in_array($sClass, $this->_aClasses);
-    }
-
-    /**
-     * Calls createUser parent
-     *
-     * @return mixed
-     * @codeCoverageIgnore
-     */
-    protected function getCreateUserParent()
-    {
-        return parent::createUser();
-    }
-
-    /**
-     * Logout action
-     */
-    public function logout()
-    {
-        parent::logout();
     }
 
     /**
@@ -90,6 +71,7 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
     }
 
     /**
+     * @codeCoverageIgnore
      */
     protected function _getLogoutLink()
     {

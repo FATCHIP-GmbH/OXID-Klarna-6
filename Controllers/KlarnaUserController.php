@@ -14,7 +14,6 @@ class KlarnaUserController extends KlarnaUserController_parent
 {
     /**
      *
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function init()
     {
@@ -30,7 +29,7 @@ class KlarnaUserController extends KlarnaUserController_parent
             if (KlarnaUtils::isCountryActiveInKlarnaCheckout($sCountryISO) &&
                 !Registry::getSession()->hasVariable('amazonOrderReferenceId')
             ) {
-                Registry::getUtils()->redirect(Registry::getConfig()->getShopHomeURL() .
+                Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() .
                                                'cl=KlarnaExpress', false, 302);
             }
         }

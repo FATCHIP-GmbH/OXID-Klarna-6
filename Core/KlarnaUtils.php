@@ -132,6 +132,7 @@ class KlarnaUtils
         if (!$sCountryISO) {
             $sCountryISO = Registry::getSession()->getVariable('sCountryISO');
         }
+
         if (!$aCredentials = KlarnaUtils::getShopConfVar('aKlarnaCreds_' . $sCountryISO)) {
             $aCredentials = array(
                 'mid'      => KlarnaUtils::getShopConfVar('sKlarnaMerchantId'),

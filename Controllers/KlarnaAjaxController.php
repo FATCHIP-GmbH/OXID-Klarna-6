@@ -98,7 +98,8 @@ class KlarnaAjaxController extends FrontendController
 
     /**
      * Initialize oxUser object and get order data from Klarna
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     *
+     * @codeCoverageIgnore
      * @throws \oxSystemComponentException
      */
     protected function _initUser()
@@ -123,6 +124,8 @@ class KlarnaAjaxController extends FrontendController
 
     /**
      * Update User object
+     *
+     * @codeCoverageIgnore
      */
     protected function updateUserObject()
     {
@@ -142,8 +145,9 @@ class KlarnaAjaxController extends FrontendController
 
     /**
      * Sends update request to checkout API
+     *
+     * @codeCoverageIgnore
      * @return array order data
-     * @throws StandardException
      * @internal param oxBasket $oBasket
      * @internal param oxUser $oUser
      */
@@ -209,12 +213,14 @@ class KlarnaAjaxController extends FrontendController
 
     /**
      * Formats Json response
+     *
+     * @codeCoverageIgnore
      * @param $action
      * @param $status
      * @param $data
      * @return string
      */
-    private function jsonResponse($action, $status, $data = null)
+    protected function jsonResponse($action, $status, $data = null)
     {
         return Registry::getUtils()->showMessageAndExit(json_encode(array(
             'action' => $action,
@@ -225,9 +231,11 @@ class KlarnaAjaxController extends FrontendController
 
     /**
      * Gets data from request body
+     *
+     * @codeCoverageIgnore
      * @return array
      */
-    private function getJsonRequest()
+    protected function getJsonRequest()
     {
         $requestBody = file_get_contents('php://input');
 

@@ -59,11 +59,12 @@ class KlarnaCustomerAccountInfo
      */
     public function getCustomerAccountInfo(User $user)
     {
-        try{
+        if($user->oxuser__oxcreate->value){
             $registration = new \DateTime($user->oxuser__oxcreate->value);
-        } catch( \Exception $e){
+        } else {
             $registration = new \DateTime($user->oxuser__oxregister->value);
         }
+
         $registration->setTimezone(new \DateTimeZone('Europe/London'));
         $customerInfo = array(
             "unique_account_identifier" => substr($user->getId(), 0, self::MAX_IDENTIFIER_LENGTH),

@@ -152,8 +152,11 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
         return $this->aPaymentList;
     }
 
-    /** Return shipping sets for KCO */
-    public function getCheckoutShippingSets()
+    /** Return shipping sets for KCO
+     * @param $oUser
+     * @return
+     */
+    public function getCheckoutShippingSets($oUser)
     {
         $sActShipSet = Registry::get(Request::class)->getRequestEscapedParameter('sShipSet');
         if (!$sActShipSet) {
@@ -161,8 +164,8 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
         }
 
         $oBasket = Registry::getSession()->getBasket();
-        list($aAllSets,) =
-            Registry::get(DeliverySetList::class)->getDeliverySetData($sActShipSet, $this->getUser(), $oBasket);
+        list($aAllSets) =
+            Registry::get(DeliverySetList::class)->getDeliverySetData($sActShipSet, $oUser, $oBasket);
 
         return $aAllSets;
     }

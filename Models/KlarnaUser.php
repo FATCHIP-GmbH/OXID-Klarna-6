@@ -63,7 +63,7 @@ class KlarnaUser extends KlarnaUser_parent
 
             $blShowShippingAddress = (bool)Registry::getSession()->getVariable('blshowshipaddress');
 
-            if ($this->_type == self::LOGGED_IN || $this->_type == self::NOT_REGISTERED) {
+            if ($this->isWritable()) {
                 $billingAddress            = KlarnaFormatter::oxidToKlarnaAddress($this);
                 $result['billing_address'] = isset($billingAddress) ? $billingAddress : null;
 
@@ -85,13 +85,9 @@ class KlarnaUser extends KlarnaUser_parent
 
         if ($sCountryISO = Registry::get(Request::class)->getRequestEscapedParameter('selected-country')) {
             if (Registry::getSession()->hasVariable('invadr')) {
-                $result['billing_address']['country'] = $sCountryISO;
                 Registry::getSession()->deleteVariable('invadr');
-            } else {
-                $result['billing_address'] = array(
-                    'country' => $sCountryISO,
-                );
             }
+            $result['billing_address']['country'] = $sCountryISO;
             Registry::getSession()->setVariable('sCountryISO', $sCountryISO);
         }
 
@@ -122,7 +118,7 @@ class KlarnaUser extends KlarnaUser_parent
             'billing_address'  => $billingAddress,
             'shipping_address' => isset($shippingAddress) ? $shippingAddress : $billingAddress,
             'customer'         => $customer,
-            'attachment'       => $this->addAttachmentsData(),
+            'attachment'       => $this->getAttachmentsData(),
         );
 
         if (!Registry::getSession()->getVariable('userDataHash'))
@@ -309,12 +305,7 @@ class KlarnaUser extends KlarnaUser_parent
      */
     public function updateDeliveryAddress($aDelAddress)
     {
-        $oAddress = oxNew(Address::class);
-        $oAddress->setId();
-        $oAddress->assign($aDelAddress);
-
-        $oAddress->oxaddress__oxuserid  = new Field($this->getId(), Field::T_RAW);
-        $oAddress->oxaddress__oxcountry = $this->getUserCountry($oAddress->oxaddress__oxcountryid->value);
+        $oAddress = $this->buildAddress($aDelAddress);
 
         if ($oAddress->isValid()) {
             // save only unique address for 
@@ -328,6 +319,18 @@ class KlarnaUser extends KlarnaUser_parent
         }
     }
 
+    protected function buildAddress($aDelAddress)
+    {
+        $oAddress = oxNew(Address::class);
+        $oAddress->setId();
+        $oAddress->assign($aDelAddress);
+
+        $oAddress->oxaddress__oxuserid  = new Field($this->getId(), Field::T_RAW);
+        $oAddress->oxaddress__oxcountry = $this->getUserCountry($oAddress->oxaddress__oxcountryid->value);
+
+        return $oAddress;
+    }
+
     /**
      * For Fake user. Replace session oxAddress ID, remove old address from DB
      * @param $sAddressOxid
@@ -337,7 +340,7 @@ class KlarnaUser extends KlarnaUser_parent
         $oSession = Registry::getSession();
         // keep only one address record for fake user, remove old
         if ($this->isFake() && $oSession->hasVariable('deladrid')) {
-            $this->clearDeliveryAddress();
+            $this->clearDeliveryAddress(); // remove old address from db
         }
         if ($sAddressOxid) {
             $oSession->setVariable('deladrid', $sAddressOxid);
@@ -375,18 +378,6 @@ class KlarnaUser extends KlarnaUser_parent
     }
 
     /**
-     * @return bool
-     */
-    public function userDataChanged()
-    {
-        $oldHash = Registry::getSession()->getVariable('userDataHash');
-        if ($this->recalculateHash() != $oldHash)
-            return true;
-
-        return false;
-    }
-
-    /**
      * Gets and saves to the session user data hash
      * @return string
      */
@@ -413,9 +404,11 @@ class KlarnaUser extends KlarnaUser_parent
     public function getKlarnaPaymentCurrency()
     {
         $country2currency = KlarnaConsts::getCountry2CurrencyArray();
-        $currencyISO      = $country2currency[$this->resolveCountry()];
+        $cur = $this->resolveCountry();
+        if(isset($country2currency[$cur])){
 
-        return $currencyISO;
+            return $country2currency[$cur];
+        }
     }
 
     /**
@@ -457,12 +450,10 @@ class KlarnaUser extends KlarnaUser_parent
     /**
      * @return array
      */
-    public function addAttachmentsData()
+    public function getAttachmentsData()
     {
         if (!$this->isFake()) {
-            /** @var KlarnaEMD $klarnaEmd */
-            $klarnaEmd = new KlarnaEMD;
-            $emd       = $klarnaEmd->getAttachments($this);
+            $emd = $this->getEMD();
             if (!empty($emd)) {
                 return array(
                     'content_type' => 'application/vnd.klarna.internal.emd-v2+json',
@@ -470,6 +461,16 @@ class KlarnaUser extends KlarnaUser_parent
                 );
             }
         }
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    protected function getEMD()
+    {
+        $klarnaEmd = new KlarnaEMD();
+
+        return $klarnaEmd->getAttachments($this);
     }
 
     /**
@@ -514,7 +515,18 @@ class KlarnaUser extends KlarnaUser_parent
                 $this->getUserCountryISO2()
             );
             Registry::getSession()->deleteVariable('klarna_checkout_user_email');
-            $this->kl_setType(self::LOGGED_IN);
+            $this->_type = self::LOGGED_IN;
         }
+    }
+
+    public function kl_checkUserType()
+    {
+        if($this->getId() === Registry::getSession()->getVariable('usr')){
+
+            return $this->_type = self::LOGGED_IN;
+        }
+
+        return $this->_type = self::NOT_REGISTERED;
+
     }
 }

@@ -45,16 +45,6 @@ class KlarnaAddress extends KlarnaAddress_parent
         }
     }
 
-    /**
-     * Gets string from oxAddress fields value
-     *
-     * @return string
-     */
-    public function convertFieldsToString()
-    {
-        return $this->kl_getMergedAddressFields();
-    }
-
 
     /**
      * Compare two oxAddress objects. If data filds are the same return true
@@ -65,10 +55,11 @@ class KlarnaAddress extends KlarnaAddress_parent
      */
     protected function compareObjectFields($that)
     {
-        return $this->convertFieldsToString() === $that->convertFieldsToString();
+        return $this->kl_getMergedAddressFields() === $that->kl_getMergedAddressFields();
     }
 
     /**
+     * Gets string from oxAddress fields value
      * Returns merged address fields.
      *
      * @return string
