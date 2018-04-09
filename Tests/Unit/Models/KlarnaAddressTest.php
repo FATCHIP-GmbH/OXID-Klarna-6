@@ -10,6 +10,7 @@ use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 /**
  * Class KlarnaAddressTest
  * @package TopConcepts\Klarna\Tests\Unit\Models
+ * @covers \TopConcepts\Klarna\Models\KlarnaAddress
  */
 class KlarnaAddressTest extends ModuleUnitTestCase
 {
