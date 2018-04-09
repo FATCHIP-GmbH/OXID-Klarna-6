@@ -83,8 +83,6 @@ class KlarnaBasketComponentTest extends ModuleUnitTestCase
         $cmpBasket = $this->getMock(BasketComponent::class, ['updateKlarnaOrder']);
         $cmpBasket->expects($this->once())->method('updateKlarnaOrder');
 
-        //$cmpBasket = oxNew(BasketComponent::class);
-
         $cmpBasket->changebasket('abc', 11, 'sel', 'persparam', 'override');
     }
 
