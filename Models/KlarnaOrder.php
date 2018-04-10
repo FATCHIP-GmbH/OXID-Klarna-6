@@ -42,6 +42,7 @@ class KlarnaOrder extends KlarnaOrder_parent
 
     /**
      * Validate Klarna Checkout order information
+     * @codeCoverageIgnore  This is only a part of parent::validateOrder
      * @param $oBasket
      * @return int
      */
@@ -49,7 +50,6 @@ class KlarnaOrder extends KlarnaOrder_parent
     {
         // validating stock
         $iValidState = $this->validateStock($oBasket);
-
         if (!$iValidState) {
             // validating delivery
             $iValidState = $this->validateDelivery($oBasket);
