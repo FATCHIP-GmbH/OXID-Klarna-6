@@ -14,11 +14,19 @@ class KlarnaOrderArticle extends KlarnaOrderArticle_parent
         return $this->oxorderarticles__oxamount->value;
     }
 
+    /**
+     * @codeCoverageIgnore
+     * @return mixed
+     */
     public function getRegularUnitPrice()
     {
         return $this->getBasePrice();
     }
 
+    /**
+     * @codeCoverageIgnore
+     * @return mixed
+     */
     public function getUnitPrice()
     {
         return $this->getPrice();

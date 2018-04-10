@@ -106,6 +106,13 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
 
     }
 
+    public function testGetIsAustria_noUser_defaultCountry()
+    {
+        $oViewConfig = $this->getMock(ViewConfig::class, ['getUser']);
+        $oViewConfig->expects($this->once())->method('getUser')->willReturn(null);
+        $this->assertFalse( $oViewConfig->getIsAustria());
+    }
+
     public function getKlarnaHomepageBannerDataProvider()
     {
         return [
@@ -135,6 +142,13 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
         $oViewConfig = $this->getMock(ViewConfig::class, ['getUser']);
         $oViewConfig->expects($this->once())->method('getUser')->willReturn($user);
         $this->assertEquals($expectedResult, $oViewConfig->getIsGermany());
+    }
+
+    public function testGetIsGermany_noUser_defaultCountry()
+    {
+        $oViewConfig = $this->getMock(ViewConfig::class, ['getUser']);
+        $oViewConfig->expects($this->once())->method('getUser')->willReturn(null);
+        $this->assertTrue( $oViewConfig->getIsGermany());
     }
 
     /**
@@ -296,6 +310,15 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
         ];
     }
 
+    public function testGetKlarnaFooterContent_nonKlarnaSetAsDefault()
+    {
+        $this->setModuleConfVar('sKlarnaDefaultCountry', 'AF');
+        $oViewConfig = oxNew(ViewConfig::class);
+        $result = $oViewConfig->getKlarnaFooterContent();
+        $this->assertFalse($result);
+        $this->setModuleConfVar('sKlarnaDefaultCountry', 'DE');
+    }
+
     /**
      * @dataProvider getKlarnaFooterContentDataProvider
      * @param $mode
@@ -373,13 +396,23 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
         $this->assertEquals($expectedResult, $result);
     }
 
+
     public function testIsPrefillIframe()
     {
-        $this->setModuleConfVar('blKlarnaPreFillNotification', true);
+        $this->setModuleConfVar('blKlarnaEnablePreFilling', true);
         $oViewConfig = oxNew(ViewConfig::class);
-        $result = $oViewConfig->isShowPrefillNotif();
+        $result = $oViewConfig->isPrefillIframe();
 
-        $this->assertEquals(true, $result);
+        $this->assertTrue($result);
+    }
+
+    public function testIsPrefillIframe_false()
+    {
+        $this->setModuleConfVar('blKlarnaEnablePreFilling', false, 'bool');
+        $oViewConfig = oxNew(ViewConfig::class);
+        $result = $oViewConfig->isPrefillIframe();
+
+        $this->assertFalse($result);
     }
 
     public function isCheckoutNonKlarnaCountryDataProvider()
@@ -394,6 +427,7 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
     /**
      * @dataProvider isCheckoutNonKlarnaCountryDataProvider
      * @param $iso
+     * @param $expectedResult
      */
     public function testIsCheckoutNonKlarnaCountry($iso, $expectedResult)
     {
@@ -407,9 +441,13 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
 
     public function isUserLoggedInDataProvider()
     {
+        $userId = 'fake_id';
+        $user = new \stdClass();
+        $user->oxuser__oxid = new Field($userId, Field::T_RAW);
+
         return [
-            ['fake_id', 'fake_id', true],
-            ['some_id', 'fake_id', false]
+            [$userId, $user, true],
+            [null, null, false],
         ];
     }
 
@@ -417,28 +455,65 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
      * @dataProvider isUserLoggedInDataProvider
      * @param $userId
      * @param $usrSession
+     * @param $user
      * @param $expectedResult
      */
-    public function testIsUserLoggedIn($userId, $usrSession, $expectedResult)
+    public function testIsUserLoggedIn($usrSession, $user, $expectedResult)
     {
         $this->setSessionParam('usr', $usrSession);
-        $user = new \stdClass();
-        $user->oxuser__oxid = new Field($userId, Field::T_RAW);
+
         $viewConfig = $this->getMock(ViewConfig::class, ['getUser']);
         $viewConfig->expects($this->once())->method('getUser')->willReturn($user);
 
         $this->assertEquals($expectedResult, $viewConfig->isUserLoggedIn());
     }
 
-//    public function testIsActiveThemeFlow()
-//    {
-//
-//    }
-//
-//    public function testIsActiveControllerKlarnaExpress()
-//    {
-//
-//    }
-//
+    /**
+     * @dataProvider isActiveFlowThemDataProvider
+     * @param $themeName
+     * @param $expectedResult
+     */
+    public function testIsActiveThemeFlow($themeName, $expectedResult)
+    {
+        $oViewConfig = $this->getMock(ViewConfig::class, ['getActiveTheme']);
+        $oViewConfig->expects($this->once())->method('getActiveTheme')->willReturn($themeName);
+        $result = $oViewConfig->isActiveThemeFlow();
+
+        $this->assertEquals($expectedResult, $result);
+    }
+
+
+    /**
+     * @dataProvider isKlarnaControllerActiveDataProvider
+     * @param $controllerName
+     * @param $expectedResult
+     */
+    public function testIsActiveControllerKlarnaExpress($controllerName, $expectedResult)
+    {
+        $oViewConfig = $this->getMock(ViewConfig::class, ['getActiveClassName']);
+        $oViewConfig->expects($this->once())->method('getActiveClassName')->willReturn($controllerName);
+        $result = $oViewConfig->isActiveControllerKlarnaExpress();
+
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    public function isKlarnaControllerActiveDataProvider()
+    {
+        return [
+            ['KlarnaExpress', true],
+            ['klarnaexpress', true],
+            ['otherName', false]
+        ];
+    }
+
+    public function isActiveFlowThemDataProvider()
+    {
+        return [
+            ['azure', false],
+            ['flow', true],
+            ['Flow', true]
+        ];
+    }
+
 
 }
