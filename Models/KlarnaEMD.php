@@ -28,8 +28,6 @@ class KlarnaEMD
      *
      * @param User $oUser
      * @return array
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
-     * @throws \oxSystemComponentException
      */
     public function getAttachments(User $oUser)
     {
@@ -50,7 +48,7 @@ class KlarnaEMD
 
     /**
      * Get customer account info
-     *
+     * @codeCoverageIgnore
      * @param User $oUser
      * @return array
      */
@@ -64,11 +62,9 @@ class KlarnaEMD
 
     /**
      * Get payment history
-     *
+     * @codeCoverageIgnore
      * @param User $oUser
      * @return array
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
-     * @throws \oxSystemComponentException
      */
     protected function getPaymentHistoryFull(User $oUser)
     {
@@ -80,7 +76,7 @@ class KlarnaEMD
 
     /**
      * To be implemented by the merchant
-     *
+     * @codeCoverageIgnore
      * @return array
      */
     protected function getPassThroughField()
