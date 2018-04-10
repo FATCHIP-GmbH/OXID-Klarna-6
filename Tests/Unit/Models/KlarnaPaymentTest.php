@@ -1,4 +1,10 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: arekk
+ * Date: 09.04.2018
+ * Time: 14:41
+ */
 
 namespace TopConcepts\Klarna\Tests\Unit\Models;
 
