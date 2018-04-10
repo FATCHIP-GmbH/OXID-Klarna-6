@@ -131,6 +131,9 @@ class KlarnaPayment extends KlarnaPayment_parent
         return $kpMethods;
     }
 
+    /**
+     *
+     */
     public function setActiveKPMethods()
     {
         $aKPmethods = Registry::get(Request::class)->getRequestEscapedParameter('kpMethods');
