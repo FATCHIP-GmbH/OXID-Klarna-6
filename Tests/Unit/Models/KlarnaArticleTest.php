@@ -155,9 +155,15 @@ class KlarnaArticleTest extends ModuleUnitTestCase
         $articleClass->klarna_loadByArtNum(3102);
         $this->assertNotNull($articleClass->getId());
 
-        $result = $articleClass->klarna_loadByArtNum(50);
+        $result = $articleClass->klarna_loadByArtNum('adc5ee42bd3c37a27a488769d22ad9edadc5ee42bd3c37a27a488769d22ad9ed');//64chars
         $this->assertFalse($result);
 
+        $this->setModuleConfVar('blKlarnaEnableAnonymization', true, 'bool');
+        $result = $articleClass->klarna_loadByArtNum(50);//non existant
+        $this->assertFalse($result);
+
+        //revert to default state
+        $this->setModuleConfVar('blKlarnaEnableAnonymization', false, 'bool');
     }
 
     public function goodStockDataProvider()
