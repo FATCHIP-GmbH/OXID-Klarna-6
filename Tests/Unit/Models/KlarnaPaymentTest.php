@@ -38,14 +38,66 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
         ];
     }
 
+    /**
+     *
+     */
     public function testGetKPMethods()
     {
+        /** @var KlarnaPayment $oPayment */
+        $oPayment = oxNew(Payment::class);
+        $result   = $oPayment->getKPMethods();
 
+        $this->assertTrue(count($result) === 3);
+        $this->assertArrayHasKey(KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID, $result);
+        $this->assertArrayHasKey(KlarnaPayment::KLARNA_PAYMENT_PAY_LATER_ID, $result);
+        $this->assertArrayHasKey(KlarnaPayment::KLARNA_PAYMENT_PAY_NOW, $result);
     }
 
-    public function testSetActiveKPMethods()
+    /**
+     * @dataProvider setActiveKPMethodsDataProvider
+     * @param $aKPMEthods
+     */
+    public function testSetActiveKPMethods($aKPMEthods)
     {
 
+        $this->setRequestParameter('kpMethods', $aKPMEthods);
+        /** @var KlarnaPayment $oPayment */
+        $oPayment = oxNew(Payment::class);
+        $oPayment->setActiveKPMethods();
+
+        foreach ($aKPMEthods as $oxId => $value) {
+            $oPayment->load($oxId);
+            $this->assertTrue($oPayment->oxpayments__oxactive->value == $value);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function setActiveKPMethodsDataProvider()
+    {
+        return [
+            [[
+                 KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID  => 0,
+                 KlarnaPayment::KLARNA_PAYMENT_PAY_LATER_ID => 0,
+                 KlarnaPayment::KLARNA_PAYMENT_PAY_NOW      => 0,
+             ]],
+            [[
+                 KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID  => 1,
+                 KlarnaPayment::KLARNA_PAYMENT_PAY_LATER_ID => 0,
+                 KlarnaPayment::KLARNA_PAYMENT_PAY_NOW      => 0,
+             ]],
+            [[
+                 KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID  => 1,
+                 KlarnaPayment::KLARNA_PAYMENT_PAY_LATER_ID => 1,
+                 KlarnaPayment::KLARNA_PAYMENT_PAY_NOW      => 0,
+             ]],
+            [[
+                 KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID  => 1,
+                 KlarnaPayment::KLARNA_PAYMENT_PAY_LATER_ID => 1,
+                 KlarnaPayment::KLARNA_PAYMENT_PAY_NOW      => 1,
+             ]],
+        ];
     }
 
     /**
@@ -58,7 +110,7 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
         /** @var KlarnaPayment $oPayment */
         $oPayment = oxNew(Payment::class);
         $oPayment->setId($paymentId);
-        $result   = $oPayment->getPaymentCategoryName();
+        $result = $oPayment->getPaymentCategoryName();
 
         $this->assertEquals($expectedResult, $result);
     }
