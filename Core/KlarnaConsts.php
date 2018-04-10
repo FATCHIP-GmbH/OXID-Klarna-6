@@ -37,6 +37,7 @@ class KlarnaConsts
     const KLARNA_MANUAL_DOWNLOAD_LINK = 'https://www.topconcepts.de/customer/klarna/docs/klarna-module-for-oxid-%s-4.0.0.pdf';
 
     /**
+     * @codeCoverageIgnore
      * @return array
      */
     public static function getKlarnaGlobalCountries()
@@ -58,6 +59,7 @@ class KlarnaConsts
     }
 
     /**
+     * @codeCoverageIgnore
      * @return array
      */
     public static function getKlarnaCoreCountries()
@@ -66,6 +68,7 @@ class KlarnaConsts
     }
 
     /**
+     * @codeCoverageIgnore
      * @return array
      */
     public static function getCountry2CurrencyArray()
@@ -84,7 +87,7 @@ class KlarnaConsts
 
     /**
      * Override to add other possible payment methods
-     *
+     * @codeCoverageIgnore
      * @return array
      */
     public static function getKlarnaExternalPaymentNames()
@@ -95,6 +98,7 @@ class KlarnaConsts
     }
 
     /**
+     * @codeCoverageIgnore
      * @return array
      */
     public static function getEmdPaymentTypeOptions()
@@ -107,6 +111,7 @@ class KlarnaConsts
     }
 
     /**
+     * @codeCoverageIgnore
      * @return array
      */
     public static function getFullHistoryOrdersOptions()
@@ -177,6 +182,7 @@ class KlarnaConsts
     }
 
     /**
+     * @codeCoverageIgnore
      * @return array
      */
     public static function getDefaultBannerSrc()
@@ -188,6 +194,7 @@ class KlarnaConsts
     }
 
     /**
+     * @codeCoverageIgnore
      * Override to change which countries are shown separately with a flag in the Klarna Checkout country popup.
      * Need to
      *
