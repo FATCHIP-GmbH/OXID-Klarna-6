@@ -76,7 +76,7 @@ class KlarnaBasket extends KlarnaBasket_parent
         usort($aItems, array($this, 'sortOrderLines'));
 
         $counter = 0;
-        /* @var BasketItem $oItem  */
+        /* @var BasketItem $oItem */
         foreach ($aItems as $oItem) {
             $counter++;
 
@@ -145,7 +145,6 @@ class KlarnaBasket extends KlarnaBasket_parent
 
     /**
      * @param $aProcessedItems
-     * @codeCoverageIgnore
      * @return array
      * @throws KlarnaBasketTooLargeException
      */
@@ -170,7 +169,6 @@ class KlarnaBasket extends KlarnaBasket_parent
 
     /**
      * Add OXID additional payable services as products to array
-     * @codeCoverageIgnore
      * @param bool $orderMgmtId
      * @return void
      */
@@ -207,7 +205,6 @@ class KlarnaBasket extends KlarnaBasket_parent
 
     /**
      * @param null $iLang
-     * @codeCoverageIgnore
      */
     protected function _addGiftWrappingCost($iLang = null)
     {
@@ -238,7 +235,6 @@ class KlarnaBasket extends KlarnaBasket_parent
 
     /**
      * @param null $iLang
-     * @codeCoverageIgnore
      */
     protected function _addGiftCardProducts($iLang = null)
     {
@@ -264,7 +260,6 @@ class KlarnaBasket extends KlarnaBasket_parent
 
     /**
      * Add OXID additional discounts as products to array
-     * @codeCoverageIgnore
      * @param null $oOrder
      * @param null $iLang
      * @return void
@@ -294,7 +289,6 @@ class KlarnaBasket extends KlarnaBasket_parent
 
     /**
      * Check if service is set and has brutto price
-     * @codeCoverageIgnore
      * @param $oService
      *
      * @return bool
@@ -306,7 +300,6 @@ class KlarnaBasket extends KlarnaBasket_parent
 
     /**
      * Returns delivery costs
-     * @codeCoverageIgnore
      * @return Price
      */
     protected function getOxDiscount()
@@ -327,32 +320,6 @@ class KlarnaBasket extends KlarnaBasket_parent
         }
 
         return $totalDiscount;
-    }
-
-    /**
-     * Save new hash
-     */
-    public function saveHash()
-    {
-        Registry::getSession()->setVariable('orderHash', $this->_orderHash);
-    }
-
-    /**
-     * Check if order configuration has changed
-     * @return bool
-     * @throws KlarnaBasketTooLargeException
-     * @throws \OxidEsales\Eshop\Core\Exception\ArticleInputException
-     * @throws \OxidEsales\Eshop\Core\Exception\NoArticleException
-     */
-    public function orderHasChanged()
-    {
-        if ($this->_orderHash != md5(json_encode($this->getKlarnaOrderLines()))) {
-            $this->saveHash();
-
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -392,7 +359,6 @@ class KlarnaBasket extends KlarnaBasket_parent
      * Create klarna checkout product from voucher discounts
      *
      * @param Price $oPrice
-     * @codeCoverageIgnore
      * @param null $iLang
      * @return array
      */
@@ -419,7 +385,6 @@ class KlarnaBasket extends KlarnaBasket_parent
      * Create klarna checkout product from non voucher discounts
      *
      * @param Price $oPrice
-     * @codeCoverageIgnore
      * @param null $iLang
      * @return array
      */
@@ -446,7 +411,6 @@ class KlarnaBasket extends KlarnaBasket_parent
      * Check if basket articles will expire in given days
      *
      * @param int $iInDays
-     * @codeCoverageIgnore
      * @return boolean
      * @throws \oxSystemComponentException
      */
@@ -478,7 +442,6 @@ class KlarnaBasket extends KlarnaBasket_parent
      * If param not set, try getting it from config, else - return given param
      *
      * @param int $iInDays
-     * @codeCoverageIgnore
      * @return int
      */
     protected function _getInDays($iInDays = null)
@@ -554,7 +517,6 @@ class KlarnaBasket extends KlarnaBasket_parent
 
     /**
      * @return object
-     * @codeCoverageIgnore
      */
     protected function _calcDeliveryCost()
     {
@@ -567,7 +529,6 @@ class KlarnaBasket extends KlarnaBasket_parent
 
     /**
      * Get average of order VAT
-     * @codeCoverageIgnore
      * @return float
      */
     protected function getOrderVatAverage()
@@ -579,7 +540,6 @@ class KlarnaBasket extends KlarnaBasket_parent
 
     /**
      * Returns sum of product netto prices
-     * @codeCoverageIgnore
      * @return float
      */
     protected function getProductsNetPriceWithoutDiscounts()
@@ -598,7 +558,6 @@ class KlarnaBasket extends KlarnaBasket_parent
     /**
      * @param $oArt
      * @return bool|null|string
-     * @codeCoverageIgnore
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
      */
@@ -619,7 +578,6 @@ class KlarnaBasket extends KlarnaBasket_parent
 
     /**
      * Get wrapping cost
-     * @codeCoverageIgnore
      * @return Price
      */
     protected function getOxWrappingCost()
@@ -649,7 +607,6 @@ class KlarnaBasket extends KlarnaBasket_parent
      * Calls getWrappingCost method parent
      *
      * @return mixed
-     * @codeCoverageIgnore
      */
     protected function getWrappingCostParent()
     {
@@ -677,7 +634,6 @@ class KlarnaBasket extends KlarnaBasket_parent
      * @param BasketItem $a
      * @param BasketItem $b
      * @return int
-     * @codeCoverageIgnore
      * @throws \oxArticleInputException
      * @throws \oxNoArticleException
      * @throws \oxSystemComponentException
@@ -703,7 +659,6 @@ class KlarnaBasket extends KlarnaBasket_parent
     }
 
     /**
-     * @codeCoverageIgnore
      * @param $artOxid
      * @param $anonArtNum
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException

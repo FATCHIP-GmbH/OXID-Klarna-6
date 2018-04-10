@@ -13,10 +13,6 @@ class KlarnaBasketTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    public function testSaveHash()
-    {
-
-    }
 
     public function testIs_fraction()
     {
@@ -24,11 +20,6 @@ class KlarnaBasketTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testSetKlarnaOrderLang()
-    {
-
-    }
-
-    public function testOrderHasChanged()
     {
 
     }
