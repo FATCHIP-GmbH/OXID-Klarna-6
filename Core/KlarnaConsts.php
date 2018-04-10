@@ -5,6 +5,11 @@ namespace TopConcepts\Klarna\Core;
 
 use OxidEsales\Eshop\Core\Registry;
 
+/**
+ * @codeCoverageIgnore
+ * Class KlarnaConsts
+ * @package TopConcepts\Klarna\Core
+ */
 class KlarnaConsts
 {
 
