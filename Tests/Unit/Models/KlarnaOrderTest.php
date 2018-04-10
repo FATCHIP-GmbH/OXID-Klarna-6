@@ -9,6 +9,7 @@
 namespace TopConcepts\Klarna\Testes\Unit\Models;
 
 use OxidEsales\Eshop\Application\Model\Order;
+use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\TestingLibrary\UnitTestCase;
 use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
@@ -140,19 +141,71 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $order->cancelKlarnaOrder();
     }
 
-    public function testIsKlarnaOrder()
+
+    public function validateOrderDataProvider()
     {
+        return [
+            ['klarna_checkout', null],
+            ['invalid_payment', 5]
+        ];
+    }
+
+    /**
+     * @dataProvider validateOrderDataProvider
+     * @param $paymentId
+     * @param $expectedResult
+     */
+    public function testValidateOrder($paymentId, $expectedResult)
+    {
+        /** @var \OxidEsales\Eshop\Application\Model\Basket $oBasket */
+        $oBasket = $this->prepareBasketWithProduct();
+        $oUser = oxNew(User::class);
+        $oBasket->setPayment($paymentId);
+
+        $order = oxNew(Order::class);
+        $result = $order->validateOrder($oBasket, $oUser);
+
+        $this->assertEquals($expectedResult, $result);
 
     }
 
-    public function testValidateOrder()
+    public function isKlarnaOrderDataProvider()
     {
-
+        return [
+            ['type1', false, false],
+            ['klarna_type', true, false],
+            ['klarna_checkout', true, true],
+            ['klarna_pay_later', true, true],
+            ['klarna_pay_now', true, true],
+            ['klarna_slice_it', true, true],
+        ];
     }
 
-    public function testIsKlarna()
+    /**
+     * @dataProvider isKlarnaOrderDataProvider
+     * @param $type
+     * @param $expectedResult
+     */
+    public function testIsKlarnaOrder($type, $expectedResult)
     {
+        $order = oxNew(Order::class);
+        $order->oxorder__oxpaymenttype = new Field($type, Field::T_RAW);
 
+        $result = $order->isKlarnaOrder();
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    /**
+     * @dataProvider isKlarnaOrderDataProvider
+     * @param $type
+     * @param $expectedResult
+     */
+    public function testIsKlarna($type, $notUsed, $expectedResult)
+    {
+        $order = oxNew(Order::class);
+        $order->oxorder__oxpaymenttype = new Field($type, Field::T_RAW);
+        $result = $order->isKlarna();
+        $this->assertEquals($expectedResult, $result);
     }
 
     public function testUpdateKlarnaOrder()
@@ -200,8 +253,26 @@ class KlarnaOrderTest extends ModuleUnitTestCase
 
     }
 
-    public function testIsKCO()
+    public function isKCODataProvider()
     {
+        return [
+            ['type1', false],
+            ['klarna_checkout', true],
+            ['klarna_pay_later', false]
+        ];
+    }
 
+    /**
+     * @dataProvider isKCODataProvider
+     * @param $type
+     * @param $expectedResult
+     */
+    public function testIsKCO($type, $expectedResult)
+    {
+        $order = oxNew(Order::class);
+        $order->oxorder__oxpaymenttype = new Field($type, Field::T_RAW);
+
+        $result = $order->isKCO();
+        $this->assertEquals($expectedResult, $result);
     }
 }
