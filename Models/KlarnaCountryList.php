@@ -8,7 +8,7 @@ use TopConcepts\Klarna\Core\KlarnaConsts;
 class KlarnaCountryList extends KlarnaCountryList_parent
 {
     /**
-     * Selects and loads all active countries that are Klarna Global countries
+     * Selects and loads all active countries that are assigned to klarna_checkout
      *
      * @param integer $iLang language
      */
@@ -47,6 +47,10 @@ class KlarnaCountryList extends KlarnaCountryList_parent
         $this->selectString($sSelect);
     }
 
+    /**
+     * Selects and loads all active countries that are on Klarna's KCO Global list
+     * @param null $iLang
+     */
     public function loadActiveKCOGlobalCountries($iLang = null)
     {
         $sViewName = getViewName('oxcountry', $iLang);
