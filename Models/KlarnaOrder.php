@@ -71,15 +71,14 @@ class KlarnaOrder extends KlarnaOrder_parent
     }
 
     /**
+     * @param null|KlarnaOrderManagementClient $client for UnitTest purpose
      * @return mixed
      */
-    protected function _setNumber()
+    protected function _setNumber($client = null)
     {
         if ($blUpdate = parent::_setNumber()) {
 
-            /** @var Session $session */
-            if (in_array($this->oxorder__oxpaymenttype->value, KlarnaPayment::getKlarnaPaymentsIds())
-                && empty($this->oxorder__klorderid->value)) {
+            if ($this->isKlarna() && empty($this->oxorder__klorderid->value)) {
 
                 $session = Registry::getSession();
 
@@ -100,9 +99,11 @@ class KlarnaOrder extends KlarnaOrder_parent
 
                 try {
                     $sCountryISO = KlarnaUtils::getCountryISO($this->getFieldData('oxbillcountryid'));
-                    $orderClient = $this->getKlarnaClient($sCountryISO);
-                    $orderClient->sendOxidOrderNr($this->oxorder__oxordernr->value, $klarna_id);
-                } catch (StandardException $e) {
+                    if(!$client){
+                        $client = KlarnaOrderManagementClient::getInstance($sCountryISO); // @codeCoverageIgnore
+                    }
+                    $client->sendOxidOrderNr($this->oxorder__oxordernr->value, $klarna_id);
+                } catch (KlarnaClientException $e) {
                     $e->debugOut();
                 }
             }
@@ -206,20 +207,10 @@ class KlarnaOrder extends KlarnaOrder_parent
         $orderId = $orderId ?: $this->getFieldData('klorderid');
 
         if(!$client) {
-            $client = KlarnaOrderManagementClient::getInstance($sCountryISO);
+            $client = KlarnaOrderManagementClient::getInstance($sCountryISO); // @codeCoverageIgnore
         }
 
         return $client->cancelOrder($orderId);
-    }
-
-    /**
-     * @param $sCountryISO
-     * @return KlarnaOrderManagementClient|KlarnaClientBase
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
-     */
-    public function getKlarnaClient($sCountryISO = null)
-    {
-        return KlarnaOrderManagementClient::getInstance($sCountryISO);
     }
 
     /**
@@ -231,7 +222,7 @@ class KlarnaOrder extends KlarnaOrder_parent
     public function updateKlarnaOrder($data, $orderId, $sCountryISO = null, KlarnaOrderManagementClient $client = null)
     {
         if(!$client){
-            $client = KlarnaOrderManagementClient::getInstance($sCountryISO);
+            $client = KlarnaOrderManagementClient::getInstance($sCountryISO); // @codeCoverageIgnore
         }
 
         try {
@@ -252,13 +243,8 @@ class KlarnaOrder extends KlarnaOrder_parent
      * @param $data
      * @param $orderId
      * @param null $sCountryISO
+     * @param KlarnaOrderManagementClient|null $client
      * @return array
-     * @throws KlarnaOrderNotFoundException
-     * @throws KlarnaWrongCredentialsException
-     * @throws \TopConcepts\Klarna\Exception\KlarnaCaptureNotAllowedException
-     * @throws \TopConcepts\Klarna\Exception\KlarnaClientException
-     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function captureKlarnaOrder($data, $orderId, $sCountryISO = null, KlarnaOrderManagementClient $client = null)
     {
@@ -266,95 +252,11 @@ class KlarnaOrder extends KlarnaOrder_parent
             $data['shipping_info'] = array(array('tracking_number' => $trackcode));
         }
         if(!$client){
-            $client = KlarnaOrderManagementClient::getInstance($sCountryISO);
+            $client = KlarnaOrderManagementClient::getInstance($sCountryISO); // @codeCoverageIgnore
         }
 
         return $client->captureOrder($data, $orderId);
     }
-
-//    /**
-//     * @param $orderId
-//     * @param null $sCountryISO
-//     * @return array
-//     * @throws KlarnaOrderNotFoundException
-//     * @throws KlarnaWrongCredentialsException
-//     * @throws \TopConcepts\Klarna\Exception\KlarnaCaptureNotAllowedException
-//     * @throws \TopConcepts\Klarna\Exception\KlarnaClientException
-//     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException
-//     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
-//     */
-//    public function getAllCaptures($orderId, $sCountryISO = null)
-//    {
-//        $client = $this->getKlarnaClient($sCountryISO);
-//
-//        return $client->getAllCaptures($orderId);
-//    }
-
-//    /**
-//     * @param $orderId
-//     * @param null $sCountryISO
-//     * @return mixed
-//     * @throws StandardException
-//     * @throws \TopConcepts\Klarna\Exception\KlarnaClientException
-//     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
-//     */
-//    public function retrieveKlarnaOrder($orderId, $sCountryISO = null)
-//    {
-//        $client = $this->getKlarnaClient($sCountryISO);
-//
-//        return $client->getOrder($orderId);
-//    }
-
-//    /**
-//     * @param $data
-//     * @param $orderId
-//     * @param null $sCountryISO
-//     * @return array
-//     * @throws KlarnaOrderNotFoundException
-//     * @throws KlarnaWrongCredentialsException
-//     * @throws \TopConcepts\Klarna\Exception\KlarnaCaptureNotAllowedException
-//     * @throws \TopConcepts\Klarna\Exception\KlarnaClientException
-//     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException
-//     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
-//     */
-//    public function createOrderRefund($data, $orderId, $sCountryISO = null)
-//    {
-//        $client = $this->getKlarnaClient($sCountryISO);
-//
-//        return $client->createOrderRefund($data, $orderId);
-//    }
-
-//    /**
-//     * @param $data
-//     * @param $orderId
-//     * @param $captureId
-//     * @param null $sCountryISO
-//     * @return array
-//     * @throws KlarnaOrderNotFoundException
-//     * @throws KlarnaWrongCredentialsException
-//     * @throws \TopConcepts\Klarna\Exception\KlarnaCaptureNotAllowedException
-//     * @throws \TopConcepts\Klarna\Exception\KlarnaClientException
-//     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException
-//     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
-//     */
-//    public function addShippingToCapture($data, $orderId, $captureId, $sCountryISO = null)
-//    {
-//        $client = $this->getKlarnaClient($sCountryISO);
-//
-//        return $client->addShippingToCapture($data, $orderId, $captureId);
-//    }
-
-//    /**
-//     * Get average of order VAT
-//     *
-//     * @return float
-//     */
-//    public function getOrderVatAverage()
-//    {
-//        $vatAvg = ($this->getTotalOrderSum() / $this->getOrderNetSum() - 1) * 100;
-//
-//        return number_format($vatAvg, 2);
-//    }
 
     /**
      * @param $orderLang
@@ -380,19 +282,6 @@ class KlarnaOrder extends KlarnaOrder_parent
     }
 
     /**
-     * @param StandardException $e
-     * @return string
-     */
-    public function showKlarnaErrorMessage(StandardException $e)
-    {
-        if (in_array($e->getCode(), array(403, 422, 401, 404))) {
-            $oLang = Registry::getLang();
-
-            return sprintf($oLang->translateString('KL_ORDER_UPDATE_REJECTED_BY_KLARNA'), $e->getMessage());
-        }
-    }
-
-    /**
      * Set anonymous data if anonymization is enabled.
      *
      * @param $aArticleList
@@ -408,7 +297,6 @@ class KlarnaOrder extends KlarnaOrder_parent
                 $this->_setOrderArticleKlarnaInfo($oOrderArticles);
             }
         }
-
     }
 
     /**
@@ -434,4 +322,6 @@ class KlarnaOrder extends KlarnaOrder_parent
 
         return $this->isAnonymous = KlarnaUtils::getShopConfVar('blKlarnaEnableAnonymization');
     }
+
+
 }

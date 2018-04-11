@@ -13,8 +13,10 @@ use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\TestingLibrary\UnitTestCase;
+use ReflectionClass;
 use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
 use TopConcepts\Klarna\Exception\KlarnaClientException;
+use TopConcepts\Klarna\Exception\KlarnaWrongCredentialsException;
 use TopConcepts\Klarna\Models\KlarnaOrder;
 use TopConcepts\Klarna\Models\KlarnaPayment;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
@@ -98,7 +100,6 @@ class KlarnaOrderTest extends ModuleUnitTestCase
 
     /**
      * @dataProvider getNewOrderLinesAndTotalsDataProvider
-     * @param $orderId
      * @param $iLang
      * @param $isCapture
      * @param $expectedResult
@@ -188,21 +189,6 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider errorDataProvider
-     * @param $iCode
-     */
-
-    public function testShowKlarnaErrorMessage($iCode)
-    {
-        $this->setLanguage(1);
-        $e = new StandardException("Test Message", $iCode);
-        $order = oxNew(Order::class);
-        $message = $order->showKlarnaErrorMessage($e);
-        $this->assertEquals('KL_ORDER_UPDATE_REJECTED_BY_KLARNA', $message);
-
-    }
-
     public function isKCODataProvider()
     {
         return [
@@ -281,17 +267,27 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $result = $order->cancelOrder();
         $this->assertNull($result);
 
+        // throws KlarnaClientException
         $order->load($id);
         $order->oxorder__oxpaymenttype = new Field('klarna_xxx', Field::T_RAW);
         $order->oxorder__oxstorno = new Field(0, Field::T_RAW);
         $order->oxorder__klsync = new Field(1, Field::T_RAW);
         $order->oxorder__klorderid = new Field('aaa', Field::T_RAW);
 
-        $order->expects($this->once())->method('cancelKlarnaOrder')->willThrowException(new KlarnaClientException("Test"));
+        $order->expects($this->any())->method('cancelKlarnaOrder')->willThrowException(new KlarnaClientException("Test"));
         $result = $order->cancelOrder();
-
-//        print_r($order);
         $this->assertEquals("Test", $result);
+
+        // throws KlarnaWrongCredentialsException
+        $order->load($id);
+        $order->oxorder__oxpaymenttype = new Field('klarna_xxx', Field::T_RAW);
+        $order->oxorder__oxstorno = new Field(0, Field::T_RAW);
+        $order->oxorder__klsync = new Field(1, Field::T_RAW);
+        $order->oxorder__klorderid = new Field('aaa', Field::T_RAW);
+
+        $order->expects($this->any())->method('cancelKlarnaOrder')->willThrowException(new KlarnaWrongCredentialsException("Test"));
+        $result = $order->cancelOrder();
+        $this->assertEquals("KLARNA_UNAUTHORIZED_REQUEST", $result);
 
 
         $this->removeKlarnaOrder($id);
@@ -308,31 +304,121 @@ class KlarnaOrderTest extends ModuleUnitTestCase
 
         $order = oxNew(Order::class);
         $result = $order->captureKlarnaOrder($data, $id, null, $client);
+        $this->assertEquals($response, $result);
+
+
+        $client = $this->createStub(KlarnaOrderManagementClient::class, ['captureOrder' => $response]);
+        $client->expects($this->once())
+            ->method('captureOrder')
+            ->with($this->callback(
+                function($data){
+                    return isset($data['shipping_info']) && $data['shipping_info'] === [['tracking_number' => 'trackcode']];
+                })
+            )
+            ->willReturn($response);
+
+        $order->oxorder__oxtrackcode = new Field('trackcode', Field::T_RAW);
+        $result = $order->captureKlarnaOrder($data, $id, null, $client);
+        $this->assertEquals($response, $result);
+    }
+    /**
+     * @throws \ReflectionException
+     */
+    public function test_setNumber()
+    {
+        $id = $this->prepareKlarnaOrder();
+        $order = $this->getMock(Order::class, ['isKlarna', 'isKP', 'isKCO']);
+        $class =  new ReflectionClass(get_class($order));
+        $method = $class->getMethod('_setNumber');
+        $method->setAccessible(true);
+
+        $order->expects($this->any())->method('isKlarna')->willReturn(true);
+        $order->expects($this->any())->method('isKP')->willReturn(true);
+
+        // successful update
+        $order->load($id);
+        $order->oxorder__klorderid = new Field('', Field::T_RAW);
+        $this->setSessionParam('klarna_last_KP_order_id', 'klarnaId');
+
+        $response = ['response'];
+        $client = $this->createStub(KlarnaOrderManagementClient::class, ['sendOxidOrderNr' => $response]);
+        $client->expects($this->once())
+            ->method('sendOxidOrderNr')
+            ->willReturn($response);
+
+        $result = $method->invokeArgs($order, [$client]);
+        $this->assertTrue($result);
+        $this->assertNull($this->getSessionParam('klarna_last_KP_order_id'));
+        $this->assertEquals('klarnaId', $order->oxorder__klorderid->value);
+        $this->assertEquals('klarnaId', $order->oxorder__klorderid->value);
+
+
+
+
+        // exception
+        $order->oxorder__klorderid = new Field('', Field::T_RAW);
+        $order->expects($this->any())->method('isKCO')->willReturn(true);
+        $this->setSessionParam('klarna_checkout_order_id', 'klarnaId');
+
+        $response = ['response'];
+        $e = $this->getMock(KlarnaClientException::class, ['debugOut']);
+        $e->expects($this->once())->method('debugOut');
+        $client = $this->createStub(KlarnaOrderManagementClient::class, ['sendOxidOrderNr' => $response]);
+        $client->expects($this->once())
+            ->method('sendOxidOrderNr')
+            ->willThrowException($e);
+
+        $result = $method->invokeArgs($order, [$client]);
+        $this->assertTrue($result);
+
+        $this->removeKlarnaOrder($id);
     }
 
 
-//    public function testGetAllCaptures()
-//    {
-//
-//    }
+    /**
+     * @throws \ReflectionException
+     */
+    public function test_setOrderArticle()
+    {
 
-//    public function testRetrieveKlarnaOrder()
-//    {
-//
-//    }
+//        $order = $this->getMock(Order::class, ['getOrderArticles']);
+        $order = oxNew(Order::class);
+        $oBasket = $this->prepareBasketWithProduct();
 
-//    public function testGetKlarnaClient()
-//    {
-//
-//    }
+        $class =  new ReflectionClass(get_class($order));
+        $method = $class->getMethod('_setOrderArticles');
+        $method->setAccessible(true);
 
-//    public function testCreateOrderRefund()
-//    {
-//
-//    }
+        $this->setProtectedClassProperty($order, 'isAnonymous', true);
+        $result = $method->invokeArgs($order, [$oBasket->getContents()]);
+        $this->assertNull($result);
 
-//    public function testAddShippingToCapture()
-//    {
-//
-//    }
+        $oList = $order->getOrderArticles();
+        $aList = $this->getProtectedClassProperty($oList, '_aArray');
+        $oArticle = reset($aList); // get first element
+
+        $this->assertNotEmpty($oArticle->getFieldData('oxorderarticles__kltitle'));
+        $this->assertNotEmpty($oArticle->getFieldData('oxorderarticles__klartnum'));
+
+        $this->setProtectedClassProperty($order, 'isAnonymous', null);
+        $result = $method->invokeArgs($order, [$oBasket->getContents()]);
+        $this->assertNull($result);
+
+        $oList = $order->getOrderArticles();
+        $aList = $this->getProtectedClassProperty($oList, '_aArray');
+        $oArticle = reset($aList); // get first element
+
+        $this->assertNull($oArticle->getFieldData('oxorderarticles__kltitle'));
+        $this->assertNull($oArticle->getFieldData('oxorderarticles__klartnum'));
+
+    }
+
+    public function setOrderArticleDataProvider()
+    {
+
+        return [
+            [true],
+            [null]
+        ];
+    }
 }
