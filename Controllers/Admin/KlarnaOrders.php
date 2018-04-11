@@ -189,7 +189,8 @@ class KlarnaOrders extends AdminDetailsController
         $sCountryISO = KlarnaUtils::getCountryISO($this->getEditObject()->getFieldData('oxbillcountryid'));
 
         try {
-            $orderRefund = $this->getEditObject()->createOrderRefund($data, $this->getEditObject()->getFieldData('klorderid'), $sCountryISO);
+            $client = KlarnaOrderManagementClient::getInstance($sCountryISO);
+            $orderRefund = $client->createOrderRefund($data, $this->getEditObject()->getFieldData('klorderid'));
         } catch (\Exception $e) {
             Registry::get("oxUtilsView")->addErrorToDisplay($e->getMessage());
         }
