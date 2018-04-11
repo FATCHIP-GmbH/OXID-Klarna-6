@@ -408,37 +408,6 @@ class KlarnaBasket extends KlarnaBasket_parent
     }
 
     /**
-     * Check if basket articles will expire in given days
-     *
-     * @param int $iInDays
-     * @return boolean
-     * @throws \oxSystemComponentException
-     */
-    public function isPreorderArticlesWillExpire($iInDays = null)
-    {
-        $blWillExpire = true;
-        if ($iInDays = $this->_getInDays($iInDays)) {
-            $this->_aPreorderArticles = array();
-            foreach ($this->getBasketArticles() as $oOrderArticle) {
-                /** @var OrderArticle | KlarnaOrderArticle $oOrderArticle */
-                if ($oOrderArticle instanceof OrderArticle) {
-                    /** @var Article | KlarnaArticle $oArticle */
-                    $oArticle = $oOrderArticle->getKlarnaArticle();
-                } else {
-                    $oArticle = $oOrderArticle;
-                }
-                // no stock or stock is external
-                if ($oArticle->isGoodStockForExpireCheck() && $oArticle->willNotExpired($iInDays)) {
-                    $blWillExpire               = false;
-                    $this->_aPreorderArticles[] = $oArticle;
-                }
-            }
-        }
-
-        return $blWillExpire;
-    }
-
-    /**
      * If param not set, try getting it from config, else - return given param
      *
      * @param int $iInDays
@@ -462,12 +431,6 @@ class KlarnaBasket extends KlarnaBasket_parent
      */
     public function kl_calculateDeliveryCost()
     {
-        /*
-         TODO: Calculation may differ for old OXID versions. Check if we need this below implemented here
-            if (version_compare(Registry::getConfig()->getVersion(), '4.8.0') == -1) { //if OXID version < 4.8.0
-                return $this->getCosts('oxdelivery');
-            }
-         */
         if ($this->_oDeliveryPrice !== null) {
             return $this->_oDeliveryPrice;
         }
@@ -482,7 +445,6 @@ class KlarnaBasket extends KlarnaBasket_parent
 
         // don't calculate if not logged in
         $oUser = $this->getBasketUser();
-
         if (!$oUser && !$myConfig->getConfigParam('blCalculateDelCostIfNotLoggedIn')) {
             return $oDeliveryPrice;
         }
@@ -617,7 +579,7 @@ class KlarnaBasket extends KlarnaBasket_parent
      * @param $val
      * @return bool
      */
-    public function is_fraction($val)
+    protected function is_fraction($val)
     {
         return is_numeric($val) && floor($val) != $val;
     }

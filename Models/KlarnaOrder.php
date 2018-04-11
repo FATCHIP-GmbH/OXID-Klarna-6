@@ -399,7 +399,7 @@ class KlarnaOrder extends KlarnaOrder_parent
      * @param StandardException $e
      * @return string
      */
-    public function showKlarnaErrorMessage(StandardException $e)
+    protected function showKlarnaErrorMessage(StandardException $e)
     {
         if (in_array($e->getCode(), array(403, 422, 401, 404))) {
             $oLang = Registry::getLang();
