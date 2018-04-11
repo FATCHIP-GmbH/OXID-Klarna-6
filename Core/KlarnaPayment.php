@@ -183,13 +183,15 @@ class KlarnaPayment extends BaseModel
      */
     protected function addOptions()
     {
-        $options = array();
+        $options = [];
+        $kcoDesign = KlarnaUtils::getShopConfVar('aKlarnaDesign') ?: [];
+        $kpDesign = KlarnaUtils::getShopConfVar('aKlarnaDesignKP') ?: [];
 
         /*** add design options ***/
         $options = array_merge(
             $options,
-            KlarnaUtils::getShopConfVar('aKlarnaDesign'),
-            KlarnaUtils::getShopConfVar('aKlarnaDesignKP')
+            $kcoDesign,
+            $kpDesign
         );
 
         if ($options) {
