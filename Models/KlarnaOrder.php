@@ -205,19 +205,16 @@ class KlarnaOrder extends KlarnaOrder_parent
     /**
      * @param $orderId
      * @param null $sCountryISO
+     * @param KlarnaOrderManagementClient|null $client
      * @return mixed
-     * @throws KlarnaOrderNotFoundException
-     * @throws KlarnaWrongCredentialsException
-     * @throws \TopConcepts\Klarna\Exception\KlarnaCaptureNotAllowedException
-     * @throws \TopConcepts\Klarna\Exception\KlarnaClientException
-     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
-    public function cancelKlarnaOrder($orderId = null, $sCountryISO = null)
+    public function cancelKlarnaOrder($orderId = null, $sCountryISO = null, KlarnaOrderManagementClient $client = null)
     {
         $orderId = $orderId ?: $this->getFieldData('klorderid');
 
-        $client = $this->getKlarnaClient($sCountryISO);
+        if(!$client) {
+            $client = KlarnaOrderManagementClient::getInstance($sCountryISO);
+        }
 
         return $client->cancelOrder($orderId);
     }
@@ -278,12 +275,14 @@ class KlarnaOrder extends KlarnaOrder_parent
      * @throws \TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
-    public function captureKlarnaOrder($data, $orderId, $sCountryISO = null)
+    public function captureKlarnaOrder($data, $orderId, $sCountryISO = null, KlarnaOrderManagementClient $client = null)
     {
         if ($trackcode = $this->getFieldData('oxtrackcode')) {
             $data['shipping_info'] = array(array('tracking_number' => $trackcode));
         }
-        $client = $this->getKlarnaClient($sCountryISO);
+        if(!$client){
+            $client = KlarnaOrderManagementClient::getInstance($sCountryISO);
+        }
 
         return $client->captureOrder($data, $orderId);
     }
