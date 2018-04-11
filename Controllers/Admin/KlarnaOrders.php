@@ -3,6 +3,7 @@
 namespace TopConcepts\Klarna\Controllers\Admin;
 
 
+use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
 use TopConcepts\Klarna\Exception\KlarnaCaptureNotAllowedException;
 use OxidEsales\Eshop\Application\Controller\Admin\AdminDetailsController;
 use TopConcepts\Klarna\Core\KlarnaUtils;
@@ -159,7 +160,8 @@ class KlarnaOrders extends AdminDetailsController
             $sCountryISO = KlarnaUtils::getCountryISO($this->getEditObject()->getFieldData('oxbillcountryid'));
         }
 
-        return $this->getEditObject()->retrieveKlarnaOrder($this->getEditObject()->getFieldData('klorderid'), $sCountryISO);
+        $client = KlarnaOrderManagementClient::getInstance($sCountryISO);
+        return $client->getOrder($this->getEditObject()->getFieldData('klorderid'));
     }
 
     /**
@@ -187,7 +189,8 @@ class KlarnaOrders extends AdminDetailsController
         $sCountryISO = KlarnaUtils::getCountryISO($this->getEditObject()->getFieldData('oxbillcountryid'));
 
         try {
-            $orderRefund = $this->getEditObject()->createOrderRefund($data, $this->getEditObject()->getFieldData('klorderid'), $sCountryISO);
+            $client = KlarnaOrderManagementClient::getInstance($sCountryISO);
+            $orderRefund = $client->createOrderRefund($data, $this->getEditObject()->getFieldData('klorderid'));
         } catch (\Exception $e) {
             Registry::get("oxUtilsView")->addErrorToDisplay($e->getMessage());
         }
@@ -200,7 +203,7 @@ class KlarnaOrders extends AdminDetailsController
      */
     public function cancelOrder()
     {
-        return $this->getEditObject()->cancelOrder();
+        return  $this->getEditObject()->cancelOrder();
     }
 
     /**

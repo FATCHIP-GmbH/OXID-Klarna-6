@@ -10,32 +10,17 @@ namespace TopConcepts\Klarna\Testes\Unit\Models;
 
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Application\Model\User;
+use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\TestingLibrary\UnitTestCase;
 use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
+use TopConcepts\Klarna\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Models\KlarnaOrder;
 use TopConcepts\Klarna\Models\KlarnaPayment;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaOrderTest extends ModuleUnitTestCase
 {
-
-    protected function prepareKlarnaOrder()
-    {
-        /** @var \OxidEsales\Eshop\Core\Database\Adapter\Doctrine\Database $db */
-        $db = UnitTestCase::getDb();
-        $db->execute("INSERT INTO `oxorder` VALUES('fce317bd07065a16d6c0b8b530346a8e', '1', 'bbf2387f1e85d75ffaac693c2338d400', '2018-03-13 11:45:41', '3', '', 'dabrowski@topconcepts.de', 'Greg', 'Dabrowski', 'afafafafafa', '1', '', '', 'Hamburg', 'a7c40f631fc920687.20179984', '', '12012', '', '', 'Mr', '', 'Greg', 'Dabrowski', 'afafafafafa', '1', '', 'Hamburg', 'a7c40f631fc920687.20179984', '', '12012', '', '', 'Mr', 'a66b77a68e3d3f84cd8950e7c99f5362', 'klarna_checkout', '276.47', '329', '329', '19', '52.53', '0', '0', '0', '19', '0', '0', '0', '0', '0', '19', '', '', '0', '0', '', '0000-00-00', '', '0000-00-00 00:00:00', '', '0', 'EUR', '1', 'ORDERFOLDER_NEW', '', '', '', '0000-00-00 00:00:00', '0', '', 'OK', '0', '0', 'oxidstandard', '2018-03-13 12:13:35', '0', 'K501664', '334d4946-6e76-7f13-9b78-c4461b5c8b9d', '1', '')");
-        $db->execute("INSERT INTO `oxorderarticles` VALUES('3c492e4ed3b7aa51b0fd1d85e26d2dc7', 'fce317bd07065a16d6c0b8b530346a8e', '0', '058de8224773a1d5fd54d523f0c823e0', '1302', 'Kiteboard CABRINHA CALIBER 2011', 'Freestyle und Freeride Board', '', '402.52', '479', '76.48', '19', '', '479', '479', '402.52', '', '', '', '', '', 'cabrinha_caliber_2011.jpg', 'cabrinha_caliber_2011_deck.jpg', 'cabrinha_caliber_2011_bottom.jpg', '', '', '0', '12', '0000-00-00', '2010-12-06', '2018-03-13 12:13:35', '0', '0', '0', '', 'kiteboard, kite, board, caliber, cabrinha', '', '', '1', '', 'oxarticle', '0', '1', '0', '', '')");
-        $db->execute("INSERT INTO `oxorderarticles` VALUES('886fab2af7827129caa39ef0be3e522e', 'fce317bd07065a16d6c0b8b530346a8e', '1', 'ed6573c0259d6a6fb641d106dcb2faec', '2103', 'Wakeboard LIQUID FORCE GROOVE 2010', 'Stylisches Wakeboard mit traumhafter Performance', '', '276.47', '329', '52.53', '19', '', '329', '329', '276.47', '', '', '', '', '', 'lf_groove_2010_1.jpg', 'lf_groove_2010_deck_1.jpg', 'lf_groove_2010_bottom_1.jpg', '', '', '0', '9', '0000-00-00', '2010-12-09', '2018-03-13 11:45:41', '0', '0', '0', '', 'wakeboarding, wake, board, liquid force, groove', '', '', '1', '', 'oxarticle', '0', '1', '0', '', '')");
-    }
-
-    protected function removeKlarnaOrder()
-    {
-        /** @var \OxidEsales\Eshop\Core\Database\Adapter\Doctrine\Database $db */
-        $db = UnitTestCase::getDb();
-        $db->execute("DELETE FROM `oxorder` WHERE `oxid` = 'fce317bd07065a16d6c0b8b530346a8e'");
-        $db->execute("DELETE FROM `oxorderarticles` WHERE `oxorderid` = 'fce317bd07065a16d6c0b8b530346a8e'");
-    }
 
     public function isKPDataProvider()
     {
@@ -106,8 +91,8 @@ class KlarnaOrderTest extends ModuleUnitTestCase
             'order_tax_amount' => 5253
         ];
         return [
-            ['fce317bd07065a16d6c0b8b530346a8e', 0, true, $orderLines],
-            ['fce317bd07065a16d6c0b8b530346a8e', 0, false, $orderLines]
+            [0, true, $orderLines],
+            [0, false, $orderLines]
         ];
     }
 
@@ -118,27 +103,15 @@ class KlarnaOrderTest extends ModuleUnitTestCase
      * @param $isCapture
      * @param $expectedResult
      */
-    public function testGetNewOrderLinesAndTotals($orderId, $iLang, $isCapture, $expectedResult)
+    public function testGetNewOrderLinesAndTotals($iLang, $isCapture, $expectedResult)
     {
-        $this->prepareKlarnaOrder();
+        $id = $this->prepareKlarnaOrder();
         $oOrder = oxNew(Order::class);
-        $oOrder->load($orderId);
+        $oOrder->load($id);
         $result = $oOrder->getNewOrderLinesAndTotals($iLang, $isCapture);
 
         $this->assertEquals($expectedResult, $result);
-        $this->removeKlarnaOrder();
-    }
-
-    public function testCancelKlarnaOrder()
-    {
-        $id = 'zzz';
-        $client = $this->getMock(KlarnaOrderManagementClient::class, ['cancelOrder']);
-        $client->expects($this->once())->method('cancelOrder')->with($id);
-        $order = $this->getMock(Order::class, ['getKlarnaClient']);
-        $order->expects($this->once())->method('getKlarnaClient')->willReturn($client);
-        $order->oxorder__klorderid = new Field('zzz', Field::T_RAW);
-
-        $order->cancelKlarnaOrder();
+        $this->removeKlarnaOrder($id);
     }
 
 
@@ -208,48 +181,25 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $this->assertEquals($expectedResult, $result);
     }
 
-    public function testUpdateKlarnaOrder()
+    public function errorDataProvider()
     {
-
+        return [
+            [403], [422], [401], [404]
+        ];
     }
 
-    public function testShowKlarnaErrorMessage()
+    /**
+     * @dataProvider errorDataProvider
+     * @param $iCode
+     */
+
+    public function testShowKlarnaErrorMessage($iCode)
     {
-
-    }
-
-    public function testCancelOrder()
-    {
-
-    }
-
-    public function testGetKlarnaClient()
-    {
-
-    }
-
-    public function testRetrieveKlarnaOrder()
-    {
-
-    }
-
-    public function testGetAllCaptures()
-    {
-
-    }
-
-    public function testCreateOrderRefund()
-    {
-
-    }
-
-    public function testCaptureKlarnaOrder()
-    {
-
-    }
-
-    public function testAddShippingToCapture()
-    {
+        $this->setLanguage(1);
+        $e = new StandardException("Test Message", $iCode);
+        $order = oxNew(Order::class);
+        $message = $order->showKlarnaErrorMessage($e);
+        $this->assertEquals('KL_ORDER_UPDATE_REJECTED_BY_KLARNA', $message);
 
     }
 
@@ -275,4 +225,114 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $result = $order->isKCO();
         $this->assertEquals($expectedResult, $result);
     }
+
+    public function testCancelKlarnaOrder()
+    {
+        $id = 'zzz';
+        $response = ['response'];
+
+        $client = $this->createStub(KlarnaOrderManagementClient::class, ['cancelOrder' => $response]);
+        $order = oxNew(Order::class);
+        $result = $order->cancelKlarnaOrder($id, null, $client);
+        $this->assertEquals($response, $result);
+    }
+
+
+    public function testUpdateKlarnaOrder()
+    {
+        $id = 'zzz';
+        $data = ['update' => 'data'];
+        $response = ['response'];
+
+        $client = $this->createStub(KlarnaOrderManagementClient::class, ['updateOrderLines' => $response]);
+
+        $order = oxNew(Order::class);
+        $result = $order->updateKlarnaOrder($data, $id, null, $client);
+        $this->assertNull($result);
+
+        $this->assertEquals(1, $order->oxorder__klsync->value);
+
+        // Test exception
+        $client = $this->getMock(KlarnaOrderManagementClient::class, ['updateOrderLines']);
+        $client->expects($this->once())->method('updateOrderLines')->willThrowException(new KlarnaClientException("Test"));
+
+        $order = oxNew(Order::class);
+        $result = $order->updateKlarnaOrder($data, $id, null, $client);
+
+        $this->assertEquals(0, $order->oxorder__klsync->value);
+        $this->assertEquals("Test", $result);
+
+    }
+    public function testCancelOrder()
+    {
+        $response = ['response'];
+        $id = $this->prepareKlarnaOrder();
+
+        $order = $this->getMock(Order::class, ['cancelKlarnaOrder'] );
+        $order->expects($this->any())->method('cancelKlarnaOrder')->willReturn($response);
+        $order->load($id);
+        $order->oxorder__oxpaymenttype = new Field('klarna_xxx', Field::T_RAW);
+        $order->oxorder__oxstorno = new Field(0, Field::T_RAW);
+        $order->oxorder__klsync = new Field(1, Field::T_RAW);
+        $order->oxorder__klorderid = new Field('aaa', Field::T_RAW);
+        $order->save();
+
+
+        $result = $order->cancelOrder();
+        $this->assertNull($result);
+
+        $order->load($id);
+        $order->oxorder__oxpaymenttype = new Field('klarna_xxx', Field::T_RAW);
+        $order->oxorder__oxstorno = new Field(0, Field::T_RAW);
+        $order->oxorder__klsync = new Field(1, Field::T_RAW);
+        $order->oxorder__klorderid = new Field('aaa', Field::T_RAW);
+
+        $order->expects($this->once())->method('cancelKlarnaOrder')->willThrowException(new KlarnaClientException("Test"));
+        $result = $order->cancelOrder();
+
+//        print_r($order);
+        $this->assertEquals("Test", $result);
+
+
+        $this->removeKlarnaOrder($id);
+    }
+
+    public function testCaptureKlarnaOrder()
+    {
+        $id = 'zzz';
+        $data = ['update' => 'data'];
+        $response = ['response'];
+
+        $client = $this->createStub(KlarnaOrderManagementClient::class, ['captureOrder' => $response]);
+        $client->expects($this->once())->method('captureOrder')->willReturn($response);
+
+        $order = oxNew(Order::class);
+        $result = $order->captureKlarnaOrder($data, $id, null, $client);
+    }
+
+
+//    public function testGetAllCaptures()
+//    {
+//
+//    }
+
+//    public function testRetrieveKlarnaOrder()
+//    {
+//
+//    }
+
+//    public function testGetKlarnaClient()
+//    {
+//
+//    }
+
+//    public function testCreateOrderRefund()
+//    {
+//
+//    }
+
+//    public function testAddShippingToCapture()
+//    {
+//
+//    }
 }

@@ -31,15 +31,14 @@ class KlarnaOrderList extends KlarnaOrderList_parent
                 $this->getEditObject()->oxorder__klsync = new Field(1);
                 $this->getEditObject()->save();
             } catch (StandardException $e) {
-                if (strstr($e->getMessage(), 'is canceled.')) {
-                    parent::deleteEntry();
-                } else {
+                if (!strstr($e->getMessage(), 'is canceled.')) {
                     Registry::get(UtilsView::class)->addErrorToDisplay($e);
+                    return;
                 }
             }
-        } else {
-            parent::deleteEntry();
         }
+
+        parent::deleteEntry();
     }
 
 
@@ -63,16 +62,15 @@ class KlarnaOrderList extends KlarnaOrderList_parent
                 $this->getEditObject()->save();
             } catch (StandardException $e) {
 
-                if (strstr($e->getMessage(), 'is canceled.')) {
-                    $e->debugOut();
-                    parent::storno();
-                } else {
+                if (!strstr($e->getMessage(), 'is canceled.')) {
                     Registry::get(UtilsView::class)->addErrorToDisplay($e);
+                    return;
                 }
+                $e->debugOut();
             }
-        } else {
-            parent::storno();
         }
+
+        parent::storno();
     }
 
 

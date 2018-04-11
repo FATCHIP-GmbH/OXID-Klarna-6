@@ -3,6 +3,7 @@
 namespace TopConcepts\Klarna\Core;
 
 
+use TopConcepts\Klarna\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Exception\KlarnaOrderNotFoundException;
 use TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException;
 use TopConcepts\Klarna\Exception\KlarnaWrongCredentialsException;
@@ -51,26 +52,11 @@ class KlarnaCheckoutClient extends KlarnaClientBase
         try {
             // update existing order
             return $this->postOrder($requestBody, $this->getOrderId());
-        } catch (KlarnaOrderNotFoundException $oEx) {
+        } catch (KlarnaClientException $oEx) {
             /**
              * Try again with a new session ( no order id )
              */
             $oEx->debugOut();
-
-            return $this->postOrder($requestBody);
-        } catch (KlarnaOrderReadOnlyException $oEx) {
-            /**
-             * Try again with a new session ( no order id )
-             */
-            $oEx->debugOut();
-
-            return $this->postOrder($requestBody);
-        } catch (KlarnaWrongCredentialsException $oEx) {
-            /**
-             * Try again with a new session ( no order id )
-             */
-            $oEx->debugOut();
-
             return $this->postOrder($requestBody);
         }
     }
@@ -78,13 +64,13 @@ class KlarnaCheckoutClient extends KlarnaClientBase
     /**
      * @param $data
      * @param string $order_id
-     * @return mixed
+     * @throws KlarnaClientException
      * @throws KlarnaOrderNotFoundException
      * @throws KlarnaOrderReadOnlyException
      * @throws KlarnaWrongCredentialsException
-     * @throws \TopConcepts\Klarna\Exception\KlarnaClientException
      * @throws \OxidEsales\Eshop\Core\Exception\StandardException
      * @throws \Exception
+     * @return array|bool
      */
     protected function postOrder($data, $order_id = '')
     {

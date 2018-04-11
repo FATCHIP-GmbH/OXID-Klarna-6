@@ -12,6 +12,7 @@ class KlarnaLogs extends BaseModel
 {
     /**
      * Class constructor, initiates parent constructor.
+     * @codeCoverageIgnore
      *
      */
     public function __construct()
@@ -20,20 +21,15 @@ class KlarnaLogs extends BaseModel
         $this->init('kl_logs');
     }
 
+    /**
+     * @throws \Exception
+     * @return bool|string
+     */
     public function save()
     {
         if (KlarnaUtils::getShopConfVar('blKlarnaLoggingEnabled')) {
-            $this->saveParent();
+            return parent::save();
         }
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return mixed
-     * @throws \Exception
-     */
-    protected function saveParent()
-    {
-        return parent::save();
+        return false;
     }
 }

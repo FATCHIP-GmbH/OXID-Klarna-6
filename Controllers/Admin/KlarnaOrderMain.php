@@ -181,7 +181,8 @@ class KlarnaOrderMain extends KlarnaOrderMain_parent
             try {
                 $this->_aViewData['sErrorMessage'] = '';
 
-                $response = $oOrder->captureKlarnaOrder($data, $oOrder->getFieldData('klorderid'), $sCountryISO);
+                $client = KlarnaOrderManagementClient::getInstance($sCountryISO);
+                $response = $client->captureOrder($data, $oOrder->getFieldData('klorderid'));
             } catch (StandardException $e) {
                 $this->_aViewData['sErrorMessage'] = $e->getMessage();
 
@@ -244,9 +245,9 @@ class KlarnaOrderMain extends KlarnaOrderMain_parent
                 }
             }
 
+            $klarnaClient = KlarnaOrderManagementClient::getInstance($sCountryISO);
             //new order number
             if ((int)$edit['oxorder__oxordernr'] !== $oldOrderNum) {
-                $klarnaClient = KlarnaOrderManagementClient::getInstance($sCountryISO);
                 try {
                     $klarnaClient->sendOxidOrderNr((int)$edit['oxorder__oxordernr'], $klorderid);
 
@@ -260,7 +261,7 @@ class KlarnaOrderMain extends KlarnaOrderMain_parent
                 $capture_id = $this->klarnaOrderData['captures'][0]['capture_id'];
 
                 try {
-                    $oOrder->addShippingToCapture($data, $klorderid, $capture_id, $sCountryISO);
+                    $klarnaClient->addShippingToCapture($data, $klorderid, $capture_id);
                 } catch (StandardException $e) {
                     $this->_aViewData['sErrorMessage'] = $oLang->translateString('KL_ORDER_UPDATE_CANT_BE_SENT_TO_KLARNA');
                 }
@@ -332,8 +333,8 @@ class KlarnaOrderMain extends KlarnaOrderMain_parent
         if (!$sCountryISO) {
             $sCountryISO = KlarnaUtils::getCountryISO($this->getEditObject()->getFieldData('oxbillcountryid'));
         }
-
-        return $this->getEditObject()->retrieveKlarnaOrder($this->getEditObject()->getFieldData('klorderid'), $sCountryISO);
+        $client = KlarnaOrderManagementClient::getInstance($sCountryISO);
+        return $client->getOrder($this->getEditObject()->getFieldData('klorderid'));
     }
 
     /**

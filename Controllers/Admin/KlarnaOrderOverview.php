@@ -3,6 +3,7 @@
 namespace TopConcepts\Klarna\Controllers\Admin;
 
 
+use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Exception\KlarnaOrderNotFoundException;
 use TopConcepts\Klarna\Exception\KlarnaWrongCredentialsException;
@@ -226,8 +227,8 @@ class KlarnaOrderOverview extends KlarnaOrderOverview_parent
         if (!$sCountryISO) {
             $sCountryISO = KlarnaUtils::getCountryISO($this->getEditObject()->getFieldData('oxbillcountryid'));
         }
-
-        return $this->getEditObject()->retrieveKlarnaOrder($this->getEditObject()->getFieldData('klorderid'), $sCountryISO);
+        $client = KlarnaOrderManagementClient::getInstance($sCountryISO);
+        return $client->getOrder($this->getEditObject()->getFieldData('klorderid'));
     }
 
     /**
