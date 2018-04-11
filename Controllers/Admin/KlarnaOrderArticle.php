@@ -3,6 +3,7 @@
 namespace TopConcepts\Klarna\Controllers\Admin;
 
 
+use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Exception\KlarnaOrderNotFoundException;
 use TopConcepts\Klarna\Exception\KlarnaWrongCredentialsException;
@@ -168,7 +169,9 @@ class KlarnaOrderArticle extends KlarnaOrderArticle_parent
             $orderLines  = $this->getEditObject(true)->getNewOrderLinesAndTotals($this->orderLang);
             $sCountryISO = KlarnaUtils::getCountryISO($this->getEditObject()->oxorder__oxbillcountryid->value);
 
-            $error = $this->getEditObject()->updateKlarnaOrder($orderLines, $this->getEditObject()->oxorder__klorderid->value, $sCountryISO);
+            $client = KlarnaOrderManagementClient::getInstance($sCountryISO);
+            $error = $client->updateOrder($orderLines, $this->getEditObject()->oxorder__klorderid->value, $sCountryISO);
+
             if ($error) {
                 $this->_aViewData['sErrorMessage'] = $error;
             }
@@ -280,7 +283,10 @@ class KlarnaOrderArticle extends KlarnaOrderArticle_parent
             $sCountryISO = KlarnaUtils::getCountryISO($this->getEditObject()->getFieldData('oxbillcountryid'));
         }
 
-        return $this->getEditObject()->retrieveKlarnaOrder($this->getEditObject()->getFieldData('klorderid'), $sCountryISO);
+        /** @var KlarnaOrderManagementClient $client */
+        $client = KlarnaOrderManagementClient::getInstance($sCountryISO);
+
+        return $client->getOrder($this->getEditObject()->getFieldData('klorderid'));
     }
 
     /**
