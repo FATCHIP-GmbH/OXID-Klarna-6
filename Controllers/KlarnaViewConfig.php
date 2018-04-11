@@ -70,7 +70,9 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
             else
                 return false;
 
-            $url = sprintf(KlarnaConsts::getFooterImgUrls(KlarnaUtils::getShopConfVar('sKlFooterValue')), $sLocale);
+            $url  = sprintf(KlarnaConsts::getFooterImgUrls(KlarnaUtils::getShopConfVar('sKlFooterValue')), $sLocale);
+            $from = '/' . preg_quote('-', '/') . '/';
+            $url  = preg_replace($from, '_', $url, 1);
 
             return array(
                 'url'   => $url,
@@ -248,6 +250,7 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
         $sCountryISO = Registry::getSession()->getVariable('sCountryISO');
         $mid         = KlarnaUtils::getAPICredentials($sCountryISO);
         preg_match('/^(?P<mid>(.)+)(\_)/', $mid['mid'], $matches);
+
         return sprintf(KlarnaConsts::KLARNA_PREFILL_NOTIF_URL, $matches['mid'], $this->getActLanguageAbbr(), strtolower($sCountryISO));
     }
 
