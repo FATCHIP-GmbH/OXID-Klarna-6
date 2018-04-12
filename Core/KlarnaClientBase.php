@@ -158,6 +158,7 @@ abstract class KlarnaClientBase extends Base
 
     /**
      * @param $aErrors
+     * @codeCoverageIgnore
      */
     public static function addErrors($aErrors)
     {
