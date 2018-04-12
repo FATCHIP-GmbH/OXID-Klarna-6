@@ -284,24 +284,24 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
             ]],
             ['KCO', 0, 'longBlack', false],
             ['KCO', 1, 'longBlack', [
-                'url' => '//cdn.klarna.com/1.0/shared/image/generic/badge/de-de/checkout/long-blue.png?width=440',
+                'url' => '//cdn.klarna.com/1.0/shared/image/generic/badge/de_de/checkout/long-blue.png?width=440',
                 'class' => 'longBlack'
             ]],
             ['KCO', 1, 'longWhite', [
-                'url' => '//cdn.klarna.com/1.0/shared/image/generic/badge/de-de/checkout/long-white.png?width=440',
+                'url' => '//cdn.klarna.com/1.0/shared/image/generic/badge/de_de/checkout/long-white.png?width=440',
                 'class' => 'longWhite'
             ]],
             ['KCO', 1, 'shortBlack', [
-                'url' => '//cdn.klarna.com/1.0/shared/image/generic/badge/de-de/checkout/short-blue.png?width=312',
+                'url' => '//cdn.klarna.com/1.0/shared/image/generic/badge/de_de/checkout/short-blue.png?width=312',
                 'class' => 'shortBlack'
             ]],
             ['KCO', 1, 'shortWhite', [
-                'url' => '//cdn.klarna.com/1.0/shared/image/generic/badge/de-de/checkout/short-white.png?width=312',
+                'url' => '//cdn.klarna.com/1.0/shared/image/generic/badge/de_de/checkout/short-white.png?width=312',
                 'class' => 'shortWhite'
             ]],
-            ['KCO', 2, 'longBlack', [
-                'url' => '//cdn.klarna.com/1.0/shared/image/generic/badge//checkout/long-blue.png?width=440',
-                'class' => 'longBlack'
+            ['KCO', 2, 'logoBlack', [
+                'url' => '//cdn.klarna.com/1.0/shared/image/generic/logo/en_gb/basic/logo_black.png',
+                'class' => 'logoBlack'
             ]],
             ['KCO', 2, 'logoWhite', [
                 'url' => '//cdn.klarna.com/1.0/shared/image/generic/logo/en_gb/basic/logo_white.png',
