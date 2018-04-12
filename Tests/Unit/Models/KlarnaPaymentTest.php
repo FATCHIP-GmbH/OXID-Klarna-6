@@ -190,6 +190,7 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
         return [
             [null, $expectedResult_1],
             ['KP', $expectedResult_2],
+            ['noResult', null],
         ];
     }
 
@@ -237,6 +238,7 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
         return [
             [$sessionData, 'pay_later', $sessionData['payment_method_categories'][0]['asset_urls']['standard']],
             [$sessionData, 'pay_over_time', $sessionData['payment_method_categories'][1]['asset_urls']['standard']],
+            [null, 'pay_over_time', null]
         ];
     }
 }
