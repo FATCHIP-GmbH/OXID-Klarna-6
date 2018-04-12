@@ -245,7 +245,9 @@ class KlarnaPaymentsClient extends KlarnaClientBase
         if ($this->_oKlarnaOrder instanceof KlarnaPayment) {
             $checkSums = $this->_oKlarnaOrder->fetchCheckSums();
             if ($this->_oKlarnaOrder->isAuthorized()
+                //@codeCoverageIgnoreStart
                 || $this->_oKlarnaOrder->getStatus() === 'authorize'
+                //@codeCoverageIgnoreEnd
                 || $checkSums['_aUserData']
             ) {
                 $aChangedData = $this->_oKlarnaOrder->getChangedData();
@@ -255,8 +257,9 @@ class KlarnaPaymentsClient extends KlarnaClientBase
                     // update order data
                     return array(json_encode($aChangedData), $splitted);
                 }
-
+                //@codeCoverageIgnoreStart
                 return null;
+                //@codeCoverageIgnoreEnd
             }
         }
 
