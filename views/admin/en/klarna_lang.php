@@ -129,9 +129,9 @@ $aLang = array(
     'KL_PAY_NOW_TEXT'      => 'Customers who want to pay in full at checkout can do it quickly and securely with Klarnas Pay now-option - using credit/debit card or Direct bank transfer: Klarna Direkt, Sofort, SEPA Direct Debit.',
 
     'KL_EXTERNAL_PAYMENTS_ADMIN_DESC'   =>
-        'Here you can configure External Payment Methods and External Checkouts to be included inside the Klarna Checkout Iframe. 
-For a detailed description of the different settings please see the tool-tip function
-<i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s" target="_blank">documentation</a>
+        '\'Here you can configure External Payment Methods and External Checkouts to be included inside the Klarna Checkout Iframe. 
+        For a detailed description of the different settings please see the tool-tip function 
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s" target="_blank">documentation</a> 
 or contact Klarna Integration Support.',
     'KL_EXTRA_MERCHANT_DATA_ADMIN_DESC' => 'Here you can configure the Extra Merchant Data to use with the Klarna extension 
 for OXID. For a detailed description of the different settings please see the tool-tip function 
