@@ -65,8 +65,7 @@ class KlarnaOrder extends KlarnaOrder_parent
             // validating minimum price
             $iValidState = $this->validateBasket($oBasket);
         }
-
-
+        
         return $iValidState;
     }
 

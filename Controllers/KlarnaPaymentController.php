@@ -113,7 +113,11 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
                 // show only first
                 $this->addTplParam("kpError", $errors[0]);
             }
-            $this->addTplParam("sLocale", strtolower(KlarnaConsts::getLocale()));
+
+            $from   = '/' . preg_quote('-', '/') . '/';
+            $locale = preg_replace($from, '_', strtolower(KlarnaConsts::getLocale(true)), 1);
+
+            $this->addTplParam("sLocale", $locale);
         }
 
         if ($this->countKPMethods() === 0) {

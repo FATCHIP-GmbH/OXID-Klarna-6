@@ -3,9 +3,6 @@
 namespace TopConcepts\Klarna\Models;
 
 
-use OxidEsales\Eshop\Core\Request;
-use OxidEsales\PayPalModule\Controller\PaymentController;
-use register;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Exception\KlarnaBasketTooLargeException;
 use OxidEsales\Eshop\Core\DatabaseProvider;
@@ -58,9 +55,8 @@ class KlarnaBasket extends KlarnaBasket_parent
      *
      * @param bool $orderMgmtId
      * @return array
-     * @throws KlarnaBasketTooLargeException
-     * @throws \OxidEsales\Eshop\Core\Exception\ArticleInputException
-     * @throws \OxidEsales\Eshop\Core\Exception\NoArticleException
+     * @throws \oxArticleInputException
+     * @throws \oxNoArticleException
      * @internal param $orderData
      */
     public function getKlarnaOrderLines($orderMgmtId = null)
@@ -74,6 +70,7 @@ class KlarnaBasket extends KlarnaBasket_parent
             $oOrder->load($orderMgmtId);
             $iOrderLang = $oOrder->getFieldData('oxlang');
         }
+
         $aItems = $this->getContents();
         usort($aItems, array($this, 'sortOrderLines'));
 
@@ -333,7 +330,7 @@ class KlarnaBasket extends KlarnaBasket_parent
      * @param DeliverySet $oDeliverySet
      * @return array
      */
-    protected function getKlarnaPaymentDelivery(Price $oPrice, $oOrder = null, DeliverySet $oDeliverySet = null)
+    public function getKlarnaPaymentDelivery(Price $oPrice, $oOrder = null, DeliverySet $oDeliverySet = null)
     {
         $unit_price = KlarnaUtils::parseFloatAsInt($oPrice->getBruttoPrice() * 100);
         $tax_rate   = KlarnaUtils::parseFloatAsInt($oPrice->getVat() * 100);
@@ -412,7 +409,6 @@ class KlarnaBasket extends KlarnaBasket_parent
 
     /**
      * Original OXID method _calcDeliveryCost
-     *
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function kl_calculateDeliveryCost()
@@ -441,7 +437,7 @@ class KlarnaBasket extends KlarnaBasket_parent
 
         // list of active delivery costs
         if ($myConfig->getConfigParam('bl_perfLoadDelivery')) {
-            /** @var DeliveryList Create new oxDeliveryList to get proper content */
+            /** @var DeliveryList oDeliveryList */
             $oDeliveryList = oxNew(DeliveryList::class);
             $aDeliveryList = $oDeliveryList->getDeliveryList(
                 $this,
@@ -566,7 +562,7 @@ class KlarnaBasket extends KlarnaBasket_parent
      * @param $val
      * @return bool
      */
-    public function is_fraction($val)
+    protected function is_fraction($val)
     {
         return is_numeric($val) && fmod($val, 1);
     }
