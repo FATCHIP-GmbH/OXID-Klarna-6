@@ -7,6 +7,7 @@ use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Request;
+use TopConcepts\Klarna\Core\KlarnaConsts;
 
 /**
  * Class Klarna_oxPayment extends OXID default oxPayment class to add additional
@@ -79,7 +80,7 @@ class KlarnaPayment extends KlarnaPayment_parent
     {
         if (in_array($this->getId(), self::getKlarnaPaymentsIds('KP'))) {
             $names = array(
-                self::KLARNA_PAYMENT_SLICE_IT_ID  => 'pay_over_time',
+                self::KLARNA_PAYMENT_SLICE_IT_ID  => 'slice_it',
                 self::KLARNA_PAYMENT_PAY_LATER_ID => 'pay_later',
                 self::KLARNA_PAYMENT_PAY_NOW      => 'pay_now',
             );
@@ -152,12 +153,20 @@ class KlarnaPayment extends KlarnaPayment_parent
         $klName = $this->getPaymentCategoryName();
 
         $oSession = Registry::getSession();
-        if($sessionData = $oSession->getVariable('klarna_session_data')){
+        if ($sessionData = $oSession->getVariable('klarna_session_data')) {
             $methodData = array_search($klName, array_column($sessionData['payment_method_categories'], 'identifier'));
-            if($methodData !== null){
+            if ($methodData !== null) {
 
                 return $sessionData['payment_method_categories'][$methodData]['asset_urls'][$variant];
             }
+        } else {
+            $from   = '/' . preg_quote('-', '/') . '/';
+            $locale = preg_replace($from, '_', strtolower(KlarnaConsts::getLocale()), 1);
+
+            return sprintf("//cdn.klarna.com/1.0/shared/image/generic/badge/%s/%s/standard/pink.png",
+                $locale,
+                $klName
+            );
         }
     }
 }

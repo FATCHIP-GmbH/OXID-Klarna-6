@@ -32,7 +32,7 @@ class KlarnaUserPayment extends KlarnaUserPayment_parent
         $from   = '/' . preg_quote('-', '/') . '/';
         $locale = preg_replace($from, '_', strtolower(KlarnaConsts::getLocale()), 1);
 
-        return sprintf("cdn.klarna.com/1.0/shared/image/generic/badge/%s/%s/standard/pink.png",
+        return sprintf("//cdn.klarna.com/1.0/shared/image/generic/badge/%s/%s/standard/pink.png",
             $locale,
             $oPayment->getPaymentCategoryName()
         );
