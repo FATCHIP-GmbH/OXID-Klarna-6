@@ -128,7 +128,7 @@ $aLang = array(
     'KL_EXTERNAL_PAYMENTS_ADMIN_DESC'   =>
         'Hier können Sie externe Bezahlarten und externe Checkouts zur Einbindung innerhalb des Klarna Checkout Iframes konfigurieren. 
         Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips 
-        <i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s">Handbuch</a> oder wenden Sie sich an den Klarna Integration Support.',
+        <i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> oder wenden Sie sich an den Klarna Integration Support.',
     'KL_EXTRA_MERCHANT_DATA_ADMIN_DESC' => 'Hier können Sie konfigurieren, ob ggf. Extra Merchant Data an Klarna übertragen werden soll. 
 Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips 
 <i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> oder wenden Sie sich an den Klarna Integration Support.',
