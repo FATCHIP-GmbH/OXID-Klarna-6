@@ -59,7 +59,7 @@ class KlarnaPaymentsClient extends KlarnaClientBase
                 KlarnaPayment::cleanUpSession();
                 list($requestBody, $splittedUpdateData) = $this->formatOrderData();
                 $this->aSessionData = $this->postSession($requestBody);
-                Registry::getSession()->setVariable('sSessionTimeStamp', $this->getTimeStamp());
+                $oSession->setVariable('sSessionTimeStamp', $this->getTimeStamp());
                 $this->_oKlarnaOrder->saveCheckSums($splittedUpdateData);
                 $oSession->setVariable('klarna_session_data', $this->aSessionData);
                 if (KlarnaUtils::is_ajax()) {
@@ -70,7 +70,7 @@ class KlarnaPaymentsClient extends KlarnaClientBase
         } else {
             // create a new order
             $this->aSessionData = $this->postSession($requestBody);
-            Registry::getSession()->setVariable('sSessionTimeStamp', $this->getTimeStamp());
+            $oSession->setVariable('sSessionTimeStamp', $this->getTimeStamp());
             $oSession->setVariable('klarna_session_data', $this->aSessionData);
         }
 
