@@ -17,7 +17,7 @@
 
 <link rel="stylesheet" href="[{$oViewConf->getResourceUrl()}]main.css">
 <link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/css/kl_klarna_admin2.css') }]">
-<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('out/admin/css/tooltipster.bundle.min.css') }]">
+<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/css/tooltipster.bundle.min.css') }]">
 <link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/css/tooltipster-sideTip-light.min.css') }]">
 <script type="text/javascript" src="[{ $oViewConf->getModuleUrl('klarna', 'out/js/libs/jquery-1.12.4.min.js') }]"></script>
 <script type="text/javascript"

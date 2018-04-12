@@ -1,8 +1,10 @@
 <link rel="stylesheet" href="[{$oViewConf->getResourceUrl()}]main.css">
 <link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/css/kl_klarna_admin2.css') }]">
 <link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/css/tooltipster.bundle.min.css') }]">
-<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/css/tooltipster-sideTip-light.min.css') }]">
-<script type="text/javascript" src="[{ $oViewConf->getModuleUrl('klarna', 'out/js/libs/jquery-1.12.4.min.js') }]"></script>
+<link rel="stylesheet"
+      href="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/css/tooltipster-sideTip-light.min.css') }]">
+<script type="text/javascript"
+        src="[{ $oViewConf->getModuleUrl('klarna', 'out/js/libs/jquery-1.12.4.min.js') }]"></script>
 <script type="text/javascript"
         src="[{ $oViewConf->getModuleUrl('klarna', 'out/js/libs/tooltipster.bundle.min.js') }]"></script>
 
@@ -32,7 +34,8 @@
                             <div class="display">
                                 <label class="label toggle" for="EmdCustomerAccountInfo">
                                     <input type="hidden" name="confbools[blKlarnaEmdCustomerAccountInfo]" value="0">
-                                    <input type="checkbox" name="confbools[blKlarnaEmdCustomerAccountInfo]" value="1" id="EmdCustomerAccountInfo"
+                                    <input type="checkbox" name="confbools[blKlarnaEmdCustomerAccountInfo]" value="1"
+                                           id="EmdCustomerAccountInfo"
                                            [{if $confbools.blKlarnaEmdCustomerAccountInfo}]checked[{/if}] [{ $readonly}]>
                                     <div class="toggle-control"></div>
                                 </label>
@@ -53,7 +56,8 @@
                             <div class="display">
                                 <label class="label toggle" for="EmdPaymentHistoryFull">
                                     <input type="hidden" name="confbools[blKlarnaEmdPaymentHistoryFull]" value="0">
-                                    <input type="checkbox" name="confbools[blKlarnaEmdPaymentHistoryFull]" value="1" id="EmdPaymentHistoryFull"
+                                    <input type="checkbox" name="confbools[blKlarnaEmdPaymentHistoryFull]" value="1"
+                                           id="EmdPaymentHistoryFull"
                                            [{if $confbools.blKlarnaEmdPaymentHistoryFull}]checked[{/if}] [{ $readonly}]
                                            class="js-payment-history-toggle">
                                     <div class="toggle-control"></div>
@@ -167,7 +171,8 @@
                             <div class="display">
                                 <label class="label toggle" for="EmdPassThrough">
                                     <input type="hidden" name="confbools[blKlarnaEmdPassThrough]" value="0">
-                                    <input type="checkbox" name="confbools[blKlarnaEmdPassThrough]" value="1" id="EmdPassThrough"
+                                    <input type="checkbox" name="confbools[blKlarnaEmdPassThrough]" value="1"
+                                           id="EmdPassThrough"
                                            [{if $confbools.blKlarnaEmdPassThrough}]checked[{/if}] [{ $readonly}]>
                                     <div class="toggle-control"></div>
                                 </label>
@@ -188,5 +193,5 @@
         </form>
     </div>
 </div>
-<script src="[{ $oViewConf->getModuleUrl('out/admin/js/kl_admin_lib.js') }]"></script>
-<script src="[{ $oViewConf->getModuleUrl('out/admin/js/kl_admin_emd.js') }]"></script>
+<script src="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/js/kl_admin_lib.js') }]"></script>
+<script src="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/js/kl_admin_emd.js') }]"></script>
