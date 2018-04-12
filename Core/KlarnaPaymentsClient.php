@@ -59,7 +59,7 @@ class KlarnaPaymentsClient extends KlarnaClientBase
                 KlarnaPayment::cleanUpSession();
                 list($requestBody, $splittedUpdateData) = $this->formatOrderData();
                 $this->aSessionData = $this->postSession($requestBody);
-                Registry::getSession()->setVariable('sSessionTimeStamp', $this->getTimeStamp());
+                $oSession->setVariable('sSessionTimeStamp', $this->getTimeStamp());
                 $this->_oKlarnaOrder->saveCheckSums($splittedUpdateData);
                 $oSession->setVariable('klarna_session_data', $this->aSessionData);
                 if (KlarnaUtils::is_ajax()) {
@@ -70,7 +70,7 @@ class KlarnaPaymentsClient extends KlarnaClientBase
         } else {
             // create a new order
             $this->aSessionData = $this->postSession($requestBody);
-            Registry::getSession()->setVariable('sSessionTimeStamp', $this->getTimeStamp());
+            $oSession->setVariable('sSessionTimeStamp', $this->getTimeStamp());
             $oSession->setVariable('klarna_session_data', $this->aSessionData);
         }
 
@@ -245,7 +245,9 @@ class KlarnaPaymentsClient extends KlarnaClientBase
         if ($this->_oKlarnaOrder instanceof KlarnaPayment) {
             $checkSums = $this->_oKlarnaOrder->fetchCheckSums();
             if ($this->_oKlarnaOrder->isAuthorized()
+                //@codeCoverageIgnoreStart
                 || $this->_oKlarnaOrder->getStatus() === 'authorize'
+                //@codeCoverageIgnoreEnd
                 || $checkSums['_aUserData']
             ) {
                 $aChangedData = $this->_oKlarnaOrder->getChangedData();
@@ -255,8 +257,9 @@ class KlarnaPaymentsClient extends KlarnaClientBase
                     // update order data
                     return array(json_encode($aChangedData), $splitted);
                 }
-
+                //@codeCoverageIgnoreStart
                 return null;
+                //@codeCoverageIgnoreEnd
             }
         }
 
