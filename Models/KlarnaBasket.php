@@ -55,9 +55,8 @@ class KlarnaBasket extends KlarnaBasket_parent
      *
      * @param bool $orderMgmtId
      * @return array
-     * @throws KlarnaBasketTooLargeException
-     * @throws \OxidEsales\Eshop\Core\Exception\ArticleInputException
-     * @throws \OxidEsales\Eshop\Core\Exception\NoArticleException
+     * @throws \oxArticleInputException
+     * @throws \oxNoArticleException
      * @internal param $orderData
      */
     public function getKlarnaOrderLines($orderMgmtId = null)
@@ -445,6 +444,7 @@ class KlarnaBasket extends KlarnaBasket_parent
 
         // don't calculate if not logged in
         $oUser = $this->getBasketUser();
+
         if (!$oUser && !$myConfig->getConfigParam('blCalculateDelCostIfNotLoggedIn')) {
             return $oDeliveryPrice;
         }
@@ -454,7 +454,7 @@ class KlarnaBasket extends KlarnaBasket_parent
 
         // list of active delivery costs
         if ($myConfig->getConfigParam('bl_perfLoadDelivery')) {
-            /** @var DeliveryList Create new oxDeliveryList to get proper content */
+            /** @var DeliveryList oDeliveryList */
             $oDeliveryList = oxNew(DeliveryList::class);
             $aDeliveryList = $oDeliveryList->getDeliveryList(
                 $this,

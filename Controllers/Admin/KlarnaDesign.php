@@ -41,9 +41,12 @@ class KlarnaDesign extends KlarnaBaseConfig
             return Registry::getUtils()->showMessageAndExit(json_encode($output));
         }
 
+        $from   = '/' . preg_quote('-', '/') . '/';
+        $locale = preg_replace($from, '_', strtolower(KlarnaConsts::getLocale(true)), 1);
+
         $this->addTplParam('settings', $this->getAdditionalSettings());
         $this->addTplParam('mode', $this->getActiveKlarnaMode());
-        $this->addTplParam('locale', strtolower(KlarnaConsts::getLocale(true)));
+        $this->addTplParam('locale', $locale);
         $this->addTplParam('aKlarnaFooterImgUrls', KlarnaConsts::getFooterImgUrls());
 
         return $this->_sThisTemplate;

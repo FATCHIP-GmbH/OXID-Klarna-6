@@ -4,8 +4,11 @@ namespace TopConcepts\Klarna\Tests\Unit\Models;
 
 
 use OxidEsales\Eshop\Application\Model\Basket;
+use OxidEsales\Eshop\Application\Model\Delivery;
+use OxidEsales\Eshop\Application\Model\DeliveryList;
 use OxidEsales\Eshop\Application\Model\DeliverySet;
 use OxidEsales\Eshop\Application\Model\Order;
+use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Price;
 use TopConcepts\Klarna\Models\KlarnaBasket;
@@ -31,11 +34,43 @@ class KlarnaBasketTest extends ModuleUnitTestCase
      */
     public function testKl_calculateDeliveryCost()
     {
-//        $oBasket = oxNew(Basket::class);
-//
-//        $result = $oBasket->kl_calculateDeliveryCost();
-//        var_dump($result);
-//        die;
+        /** @var Basket $oBasket */
+        $oBasket = $this->createStub(Basket::class, ['getAdditionalServicesVatPercent' => 7.00]);
+        $this->setConfigParam('blDeliveryVatOnTop', true);
+        $oBasket->setDeliveryPrice('price already set');
+
+        $result = $oBasket->kl_calculateDeliveryCost();
+        $this->assertEquals('price already set', $result);
+
+
+        $oBasket->setDeliveryPrice(null);
+        $this->setConfigParam('blCalculateDelCostIfNotLoggedIn', false);
+
+        $result = $oBasket->kl_calculateDeliveryCost();
+        $this->assertTrue($result instanceof Price);
+        $this->assertTrue($result->isNettoMode());
+        $this->assertEquals(0, $result->getVat());
+        $this->assertEquals(0, $result->getBruttoPrice());
+        $this->assertEquals(0, $result->getNettoPrice());
+        $this->assertEquals(0, $result->getVatValue());
+
+
+        $this->setConfigParam('blDeliveryVatOnTop', false);
+        $oUser = oxNew(User::class);
+        $oUser->load('oxdefaultadmin');
+        $oBasket->setBasketUser($oUser);
+        $oDelivery = oxNew(Delivery::class);
+        $oPrice    = oxNew(Price::class);
+        $oPrice->setPrice(100.00);
+        $oDelivery->setDeliveryPrice($oPrice);
+        $oDeliveryList = $this->createStub(DeliveryList::class, ['getDeliveryList' => [$oDelivery]]);
+        \oxTestModules::addModuleObject(DeliveryList::class, $oDeliveryList);
+
+        $result = $oBasket->kl_calculateDeliveryCost();
+        $this->assertTrue($result instanceof Price);
+        $this->assertEquals(7, $result->getVat());
+        $this->assertEquals(100, $result->getBruttoPrice());
+        $this->assertEquals(6.54, $result->getVatValue());
     }
 
     /**
@@ -52,8 +87,11 @@ class KlarnaBasketTest extends ModuleUnitTestCase
         $oPrice       = $this->createStub(Price::class,
             ['getBruttoPrice' => $bruttoPrice, 'getVat' => $vat]
         );
-        $oDeliverySet = $this->createStub(DeliverySet::class,
-            ['getFieldData' => $name]
+        $oDeliverySet = $this->createStub(DeliverySet::class, [
+                'getFieldData'      => $name,
+                'getShippingId'     => 'oxidstandard',
+                '_findDelivCountry' => 'a7c40f631fc920687.20179984',
+            ]
         );
         $oOrder       = $order;
         $oBasket      = oxNew(Basket::class);
