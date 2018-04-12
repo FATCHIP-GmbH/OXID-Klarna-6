@@ -53,20 +53,21 @@ class KlarnaOrderTest extends ModuleUnitTestCase
 
     public function getNewOrderLinesAndTotalsDataProvider()
     {
+        $homeUrl = $this->getConfigParam('sShopURL');
         $orderLines = [
             'order_lines' => [
                 [
                     'type' => 'physical',
-                    'reference' => '',
+                    'reference' => '2103',
                     'quantity' => 1,
                     'unit_price' => 32900,
                     'tax_rate' => 1900,
                     'total_amount' => 32900,
                     'total_tax_amount' => 5253,
                     'quantity_unit' => 'pcs',
-                    'name' => '(no title)',
-                    'product_url' => 'http://arek.ox6.demohost.topconcepts.net/index.php',
-                    'image_url' => 'http://arek.ox6.demohost.topconcepts.net/out/pictures/generated/product/1/540_340_75/nopic.jpg',
+                    'name' => 'Wakeboard LIQUID FORCE GROOVE 2010',
+                    'product_url' => $homeUrl . 'index.php',
+                    'image_url' => $homeUrl . 'out/pictures/generated/product/1/540_340_75/lf_groove_2010_1.jpg',
                     'product_identifiers' => [
                         'category_path' => '',
                         'global_trade_item_number' => '',

@@ -3,6 +3,9 @@
 namespace TopConcepts\Klarna\Models;
 
 
+use OxidEsales\Eshop\Core\Request;
+use OxidEsales\PayPalModule\Controller\PaymentController;
+use register;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Exception\KlarnaBasketTooLargeException;
 use OxidEsales\Eshop\Core\DatabaseProvider;
@@ -71,7 +74,6 @@ class KlarnaBasket extends KlarnaBasket_parent
             $oOrder->load($orderMgmtId);
             $iOrderLang = $oOrder->getFieldData('oxlang');
         }
-
         $aItems = $this->getContents();
         usort($aItems, array($this, 'sortOrderLines'));
 
@@ -331,7 +333,7 @@ class KlarnaBasket extends KlarnaBasket_parent
      * @param DeliverySet $oDeliverySet
      * @return array
      */
-    public function getKlarnaPaymentDelivery(Price $oPrice, $oOrder = null, DeliverySet $oDeliverySet = null)
+    protected function getKlarnaPaymentDelivery(Price $oPrice, $oOrder = null, DeliverySet $oDeliverySet = null)
     {
         $unit_price = KlarnaUtils::parseFloatAsInt($oPrice->getBruttoPrice() * 100);
         $tax_rate   = KlarnaUtils::parseFloatAsInt($oPrice->getVat() * 100);
@@ -407,67 +409,14 @@ class KlarnaBasket extends KlarnaBasket_parent
         return $aItem;
     }
 
-    /**
-     * Check if basket articles will expire in given days
-     *
-     * @param int $iInDays
-     * @return boolean
-     * @throws \oxSystemComponentException
-     */
-    public function isPreorderArticlesWillExpire($iInDays = null)
-    {
-        $blWillExpire = true;
-        if ($iInDays = $this->_getInDays($iInDays)) {
-            $this->_aPreorderArticles = array();
-            foreach ($this->getBasketArticles() as $oOrderArticle) {
-                /** @var OrderArticle | KlarnaOrderArticle $oOrderArticle */
-                if ($oOrderArticle instanceof OrderArticle) {
-                    /** @var Article | KlarnaArticle $oArticle */
-                    $oArticle = $oOrderArticle->getKlarnaArticle();
-                } else {
-                    $oArticle = $oOrderArticle;
-                }
-                // no stock or stock is external
-                if ($oArticle->isGoodStockForExpireCheck() && $oArticle->willNotExpired($iInDays)) {
-                    $blWillExpire               = false;
-                    $this->_aPreorderArticles[] = $oArticle;
-                }
-            }
-        }
-
-        return $blWillExpire;
-    }
-
-    /**
-     * If param not set, try getting it from config, else - return given param
-     *
-     * @param int $iInDays
-     * @return int
-     */
-    protected function _getInDays($iInDays = null)
-    {
-        if ($iInDays === null) {
-            // check if feature is not disabled (not 0 or empty)
-            if (Registry::getConfig()->getConfigParam('iKlarnaMaxDaysForPreorder')) {
-                $iInDays = (int)Registry::getConfig()->getConfigParam('iKlarnaMaxDaysForPreorder');
-            }
-        }
-
-        return $iInDays;
-    }
 
     /**
      * Original OXID method _calcDeliveryCost
+     *
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function kl_calculateDeliveryCost()
     {
-        /*
-         TODO: Calculation may differ for old OXID versions. Check if we need this below implemented here
-            if (version_compare(Registry::getConfig()->getVersion(), '4.8.0') == -1) { //if OXID version < 4.8.0
-                return $this->getCosts('oxdelivery');
-            }
-         */
         if ($this->_oDeliveryPrice !== null) {
             return $this->_oDeliveryPrice;
         }
@@ -619,10 +568,11 @@ class KlarnaBasket extends KlarnaBasket_parent
      */
     public function is_fraction($val)
     {
-        return is_numeric($val) && floor($val) != $val;
+        return is_numeric($val) && fmod($val, 1);
     }
 
     /**
+     * @codeIgnoreCoverage
      * @param $iLang
      */
     public function setKlarnaOrderLang($iLang)
