@@ -95,9 +95,9 @@ class KlarnaFormatter extends Base
      */
     public static function oxidToKlarnaAddress($oxObject)
     {
-        if ($oxObject instanceof User)
+        if ($oxObject instanceof User) {
             $sTable = 'oxuser__';
-        else if ($oxObject instanceof Address) {
+        } else if ($oxObject instanceof Address) {
             $sTable   = 'oxaddress__';
             $oxObject = self::completeUserData($oxObject);
         } else
@@ -192,5 +192,8 @@ class KlarnaFormatter extends Base
                 return $sSal;
             }
         }
+        //@codeCoverageIgnoreStart
+        return false;
+        //@codeCoverageIgnoreEnd
     }
 }
