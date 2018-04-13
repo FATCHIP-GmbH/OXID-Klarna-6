@@ -35,14 +35,6 @@ class KlarnaOrderValidator extends Base
     protected $_bResult;
 
     /**
-     * @return boolean
-     */
-    public function getResult()
-    {
-        return $this->_bResult;
-    }
-
-    /**
      * @return array
      */
     public function getResultErrors()
@@ -67,12 +59,12 @@ class KlarnaOrderValidator extends Base
     {
         $aOrderItems = $this->_fetchOrderItems();
         if (empty($aOrderItems)) {
-            return false;
+            return $this->_bResult = false;
         }
 
         $this->_validateItemsBuyable($aOrderItems);
 
-        return count($this->_aResultErrors) === 0 ? true : false;
+        return count($this->_aResultErrors) === 0 ? $this->_bResult = true : $this->_bResult = false;
     }
 
     /**
@@ -145,7 +137,7 @@ class KlarnaOrderValidator extends Base
 
     public function isValid()
     {
-        return count($this->_aResultErrors) === 0;
+        return $this->_bResult;
     }
 
     /** @param $item array

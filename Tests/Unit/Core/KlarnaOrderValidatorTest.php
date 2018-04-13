@@ -120,7 +120,6 @@ class KlarnaOrderValidatorTest extends ModuleUnitTestCase
 
         $this->assertEquals($eRes, $result);
         $this->assertEquals($eRes, $oOrderValidator->isValid());
-//        print_r($oOrderValidator->getResultErrors());
         $this->assertEquals($resultErrors, $oOrderValidator->getResultErrors());
 
         array_pop($orderData['order_lines']);  // remove delivery service
