@@ -183,7 +183,6 @@ class KlarnaBasket extends KlarnaBasket_parent
 
         if (KlarnaUtils::isKlarnaPaymentsEnabled() || $oOrder) {
             $oDelivery = parent::getCosts('oxdelivery');
-//            if ($this->_isServicePriceSet($oDelivery)) {
             $oDeliverySet = oxNew(DeliverySet::class);
             if ($iLang) {
                 $oDeliverySet->loadInLang($iLang, $this->getShippingId());
@@ -192,14 +191,10 @@ class KlarnaBasket extends KlarnaBasket_parent
             }
 
             $this->klarnaOrderLines[] = $this->getKlarnaPaymentDelivery($oDelivery, $oOrder, $oDeliverySet);
-//            }
         }
         $this->_addDiscountsAsProducts($oOrder, $iLang);
         $this->_addGiftWrappingCost($iLang);
         $this->_addGiftCardProducts($iLang);
-//      $this->_addServicePaymentCost();
-//      $this->_addTrustedShopsExcellenceFee();
-
     }
 
     /**
@@ -208,7 +203,7 @@ class KlarnaBasket extends KlarnaBasket_parent
     protected function _addGiftWrappingCost($iLang = null)
     {
         /** @var \OxidEsales\Eshop\Core\Price $oWrappingCost */
-        $oWrappingCost = $this->getOxWrappingCost();
+        $oWrappingCost = $this->getWrappingCost();
         if (($oWrappingCost && $oWrappingCost->getPrice())) {
             $unit_price = KlarnaUtils::parseFloatAsInt($oWrappingCost->getBruttoPrice() * 100);
 
@@ -275,10 +270,6 @@ class KlarnaBasket extends KlarnaBasket_parent
             $oDiscount = oxNew(Price::class);
             $oDiscount->setBruttoPriceMode();
 
-            $itemDiscountSum = 0;
-            foreach ($this->klarnaOrderLines as $item) {
-                $itemDiscountSum += $item['total_discount_amount'];
-            }
             $oDiscount->setPrice($oOrder->getFieldData('oxdiscount'));
         }
         if ($this->_isServicePriceSet($oDiscount)) {
@@ -450,7 +441,7 @@ class KlarnaBasket extends KlarnaBasket_parent
                 foreach ($aDeliveryList as $oDelivery) {
                     //debug trace
                     if ($myConfig->getConfigParam('iDebug') == 5) {
-                        echo("Delivery Cost : " . $oDelivery->oxdelivery__oxtitle->value . "<br>");
+                        echo("Delivery Cost : " . $oDelivery->oxdelivery__oxtitle->value . "<br>"); // @codeCoverageIgnore
                     }
                     $oDeliveryPrice->addPrice($oDelivery->getDeliveryPrice($fDelVATPercent));
                 }
@@ -522,43 +513,6 @@ class KlarnaBasket extends KlarnaBasket_parent
     }
 
     /**
-     * Get wrapping cost
-     * @return Price
-     */
-    protected function getOxWrappingCost()
-    {
-        // if OXID version < 4.8.0
-        if (version_compare($this->getConfig()->getVersion(), '4.8.0') == -1) {
-            // _calcBasketWrapping problem, that in old oxid wrapping cost is included gift price, so recalculate wrapping only
-            $oWrappingPrice = oxNew(Price::class);
-            $oWrappingPrice->setBruttoPriceMode();
-            // calculating basket items wrapping
-            /** @var BasketItem $oBasketItem */
-            foreach ($this->_aBasketContents as $oBasketItem) {
-                /** @var Price $oWrapPrice */
-                if (($oWrapping = $oBasketItem->getWrapping())) {
-                    $oWrapPrice = $oWrapping->getWrappingPrice($oBasketItem->getAmount());
-                    $oWrappingPrice->add($oWrapPrice->getBruttoPrice());
-                }
-            }
-
-            return $oWrappingPrice;
-        }
-
-        return $this->getWrappingCostParent();
-    }
-
-    /**
-     * Calls getWrappingCost method parent
-     *
-     * @return mixed
-     */
-    protected function getWrappingCostParent()
-    {
-        return parent::getWrappingCost();
-    }
-
-    /**
      * @param $val
      * @return bool
      */
@@ -594,7 +548,6 @@ class KlarnaBasket extends KlarnaBasket_parent
         if (!$oArtB instanceof Article) {
             $oArtB = $oArtB->getArticle();
         }
-
         if (round(hexdec($oArtA->getId()), 3) > round(hexdec($oArtB->getId()), 3)) {
             return 1;
         } else if (round(hexdec($oArtA->getId()), 3) < round(hexdec($oArtB->getId()), 3)) {

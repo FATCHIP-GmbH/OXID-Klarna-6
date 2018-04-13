@@ -3,7 +3,9 @@
 namespace TopConcepts\Klarna\Tests\Unit\Models;
 
 
+use OxidEsales\Eshop\Application\Model\Article;
 use OxidEsales\Eshop\Application\Model\Basket;
+use OxidEsales\Eshop\Application\Model\BasketItem;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Application\Model\Delivery;
@@ -11,6 +13,9 @@ use OxidEsales\Eshop\Application\Model\DeliveryList;
 use OxidEsales\Eshop\Application\Model\DeliverySet;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Price;
+use OxidEsales\Eshop\Core\ShopIdCalculator;
+use ReflectionClass;
+use TopConcepts\Klarna\Exception\KlarnaBasketTooLargeException;
 use TopConcepts\Klarna\Models\KlarnaBasket;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
@@ -102,81 +107,84 @@ class KlarnaBasketTest extends ModuleUnitTestCase
         $this->assertEquals($expectedResult, $result);
     }
 
-    public function orderLinesDataProvider()
+    protected function getOrderLinesData($anonOn = 0, $wrapping = 0){
+        $homeUrl = $this->getConfigParam('sShopURL');
+        $lines = [
+            'order_lines' => [
+                [
+                    'type' => 'physical',
+                    'reference' => ($anonOn ? '7b1ce3d73b70f1a7246e7b76a35fb552': '2103'),
+                    'quantity' => 1,
+                    'unit_price' => 32900,
+                    'tax_rate' => 1900,
+                    'total_amount' => 32900,
+                    'total_tax_amount' => 5253,
+                    'quantity_unit' => 'pcs',
+                    'name' => ($anonOn ? 'Product name 1' : 'Wakeboard LIQUID FORCE GROOVE 2010'),
+                    'product_url' => $homeUrl . 'index.php',
+                    'image_url' => $homeUrl . 'out/pictures/generated/product/1/540_340_75/lf_groove_2010_1.jpg',
+                    'product_identifiers' => [
+                        'category_path' => '',
+                        'global_trade_item_number' => '',
+                        'manufacturer_part_number' => '',
+                        'brand' => '',
+                    ],
+                ],
+                [
+                    'type' => 'shipping_fee',
+                    'reference' => 'SRV_DELIVERY',
+                    'name' => 'Standard',
+                    'quantity' => 1,
+                    'total_amount' => 0,
+                    'total_discount_amount' => 0,
+                    'total_tax_amount' => 0,
+                    'unit_price' => 0,
+                    'tax_rate' => 0,
+                ],
+
+            ],
+            'order_amount' => 32900,
+            'order_tax_amount' => 5253
+        ];
+
+        if($anonOn){
+            unset($lines['order_lines'][0]['product_url']);
+            unset($lines['order_lines'][0]['image_url']);
+            unset($lines['order_lines'][0]['product_identifiers']);
+        }
+
+        if($wrapping){
+            //$lines['order_lines'];
+        }
+
+        return $lines;
+    }
+
+    /**
+     * @param $orderLines
+     * @param $orderMgmtId
+     * @param $iLang
+     * @param $anonymizationOn
+     * @param $voucherNr
+     * @param Basket $oBasket
+     * @throws \oxSystemComponentException
+     */
+    public function testGetKlarnaOrderLines()
     {
+        $orderMgmtId = 'fake';
+
+        $this->setModuleConfVar('blKlarnaEnableAnonymization', 1, 'bool');
+        $this->setModuleConfVar('iKlarnaValidation', 1, 'bool');
+        $this->setModuleMode('KP');
+
+        $orderLines = $this->getOrderLinesData(1);
         $ids = ['ed6573c0259d6a6fb641d106dcb2faec'];
         /** @var Basket|KlarnaBasket $oBasket */
         $oBasket = oxNew(Basket::class);
         $this->setUpBasket($oBasket, $ids);
-
-
-        $orderLines = function($anonOn){
-            $homeUrl = $this->getConfigParam('sShopURL');
-            $lines = [
-                'order_lines' => [
-                    [
-                        'type' => 'physical',
-                        'reference' => ($anonOn ? '7b1ce3d73b70f1a7246e7b76a35fb552': '2103'),
-                        'quantity' => 1,
-                        'unit_price' => 32900,
-                        'tax_rate' => 1900,
-                        'total_amount' => 32900,
-                        'total_tax_amount' => 5253,
-                        'quantity_unit' => 'pcs',
-                        'name' => ($anonOn ? 'Product name 1' : 'Wakeboard LIQUID FORCE GROOVE 2010'),
-                        'product_url' => $homeUrl . 'index.php',
-                        'image_url' => $homeUrl . 'out/pictures/generated/product/1/540_340_75/lf_groove_2010_1.jpg',
-                        'product_identifiers' => [
-                            'category_path' => '',
-                            'global_trade_item_number' => '',
-                            'manufacturer_part_number' => '',
-                            'brand' => ''
-                        ]
-                    ],
-                    [
-                        'type' => 'shipping_fee',
-                        'reference' => 'SRV_DELIVERY',
-                        'name' => 'Standard',
-                        'quantity' => 1,
-                        'total_amount' => 0,
-                        'total_discount_amount' => 0,
-                        'total_tax_amount' => 0,
-                        'unit_price' => 0,
-                        'tax_rate' => 0
-                    ]
-
-                ],
-                'order_amount' => 32900,
-                'order_tax_amount' => 5253
-            ];
-
-            if($anonOn){
-                unset($lines['order_lines'][0]['product_url']);
-                unset($lines['order_lines'][0]['image_url']);
-                unset($lines['order_lines'][0]['product_identifiers']);
-            }
-
-            return $lines;
-        };
-
-        return [
-            ['fake', 1, 1, $oBasket, $orderLines(1)],
-            ['fake', 1, 0, $oBasket, $orderLines(0)]
-        ];
-    }
-
-    /**
-     * @dataProvider orderLinesDataProvider
-     * @param $orderMgmtId
-     * @param $iLang
-     * @param $anonymizationOn
-     * @param $oBasket
-     * @param $orderLines
-     */
-    public function testGetKlarnaOrderLines($orderMgmtId, $iLang, $anonymizationOn, $oBasket, $orderLines)
-    {
-        $this->prepareOrder($iLang);
-        $this->setModuleConfVar('blKlarnaEnableAnonymization', $anonymizationOn, 'bool');
+        $oOrder                  = $this->getMock(Order::class, ['load']);
+        $oOrder->oxorder__oxlang = new Field(1, Field::T_RAW);
+        \oxTestModules::addModuleObject(Order::class, $oOrder);
 
         $result = $oBasket->getKlarnaOrderLines($orderMgmtId);
 
@@ -184,22 +192,75 @@ class KlarnaBasketTest extends ModuleUnitTestCase
         $this->assertNotEmpty($result['order_lines']);
         $this->assertEquals($orderLines, $result);
 
+        $this->setModuleMode('KCO');
+        $this->setModuleConfVar('blKlarnaEnableAnonymization', 0, 'bool');
     }
 
-    protected function prepareOrder($iLang)
+
+
+    public function testGetKlarnaOrderLines_VouchersAndDiscounts()
     {
+        $orderMgmtId = 'fake';
+        $iLang = 1;
+        $ids = ['ed6573c0259d6a6fb641d106dcb2faec'];
+        /** @var Basket|KlarnaBasket $oBasket */
+        $oBasket = oxNew(Basket::class);
+        $this->setUpBasket($oBasket, $ids);
+
         $oOrder                  = $this->getMock(Order::class, ['load']);
-        $oOrder->oxorder__oxlang = new Field($iLang, Field::T_RAW);
+        $oOrder->oxorder__oxdiscount = new Field(100, Field::T_RAW);
         \oxTestModules::addModuleObject(Order::class, $oOrder);
 
+
+        $orderLines = $this->getOrderLinesData(0);
+        // voucher discount
+
+        $orderLines['order_lines'][] = [
+            'type'             => 'discount',
+            'reference'        => 'SRV_COUPON',
+            'name'             => 'Gutschein Rabatt',
+            'quantity'         => 1,
+            'total_amount'     => -2000,
+            'unit_price'       => -2000,
+            'tax_rate'         => 1900,
+            'total_tax_amount' => -319,
+
+        ];
+        $orderLines['order_lines'][] = [
+            'type' => 'discount',
+            'reference' => 'SRV_DISCOUNT',
+            'name' => 'Rabatt',
+            'quantity' => 1,
+            'total_amount' => -10000,
+            'unit_price' => -10000,
+            'tax_rate' => 1900,
+            'total_tax_amount' => -1597
+        ];
+
+        $orderLines['order_amount'] = 20900;
+        $orderLines['order_tax_amount'] = 3337;
+
+        $this->addVouchersData();
+        $oBasket->addVoucher('111');
+        $result = $oBasket->getKlarnaOrderLines($orderMgmtId);
+        $this->removeVouchersData();
+        $this->assertEquals($orderLines, $result);
+
+
     }
-//     protected function prepareBasketFromOrder()
-//    {
-//        $id = $this->prepareKlarnaOrder();
-//        $oOrder = oxNew(Order::class);
-//        $oOrder->load($id);
-//
-//    }
+
+
+
+    public function testGetKlarnaOrderLines_ToLargeException()
+    {
+        $ids = ['very_expensive'];
+        /** @var Basket|KlarnaBasket $oBasket */
+        $oBasket = oxNew(Basket::class);
+        $this->setUpBasket($oBasket, $ids);
+
+        $this->setExpectedException(KlarnaBasketTooLargeException::class);
+        $oBasket->getKlarnaOrderLines();
+    }
 
     protected function setUpBasket($oBasket, $productsIds)
     {
@@ -279,7 +340,7 @@ class KlarnaBasketTest extends ModuleUnitTestCase
     public function is_fractionDataProvider()
     {
         return [
-            [1.3, true], [12, false], ['zzzz', false]
+            [1.3, true], [12, false], ['zzzz', false],
         ];
     }
     /**
@@ -291,5 +352,131 @@ class KlarnaBasketTest extends ModuleUnitTestCase
         $oBasket = oxNew(Basket::class);
         $result = $oBasket->is_fraction($val);
         $this->assertEquals($eResult, $result);
+    }
+
+
+    protected function addVouchersData()
+    {
+
+        $this->removeVouchersData();
+
+        $sShopIdFields = "`OXSHOPID`";
+        $sShopIdValues = ShopIdCalculator::BASE_SHOP_ID;
+
+        $sInsertSeries = "
+        INSERT INTO `oxvoucherseries`
+        (`OXID`, $sShopIdFields, `OXSERIENR`, `OXSERIEDESCRIPTION`, `OXDISCOUNT`, `OXDISCOUNTTYPE`, `OXBEGINDATE`, `OXENDDATE`, `OXALLOWSAMESERIES`, `OXALLOWOTHERSERIES`, `OXALLOWUSEANOTHER`, `OXMINIMUMVALUE`, `OXCALCULATEONCE`)
+        VALUES
+        ('test_s1',$sShopIdValues,'s1','regular   ','20','absolute','0000-00-00 00:00:00','0000-00-00 00:00:00',0,0,0,'0',0);";
+
+        $sInsertVouchers = "
+        INSERT INTO `oxvouchers`
+        (`OXVOUCHERSERIEID`,`OXID`, `OXDATEUSED`, `OXORDERID`, `OXUSERID`, `OXRESERVED`, `OXVOUCHERNR`, `OXDISCOUNT`)
+        VALUES
+        ('test_s1','test_111','0000-00-00','','',0,'111',NULL);";
+
+        $this->addToDatabase($sInsertSeries, 'oxvoucherseries');
+        $this->addToDatabase($sInsertVouchers, 'oxvouchers');
+
+    }
+    protected function removeVouchersData()
+    {
+        $oSerie = oxNew('oxvoucherserie');
+        $oSerie->load('test_s1');
+
+        $oSerie->delete();
+    }
+
+
+
+    protected function addWrappingAndCard(Basket $oBasket)
+    {
+        /** @var BasketItem $oBasketItem */
+        foreach($oBasket->getContents() as $oBasketItem){
+            $oBasketItem->setWrapping('81b40cf210343d625.49755120');
+        }
+        $oBasket->setCardId('81b40cf0cd383d3a9.70988998');
+    }
+
+
+    /**
+     *
+     */
+    public function testGetKlarnaOrderLines_WrappingAndCards()
+    {
+        // prepare expected result
+        $order_lines = $this->getOrderLinesData(0);
+        array_pop($order_lines['order_lines']);         // remove delivery
+        $order_lines['order_lines'][] = [                      // add wrapping
+            'type' => 'physical',
+            'reference' => 'SRV_WRAPPING',
+            'name' => 'Geschenkverpackung',
+            'quantity' => 1,
+            'total_amount' => 295,
+            'total_discount_amount' => 0,
+            'total_tax_amount' => 47,
+            'unit_price' => 295,
+            'tax_rate' => 1900
+        ];
+        $order_lines['order_lines'][] = [                      // add gift card
+             'type' => 'physical',
+             'reference' => 'SRV_GIFTCARD',
+             'name' => 'Grußkarte',
+             'quantity' => 1,
+             'total_amount' => 300,
+             'total_discount_amount' => 0,
+             'total_tax_amount' => 48,
+             'unit_price' => 300,
+             'tax_rate' => 1900
+        ];
+        $order_lines['order_amount'] = 33495;
+        $order_lines['order_tax_amount'] = 5348;
+
+        $ids = ['ed6573c0259d6a6fb641d106dcb2faec'];
+        /** @var Basket|KlarnaBasket $oBasket */
+        $oBasket = oxNew(Basket::class);
+        $this->setUpBasket($oBasket, $ids);
+        $this->addWrappingAndCard($oBasket);
+        $result = $oBasket->getKlarnaOrderLines();
+        $this->assertEquals($order_lines, $result);
+    }
+
+
+    /**
+     * @dataProvider sortDataProvider
+     * @param $aVal
+     * @param $bVal
+     * @throws \ReflectionException
+     */
+    public function testSortOrderLines($aVal, $bVal, $eRes)
+    {
+        $oBasket = oxNew(Basket::class);
+        $class =  new ReflectionClass(get_class($oBasket));
+        $method = $class->getMethod('sortOrderLines');
+        $method->setAccessible(true);
+
+        $oBasketItem = $this->getMock(BasketItem::class, ['getArticle', 'getId']);
+        $oArticle = oxNew(Article::class);
+        $aArt = clone $oArticle;
+        $aBrt = clone $oArticle;
+        $this->setProtectedClassProperty($aArt, '_sOXID', $aVal);
+        $this->setProtectedClassProperty($aBrt, '_sOXID', $bVal);
+
+        $a = clone $oBasketItem;
+        $a->expects($this->any())->method('getArticle')->willReturn($aArt);
+        $b = clone $oBasketItem;
+        $b->expects($this->any())->method('getArticle')->willReturn($aBrt);
+
+        $result = $method->invokeArgs($oBasket, [$a, $b]);
+        $this->assertEquals($eRes, $result);
+    }
+
+    public function sortDataProvider()
+    {
+        return [
+            ['200', '100', 1],
+            ['100', '200', -1],
+            ['200', '200', 0]
+        ];
     }
 }
