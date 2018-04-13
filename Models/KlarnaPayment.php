@@ -80,7 +80,7 @@ class KlarnaPayment extends KlarnaPayment_parent
     {
         if (in_array($this->getId(), self::getKlarnaPaymentsIds('KP'))) {
             $names = array(
-                self::KLARNA_PAYMENT_SLICE_IT_ID  => 'slice_it',
+                self::KLARNA_PAYMENT_SLICE_IT_ID  => 'pay_over_time',
                 self::KLARNA_PAYMENT_PAY_LATER_ID => 'pay_later',
                 self::KLARNA_PAYMENT_PAY_NOW      => 'pay_now',
             );
@@ -162,6 +162,11 @@ class KlarnaPayment extends KlarnaPayment_parent
         } else {
             $from   = '/' . preg_quote('-', '/') . '/';
             $locale = preg_replace($from, '_', strtolower(KlarnaConsts::getLocale()), 1);
+
+            //temp fix for payment name mismatch slice_it -> pay_over_time
+            if ($klName === 'pay_over_time') {
+                $klName = 'slice_it';
+            }
 
             return sprintf("//cdn.klarna.com/1.0/shared/image/generic/badge/%s/%s/standard/pink.png",
                 $locale,
