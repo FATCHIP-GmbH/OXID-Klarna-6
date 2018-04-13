@@ -32,9 +32,14 @@ class KlarnaUserPayment extends KlarnaUserPayment_parent
         $from   = '/' . preg_quote('-', '/') . '/';
         $locale = preg_replace($from, '_', strtolower(KlarnaConsts::getLocale()), 1);
 
+        $name = $oPayment->getPaymentCategoryName();
+        if ($name === 'pay_over_time') {
+            $name = 'slice_it';
+        }
+
         return sprintf("//cdn.klarna.com/1.0/shared/image/generic/badge/%s/%s/standard/pink.png",
             $locale,
-            $oPayment->getPaymentCategoryName()
+            $name
         );
     }
 }
