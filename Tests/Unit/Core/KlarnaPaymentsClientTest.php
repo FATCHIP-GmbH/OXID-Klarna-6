@@ -44,7 +44,7 @@ class KlarnaPaymentsClientTest extends ModuleUnitTestCase
     }
 
     /**
-     * @dataProvider testExceptionDataprovider
+     * @dataProvider exceptionDataprovider
      * @param $errorCode
      */
     public function testCreateNewOrderWithException($errorCode)
@@ -54,7 +54,7 @@ class KlarnaPaymentsClientTest extends ModuleUnitTestCase
         $this->assertFalse($result);
     }
 
-    public function testExceptionDataprovider()
+    public function exceptionDataprovider()
     {
         return [
             [399],
