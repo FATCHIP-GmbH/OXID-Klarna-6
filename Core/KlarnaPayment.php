@@ -34,13 +34,13 @@ class KlarnaPayment extends BaseModel
      * @var array
      * Current checksum of private attributes are saved in the session after each update send to Klarna
      */
-    private $_aOrderLines;
-    private $_aUserData;
+    protected $_aOrderLines;
+    protected $_aUserData;
 
     /** @var mixed checksum of currently selected KP method stored in the session
      * Updated
      */
-    private $_sPaymentMethod;
+    protected $_sPaymentMethod;
 
     /**
      * @var array
@@ -57,7 +57,7 @@ class KlarnaPayment extends BaseModel
      * Stores data to send to Klarna with update call
      * Empty if there is nothing to update
      */
-    protected $aUpdateData;
+    protected $aUpdateData = array();
 
     /** @var array Stores order checksums array fetched from session */
     protected $checkSums;
@@ -463,7 +463,7 @@ class KlarnaPayment extends BaseModel
         foreach ($this->_trackedProperties as $sPropertyName) {
             $currentCheckSum = md5(json_encode($this->{$sPropertyName}));
             if ($this->checkSums[$sPropertyName] !== $currentCheckSum) {
-
+                //var_dump($this->checkSums[$sPropertyName] . " $sPropertyName  $currentCheckSum");
                 if ($sPropertyName !== '_sPaymentMethod') {
                     $this->aUpdateData = array_merge($this->aUpdateData, $this->{$sPropertyName});
 
@@ -479,7 +479,6 @@ class KlarnaPayment extends BaseModel
      * Saves order checksums user and order data
      * KP method is saved earlier at the end of the constructor method (checkSmsCheck)
      * @param $splitedUpdateData
-     * @throws \ReflectionException
      */
     public function saveCheckSums($splitedUpdateData)
     {
@@ -487,18 +486,13 @@ class KlarnaPayment extends BaseModel
         if (!$aOrderCheckSums) {
             $aOrderCheckSums = array();
         }
-
-        foreach ($this->_trackedProperties as $sPropertyName) {
-            if ($sPropertyName === '_aUserData' && $splitedUpdateData['userData']) {
-                $aOrderCheckSums[$sPropertyName] = md5(json_encode($splitedUpdateData['userData']));
-                continue;
-            }
-
-            if ($sPropertyName === '_aOrderLines' && $splitedUpdateData['orderData']) {
-                $aOrderCheckSums[$sPropertyName] = md5(json_encode($splitedUpdateData['orderData']));
-                continue;
-            }
+        if($splitedUpdateData['userData']){
+            $aOrderCheckSums['_aUserData'] = md5(json_encode($splitedUpdateData['userData']));
         }
+        if($splitedUpdateData['orderData']){
+            $aOrderCheckSums['_aOrderLines'] = md5(json_encode($splitedUpdateData['orderData']));
+        }
+
         Registry::getSession()->setVariable('kpCheckSums', $aOrderCheckSums);
     }
 

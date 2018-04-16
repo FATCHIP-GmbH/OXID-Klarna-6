@@ -219,14 +219,157 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
         $this->setSessionParam('sTokenTimeStamp', null);
     }
 
-    public function testChecksumCheck()
+    public function ChecksumCheckDataProvider()
     {
+        return [
+            [
+                [
+                    '_aOrderLines' => false,
+                    '_aUserData' => false,
+                    '_sPaymentMethod' => false
+                ],
+                [
+                    '_aOrderLines' => ['orderLines' => 'val'],
+                    '_aUserData' => ['userData' => 'val'],
+                    '_sPaymentMethod' => 'pay_name'
+                ],
+                [
+                    'orderLines' => 'val',
+                    'userData' => 'val'
+                ],
+                '', true,
+            ],
+
+            [
+                [
+                    '_aOrderLines' => '41e571b35e719e23f57f6763a70087cc',
+                    '_aUserData' => 'd05c7d45632b1b3ff7d53e21991c4006',
+                    '_sPaymentMethod' => false
+                ],
+                [
+                    '_aOrderLines' => ['orderLines' => 'val'],
+                    '_aUserData' => ['userData' => 'val'],
+                    '_sPaymentMethod' => 'pay_name'
+                ],
+                [
+                ],
+                'addUserData', null,
+            ],
+
+            [
+                [
+                    '_aOrderLines' => '41e571b35e719e23f57f6763a70087cc',
+                    '_aUserData' => 'd05c7d45632b1b3ff7d53e21991c4006',
+                    '_sPaymentMethod' => 'da442e4fc8855a43f9061c96caa96bf7'
+                ],
+                [
+                    '_aOrderLines' => ['orderLines' => 'val2'],
+                    '_aUserData' => ['userData' => 'val2'],
+                    '_sPaymentMethod' => 'pay_name'
+                ],
+                [
+                    'orderLines' => 'val2',
+                    'userData' => 'val2',
+                ],
+                '', null,
+            ],
+
+        ];
 
     }
 
-    public function testSaveCheckSums()
+
+    /**
+     * @dataProvider ChecksumCheckDataProvider
+     * @param $currentCheckSums
+     * @param $properties
+     * @param $toUpdate
+     * @param $action
+     * @param $paymentChanged
+     */
+    public function testChecksumCheck($currentCheckSums, $properties, $toUpdate, $action, $paymentChanged)
     {
 
+        $oKlarnaOrder = $this->createStub(KlarnaPayment::class,
+            ['fetchCheckSums' => null]
+        );
+        $this->setProtectedClassProperty($oKlarnaOrder, 'checkSums', $currentCheckSums);
+        foreach($properties as $name => $value){
+            $this->setProtectedClassProperty($oKlarnaOrder, $name, $value);
+        }
+
+        $this->setProtectedClassProperty($oKlarnaOrder, 'action', $action);
+        $oKlarnaOrder->checksumCheck();
+        $this->assertEquals($toUpdate, $oKlarnaOrder->getChangedData());
+        $this->assertEquals($paymentChanged, $this->getProtectedClassProperty($oKlarnaOrder, 'paymentChanged'));
+
+
+    }
+
+    public function saveCheckSumsDataProvider()
+    {
+        return [
+            [
+                null,
+                [ 'userData' => 'newData', 'orderData' => ''],
+                ['_aUserData' => '7422beec444f8d3b06f6c3181f9402ca']
+            ],
+            [
+                [
+                    '_aOrderLines' => '41e571b35e719e23f57f6763a70087cc',
+                    '_aUserData' => 'd05c7d45632b1b3ff7d53e21991c4006',
+                    '_sPaymentMethod' => 'da442e4fc8855a43f9061c96caa96bf7'
+                ],
+                [],
+                [
+                    '_aOrderLines' => '41e571b35e719e23f57f6763a70087cc',
+                    '_aUserData' => 'd05c7d45632b1b3ff7d53e21991c4006',
+                    '_sPaymentMethod' => 'da442e4fc8855a43f9061c96caa96bf7'
+                ],
+            ],
+            [
+                [
+                    '_aOrderLines' => '41e571b35e719e23f57f6763a70087cc',
+                    '_aUserData' => 'd05c7d45632b1b3ff7d53e21991c4006',
+                    '_sPaymentMethod' => 'da442e4fc8855a43f9061c96caa96bf7'
+                ],
+                [ 'userData' => 'newData', 'orderData' => ''],
+                [
+                    '_aOrderLines' => '41e571b35e719e23f57f6763a70087cc',
+                    '_aUserData' => '7422beec444f8d3b06f6c3181f9402ca',
+                    '_sPaymentMethod' => 'da442e4fc8855a43f9061c96caa96bf7'
+                ],
+            ],
+            [
+                [
+                    '_aOrderLines' => '41e571b35e719e23f57f6763a70087cc',
+                    '_aUserData' => 'd05c7d45632b1b3ff7d53e21991c4006',
+                    '_sPaymentMethod' => 'da442e4fc8855a43f9061c96caa96bf7'
+                ],
+                [ 'userData' => '', 'orderData' => 'newData'],
+                [
+                    '_aOrderLines' => '7422beec444f8d3b06f6c3181f9402ca',
+                    '_aUserData' => 'd05c7d45632b1b3ff7d53e21991c4006',
+                    '_sPaymentMethod' => 'da442e4fc8855a43f9061c96caa96bf7'
+                ],
+
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider saveCheckSumsDataProvider
+     * @param $currentCheckSums
+     * @param $arg
+     * @param $eRes
+     */
+    public function testSaveCheckSums($currentCheckSums, $arg, $eRes)
+    {
+        $oKlarnaOrder = $this->createStub(KlarnaPayment::class,
+            ['fetchCheckSums' => $currentCheckSums]
+        );
+        $oKlarnaOrder->saveCheckSums($arg);
+        $this->assertEquals($eRes, $this->getSessionParam('kpCheckSums'));
     }
 
     public function testGetOrderData_AddOptions()
