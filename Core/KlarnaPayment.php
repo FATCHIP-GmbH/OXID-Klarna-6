@@ -43,6 +43,12 @@ class KlarnaPayment extends BaseModel
     private $_sPaymentMethod;
 
     /**
+     * @var array
+     * List of tracked properties
+     */
+    protected $_trackedProperties = ['_aOrderLines', '_aUserData', '_sPaymentMethod'];
+
+    /**
      * @var array Stores basic data send to Klarna required to begin new KP session
      */
     protected $_aOrderData;
@@ -111,9 +117,8 @@ class KlarnaPayment extends BaseModel
         }
 
         $sCountryISO = $oUser->resolveCountry();
-        $sLocale     = KlarnaConsts::getLocale(false, true);   //$oUser->resolveLocale($sCountryISO);
+        $sLocale     = KlarnaConsts::getLocale(false, true);
         $currencyISO = $oBasket->getBasketCurrency()->name;
-
         if ($oUser->getKlarnaPaymentCurrency() !== $currencyISO) {
             $this->currencyToCountryMatch = false;
         }
@@ -192,18 +197,6 @@ class KlarnaPayment extends BaseModel
         if ($options) {
             $this->_aOrderData['options'] = $options;
         }
-    }
-
-    /**
-     * Gets privet properties for checksum calculations
-     * @return \ReflectionProperty[]
-     * @throws \ReflectionException
-     */
-    protected function getPrivateProperties()
-    {
-        $reflect = new \ReflectionClass($this);
-
-        return $reflect->getProperties(\ReflectionProperty::IS_PRIVATE);
     }
 
     /**
@@ -467,8 +460,7 @@ class KlarnaPayment extends BaseModel
     public function checksumCheck()
     {
         $this->fetchCheckSums();
-        foreach ($this->getPrivateProperties() as $oProperty) {
-            $sPropertyName   = $oProperty->getName();
+        foreach ($this->_trackedProperties as $sPropertyName) {
             $currentCheckSum = md5(json_encode($this->{$sPropertyName}));
             if ($this->checkSums[$sPropertyName] !== $currentCheckSum) {
 
@@ -496,8 +488,7 @@ class KlarnaPayment extends BaseModel
             $aOrderCheckSums = array();
         }
 
-        foreach ($this->getPrivateProperties() as $oProperty) {
-            $sPropertyName = $oProperty->getName();
+        foreach ($this->_trackedProperties as $sPropertyName) {
             if ($sPropertyName === '_aUserData' && $splitedUpdateData['userData']) {
                 $aOrderCheckSums[$sPropertyName] = md5(json_encode($splitedUpdateData['userData']));
                 continue;
