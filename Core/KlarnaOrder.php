@@ -415,16 +415,10 @@ class KlarnaOrder extends BaseModel
         return (int)$iActiveCheckbox;
     }
 
-    /**
-     *
-     * @throws \oxSystemComponentException
-     */
     protected function setAttachmentsData()
     {
         if (!$this->_oUser->isFake()) {
-            /** @var Klarna_EMD $klarnaEmd */
-            $klarnaEmd = new KlarnaEMD;
-            $emd       = $klarnaEmd->getAttachments($this->_oUser);
+           $emd = $this->getEmd();
 
             if (!empty($emd)) {
                 $this->_aOrderData['attachment'] = array(
@@ -433,6 +427,18 @@ class KlarnaOrder extends BaseModel
                 );
             }
         }
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return array
+     */
+    protected function getEmd()
+    {
+        /** @var KlarnaEMD $klarnaEmd */
+        $klarnaEmd = new KlarnaEMD;
+        $emd       = $klarnaEmd->getAttachments($this->_oUser);
+        return $emd;
     }
 
     /**
