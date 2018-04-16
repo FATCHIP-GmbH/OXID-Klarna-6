@@ -279,7 +279,8 @@ class KlarnaOrderManagementClient extends KlarnaClientBase
             throw new KlarnaOrderNotFoundException(sprintf($message, $this->formatErrorMessage($oResponse)), 404);
         }
         if ($oResponse->status_code == 403) {
-            if ($oResponse->error_code === "CAPTURE_NOT_ALLOWED") {
+            $aResponse = json_decode($oResponse->body, true);
+            if ($aResponse['error_code'] === "CAPTURE_NOT_ALLOWED") {
                 throw new KlarnaCaptureNotAllowedException(sprintf($message, $this->formatErrorMessage($oResponse)), 403);
             } else {
                 throw new KlarnaOrderReadOnlyException(sprintf($message, $this->formatErrorMessage($oResponse)), 403);
