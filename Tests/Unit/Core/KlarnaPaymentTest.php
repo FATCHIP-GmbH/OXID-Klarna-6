@@ -10,6 +10,9 @@ namespace TopConcepts\Klarna\Tests\Unit\Core;
 
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\User;
+use OxidEsales\Eshop\Core\Field;
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\UtilsView;
 use TopConcepts\Klarna\Core\KlarnaPayment;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
@@ -391,76 +394,249 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
 
     public function testDisplayErrors()
     {
-
+        $oBasket = oxNew(Basket::class);
+        $oUser = oxNew(User::class);
+        $oKlarnaOrder = new  KlarnaPayment($oBasket, $oUser, []);
+        $this->setProtectedClassProperty($oKlarnaOrder, 'errors', ['Error1', 'Error2']);
+        $oUtilsView = $this->getMock(UtilsView::class, ['addErrorToDisplay']);
+        $oUtilsView->expects($this->at(0))->method('addErrorToDisplay')->with('Error1');
+        $oUtilsView->expects($this->at(1))->method('addErrorToDisplay')->with('Error2');
+        \oxTestModules::addModuleObject(UtilsView::class, $oUtilsView);
+        $oKlarnaOrder->displayErrors();
     }
 
     public function testAddErrorMessage()
     {
+        $oBasket = oxNew(Basket::class);
+        $oUser = oxNew(User::class);
+        $oKlarnaOrder = new  KlarnaPayment($oBasket, $oUser, []);
 
+        $this->setLanguage(0);
+        $oKlarnaOrder->addErrorMessage('KL_KP_INVALID_TOKEN');
+        $expectedErrors = ['Ungültiger Authorization Token. Bitte probieren Sie es noch einmal.'];
+        $this->assertEquals($expectedErrors, $this->getProtectedClassProperty($oKlarnaOrder, 'errors'));
+
+        $this->setLanguage(1);
+        $expectedErrors[] = 'Invalid authorization token. Please try again.';
+        $oKlarnaOrder->addErrorMessage('KL_KP_INVALID_TOKEN');
+        $this->assertEquals($expectedErrors, $this->getProtectedClassProperty($oKlarnaOrder, 'errors'));
     }
 
     public function testGetUserData()
     {
-
+        $oBasket = oxNew(Basket::class);
+        $oUser = oxNew(User::class);
+        $oKlarnaOrder = new  KlarnaPayment($oBasket, $oUser, []);
+        $this->setProtectedClassProperty($oKlarnaOrder, '_aUserData', ['userData']);
+        $result = $oKlarnaOrder->getUserData();
+        $this->assertEquals(['userData'], $result);
     }
-
-//    public function testValidateCountryAndCurrency()
-//    {
-//
-//    }
 
     public function testGetChangedData()
     {
-
+        $oBasket = oxNew(Basket::class);
+        $oUser = oxNew(User::class);
+        $oKlarnaOrder = new  KlarnaPayment($oBasket, $oUser, []);
+        $this->setProtectedClassProperty($oKlarnaOrder, 'aUpdateData', ['aaaaa']);
+        $result = $oKlarnaOrder->getChangedData();
+        $this->assertEquals(['aaaaa'], $result);
     }
 
     public function testSetStatus()
     {
+        $oBasket = oxNew(Basket::class);
+        $oUser = oxNew(User::class);
+        $oKlarnaOrder = new  KlarnaPayment($oBasket, $oUser, []);
 
+        $oKlarnaOrder->setStatus('NewStatus');
+        $result = $this->getProtectedClassProperty($oKlarnaOrder, 'status');
+        $this->assertEquals('NewStatus', $result);
     }
 
     public function testFetchCheckSums()
     {
+        $oBasket = oxNew(Basket::class);
+        $oUser = oxNew(User::class);
+        $oKlarnaOrder = new  KlarnaPayment($oBasket, $oUser, []);
 
+        $this->setSessionParam('kpCheckSums', ['myCheckSums']);
+        $result = $oKlarnaOrder->fetchCheckSums();
+        $expectedResult = ['myCheckSums'];
+        $this->assertEquals($expectedResult, $result);
+
+        $this->setSessionParam('kpCheckSums', null);
+        $result = $oKlarnaOrder->fetchCheckSums();
+        $expectedResult = [
+            '_aOrderLines' => false,
+            '_aUserData' => false,
+            '_sPaymentMethod' => false
+        ];
+        $this->assertEquals($expectedResult, $result);
     }
 
-    public function testGetPaymentMethodCategory()
+    public function paymentCategoryNameDataProvider()
     {
+        return [
+            ['ss_name', null],
+            ['klarna_pay_now', 'pay_now'],
+            ['klarna_pay_later', 'pay_later'],
+            ['klarna_slice_it', 'pay_over_time'],
+        ];
+    }
+
+    /**
+     * @dataProvider paymentCategoryNameDataProvider
+     * @param $paymentMethodName
+     * @param $eRes
+     */
+    public function testGetPaymentMethodCategory($paymentMethodName, $eRes)
+    {
+        $oBasket = oxNew(Basket::class);
+        $oUser = oxNew(User::class);
+        $oKlarnaOrder = new  KlarnaPayment($oBasket, $oUser, []);
+        $this->setProtectedClassProperty($oKlarnaOrder, '_sPaymentMethod', $paymentMethodName);
+        $result = $oKlarnaOrder->getPaymentMethodCategory();
+        $this->assertEquals($eRes, $result);
 
     }
 
     public function testValidateClientToken()
     {
+        $oBasket = oxNew(Basket::class);
+        $oUser = oxNew(User::class);
+        $oKlarnaOrder = new  KlarnaPayment($oBasket, $oUser, []);
+
+        $this->setSessionParam('klarna_session_data', ['client_token' => 'the_token']);
+        $this->assertTrue($oKlarnaOrder->validateClientToken('the_token'));
+
+        $this->setSessionParam('klarna_session_data', ['client_token' => 'the_token']);
+        $this->assertFalse($oKlarnaOrder->validateClientToken('another_token'));
+        $this->assertEquals(['KL_INVALID_CLIENT_TOKEN'], $this->getProtectedClassProperty($oKlarnaOrder, 'errors'));
 
     }
 
     public function testValidateKlarnaUserData()
     {
 
+        $oBasket = oxNew(Basket::class);
+        $oUser = oxNew(User::class);
+        $oUser->load('92ebae5067055431aeaaa6f75bd9a131');
+        $this->setSessionParam('deladrid', '41b545c65fe99ca2898614e563a7108a');
+        $this->setLanguage(1);
+
+        $expectedError = 'In order to being able to use Klarna payments, both person and country in billing and shipping address must match.';
+
+        // valid
+        $oUser->oxuser__oxlname = new Field('Dabrowski', Field::T_RAW);
+        $oUser->oxuser__oxfname = new Field('Gregory', Field::T_RAW);
+        $oKlarnaOrder = new  KlarnaPayment($oBasket, $oUser, []);
+        $errors = $this->getProtectedClassProperty($oKlarnaOrder, 'errors');
+        $this->assertEmpty($errors);
+
+        // company name present
+        $oUser->oxuser__oxcompany = new Field('FakeCompany', Field::T_RAW);
+        $oKlarnaOrder = new  KlarnaPayment($oBasket, $oUser, []);
+        $errors = $this->getProtectedClassProperty($oKlarnaOrder, 'errors');
+        $this->assertNotEmpty($errors);
+        $companyNameError = 'Payment with this Klarna payment method is currently not available for companies.';
+        $this->assertEquals($companyNameError, $errors[0]);
+
+        // different country
+        $this->setSessionParam('sCountryISO', null);
+        $oUser->oxuser__oxcountryid = new Field('a7c40f6320aeb2ec2.72885259', Field::T_RAW);
+        $oKlarnaOrder = new  KlarnaPayment($oBasket, $oUser, []);
+        $errors = $this->getProtectedClassProperty($oKlarnaOrder, 'errors');
+        $this->assertNotEmpty($errors);
+        $this->assertEquals($expectedError, $errors[0]);
+
+        // different family_name
+        $this->setSessionParam('sCountryISO', null);
+        $oUser->oxuser__oxcountryid = new Field('a7c40f631fc920687.20179984', Field::T_RAW);
+        $oUser->oxuser__oxlname = new Field('notDabrowski', Field::T_RAW);
+        $oKlarnaOrder = new  KlarnaPayment($oBasket, $oUser, []);
+        $errors = $this->getProtectedClassProperty($oKlarnaOrder, 'errors');
+        $this->assertNotEmpty($errors);
+        $this->assertEquals($expectedError, $errors[0]);
+
+        // different given name
+        $oUser->oxuser__oxlname = new Field('Dabrowski', Field::T_RAW);
+        $oUser->oxuser__oxfname = new Field('notGregory', Field::T_RAW);
+        $oKlarnaOrder = new  KlarnaPayment($oBasket, $oUser, []);
+        $errors = $this->getProtectedClassProperty($oKlarnaOrder, 'errors');
+        $this->assertNotEmpty($errors);
+        $this->assertEquals($expectedError, $errors[0]);
     }
 
-    public function testValidateOrder()
-    {
 
+    public function validateOrderDataProvider()
+    {
+        $invalidTokenMessage = "Invalid authorization token. Please try again.";
+        $orderChangedMessage = "Order data have been changed. Please try again.";
+        return [
+            [true, false, [$orderChangedMessage], true, false],
+            [true, true, [$orderChangedMessage], true, false],
+            [false, true, [$orderChangedMessage], true, false],
+            [false, false, [$invalidTokenMessage], false, false],
+            [false, false, [], true, true]
+        ];
     }
 
-    public function testGetStatus()
+    /**
+     * @dataProvider validateOrderDataProvider
+     * @param $stateChanged
+     * @param $paymentChanged
+     * @param $errors
+     * @param $validToken
+     * @param $eRes
+     */
+    public function testValidateOrder($stateChanged, $paymentChanged, $errors, $validToken, $eRes)
     {
+        $this->setLanguage(1);
+        $oKlarnaOrder = $this->createStub(KlarnaPayment::class,
+            [
+                'isOrderStateChanged' => $stateChanged,
+                'isTokenValid' => $validToken,
+                'validateKlarnaUserData' => null,
+                'validateCountryAndCurrency' => null
+            ]
+        );
+        $this->setProtectedClassProperty($oKlarnaOrder,'paymentChanged', $paymentChanged);
+        $result = $oKlarnaOrder->validateOrder();
+        $this->assertEquals($errors, $this->getProtectedClassProperty($oKlarnaOrder,'errors'));
+        $this->assertEquals($eRes, $result);
 
     }
 
     public function testCountryWasChanged()
     {
-
+        $this->setSessionParam('sCountryISO', 'DE');
+        $oUser = $this->createStub(User::class, ['resolveCountry' => 'DE']);
+        $this->assertFalse(KlarnaPayment::countryWasChanged($oUser));
+        $oUser = $this->createStub(User::class, ['resolveCountry' => 'AT']);
+        $this->assertTrue(KlarnaPayment::countryWasChanged($oUser));
     }
 
     public function testSetCheckSum()
     {
+        $currentCheckSums = [];
+        $oKlarnaOrder = $this->createStub(KlarnaPayment::class,
+            ['fetchCheckSums' => null]
+        );
+        $this->setProtectedClassProperty($oKlarnaOrder, 'checkSums', $currentCheckSums);
+        $oKlarnaOrder->setCheckSum('key', 'value');
+        $this->assertEquals(['key' => 'value'], $this->getSessionParam('kpCheckSums'));
 
     }
 
     public function testCleanUpSession()
     {
+        foreach(KlarnaPayment::$aSessionKeys as $key){
+            $this->setSessionParam($key, 'someValue');
+        }
+        KlarnaPayment::cleanUpSession();
 
+        foreach(KlarnaPayment::$aSessionKeys as $key) {
+            $this->assertNull($this->getSessionParam($key));
+        }
     }
 }

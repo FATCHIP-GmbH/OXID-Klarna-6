@@ -263,6 +263,7 @@ class KlarnaPayment extends BaseModel
 
     /**
      * Gets order status
+     * @codeCoverageIgnore
      * @return string
      */
     public function getStatus()
@@ -309,7 +310,7 @@ class KlarnaPayment extends BaseModel
      * Removes all session keys related to KlarnaPayment
      * Required before starting new KP session
      */
-    static function cleanUpSession()
+    public static function cleanUpSession()
     {
         $oSession = Registry::getSession();
         foreach (self::$aSessionKeys as $key) {
