@@ -96,8 +96,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                 try {
                     $this->_aOrderData = $oClient->getOrder();
                 } catch (KlarnaClientException $oEx) {
-                    $oEx->debugOut();
-
                     if ($oEx->getCode() == 401 || $oEx->getCode() == 404) {
                         // create new order. restart session.
                         if (KlarnaUtils::is_ajax()) {
@@ -147,7 +145,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     }
 
     /**
-     * @codeCoverageIgnore
      * @return KlarnaCheckoutClient|KlarnaClientBase
      */
     protected function getKlarnaCheckoutClient()
@@ -156,7 +153,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     }
 
     /**
-     * @codeCoverageIgnore
      * @return KlarnaPaymentsClient|KlarnaClientBase
      */
     protected function getKlarnaPaymentsClient()
@@ -241,7 +237,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     }
 
     /**
-     * @codeCoverageIgnore
      * @throws StandardException
      */
     protected function kcoBeforeExecute()
@@ -274,8 +269,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     /**
      * Check if user is logged in, if not check if user is in oxid and log them in
      * or create a user
-     *
-     * @codeCoverageIgnore
      * @return bool
      */
     protected function _validateUser()
@@ -296,8 +289,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
     /**
      * Create a user in oxid from klarna checkout data
-     *
-     * @codeCoverageIgnore
      * @return bool
      * @throws \oxUserException
      */
@@ -346,7 +337,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     /**
      * Save order to database, delete order_id from session and redirect to thank you page
      *
-     * @codeCoverageIgnore
      * @param Basket $oBasket
      */
     protected function kcoExecute(Basket $oBasket)
@@ -431,8 +421,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
     /**
      * Ajax call for Klarna Payment. Tracks changes and controls frontend Widget by status message
-     *
-     * @codeCoverageIgnore
      * @param $aPost
      * @return string
      */
@@ -509,8 +497,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     }
 
     /**
-     *
-     * @codeCoverageIgnore
      * @param $aPost
      * @return string
      */
@@ -679,12 +665,11 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             $oCountry                          = oxNew(Country::class);
             $this->_oUser->oxuser__oxcountryid = new Field(
                 $oCountry->getIdByCode(
-                    strtoupper($this->_aOrderData['purchase_country'])
+                    strtoupper($this->_aOrderData['shipping_address']['country'])
                 ),
                 Field::T_RAW
             );
         }
-
     }
 
     /**
@@ -698,6 +683,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             } else {
                 $this->_oUser->clearDeliveryAddress();
             }
+
             $this->_oUser->assign(KlarnaFormatter::klarnaToOxidAddress($this->_aOrderData, 'billing_address'));
 
             if (isset($this->_aOrderData['customer']['date_of_birth'])) {

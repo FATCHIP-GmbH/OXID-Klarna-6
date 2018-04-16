@@ -464,7 +464,6 @@ class KlarnaUser extends KlarnaUser_parent
     }
 
     /**
-     * @codeCoverageIgnore
      */
     protected function getEMD()
     {

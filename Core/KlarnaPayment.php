@@ -115,7 +115,7 @@ class KlarnaPayment extends BaseModel
         }
 
         $sCountryISO = $oUser->resolveCountry();
-        $sLocale     = KlarnaConsts::getLocale(false, true);   //$oUser->resolveLocale($sCountryISO);
+        $sLocale     = KlarnaConsts::getLocale(false, true);
         $currencyISO = $oBasket->getBasketCurrency()->name;
 
         if ($oUser->getKlarnaPaymentCurrency() !== $currencyISO) {

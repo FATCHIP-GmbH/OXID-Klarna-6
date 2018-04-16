@@ -95,6 +95,10 @@ class KlarnaBasket extends KlarnaBasket_parent
                 $oArt = $oArt->getArticle();
             }
 
+            if($iOrderLang){
+                $oArt->loadInLang($iOrderLang, $oArt->getId());
+            }
+
             $aProcessedItem = array(
                 "type"             => "physical",
                 'reference'        => $this->getArtNum($oArt),
@@ -434,56 +438,6 @@ class KlarnaBasket extends KlarnaBasket_parent
         return $aItem;
     }
 
-    /**
-     * Check if basket articles will expire in given days
-     *
-     * @param int $iInDays
-     *
-     * @return boolean
-     * @throws \oxSystemComponentException
-     */
-    public function isPreorderArticlesWillExpire($iInDays = null)
-    {
-        $blWillExpire = true;
-        if ($iInDays = $this->_getInDays($iInDays)) {
-            $this->_aPreorderArticles = array();
-            foreach ($this->getBasketArticles() as $oOrderArticle) {
-                /** @var OrderArticle | KlarnaOrderArticle $oOrderArticle */
-                if ($oOrderArticle instanceof OrderArticle) {
-                    /** @var Article | KlarnaArticle $oArticle */
-                    $oArticle = $oOrderArticle->getKlarnaArticle();
-                } else {
-                    $oArticle = $oOrderArticle;
-                }
-                // no stock or stock is external
-                if ($oArticle->isGoodStockForExpireCheck() && $oArticle->willNotExpired($iInDays)) {
-                    $blWillExpire               = false;
-                    $this->_aPreorderArticles[] = $oArticle;
-                }
-            }
-        }
-
-        return $blWillExpire;
-    }
-
-    /**
-     * If param not set, try getting it from config, else - return given param
-     *
-     * @param int $iInDays
-     *
-     * @return int
-     */
-    protected function _getInDays($iInDays = null)
-    {
-        if ($iInDays === null) {
-            // check if feature is not disabled (not 0 or empty)
-            if (Registry::getConfig()->getConfigParam('iKlarnaMaxDaysForPreorder')) {
-                $iInDays = (int)Registry::getConfig()->getConfigParam('iKlarnaMaxDaysForPreorder');
-            }
-        }
-
-        return $iInDays;
-    }
 
     /**
      * Original OXID method _calcDeliveryCost
@@ -636,7 +590,6 @@ class KlarnaBasket extends KlarnaBasket_parent
      * Calls getWrappingCost method parent
      *
      * @return mixed
-     * @codeCoverageIgnore
      */
     protected function getWrappingCostParent()
     {

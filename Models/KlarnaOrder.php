@@ -360,17 +360,6 @@ class KlarnaOrder extends KlarnaOrder_parent
         return $client->addShippingToCapture($data, $orderId, $captureId);
     }
 
-//    /**
-//     * Get average of order VAT
-//     *
-//     * @return float
-//     */
-//    public function getOrderVatAverage()
-//    {
-//        $vatAvg = ($this->getTotalOrderSum() / $this->getOrderNetSum() - 1) * 100;
-//
-//        return number_format($vatAvg, 2);
-//    }
 
     /**
      * @param $orderLang

@@ -79,6 +79,7 @@ class KlarnaCustomerAccountInfo
         }
 
         $customerInfo = array($customerInfo);
+
         return array(
             "customer_account_info" => $customerInfo,
         );

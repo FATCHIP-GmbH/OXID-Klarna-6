@@ -60,7 +60,6 @@ class KlarnaOrderList extends KlarnaOrderList_parent
         if ($oOrder->isLoaded() && $oOrder->isKlarnaOrder() && !$oOrder->getFieldData('oxstorno')) {
             $orderId     = $oOrder->getFieldData('klorderid');
             $sCountryISO = KlarnaUtils::getCountryISO($oOrder->getFieldData('oxbillcountryid'));
-            $cancelled   = false;
 
             try {
                 $oOrder->cancelKlarnaOrder($orderId, $sCountryISO);
