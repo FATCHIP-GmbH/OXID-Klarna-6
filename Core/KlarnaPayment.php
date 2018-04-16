@@ -95,10 +95,6 @@ class KlarnaPayment extends BaseModel
      */
     public function __construct(Basket $oBasket, User $oUser, $aPost = array())
     {
-        if (!$oUser instanceof User) {
-            $oUser = $this->getUser();
-        }
-
         $controllerName   = $this->isAuthorized() ? 'order' : 'payment';
         $this->refreshUrl = Registry::getConfig()->getShopSecureHomeUrl() . "cl=$controllerName";
 

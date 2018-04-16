@@ -40,7 +40,7 @@ class KlarnaInstaller extends ShopConfiguration
     public static function getInstance()
     {
         if (!self::$instance) {
-            self::$instance = new KlarnaInstaller;
+            self::$instance = new KlarnaInstaller();
             /** @var Database db */
             self::$instance->db         = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
             self::$instance->dbName     = Registry::getConfig()->getConfigParam('dbName');
@@ -55,6 +55,9 @@ class KlarnaInstaller extends ShopConfiguration
      */
     public static function onActivate()
     {
+        $oMetaData = oxNew(DbMetaDataHandler::class);
+        $oMetaData->updateViews();
+
         $instance = self::getInstance();
 
         $instance->performMigrations();
