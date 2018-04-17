@@ -39,6 +39,7 @@ class KlarnaEmdAdmin extends KlarnaBaseConfig
 
     /**
      * @throws \Exception
+     * @codeCoverageIgnore
      */
     public function save()
     {
@@ -76,6 +77,7 @@ class KlarnaEmdAdmin extends KlarnaBaseConfig
 
     /**
      * @return array
+     * @codeCoverageIgnore
      */
     public function getEmdPaymentTypeOptions()
     {
@@ -84,6 +86,7 @@ class KlarnaEmdAdmin extends KlarnaBaseConfig
 
     /**
      * @return array
+     * @codeCoverageIgnore
      */
     public function getFullHistoryOrdersOptions()
     {
