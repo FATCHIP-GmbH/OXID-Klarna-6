@@ -24,44 +24,82 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
      * @var array of available payment methods
      * Added for performance optimization
      */
-    private $aPaymentList;
+    protected $aPaymentList;
 
     /**
      * @var \TopConcepts\Klarna\Core\KlarnaPayment
      */
-    private $oKlarnaPayment;
+    protected $oKlarnaPayment;
 
     /** @var Request */
-    private $oRequest;
+    protected $oRequest;
+
+    /**
+     * @var string
+     * CountryISO assigned to the user
+     */
+    protected $userCountryISO;
 
     /**
      *
      * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function init()
     {
         $this->oRequest = Registry::get(Request::class);
 
-        if ($this->getUser()) {
-            $sCountryISO = KlarnaUtils::getCountryISO($this->getUser()->getFieldData('oxcountryid'));
+        if ($oUser = $this->getUser()) {
+            $this->userCountryISO = KlarnaUtils::getCountryISO($oUser->getFieldData('oxcountryid'));
         }
         if (Registry::getSession()->getVariable('amazonOrderReferenceId')) {
             $this->loadKlarnaPaymentWidget = false;
         }
 
         if (
-            KlarnaUtils::isKlarnaCheckoutEnabled() &&
-            (KlarnaUtils::isCountryActiveInKlarnaCheckout(Registry::getSession()->getVariable('sCountryISO')) ||
-             KlarnaUtils::isCountryActiveInKlarnaCheckout($sCountryISO)) &&
-            !Registry::getSession()->getVariable('amazonOrderReferenceId') &&
-            !$this->oRequest->getRequestEscapedParameter('non_kco_global_country')
+//            KlarnaUtils::isKlarnaCheckoutEnabled() &&
+//            (KlarnaUtils::isCountryActiveInKlarnaCheckout(Registry::getSession()->getVariable('sCountryISO')) ||
+//             KlarnaUtils::isCountryActiveInKlarnaCheckout($this->userCountryISO)) &&
+//            !Registry::getSession()->getVariable('amazonOrderReferenceId') &&
+//            !$this->oRequest->getRequestEscapedParameter('non_kco_global_country')
+            $this->redirectToKCO()
         ) {
             $redirectUrl = Registry::getConfig()->getShopSecureHomeURL() . 'cl=KlarnaExpress';
             Registry::getUtils()->redirect($redirectUrl, false, 302);
         }
 
         parent::init();
+    }
+
+    /**
+     * Redirect or not the user to the KlarnaCheckout
+     * @return bool
+     */
+    protected function redirectToKCO()
+    {
+        $sessionCountry = Registry::getSession()->getVariable('sCountryISO');
+        $sessionAmazonReference = Registry::getSession()->getVariable('amazonOrderReferenceId');
+
+        if(!KlarnaUtils::isKlarnaCheckoutEnabled()){
+            return false;
+        }
+
+        if(!(KlarnaUtils::isCountryActiveInKlarnaCheckout($sessionCountry))){
+            return false;
+        }
+
+        if(!(KlarnaUtils::isCountryActiveInKlarnaCheckout($this->userCountryISO))){
+            return false;
+        }
+
+        if($sessionAmazonReference){
+            return false;
+        }
+
+        if($this->oRequest->getRequestEscapedParameter('non_kco_global_country')){
+            return false;
+        }
+
+        return true;
     }
 
     /**
