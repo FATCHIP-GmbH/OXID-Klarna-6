@@ -269,29 +269,25 @@ class KlarnaInstaller extends ShopConfiguration
      */
     protected function performMigrations()
     {
-        try{
+        try {
             $migrations = $this->getModuleMigrations();
             $migrations->execute('migrations:migrate');
-
-
-        } catch (\Exception $e){
-            Registry::getUtilsView()->addErrorToDisplay($e->getMessage() .  $e->getCode());
+        } catch (\Exception $e) {
+            Registry::getUtilsView()->addErrorToDisplay($e->getMessage() . $e->getCode());
         }
 
         $this->updateViews();
     }
-
 
     /**
      * Performs full view update
      */
     protected function updateViews()
     {
-
         //preventing edit for anyone except malladmin
         //if (Registry::getSession()->getVariable("malladmin")) {
-            $oMetaData = oxNew(DbMetaDataHandler::class);
-            $oMetaData->updateViews();
+        $oMetaData = oxNew(DbMetaDataHandler::class);
+        $oMetaData->updateViews();
         //}
     }
 

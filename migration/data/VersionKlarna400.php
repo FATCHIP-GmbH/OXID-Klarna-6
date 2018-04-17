@@ -116,7 +116,6 @@ class VersionKlarna400 extends AbstractMigration
                 'KLCHECKOUTIMAGEURL_1'     => 'ADD COLUMN `KLCHECKOUTIMAGEURL_1` VARCHAR(255) NULL DEFAULT \'\'',
                 'KLPAYMENTOPTION'          => 'ADD COLUMN `KLPAYMENTOPTION` SET(\'card\',\'direct banking\',\'other\') NOT NULL DEFAULT \'other\'',
                 'KLEMDPURCHASEHISTORYFULL' => 'ADD COLUMN `KLEMDPURCHASEHISTORYFULL` TINYINT(1) UNSIGNED NOT NULL DEFAULT \'0\'',
-
             ),
             'oxaddress' => array(
                 'KLTEMPORARY' => 'ADD COLUMN `KLTEMPORARY` TINYINT(1) UNSIGNED NOT NULL DEFAULT \'0\'',
