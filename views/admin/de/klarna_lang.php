@@ -12,7 +12,7 @@ $aLang = array(
     'KL_GENERAL_SETTINGS'    => 'Allgemein',
     'KL_CONFIGURATION'       => 'Konfiguration',
     'KL_CONFIGURATION_KCO'   => 'Konfiguration für Klarna Checkout',
-    'KL_CONFIGURATION_KP'    => 'Konfiguration für Klarna Payment Methods',
+    'KL_CONFIGURATION_KP'    => 'Konfiguration für Klarna Payments',
     'KL_KLARNADESIGN'        => 'Design Settings',
     'KL_EXTERNAL_PAYMENTS'   => 'External Payment Methods',
     'KL_EXTRA_MERCHANT_DATA' => 'Extra Merchant Data',
@@ -49,7 +49,7 @@ $aLang = array(
 
 
     'KL_KLARNA_CHECKOUT_NAME'      => 'Klarna Checkout',
-    'KL_KLARNA_PAYMENTS_NAME'      => 'Klarna Payment Methods',
+    'KL_KLARNA_PAYMENTS_NAME'      => 'Klarna Payments',
     'KL_CHOOSE_KLARNA_MODULE_MODE' => 'Klarna Modul Modus auswählen',
 
     'KL_KLARNA_CHECKOUT_DESC'     => 'Die Komplettlösung enthält alle wichtigen Zahlarten (Rechnung, Ratenkauf, Sofortüberweisung, Lastschrift, Mastercard und VISA-Card) und wird durch Klarna gehostet. Ihre Kunden müssen beim Bezahlen lediglich E-Mail-Adresse und Postleitzahl eingeben und können ihre bevorzugte Zahlart wählen. Alles mit nur einer Integration.',
@@ -128,21 +128,26 @@ $aLang = array(
     'KL_EXTERNAL_PAYMENTS_ADMIN_DESC'   =>
         'Hier können Sie externe Bezahlarten und externe Checkouts zur Einbindung innerhalb des Klarna Checkout Iframes konfigurieren. 
         Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips 
-        <i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> oder wenden Sie sich an den Klarna Integration Support.',
+        <i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> 
+        oder wenden Sie sich an den Klarna Integration Support.',
     'KL_EXTRA_MERCHANT_DATA_ADMIN_DESC' => 'Hier können Sie konfigurieren, ob ggf. Extra Merchant Data an Klarna übertragen werden soll. 
 Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips 
-<i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> oder wenden Sie sich an den Klarna Integration Support.',
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> 
+oder wenden Sie sich an den Klarna Integration Support.',
     'KL_DESIGN_SETTINGS_ADMIN_DESC'     => 'Hier können Sie die Design Einstellungen zur Verwendung mit dem Klarna Modul für den OXID eShop konfigurieren. 
 Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips 
-<i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> oder wenden Sie sich an den Klarna Integration Support.',
-    'KL_GENERAL_SETTINGS_ADMIN_DESC'    => 'Treffen Sie hier die Auswahl zwischen Klarna Checkout und Klarna Payment Methods, und nehmen Sie übergreifende 
-Einstellungen vor. Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips <i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> oder wenden Sie sich an den Klarna Integration Support.',
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> 
+oder wenden Sie sich an den Klarna Integration Support.',
+    'KL_GENERAL_SETTINGS_ADMIN_DESC'    => 'Treffen Sie hier die Auswahl zwischen Klarna Checkout und Klarna Payments, und nehmen Sie übergreifende Einstellungen vor. 
+Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips 
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> 
+oder wenden Sie sich an den Klarna Integration Support.',
     'KL_CONFIGURATION_KCO_ADMIN_DESC'   => 'Auf dieser Seite können Sie die Klarna Checkout spezifischen Einstellungen konfigurieren. 
 Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips 
 <i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> 
 oder wenden Sie sich an den Klarna Integration Support.',
-    'KL_CONFIGURATION_KP_ADMIN_DESC'    => 'Auf dieser Seite wählen Sie, welche Klarna Payment Methods Sie anbieten möchten. 
-Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips 
+    'KL_CONFIGURATION_KP_ADMIN_DESC'    => 'Auf dieser Seite wählen Sie, welche Klarna Payments Sie anbieten möchten. 
+Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips
 <i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> 
 oder wenden Sie sich an den Klarna Integration Support.',
     'KL_PAYMENT_METHOD'                 => 'Zahlungsart',
@@ -175,17 +180,17 @@ oder wenden Sie sich an den Klarna Integration Support.',
     'KL_CREDENTIALS_COUNTRY_SELECTOR_TOOLTIP'    => 'Wählen Sie aus der Auswahl links das Land aus, für das Sie länderspezifische Zugangsdaten von Klarna erhalten haben.',
     'KL_CREDENTIALS_COUNTRY_MERCHANT_ID_TOOLTIP' => 'Bitte geben Sie hier die zugehörige Merchant ID für dieses Land ein.',
     'KL_CREDENTIALS_COUNTRY_PASSWORD_TOOLTIP'    => 'Bitte geben Sie hier das zugehörige Passwort für dieses Land ein.',
-    'KL_KLARNA_DEFAULT_COUNTRY_TOOLTIP'          => 'Bitte wählen Sie aus der Liste aus, für welches Land die Klarna Bezahlmethoden standardmäßig geladen werden sollen, solange der Kunde sein Land noch nicht angegeben hat.',
-    'KL_ENABLE_LOGGING_TOOLTIP'                  => 'Aktiviert die Protokollfunktion, damit sämtliche API-Kommunikation mit Klarna in der mysql-Tabelle kl_logs aufgezeichnet wird. Dies kann bei der Analyse oder Fehlersuche nützlich sein. Im Produktiv-Betrieb sollte die Funktion abgeschaltet sein, da sich sonst ggf. große Log-Mengen anhäufen.',
+    'KL_KLARNA_DEFAULT_COUNTRY_TOOLTIP'          => 'Bitte wählen Sie aus der Liste aus, für welches Land der Klarna Checkout standardmäßig geladen werden sollen, solange der Kunde sein Land noch nicht angegeben hat.',
+    'KL_ENABLE_LOGGING_TOOLTIP'                  => 'Aktiviert die Protokollfunktion, damit sämtliche API-Kommunikation mit Klarna in der mysql-Tabelle kl_logs aufgezeichnet wird. Dies kann bei der Analyse oder Fehlersuche nützlich sein. Im Produktiv-Betrieb sollte die Funktion abgeschaltet sein, da sich sonst ggf. große Log-Mengen anhäufen und sensitive Daten gespeichert werden.',
     'KL_SEND_PRODUCT_URLS_TOOLTIP'               => 'Senden Sie die URLs der Artikel-Detailseiten der Produkte, die sich im Warenkorb Ihrer Kunden befinden an Klarna, damit Klarna später aus dem Klarna Portal auf Ihre Artikel verlinken kann.',
     'KL_SEND_PRODUCT_IMAGES_TOOLTIP'             => 'Senden Sie die URLs der Artikel-Bilder der Produkte, die sich im Warenkorb Ihrer Kunden befinden an Klarna, damit Klarna diese im Klarna Portal anzeigen kann.',
-    'KL_ENABLE_ANONYMIZATION_TOOLTIP'            => 'Aktivieren Sie die Anonymisierung, um die Artikelbezeichnungen der Produkte, die sich im Warenkorb Ihrer Kunden befinden, vor Klarna zu verbergen. Dies wird z.B. für Online-Apotheken empfohlen.',
-    'KL_ALLOW_SEPARATE_DELIVERY_ADDRESS_TOOLTIP' => 'Falls die Lieferung an eine abweichende Lieferanschrift ermöglicht werden soll, aktivieren Sie diesen Schalter. Beachten Sie bitte, dass das Rechnungsland immer dem Lieferland entsprechen muss.',
+    'KL_ENABLE_ANONYMIZATION_TOOLTIP'            => 'Aktivieren Sie die Anonymisierung, um die Artikelbezeichnungen der Produkte, die sich im Warenkorb Ihrer Kunden befinden, vor Klarna zu verbergen. Dies wird z.B. für Online-Apotheken empfohlen, sollte aber nur nach Rücksprache mit dem Klarna Integration Manager geschehen.',
+    'KL_ALLOW_SEPARATE_DELIVERY_ADDRESS_TOOLTIP' => 'Falls die Lieferung an eine abweichende Lieferanschrift ermöglicht werden soll, aktivieren Sie diesen Schalter.',
     'KL_MANDATORY_PHONE_TOOLTIP'                 => 'Falls Sie die Angabe einer Telefonnummer zwingend erfordern wollen, aktivieren Sie diesen Schalter. Normalerweise ist für Klarna die Telefonnummer kein Pflichtfeld.',
     'KL_MANDATORY_BIRTH_DATE_TOOLTIP'            => 'Falls Sie die Angabe eines Geburtsdatums zwingend erfordern wollen, aktivieren Sie diesen Schalter. Normalerweise ist für Klarna das Geburtsdatum kein Pflichtfeld. Allerdings ist die Angabe notwendig, um den Kauf auf Rechnung oder eine Ratenzahlung zu ermöglichen.',
     'KL_ENABLE_AUTOFOCUS_TOOLTIP'                => 'Mit Hilfe dieses Schalters aktivieren Sie, dass beim Laden der Seite mit dem Klarna Checkout das Klarna Iframe automatisch fokussiert wird.',
-    'KL_CHECKBOX_TOOLTIP'                        => 'Es besteht die Möglichkeit, dass Sie innerhalb des Klarna Checkout Iframes eine zusätzliche Checkbox aktivieren, um dem Kunden anzubieten, ein Kundenkonto zu eröffnen oder sich für Ihren Newsletter anzumelden, oder beides.',
-    'KL_VALIDATION_TOOLTIP'                      => 'Hiermit können Sie eine zusätzliche Überprüfung des Warenkorbs aktivieren, die beim Absenden der Klarna Checkout Bestellung noch einmal die Verfügbarkeit der gewünschten Artikel überprüft, um Fehler durch Überverkäufe zu vermeiden.',
+    'KL_CHECKBOX_TOOLTIP'                        => 'Es besteht die Möglichkeit, dass Sie innerhalb des Klarna Checkout Iframes eine zusätzliche Checkbox aktivieren, um dem Kunden anzubieten, ein Kundenkonto zu eröffnen oder sich für Ihren Newsletter anzumelden, oder beides. Sollte bei angeschalter Checkbox der Kunde schon ein Kundenkonto haben bzw. schon für den Newsletter angemeldet sein wird der Text der Checkbox automatisch angepasst oder die Checkbox ggf. komplett ausgeblendet.',
+    'KL_VALIDATION_TOOLTIP'                      => 'Hiermit können Sie eine zusätzliche Überprüfung des Warenkorbs aktivieren, die beim Absenden der Klarna Checkout Bestellung noch einmal die Verfügbarkeit der gewünschten Artikel überprüft, um Fehler durch Überverkäufe zu vermeiden. Es wird der Modus "Erfolgreiche Validierung erforderlich" empfohlen.',
     'KL_SALUTATION_MANDATORY_TOOLTIP'            => 'Diese Einstellung betrifft ausschließlich das Klarna Checkout Formular für UK: Soll die Angabe der Anrede erzwungen werden?',
     'KL_ENABLE_DHL_PACKSTATIONS_TOOLTIP'         => 'Zur Zeit nicht implementiert',
     'KL_ENABLE_PRE_FILLING_TOOLTIP'              => 'Aktivieren Sie das automatische Ausfüllen des Klarna Checkout Iframes durch die Daten des im OXID eShop eingeloggten Kunden',
@@ -218,7 +223,7 @@ oder wenden Sie sich an den Klarna Integration Support.',
     'KL_DESIGN_CHECKBOX_TOOLTIP'                 => 'Hintergrundfarbe der Radio-Buttons, die im Falle verschiedener zur Verfügung stehender Unter-Optionen nach Auswahl der Klarna Zahlungsart im Shop-Frontend erscheinen',
     'KL_DESIGN_CHECKBOX_CHECKMARK_TOOLTIP'       => 'Diese Einstellung hat zum Zeitpunkt der Veröffentlichung dieses Moduls noch keine Auswirkung.',
     'KL_DETAILS_TOOLTIP'                         => 'Farbe der Aufzählungszeichen bei der Darstellung der Zahlungs-Details auf der Zahlungsarten-Auswahlseite.',
-    'KL_HEADER_TOOLTIP'                          => 'Farbe der Überschrift / Titel der Zahlungsarten auf der Zahlungsarten-Auswahlseite.',
+    'KL_HEADER_TOOLTIP'                          => 'Diese Einstellung hat zum Zeitpunkt der Veröffentlichung dieses Moduls noch keine Auswirkung.',
     'KL_LINK_TOOLTIP'                            => 'Farbe der Links innerhalb der Detail-Beschreibung der Zahlungsarten auf der Zahlungsarten-Auswahlseite.',
     'KL_TEXT_TOOLTIP'                            => 'Textfarbe der Detail-Beschreibung der Zahlungsarten auf der Zahlungsarten-Auswahlseite.',
     'KL_SECONDARY_TEXT_TOOLTIP'                  => 'Alternative Textfarbe der Detail-Beschreibung der Zahlungsarten auf der Zahlungsarten-Auswahlseite.',
