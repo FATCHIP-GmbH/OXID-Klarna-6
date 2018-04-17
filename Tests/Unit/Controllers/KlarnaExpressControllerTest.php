@@ -9,9 +9,9 @@
 namespace TopConcepts\Klarna\Testes\Unit\Controllers;
 
 use OxidEsales\Eshop\Application\Model\Country;
-use OxidEsales\Eshop\Application\Model\CountryList;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Config;
+use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\UtilsView;
@@ -376,5 +376,31 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
         $this->assertTrue($viewData['confError']);
         $this->assertEquals('kl_klarna_checkout.tpl', $result);
 
+    }
+
+    public function testRenderKlarnaClient()
+    {
+        $this->setRequestParameter('sslredirect' , 'forced');
+        $url = $this->getConfig()->getCurrentShopURL();
+
+        $oConfig = $this->getMock(Config::class, ['getCurrentShopURL']);
+        $oConfig->expects($this->any())->method('getCurrentShopURL')->willReturn($url);
+
+        $keController = $this->createStub(KlarnaExpressController::class, ['getConfig' => $oConfig]);
+
+        $keController->init();
+        $result = $keController->render();
+
+        $this->assertEquals('kl_klarna_checkout.tpl', $result);
+
+
+        $keController = $this->getMock(KlarnaExpressController::class, ['getKlarnaClient', 'getConfig']);
+        $keController->expects($this->any())->method('getKlarnaClient')->will($this->throwException(new StandardException()));
+        $keController->expects($this->any())->method('getConfig')->will($this->returnValue($oConfig));
+
+        $keController->init();
+        $keController->render();
+
+        $this->assertEquals('kl_klarna_checkout.tpl', $result);
     }
 }
