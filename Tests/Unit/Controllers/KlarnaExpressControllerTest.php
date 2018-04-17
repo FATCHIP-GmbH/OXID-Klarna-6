@@ -9,12 +9,15 @@
 namespace TopConcepts\Klarna\Testes\Unit\Controllers;
 
 use OxidEsales\Eshop\Application\Model\Country;
+use OxidEsales\Eshop\Application\Model\CountryList;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\UtilsView;
 use TopConcepts\Klarna\Controllers\KlarnaExpressController;
+use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
+use TopConcepts\Klarna\Exception\KlarnaBasketTooLargeException;
 use TopConcepts\Klarna\Exception\KlarnaConfigException;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
@@ -219,11 +222,6 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
         $this->assertEquals($redirectUrl , \oxUtilsHelper::$sRedirectUrl);
     }
 
-    public function testInit_next()
-    {
-        $this->markTestIncomplete("More tests");
-    }
-
 
     public function testRender_forceSsl()
     {
@@ -297,29 +295,86 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
         $this->assertEquals($expectedShowPopUp, $kcoController->getNonPublicVar('blShowPopup'), "Show popup mismatch.");
     }
 
-    public function testRender()
+    public function testRenderBlockIframeRender()
     {
+        $this->setRequestParameter('sslredirect' , 'forced');
+        $url = $this->getConfig()->getCurrentShopURL();
+        $oConfig = $this->getMock(Config::class, ['getCurrentShopURL']);
+        $oConfig->expects($this->once())->method('getCurrentShopURL')->willReturn($url);
 
-        $userUrl = $this->getConfig()->getSSLShopURL() . 'index.php?cl=user';
-        $orderUrl = $this->getConfig()->getSSLShopURL() . 'index.php?cl=order';
-
-//        $testShippingList = array('testId' => new \stdClass());
-//        $oPayment = $this->getMock(PaymentController::class, ['getCheckoutShippingSets']);
-//        $oPayment->expects($this->once())
-//            ->method('getCheckoutShippingSets')->willReturn($testShippingList);
-//        \oxTestModules::addModuleObject(PaymentController::class, $oPayment);
-
-
-        $this->markTestIncomplete("Render method requires more tests");
-        //$this->assertEquals($redirectUrl, \oxUtilsHelper::$sRedirectUrl, "Redirect url mismatch.");
+        $keController = $this->createStub(KlarnaExpressController::class,['getConfig' => $oConfig]);
+        $this->setProtectedClassProperty($keController,'blockIframeRender',true);
+        $keController->init();
+        $result = $keController->render();
+        $this->assertEquals('kl_klarna_checkout.tpl', $result);
     }
 
-//    public function testGetKlarnaClient()
-//    {
-//
-//    }
-//    public function testIsUserLoggedIn()
-//    {
-//
-//    }
+    public function testRenderException()
+    {
+        $this->setRequestParameter('sslredirect' , 'forced');
+        $url = $this->getConfig()->getCurrentShopURL();
+        $oConfig = $this->getMock(Config::class, ['getCurrentShopURL']);
+        $oConfig->expects($this->once())->method('getCurrentShopURL')->willReturn($url);
+
+        $keController = $this->getMock(KlarnaExpressController::class, ['getKlarnaOrder', 'getConfig']);
+        $keController->expects($this->any())->method('getKlarnaOrder')->will($this->throwException(new KlarnaBasketTooLargeException()));
+        $keController->expects($this->any())->method('getConfig')->will($this->returnValue($oConfig));
+        $keController->init();
+        $result = $keController->render();
+
+        $this->assertEquals(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=basket',\oxUtilsHelper::$sRedirectUrl);
+        $this->assertEquals('kl_klarna_checkout.tpl', $result);
+    }
+
+    public function testGetKlarnaClient()
+    {
+        $keController = $this->createStub(KlarnaExpressController::class, ['init' => null]);
+        $result = $keController->getKlarnaClient();
+
+        $this->assertInstanceOf(KlarnaCheckoutClient::class, $result);
+    }
+
+    public function testShowCountryPopup()
+    {
+        $this->setSessionParam('sCountryISO', 'test');
+        $methodReflection = new \ReflectionMethod(KlarnaExpressController::class, 'showCountryPopup');
+        $methodReflection->setAccessible(true);
+
+        $keController = $this->createStub(KlarnaExpressController::class, ['getSession' => $this->getSession()]);
+        $keController->init();
+        $result = $methodReflection->invoke($keController);
+        $this->assertFalse($result);
+
+        $this->setSessionParam('sCountryISO', false);
+        $keController = $this->createStub(KlarnaExpressController::class, ['getSession' => $this->getSession()]);
+        $keController->init();
+        $result = $methodReflection->invoke($keController);
+
+        $this->assertTrue($result);
+
+        $this->setRequestParameter('reset_klarna_country', true);
+        $keController->init();
+        $result = $methodReflection->invoke($keController);
+        $this->assertTrue($result);
+    }
+
+    public function testRenderWrongMerchantUrls()
+    {
+        $this->setRequestParameter('sslredirect' , 'forced');
+        $url = $this->getConfig()->getCurrentShopURL();
+
+        $oConfig = $this->getMock(Config::class, ['getCurrentShopURL']);
+        $oConfig->expects($this->once())->method('getCurrentShopURL')->willReturn($url);
+
+        $this->setSessionParam('wrong_merchant_urls', 'sds');
+        $keController = $this->createStub(KlarnaExpressController::class, ['getConfig' => $oConfig, 'getSession' => $this->getSession()]);
+
+        $keController->init();
+        $result = $keController->render();
+
+        $viewData = $this->getProtectedClassProperty($keController, '_aViewData');
+        $this->assertTrue($viewData['confError']);
+        $this->assertEquals('kl_klarna_checkout.tpl', $result);
+
+    }
 }

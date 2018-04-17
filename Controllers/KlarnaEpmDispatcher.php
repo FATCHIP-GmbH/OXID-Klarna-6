@@ -12,6 +12,9 @@ use OxidEsales\Eshop\Application\Controller\FrontendController;
 class KlarnaEpmDispatcher extends FrontendController
 {
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function init()
     {
         parent::init();

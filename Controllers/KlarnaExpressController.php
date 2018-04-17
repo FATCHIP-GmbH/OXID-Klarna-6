@@ -206,7 +206,6 @@ class KlarnaExpressController extends FrontendController
         $this->addTplParam('blShowCountryReset', KlarnaUtils::isNonKlarnaCountryActive());
 
         try {
-//            $oKlarnaOrder = new KlarnaOrder($oBasket, $this->_oUser);
             $oKlarnaOrder = $this->getKlarnaOrder($oBasket);
         } catch (KlarnaConfigException $e) {
 
@@ -219,6 +218,8 @@ class KlarnaExpressController extends FrontendController
             Registry::get(UtilsView::class)->addErrorToDisplay($e);
 
             $this->redirectForNonKlarnaCountry(Registry::getSession()->getVariable('sCountryISO'), false);
+
+            return $this->_sThisTemplate;
         }
 
         if ($oSession->getVariable('wrong_merchant_urls')) {
@@ -273,7 +274,6 @@ class KlarnaExpressController extends FrontendController
 
     /**
      *
-     * @codeCoverageIgnore
      * @return bool
      */
     protected function showCountryPopup()
@@ -285,9 +285,11 @@ class KlarnaExpressController extends FrontendController
             return true;
         }
 
+        //@codeCoverageIgnoreStart
         if(!KlarnaUtils::isNonKlarnaCountryActive()){
             return false;
         }
+        //@codeCoverageIgnoreEnd
 
         if($this->isKLUserLoggedIn()){
             return false;
@@ -302,7 +304,6 @@ class KlarnaExpressController extends FrontendController
 
     /**
      *
-     * @codeCoverageIgnore
      * @return bool
      * @throws \oxSystemComponentException
      */
@@ -392,13 +393,16 @@ class KlarnaExpressController extends FrontendController
             if (in_array($country->oxcountry__oxisoalpha2->value, $flagCountries)) {
                 continue;
             }
+            //@codeCoverageIgnoreStart
             $result[] = $country;
+            //@codeCoverageIgnoreEnd
         }
 
         return $result;
     }
 
     /**
+     * @codeCoverageIgnore
      * @return bool
      */
     public function isUserLoggedIn()
@@ -446,7 +450,6 @@ class KlarnaExpressController extends FrontendController
 
     /**
      *
-     * @codeCoverageIgnore
      * @param $sCountryISO
      */
     protected function redirectForNonKlarnaCountry($sCountryISO, $blShippingOptionsSet = true)
@@ -472,7 +475,6 @@ class KlarnaExpressController extends FrontendController
 
     /**
      *
-     * @codeCoverageIgnore
      * @param $oBasket
      * @return KlarnaOrder
      */
