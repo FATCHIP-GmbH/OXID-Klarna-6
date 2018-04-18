@@ -175,6 +175,7 @@ class KlarnaConfiguration extends KlarnaBaseConfig
     }
 
     /**
+     * @codeCoverageIgnore
      */
     public function save()
     {
