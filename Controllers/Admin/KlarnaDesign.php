@@ -54,6 +54,7 @@ class KlarnaDesign extends KlarnaBaseConfig
 
     /**
      * Save configuration values
+     * @codeCoverageIgnore
      *
      * @return void
      * @throws oxSystemComponentException
@@ -66,6 +67,7 @@ class KlarnaDesign extends KlarnaBaseConfig
 
     /**
      * @throws oxSystemComponentException
+     * @codeCoverageIgnore
      */
     protected function saveAdditionalSetting()
     {
