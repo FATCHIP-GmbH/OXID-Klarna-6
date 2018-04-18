@@ -61,6 +61,7 @@ class KlarnaOrderMain extends KlarnaOrderMain_parent
 
             if (is_array($this->klarnaOrderData)) {
                 $klarnaOrderTotalSum = KlarnaUtils::parseFloatAsInt($oOrder->getTotalOrderSum() * 100);
+
                 if ($this->klarnaOrderData['order_amount'] != $klarnaOrderTotalSum ||
                     ($this->klarnaOrderData['remaining_authorized_amount'] != $klarnaOrderTotalSum &&
                      $this->klarnaOrderData['remaining_authorized_amount'] != 0
@@ -131,7 +132,6 @@ class KlarnaOrderMain extends KlarnaOrderMain_parent
             if (is_array($this->klarnaOrderData)) {
                 $apiDisabled = Registry::getLang()->translateString("KL_NO_REQUESTS_WILL_BE_SENT");
                 if ($this->klarnaOrderData['status'] === 'CANCELLED') {
-                    die('dead');
                     $oOrder->oxorder__klsync = new Field(0);
 
                     $orderCancelled                      = Registry::getLang()->translateString("KLARNA_ORDER_IS_CANCELLED");
