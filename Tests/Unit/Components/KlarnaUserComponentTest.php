@@ -97,9 +97,7 @@ class KlarnaUserComponentTest extends ModuleUnitTestCase
      */
     public function testLogout()
     {
-        \oxTestModules::addFunction("oxUtils", "redirect", "{ return true;}");
         \oxTestModules::addFunction("oxUser", "logout", "{ return true;}");
-
 
         $this->setRequestParameter('cl', 'KlarnaExpress');
         $oParent = $this->getMock(\OxidEsales\Eshop\Application\Controller\FrontendController::class, array("isEnabledPrivateSales"));
