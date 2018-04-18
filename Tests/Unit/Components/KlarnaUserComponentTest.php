@@ -9,7 +9,9 @@
 namespace TopConcepts\Klarna\Tests\Unit\Components;
 
 use OxidEsales\Eshop\Application\Component\UserComponent;
+use OxidEsales\Eshop\Core\Controller\BaseController;
 use OxidEsales\Eshop\Core\ViewConfig;
+use ReflectionClass;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 /**
@@ -19,12 +21,6 @@ use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
  */
 class KlarnaUserComponentTest extends ModuleUnitTestCase
 {
-
-    protected function setUp()
-    {
-        parent::setUp();
-    }
-
     public function loginDataProvider()
     {
         $redirectUrl = $this->removeQueryString($this->getConfig()->getShopSecureHomeUrl()) . 'cl=KlarnaExpress';
@@ -93,31 +89,42 @@ class KlarnaUserComponentTest extends ModuleUnitTestCase
     }
 
     /**
-     * covers \TopConcepts\Klarna\Components\KlarnaUserComponent::_getLogoutLink
+     * @dataProvider getLogoutLinkDataProvider
+     * @param $isKlarnaCheckoutEnabled
+     * @param $isKlarnaRedirect
+     * @throws \ReflectionException
      */
-    public function testLogout()
+    public function test_getLogoutLink($isKlarnaCheckoutEnabled, $isKlarnaRedirect, $expectedResult)
     {
-        \oxTestModules::addFunction("oxUser", "logout", "{ return true;}");
-
-        $this->setRequestParameter('cl', 'KlarnaExpress');
-        $oParent = $this->getMock(\OxidEsales\Eshop\Application\Controller\FrontendController::class, array("isEnabledPrivateSales"));
-        $oParent->expects($this->once())->method('isEnabledPrivateSales')->will($this->returnValue(false));
-
-        $aMockFnc = array('_afterLogout', 'getParent');
-        $oUserView = $this->getMock(\OxidEsales\Eshop\Application\Component\UserComponent::class, $aMockFnc);
-        $oUserView->expects($this->once())->method('_afterLogout');
-
-        $oUserView->expects($this->any())->method('getParent')->will($this->returnValue($oParent));
-
-        $this->setRequestParameter('redirect', true);
         $oViewConfig = $this->getMock(ViewConfig::class, ['isKlarnaCheckoutEnabled']);
         $oViewConfig->expects($this->any())
-            ->method('isKlarnaCheckoutEnabled')->willReturn(true);
-       \oxTestModules::addModuleObject(ViewConfig::class, $oViewConfig);
+            ->method('isKlarnaCheckoutEnabled')->willReturn($isKlarnaCheckoutEnabled);
+        \oxTestModules::addModuleObject(ViewConfig::class, $oViewConfig);
 
-        $oUserView->logout();
+        $baseController = $this->getMock(BaseController::class, ['getDynUrlParams']);
+        $userComponent = $this->getMock(UserComponent::class, ['klarnaRedirect', 'getParent']);
+        $userComponent->expects($this->any())->method('getParent')->willReturn($baseController);
+        $userComponent->expects($this->any())->method('getDynUrlParams')->willReturn('dyna');
+        $userComponent->expects($this->any())->method('klarnaRedirect')->willReturn($isKlarnaRedirect);
 
-        $this->markTestIncomplete("Capture and check redirect link. UserComponent:336 _getLogoutLink call");
+        $class  = new ReflectionClass(get_class($userComponent));
+        $sut = $class->getMethod('_getLogoutLink');
+        $sut->setAccessible(true);
 
+        $result = $sut->invokeArgs($userComponent, []);
+
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    public function getLogoutLinkDataProvider()
+    {
+        $res1 = 'http://arek.ox6.demohost.topconcepts.net/index.php?cl=basket&amp;fnc=logout';
+        $res2 = 'http://arek.ox6.demohost.topconcepts.net/index.php?cl=&amp;fnc=logout';
+        return [
+            [false, false, $res2],
+            [true, true, $res1],
+            [true, false, $res2],
+            [false, true, $res2]
+        ];
     }
 }

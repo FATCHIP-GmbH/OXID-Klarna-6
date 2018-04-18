@@ -32,7 +32,7 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
      */
     public function login_noredirect()
     {
-        $this->login_noredirectParent();
+        parent::login_noredirect();
 
         Registry::getSession()->setVariable("iShowSteps", 1);
         $oViewConfig = oxNew(ViewConfig::class);
@@ -59,20 +59,7 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
         return in_array($sClass, $this->_aClasses);
     }
 
-    /**
-     * Calls login_noredirect parent
-     *
-     * @return mixed
-     * @codeCoverageIgnore
-     */
-    protected function login_noredirectParent()
-    {
-        parent::login_noredirect();
-    }
 
-    /**
-     * @codeCoverageIgnore
-     */
     protected function _getLogoutLink()
     {
 
