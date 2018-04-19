@@ -118,8 +118,8 @@ class KlarnaUserComponentTest extends ModuleUnitTestCase
 
     public function getLogoutLinkDataProvider()
     {
-        $res1 = 'http://arek.ox6.demohost.topconcepts.net/index.php?cl=basket&amp;fnc=logout';
-        $res2 = 'http://arek.ox6.demohost.topconcepts.net/index.php?cl=&amp;fnc=logout';
+        $res1 = $this->getConfig()->getShopUrl().'index.php?cl=basket&amp;fnc=logout';
+        $res2 = $this->getConfig()->getShopUrl().'index.php?cl=&amp;fnc=logout';
         return [
             [false, false, $res2],
             [true, true, $res1],
