@@ -9,8 +9,11 @@
 namespace TopConcepts\Klarna\Testes\Unit\Controllers;
 
 
+use ReflectionClass;
 use TopConcepts\Klarna\Controllers\KlarnaValidationController;
+use TopConcepts\Klarna\Core\KlarnaLogs;
 use TopConcepts\Klarna\Core\KlarnaOrderValidator;
+use TopConcepts\Klarna\Models\KlarnaPayment;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 /**
@@ -21,47 +24,108 @@ use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 class KlarnaValidationControllerTest extends ModuleUnitTestCase
 {
 
+    public function setUp()
+    {
+        parent::setUp();
+        $this->setModuleConfVar('blKlarnaLoggingEnabled', true, 'bool');
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+        $this->setModuleConfVar('blKlarnaLoggingEnabled', false, 'bool');
+    }
+
     /**
      * @dataProvider initDataProvider
-     * @param $id
      * @param $requestBody
      * @param $isValid
      * @param $errors
-     * @param $rUrl
+     * @param $eRes
      */
-    public function testInit($id, $requestBody, $isValid, $errors, $rUrl)
+    public function testInit($requestBody, $isValid, $errors, $eRes)
     {
-        $validator = $this->getMock(
-            KlarnaOrderValidator::class, ['validateOrder', 'isValid', 'getResultErrors'], [], '', false);
+        $data = json_decode($requestBody, true);
+        $validator = $this->getMock(KlarnaOrderValidator::class, ['validateOrder', 'isValid', 'getResultErrors'], [$data]);
         $validator->expects($this->once())
             ->method('isValid')
             ->willReturn($isValid);
-
         $validator->expects($this->any())
             ->method('getResultErrors')
             ->willReturn($errors);
+
+        $validationController = $this->getMock(KlarnaValidationController::class, ['getRequestBody', 'logKlarnaData', 'getValidator']);
+        $validationController->expects($this->once())
+            ->method('getRequestBody')
+            ->willReturn($requestBody);
+        $validationController->expects($this->once())
+            ->method('getValidator')
+            ->willReturn($validator);
+        $validationController->expects($this->once())
+            ->method('logKlarnaData');
+
+        $this->setProtectedClassProperty($validationController,'order_id', $data['order_id']);
+
+        $validationController->init();
+
+        $this->assertEquals($eRes['code'], \oxUtilsHelper::$iCode);
+    }
+
+    public function testInit_errorsAndLogs()
+    {
+        $errors = ['MY_ERROR' => 33, 'CANT_BUY' => 10];
+        $validator = $this->createStub(KlarnaOrderValidator::class, [
+            'validateOrder' => null,
+            'isValid' => false,
+            'getResultErrors' => $errors
+        ]);
+
+        $randId = "rand_" . rand(1,100000);
+        $requestBody = "{\"order_id\": \"$randId\", \"fake_order\": \"data\"}";
+        $data = json_decode($requestBody, true);
 
         $validationController = $this->getMock(KlarnaValidationController::class, ['getRequestBody', 'getValidator']);
         $validationController->expects($this->once())
             ->method('getRequestBody')
             ->willReturn($requestBody);
-
         $validationController->expects($this->once())
             ->method('getValidator')
             ->willReturn($validator);
 
+        $this->setProtectedClassProperty($validationController,'order_id', $data['order_id']);
 
-
-        $this->markTestIncomplete("Find solution for error linked to header() function call.");
         $validationController->init();
 
+        $result = $this->getDb()->select("SELECT * FROM `kl_logs` WHERE `KLORDERID` = '$randId'");
+        $this->assertNotEmpty($result->count());
+
+        $this->assertEquals(303, \oxUtilsHelper::$iCode);
+        $this->assertContains('klarnaInvalid=1&MY_ERROR=33&CANT_BUY=10', \oxUtilsHelper::$sRedirectUrl);
     }
+
 
     public function initDataProvider()
     {
+        $validResponse = ['urlShouldContain' => "", 'code' => 200];
+        $invalidResponse = ['urlShouldContain' => "klarnaInvalid=1", 'code' => 303];
         return [
-            ['0000', '{"order_id": "0000"}', true, [], null],
-            ['0001', '{"order_id": "0001"}', false, ['MY_ERROR' => 33], '']
+            ["{\"order_id\": \"0000\"}", true, [], $validResponse],
+            ["{\"order_id\": \"0001\"}", false, ['MY_ERROR' => 33], $invalidResponse]
         ];
+    }
+
+    public function testGetValidator()
+    {
+        $randId = "rand_" . rand(1,100000);
+        $requestBody = "{\"order_id\": \"$randId\", \"fake_order\": \"data\"}";
+        $validationController = new KlarnaValidationController();
+        $this->setProtectedClassProperty($validationController, 'requestBody', $requestBody);
+        $class =  new ReflectionClass(get_class($validationController));
+        $method = $class->getMethod('getValidator');
+        $method->setAccessible(true);
+        $result = $method->invokeArgs($validationController, []);
+
+        $this->assertInstanceOf(KlarnaOrderValidator::class, $result);
+        $this->assertEquals($randId, $this->getProtectedClassProperty($validationController, 'order_id'));
     }
 }

@@ -68,6 +68,10 @@ class KlarnaExternalPayments extends KlarnaBaseConfig
     }
 
 
+    /**
+     * @codeCoverageIgnore
+     * @throws \Exception
+     */
     public function save()
     {
         $vars    = $this->_oRequest->getRequestEscapedParameter('payments');
@@ -113,7 +117,7 @@ class KlarnaExternalPayments extends KlarnaBaseConfig
             'patternMismatch' => Registry::getLang()->translateString('KL_EXTERNAL_IMAGE_URL_INVALID')
         );
 
-        Registry::getUtils()->showMessageAndExit(json_encode($multiLangData));
+        return Registry::getUtils()->showMessageAndExit(json_encode($multiLangData));
     }
 
     /**

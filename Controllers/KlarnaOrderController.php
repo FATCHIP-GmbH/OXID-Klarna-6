@@ -3,6 +3,7 @@
 namespace TopConcepts\Klarna\Controllers;
 
 
+use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\PayPalModule\Controller\ExpressCheckoutDispatcher;
 use OxidEsales\PayPalModule\Controller\StandardDispatcher;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
@@ -35,10 +36,13 @@ use OxidEsales\Eshop\Core\UtilsView;
  */
 class KlarnaOrderController extends KlarnaOrderController_parent
 {
-    private $_aResultErrors;
+    protected $_aResultErrors;
 
     /** @var Request */
-    private $oRequest;
+    protected $oRequest;
+
+    /** @var string  KlarnaExpressController url */
+    protected $selfUrl;
 
     /**
      * @var User|KlarnaUser
@@ -79,20 +83,16 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
         if (KlarnaUtils::isKlarnaCheckoutEnabled()) {
 
+            $this->selfUrl = Registry::getConfig()->getShopSecureHomeUrl() . 'cl=KlarnaExpress';
             if ($this->oRequest->getRequestEscapedParameter('externalCheckout') == 1) {
                 Registry::getSession()->setVariable('externalCheckout', true);
             }
             $this->isExternalCheckout = Registry::getSession()->getVariable('externalCheckout');
 
-            if (
-                (Registry::getSession()->getBasket()->getPaymentId() == 'klarna_checkout' ||
-                 KlarnaUtils::isKlarnaExternalPaymentMethod()
-                )
-                && !$this->isExternalCheckout
-                && !$this->isPayPalAmazon()
-            ) {
-                $oClient = $this->getKlarnaCheckoutClient();
+            $oBasket = Registry::getSession()->getBasket();
+            if ($this->isKlarnaCheckoutOrder($oBasket)) {
 
+                $oClient = $this->getKlarnaCheckoutClient();
                 try {
                     $this->_aOrderData = $oClient->getOrder();
                 } catch (KlarnaClientException $oEx) {
@@ -103,7 +103,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                         if (KlarnaUtils::is_ajax()) {
                             return $this->jsonResponse(__FUNCTION__, 'restart needed', $data = null);
                         }
-                        Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=KlarnaExpress', true, 302);
+                        Registry::getUtils()->redirect($this->selfUrl, true, 302);
                     }
                 }
 
@@ -144,6 +144,56 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         );
         $oKlarnaLog->assign($aData);
         $oKlarnaLog->save();
+    }
+
+    protected function getKlarnaAllowedExternalPayments()
+    {
+        $result      = array();
+        $db          = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
+        $sql         = 'SELECT oxid FROM oxpayments WHERE OXACTIVE=1 AND KLEXTERNALPAYMENT=1';
+        /** @var ResultSet $oRs */
+        $oRs = $db->select($sql);
+        foreach ($oRs->getIterator() as $payment) {
+            $result[] = $payment['oxid'];
+        }
+
+        return $result;
+    }
+
+    protected  function isKlarnaExternalPaymentMethod($paymentId, $sCountryISO)
+    {
+        if (!in_array($paymentId, $this->getKlarnaAllowedExternalPayments())){
+            return false;
+        }
+        if(!KlarnaUtils::isCountryActiveInKlarnaCheckout($sCountryISO)){
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $oBasket Basket
+     * @return bool
+     */
+    protected function isKlarnaCheckoutOrder($oBasket)
+    {
+        $paymentId = $oBasket->getPaymentId();
+        $sCountryISO = Registry::getSession()->getVariable('sCountryISO');
+
+        if(!($paymentId === 'klarna_checkout' || $this->isKlarnaExternalPaymentMethod($paymentId, $sCountryISO))){
+            return false;
+        }
+
+        if($this->isExternalCheckout){
+            return false;
+        }
+
+        if($this->isPayPalAmazon()){
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -733,8 +783,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         $paymentId = Registry::get(Request::class)->getRequestEscapedParameter('payment_id');
         if (!$orderId || !$paymentId || !$this->isActivePayment($paymentId)) {
             Registry::get(UtilsView::class)->addErrorToDisplay('KLARNA_WENT_WRONG_TRY_AGAIN', false, true);
-            $redirectUrl = Registry::getConfig()->getShopSecureHomeURL() . 'cl=KlarnaExpress';
-            Registry::getUtils()->redirect($redirectUrl, true, 302);
+            Registry::getUtils()->redirect($this->selfUrl, true, 302);
         }
 
         $oSession = Registry::getSession();
@@ -777,8 +826,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         } else {
             KlarnaUtils::fullyResetKlarnaSession();
             Registry::get(UtilsView::class)->addErrorToDisplay('KLARNA_WENT_WRONG_TRY_AGAIN', false, true);
-            $redirectUrl = Registry::getConfig()->getShopSecureHomeURL() . 'cl=KlarnaExpress';
-            Registry::getUtils()->redirect($redirectUrl, true, 302);
+            Registry::getUtils()->redirect($this->selfUrl, true, 302);
         }
     }
 

@@ -14,6 +14,9 @@ class oxUtilsHelper extends \OxidEsales\Eshop\Core\Utils
     /** @var null Redirect url. */
     public static $sRedirectUrl = null;
 
+    /** @var null Header Code. */
+    public static $iCode = null;
+
     /** @var bool Should SEO engine be active during testing. */
     public static $sSeoIsActive = false;
 
@@ -35,6 +38,7 @@ class oxUtilsHelper extends \OxidEsales\Eshop\Core\Utils
     public function redirect($sUrl, $blAddRedirectParam = true, $iHeaderCode = 301)
     {
         self::$sRedirectUrl = $sUrl;
+        self::$iCode = $iHeaderCode;
     }
 
     /**

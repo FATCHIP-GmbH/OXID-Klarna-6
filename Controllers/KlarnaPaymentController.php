@@ -3,8 +3,8 @@
 namespace TopConcepts\Klarna\Controllers;
 
 
-use TopConcepts\Klarna\Core\KlarnaClientBase;
 use TopConcepts\Klarna\Core\KlarnaPaymentsClient;
+use TopConcepts\Klarna\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Models\KlarnaPayment as KlarnaPaymentModel;
 use TopConcepts\Klarna\Core\KlarnaConsts;
 use TopConcepts\Klarna\Core\KlarnaPayment;
@@ -12,7 +12,6 @@ use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Models\KlarnaUser;
 use OxidEsales\Eshop\Application\Model\DeliverySetList;
 use OxidEsales\Eshop\Application\Model\User;
-use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Request;
 
@@ -24,39 +23,41 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
      * @var array of available payment methods
      * Added for performance optimization
      */
-    private $aPaymentList;
+    protected $aPaymentList;
 
     /**
      * @var \TopConcepts\Klarna\Core\KlarnaPayment
      */
-    private $oKlarnaPayment;
+    protected $oKlarnaPayment;
 
     /** @var Request */
-    private $oRequest;
+    protected $oRequest;
+
+    /**
+     * @var string
+     * CountryISO assigned to the user
+     */
+    protected $userCountryISO;
+
+
+    protected $client;
 
     /**
      *
      * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function init()
     {
         $this->oRequest = Registry::get(Request::class);
 
-        if ($this->getUser()) {
-            $sCountryISO = KlarnaUtils::getCountryISO($this->getUser()->getFieldData('oxcountryid'));
+        if ($oUser = $this->getUser()) {
+            $this->userCountryISO = KlarnaUtils::getCountryISO($oUser->getFieldData('oxcountryid'));
         }
         if (Registry::getSession()->getVariable('amazonOrderReferenceId')) {
             $this->loadKlarnaPaymentWidget = false;
         }
 
-        if (
-            KlarnaUtils::isKlarnaCheckoutEnabled() &&
-            (KlarnaUtils::isCountryActiveInKlarnaCheckout(Registry::getSession()->getVariable('sCountryISO')) ||
-             KlarnaUtils::isCountryActiveInKlarnaCheckout($sCountryISO)) &&
-            !Registry::getSession()->getVariable('amazonOrderReferenceId') &&
-            !$this->oRequest->getRequestEscapedParameter('non_kco_global_country')
-        ) {
+        if ($this->redirectToKCO()) {
             $redirectUrl = Registry::getConfig()->getShopSecureHomeURL() . 'cl=KlarnaExpress';
             Registry::getUtils()->redirect($redirectUrl, false, 302);
         }
@@ -65,9 +66,39 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
     }
 
     /**
+     * Redirect or not the user to the KlarnaCheckout
+     * @return bool
+     */
+    protected function redirectToKCO()
+    {
+        $sessionCountry = Registry::getSession()->getVariable('sCountryISO');
+        $sessionAmazonReference = Registry::getSession()->getVariable('amazonOrderReferenceId');
+
+        if(!KlarnaUtils::isKlarnaCheckoutEnabled()){
+            return false;
+        }
+
+        if(!(KlarnaUtils::isCountryActiveInKlarnaCheckout($sessionCountry))){
+            return false;
+        }
+
+        if(!(KlarnaUtils::isCountryActiveInKlarnaCheckout($this->userCountryISO))){
+            return false;
+        }
+
+        if($sessionAmazonReference){
+            return false;
+        }
+
+        if($this->oRequest->getRequestEscapedParameter('non_kco_global_country')){
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * @return string
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
-     * @throws \ReflectionException
      * @throws \oxSystemComponentException
      */
     public function render()
@@ -90,12 +121,13 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
                 KlarnaPayment::cleanUpSession();
             }
 
-            $this->oKlarnaPayment->isOrderStateChanged();
             $errors = $this->oKlarnaPayment->getError();
             if (!$errors) {
                 try {
-                    $this->getKlarnaClient()
-                        ->initOrder($this->oKlarnaPayment)
+                    if(!$this->client){
+                        $this->client = KlarnaPaymentsClient::getInstance(); // @codeCoverageIgnore
+                    }
+                    $this->client->initOrder($this->oKlarnaPayment)
                         ->createOrUpdateSession();
 
                     $sessionData = $oSession->getVariable('klarna_session_data');
@@ -104,7 +136,7 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
                     // update KP options, remove unavailable klarna payments
                     $this->removeUnavailableKP($sessionData);
 
-                } catch (StandardException $e) {
+                } catch (KlarnaClientException $e) {
                     $e->debugOut();
 
                     return $sTplName;
@@ -137,11 +169,10 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
          * We will remove some methods in the render method after getting payment_method_categories
          * This will pass modified list to the tempalte
          */
-        if ($this->aPaymentList) {
-            return $this->aPaymentList;
+        if (!$this->aPaymentList) {
+            $this->aPaymentList = parent::getPaymentList();
         }
 
-        $this->aPaymentList = parent::getPaymentList();
         if (KlarnaUtils::isKlarnaPaymentsEnabled()) {
             // remove needless methods from the list
             unset($this->aPaymentList[KlarnaPaymentModel::KLARNA_PAYMENT_CHECKOUT_ID]);
@@ -174,20 +205,9 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
         return $aAllSets;
     }
 
-    /**
-     * @return KlarnaPaymentsClient|KlarnaClientBase
-     */
-    public function getKlarnaClient()
-    {
-        return KlarnaPaymentsClient::getInstance();
-    }
-
     /** Saves Klarna Payment authorization_token or deleting an existing authorization
      * if payment method was changed to not KP method
      * @return null
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
-     * @throws \ReflectionException
-     * @throws \oxSystemComponentException
      */
     public function validatepayment()
     {
@@ -265,7 +285,6 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
      *
      * @param $oUser
      * @return bool
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      */
     public function isCountryHasKlarnaPaymentsAvailable($oUser = null)
     {

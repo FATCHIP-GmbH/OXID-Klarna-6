@@ -6,11 +6,13 @@ namespace TopConcepts\Klarna\Controllers;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use OxidEsales\Eshop\Application\Model\Order;
-use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Registry;
+use TopConcepts\Klarna\Exception\KlarnaClientException;
 
 class KlarnaThankYouController extends KlarnaThankYouController_parent
 {
+    /** @var KlarnaCheckoutClient */
+    protected $client;
     /**
      * @return mixed
      */
@@ -20,7 +22,6 @@ class KlarnaThankYouController extends KlarnaThankYouController_parent
 
         if (Registry::getSession()->getVariable('paymentid') === 'klarna_checkout') {
 
-
             $sKlarnaId = Registry::getSession()->getVariable('klarna_checkout_order_id');
             $oOrder = oxNew(Order::class);
             $query = $oOrder->buildSelectString(array('klorderid' => $sKlarnaId));
@@ -28,28 +29,24 @@ class KlarnaThankYouController extends KlarnaThankYouController_parent
             $sCountryISO = KlarnaUtils::getCountryISO($oOrder->getFieldData('oxbillcountryid'));
             $this->addTplParam("klOrder", $oOrder);
 
+            if(!$this->client){
+                $this->client = KlarnaCheckoutClient::getInstance($sCountryISO);
+            }
+
             try {
-                $this->getKlarnaClient($sCountryISO)->getOrder($sKlarnaId);
-            } catch (StandardException $e) {
+                $this->client->getOrder($sKlarnaId);
+
+            } catch (KlarnaClientException $e) {
                 $e->debugOut();
             }
 
             // add klarna confirmation snippet
-            $this->addTplParam("sKlarnaIframe", $this->getKlarnaClient()->getHtmlSnippet());
+            $this->addTplParam("sKlarnaIframe", $this->client->getHtmlSnippet());
         }
         $this->addTplParam("sPaymentId", Registry::getSession()->getVariable('paymentid'));
 
         KlarnaUtils::fullyResetKlarnaSession();
 
         return $render;
-    }
-
-    /**
-     * @param null $sCountryISO
-     * @return KlarnaCheckoutClient | \TopConcepts\Klarna\Core\KlarnaClientBase
-     */
-    public function getKlarnaClient($sCountryISO = null)
-    {
-        return KlarnaCheckoutClient::getInstance($sCountryISO);
     }
 }

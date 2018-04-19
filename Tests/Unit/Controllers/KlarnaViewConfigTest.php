@@ -65,23 +65,6 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider isKarnaExternalPaymentDataProvider
-     * @param $paymentId
-     * @param $country
-     * @param $expectedResult
-     */
-    public function testIsKlarnaExternalPayment($paymentId, $country, $expectedResult)
-    {
-        $this->setupKlarnaExternals();
-        Registry::getSession()->getBasket()->setPayment($paymentId);
-        $this->setSessionParam('sCountryISO', $country);
-
-        $oViewConfig = oxNew(ViewConfig::class);
-        $result = $oViewConfig->isKlarnaExternalPayment();
-        $this->assertEquals($result, $expectedResult);
-    }
-
     public function isATDataProvider()
     {
         return [
