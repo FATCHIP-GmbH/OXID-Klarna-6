@@ -138,14 +138,6 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
     }
 
     /**
-     *
-     */
-    public function isKlarnaExternalPayment()
-    {
-        return KlarnaUtils::isKlarnaExternalPaymentMethod();
-    }
-
-    /**
      * @param bool $blShipping
      * @return mixed
      */

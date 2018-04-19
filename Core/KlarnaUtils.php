@@ -63,24 +63,6 @@ class KlarnaUtils
     }
 
     /**
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
-     */
-    public static function getKlarnaAllowedExternalPayments()
-    {
-        $result      = array();
-        $db          = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
-        $sql         = 'SELECT oxid FROM oxpayments WHERE OXACTIVE=1 AND KLEXTERNALPAYMENT=1';
-        /** @var ResultSet $oRs */
-        $oRs = $db->select($sql);
-        foreach ($oRs->getIterator() as $payment) {
-            $result[] = $payment['oxid'];
-        }
-
-        return $result;
-    }
-
-    /**
      * @return mixed
      */
     public static function getKlarnaModuleMode()
@@ -223,22 +205,6 @@ class KlarnaUtils
         $oCountryList->loadActiveKCOGlobalCountries($iLang);
 
         return $oCountryList;
-    }
-
-
-    /**
-     * @return bool
-     */
-    public static function isKlarnaExternalPaymentMethod()
-    {
-        if (
-            in_array(Registry::getSession()->getBasket()->getPaymentId(), self::getKlarnaAllowedExternalPayments()) &&
-            KlarnaUtils::isCountryActiveInKlarnaCheckout(Registry::getSession()->getVariable('sCountryISO'))
-        ) {
-            return true;
-        }
-
-        return false;
     }
 
     /**
