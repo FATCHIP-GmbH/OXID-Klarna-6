@@ -98,8 +98,7 @@ class KlarnaAjaxController extends FrontendController
 
     /**
      * Initialize oxUser object and get order data from Klarna
-     *
-     * @codeCoverageIgnore
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      * @throws \oxSystemComponentException
      */
     protected function _initUser()
@@ -115,7 +114,7 @@ class KlarnaAjaxController extends FrontendController
             $oCountry                          = oxNew(Country::class);
             $this->_oUser->oxuser__oxcountryid = new Field(
                 $oCountry->getIdByCode(
-                    strtoupper($this->_aOrderData['purchase_country'])
+                    strtoupper($this->_aOrderData['shipping_address']['country'])
                 ),
                 Field::T_RAW
             );
@@ -124,8 +123,6 @@ class KlarnaAjaxController extends FrontendController
 
     /**
      * Update User object
-     *
-     * @codeCoverageIgnore
      */
     protected function updateUserObject()
     {
@@ -145,9 +142,8 @@ class KlarnaAjaxController extends FrontendController
 
     /**
      * Sends update request to checkout API
-     *
-     * @codeCoverageIgnore
      * @return array order data
+     * @throws StandardException
      * @internal param oxBasket $oBasket
      * @internal param oxUser $oUser
      */
@@ -213,8 +209,6 @@ class KlarnaAjaxController extends FrontendController
 
     /**
      * Formats Json response
-     *
-     * @codeCoverageIgnore
      * @param $action
      * @param $status
      * @param $data
@@ -232,7 +226,6 @@ class KlarnaAjaxController extends FrontendController
     /**
      * Gets data from request body
      *
-     * @codeCoverageIgnore
      * @return array
      */
     protected function getJsonRequest()

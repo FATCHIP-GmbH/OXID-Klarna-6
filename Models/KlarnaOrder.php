@@ -43,7 +43,6 @@ class KlarnaOrder extends KlarnaOrder_parent
 
     /**
      * Validate Klarna Checkout order information
-     * @codeCoverageIgnore  This is only a part of parent::validateOrder
      * @param $oBasket
      * @return int
      */
@@ -65,7 +64,7 @@ class KlarnaOrder extends KlarnaOrder_parent
             // validating minimum price
             $iValidState = $this->validateBasket($oBasket);
         }
-        
+
         return $iValidState;
     }
 

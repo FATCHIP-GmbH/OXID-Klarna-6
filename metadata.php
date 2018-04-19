@@ -1,5 +1,6 @@
 <?php
 
+use OxidEsales\Eshop\Application\Controller\Admin\PaymentMain;
 use TopConcepts\Klarna\Components\KlarnaBasketComponent;
 use TopConcepts\Klarna\Components\KlarnaUserComponent;
 use TopConcepts\Klarna\Components\Widgets\KlarnaServiceMenu;
@@ -14,6 +15,7 @@ use TopConcepts\Klarna\Controllers\Admin\KlarnaOrderList;
 use TopConcepts\Klarna\Controllers\Admin\KlarnaOrderMain;
 use TopConcepts\Klarna\Controllers\Admin\KlarnaOrderOverview;
 use TopConcepts\Klarna\Controllers\Admin\KlarnaOrders;
+use TopConcepts\Klarna\Controllers\Admin\KlarnaPaymentMain;
 use TopConcepts\Klarna\Controllers\Admin\KlarnaStart;
 use TopConcepts\Klarna\Controllers\KlarnaUserController;
 use TopConcepts\Klarna\Controllers\KlarnaAcknowledgeController;
@@ -72,7 +74,7 @@ $aModule = array(
     'title'       => 'Klarna',
     'description' => 'Klarna Extension',
     'version'     => '4.0.0',
-    'author'      => 'topconcepts.com',
+    'author'      => 'https://www.topconcepts.de/oxid-eshop',
     'thumbnail'   => 'logo_black.png',
     'url'         => 'http://integration.klarna.com',
     'email'       => 'integration@klarna.com',
@@ -118,6 +120,7 @@ $aModule = array(
         AdminOrderArticle::class  => KlarnaAdminOrderArticle::class,
         OrderMain::class          => KlarnaOrderMain::class,
         OrderOverview::class      => KlarnaOrderOverview::class,
+        PaymentMain::class        => KlarnaPaymentMain::class,
         //components
         BasketComponent::class    => KlarnaBasketComponent::class,
         UserComponent::class      => KlarnaUserComponent::class,
@@ -246,6 +249,11 @@ $aModule = array(
             'template' => 'order_list.tpl',
             'block'    => 'admin_order_list_filter',
             'file'     => 'kl_admin_list_order_filter',
+        ),
+        array(
+            'template' => 'payment_main.tpl',
+            'block'    => 'admin_payment_main_form',
+            'file'     => 'kl_admin_payment_main_form',
         ),
     ),
     'settings'    => array(),

@@ -17,7 +17,7 @@
 
 <link rel="stylesheet" href="[{$oViewConf->getResourceUrl()}]main.css">
 <link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/css/kl_klarna_admin2.css') }]">
-<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('out/admin/css/tooltipster.bundle.min.css') }]">
+<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/css/tooltipster.bundle.min.css') }]">
 <link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/css/tooltipster-sideTip-light.min.css') }]">
 <script type="text/javascript" src="[{ $oViewConf->getModuleUrl('klarna', 'out/js/libs/jquery-1.12.4.min.js') }]"></script>
 <script type="text/javascript"
@@ -26,7 +26,7 @@
 <div class="[{$box|default:'box'}]" style="[{if !$box && !$bottom_buttons}]height: 100%;[{/if}]">
     <div class="main-container">
         [{assign var="tabName" value="KL_BASIC_SETTINGS"|oxmultilangassign }]
-        [{include file="kl_header.tpl" title="KL_GENERAL_SETTINGS"|oxmultilangassign}]
+        [{include file="kl_header.tpl" title="KL_GENERAL_SETTINGS"|oxmultilangassign desc="KL_GENERAL_SETTINGS_ADMIN_DESC"|oxmultilangassign }]
         <hr>
         <h4>[{oxmultilang ident="KL_CHOOSE_KLARNA_MODULE_MODE"}]:</h4>
 

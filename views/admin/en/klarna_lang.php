@@ -11,6 +11,8 @@ $aLang = array(
     'KL_START'               => 'Start',
     'KL_GENERAL_SETTINGS'    => 'General Settings',
     'KL_CONFIGURATION'       => 'Configuration',
+    'KL_CONFIGURATION_KCO'   => 'Configuration for Klarna Checkout',
+    'KL_CONFIGURATION_KP'    => 'Configuration for Klarna Payments',
     'KL_KLARNADESIGN'        => 'Design Settings',
     'KL_EXTERNAL_PAYMENTS'   => 'External Payment Methods',
     'KL_EXTRA_MERCHANT_DATA' => 'Extra Merchant Data',
@@ -47,7 +49,7 @@ $aLang = array(
     'KL_ADD'                          => 'Add',
 
     'KL_KLARNA_CHECKOUT_NAME'      => 'Klarna Checkout',
-    'KL_KLARNA_PAYMENTS_NAME'      => 'Klarna Payment Methods',
+    'KL_KLARNA_PAYMENTS_NAME'      => 'Klarna Payments',
     'KL_CHOOSE_KLARNA_MODULE_MODE' => 'Choose Klarna module mode',
 
     'KL_KLARNA_CHECKOUT_DESC' => 'A full checkout solution embedded on your site. It lets your customers check out on 
@@ -79,7 +81,7 @@ $aLang = array(
     'KL_SHORT_VERSION'          => 'Short Version:',
     'KL_WHITE'                  => 'White:',
     'KL_BLACK'                  => 'Black:',
-    'KL_DETAILS_AND_BASKET'     => 'Product details page and basket',
+    'KL_DETAILS_AND_BASKET'     => 'Product details page',
     'KL_DISPLAY_PAYMENT_WIDGET' => 'Display Klarna Payment Method Widget?',
     'KL_ON_PROD_PAGE'           => 'On product details page',
     'KL_ON_BASKET_PAGE'         => 'On basket page',
@@ -123,27 +125,32 @@ $aLang = array(
     'KL_PAY_LATER_TEXT'    => 'The option to pay later makes buying quicker and easier for customers: no need to fill out lengthy personal details or card number online.',
     'KL_SLICE_IT'          => 'Slice it',
     'KL_SLICE_IT_TEXT'     => 'Your customers can spread the cost of their purchases at a low interest rate, giving them flexibility and increased purchasing power. Our unique credit application requires minimal information and takes just seconds to complete.',
-    'KL_PAY_NOW'      => 'Pay Now',
-    'KL_PAY_NOW_TEXT' => 'Customers who want to pay in full at checkout can do it quickly and securely with Klarnas Pay now-option - using credit/debit card or Direct bank transfer: Klarna Direkt, Sofort, SEPA Direct Debit.',
+    'KL_PAY_NOW'           => 'Pay Now',
+    'KL_PAY_NOW_TEXT'      => 'Customers who want to pay in full at checkout can do it quickly and securely with Klarnas Pay now-option - using credit/debit card or Direct bank transfer: Klarna Direkt, Sofort, SEPA Direct Debit.',
 
-
-
-    'KL_EXTERNAL_PAYMENTS_ADMIN_DESC' => 'Here you can configure the External Payment Methods to use with the Klarna extension 
-for OXID. For a detailed description of the different settings please see the tool-tip function 
+    'KL_EXTERNAL_PAYMENTS_ADMIN_DESC'   =>
+        '\'Here you can configure External Payment Methods and External Checkouts to be included inside the Klarna Checkout Iframe. 
+        For a detailed description of the different settings please see the tool-tip function 
 <i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s" target="_blank">documentation</a> 
 or contact Klarna Integration Support.',
-
     'KL_EXTRA_MERCHANT_DATA_ADMIN_DESC' => 'Here you can configure the Extra Merchant Data to use with the Klarna extension 
 for OXID. For a detailed description of the different settings please see the tool-tip function 
 <i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s" target="_blank">documentation</a> 
 or contact Klarna Integration Support.',
-
-    'KL_DESIGN_SETTINGS_ADMIN_DESC' => 'Here you can configure the design settings to use with the Klarna extension 
+    'KL_DESIGN_SETTINGS_ADMIN_DESC'     => 'Here you can configure the Design Settings to use with the Klarna extension 
 for OXID. For a detailed description of the different settings please see the tool-tip function 
 <i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s" target="_blank">documentation</a> 
 or contact Klarna Integration Support.',
-
-    'KL_GENERAL_SETTINGS_ADMIN_DESC' => 'Here you can configure the %s to use with the Klarna extension for OXID. For a detailed description of the different settings please see the tool-tip function <i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s" target="_blank">documentation</a> or contact Klarna Integration Support.',
+    'KL_GENERAL_SETTINGS_ADMIN_DESC'    => 'Choose between Klarna Checkout and Klarna Payments, and make some overall settings. 
+For a detailed description of the different settings please see the tool-tip function
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s" target="_blank">documentation</a> or contact Klarna Integration Support.',
+    'KL_CONFIGURATION_KCO_ADMIN_DESC'   => 'On this page you can configure the Klarna Checkout specific settings. 
+For a detailed description of the different settings please see the tool-tip function 
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s" target="_blank">documentation</a> 
+or contact Klarna Integration Support.',
+    'KL_CONFIGURATION_KP_ADMIN_DESC'    => 'On this page you can choose which Klarna Payments you want to offer. 
+For a detailed description of the different settings please see the tool-tip function 
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s" target="_blank">documentation</a> or contact Klarna Integration Support.',
 
     'KL_PAYMENT_METHOD'          => 'Payment method',
     'KL_EXTERNAL_PAYMENT_METHOD' => 'External Payment Method',
@@ -175,17 +182,17 @@ or contact Klarna Integration Support.',
     'KL_CREDENTIALS_COUNTRY_SELECTOR_TOOLTIP'    => 'From the selection on the left, select the country for which you have received country-specific access data from Klarna.',
     'KL_CREDENTIALS_COUNTRY_MERCHANT_ID_TOOLTIP' => 'Please enter the corresponding Merchant ID for this country here.',
     'KL_CREDENTIALS_COUNTRY_PASSWORD_TOOLTIP'    => 'Please enter here the corresponding password for this country.',
-    'KL_KLARNA_DEFAULT_COUNTRY_TOOLTIP'          => 'Please choose from the list for which country the Klarna payment methods are to be loaded by default, as long as the customer has not yet specified his country.',
-    'KL_ENABLE_LOGGING_TOOLTIP'                  => 'Enables the logging function to record all API communication with Klarna into the mysql table kl_logs. This can be useful for analysis or troubleshooting. In productive mode, the function should be switched off, as otherwise table rows might increase quickly.',
+    'KL_KLARNA_DEFAULT_COUNTRY_TOOLTIP'          => 'Please choose from the list for which country the Klarna Checkout should be loaded by default, as long as the customer has not yet specified his country.',
+    'KL_ENABLE_LOGGING_TOOLTIP'                  => 'Enables the logging function to record all API communication with Klarna into the mysql table kl_logs. This can be useful for analysis or troubleshooting. In productive mode, the function should be switched off, as otherwise table rows might increase quickly and sensitive data will be saved.',
     'KL_SEND_PRODUCT_URLS_TOOLTIP'               => 'Submit the URLs of the product detail pages of the products that are in your customer\'s shopping cart to Klarna so that Klarna can later link to your articles from the Klarna portal.',
     'KL_SEND_PRODUCT_IMAGES_TOOLTIP'             => 'Send the URLs of the product images of the products that are in your customers\' shopping cart to Klarna so that Klarna can display them in the Klarna portal.',
-    'KL_ENABLE_ANONYMIZATION_TOOLTIP'            => 'Enable anonymization to hide the product names of products in your customers\' shopping cart from Klarna. This is e.g. recommended for online pharmacies.',
-    'KL_ALLOW_SEPARATE_DELIVERY_ADDRESS_TOOLTIP' => 'If delivery to a different delivery address should be enabled, activate this button. Please note that the country of invoice must always correspond to the country of delivery.',
+    'KL_ENABLE_ANONYMIZATION_TOOLTIP'            => 'Enable anonymization to hide the product names of products in your customers\' shopping cart from Klarna . This is e . g . recommended for online pharmacies, but should only be activated after consultation with Klarna .',
+    'KL_ALLOW_SEPARATE_DELIVERY_ADDRESS_TOOLTIP' => 'If delivery to a different delivery address should be enabled, activate this button.',
     'KL_MANDATORY_PHONE_TOOLTIP'                 => 'If you want to require the specification of a telephone number, activate this switch. Normally for Klarna the telephone number is not mandatory.',
     'KL_MANDATORY_BIRTH_DATE_TOOLTIP'            => 'If you want to require the specification of a date of birth, activate this button. Usually for Klarna the date of birth is not mandatory. However, the information is necessary to allow the purchase on account or installment.',
     'KL_ENABLE_AUTOFOCUS_TOOLTIP'                => 'With this switch, you can set focus on the Klarna Iframe automatically when loading the page with the Klarna Checkout.',
-    'KL_CHECKBOX_TOOLTIP'                        => 'There is a possibility that you can activate an additional checkbox within the Klarna Checkout Iframes to offer the customer, to open a customer account or to sign up for your newsletter, or both.',
-    'KL_VALIDATION_TOOLTIP'                      => 'Hereby you can activate an additional check of the shopping cart, which validates the availability of the desired products again when sending the Klarna checkout order, in order to avoid errors through over sales.',
+    'KL_CHECKBOX_TOOLTIP'                        => 'There is a possibility that you can activate an additional checkbox within the Klarna Checkout Iframes to offer the customer, to open a customer account or to sign up for your newsletter, or both. If a checkbox was activated and user already has an account or signed up for the newsletter the text will be adjusted or hidden accordingly.',
+    'KL_VALIDATION_TOOLTIP'                      => 'Hereby you can activate an additional check of the shopping cart, which validates the availability of the desired products again when sending the Klarna checkout order, in order to avoid errors through over sales. The mode "Require successful validation" is recommended.',
     'KL_SALUTATION_MANDATORY_TOOLTIP'            => 'This setting only applies to the Klarna checkout form for UK: Should input of a salutation be forced?',
     'KL_ENABLE_DHL_PACKSTATIONS_TOOLTIP'         => 'Currently not implemented',
     'KL_ENABLE_PRE_FILLING_TOOLTIP'              => 'Activate pre-filling of the Klarna Checkout Iframe with the data of the customer logged in to the OXID eShop',
@@ -215,10 +222,10 @@ or contact Klarna Integration Support.',
     'KL_BORDER_SELECTED_TOOLTIP'                 => 'Color of the frame, which appears in the shop frontend in the case of various available sub-options after selecting the Klarna payment method. This color value is used to highlight the currently active sub-option.',
     'KL_BUTTON_TOOLTIP'                          => 'This setting has no effect at the time of publishing this module.',
     'KL_BUTTON_TEXT_TOOLTIP'                     => 'This setting has no effect at the time of publishing this module.',
-    'KL_DESIGN_CHECKBOX_TOOLTIP'                 => 'This setting has no effect at the time of publishing this module.',
+    'KL_DESIGN_CHECKBOX_TOOLTIP'                 => 'Background color of the radio-buttons, which appear in the shop frontend in the case of various available sub-options after selecting the Klarna payment method',
     'KL_DESIGN_CHECKBOX_CHECKMARK_TOOLTIP'       => 'This setting has no effect at the time of publishing this module.',
     'KL_DETAILS_TOOLTIP'                         => 'Color of bullets in the presentation of payment details on the payment methods selection page.',
-    'KL_HEADER_TOOLTIP'                          => 'Color of the headline / title of the payment methods on the payment methods selection page.',
+    'KL_HEADER_TOOLTIP'                          => 'This setting has no effect at the time of publishing this module.',
     'KL_LINK_TOOLTIP'                            => 'Color of the links within the detail description of the payment methods on the payment methods selection page.',
     'KL_TEXT_TOOLTIP'                            => 'Text color of the detailed description of the payment methods on the payment methods selection page.',
     'KL_SECONDARY_TEXT_TOOLTIP'                  => 'Alternative text color of the detailed description of the payment methods on the payment methods selection page.',
@@ -268,5 +275,5 @@ or contact Klarna Integration Support.',
     'KL_CAPUTRE_FAIL_ORDER_CANCELLED' => 'Order could not be captured, because it was already cancelled.',
     'KL_NO_REQUESTS_WILL_BE_SENT'     => 'Changes to this order will not be transmitted to Klarna.',
     'KL_ANONYMIZED_PRODUCT_TOOLTIP'   => 'Please enter the string which should be transmitted to Klarna instead of the real product title.',
-
+    'KL_USER_GUIDE'                   => 'User Guide',
 );

@@ -105,6 +105,7 @@ class KlarnaExpressController extends FrontendController
             if ($this->getUser()) {
                 $oCountry                             = oxNew(Country::class);
                 $sCountryId                           = $oCountry->getIdByCode($this->selectedCountryISO);
+                $oCountry->load($sCountryId);
                 $this->getUser()->oxuser__oxcountryid = new Field($sCountryId);
                 $this->getUser()->oxuser__oxcountry   = new Field($oCountry->oxcountry__oxtitle->value);
                 $this->getUser()->save();
@@ -126,7 +127,7 @@ class KlarnaExpressController extends FrontendController
             /**
              * Logged in user with a non KCO country attempting to render the klarna checkout.
              */
-        } else if ($this->getUser() && !KlarnaUtils::isCountryActiveInKlarnaCheckout($this->getUser()->getUserCountryISO2())) {
+        } else if ($this->getUser() && $this->getUser()->getUserCountryISO2() && !KlarnaUtils::isCountryActiveInKlarnaCheckout($this->getUser()->getUserCountryISO2())) {
             //@codeCoverageIgnoreStart
             /**
              * User is coming back from legacy oxid checkout wanting to change the country to one of KCO ones
@@ -403,9 +404,7 @@ class KlarnaExpressController extends FrontendController
             if (in_array($country->oxcountry__oxisoalpha2->value, $flagCountries)) {
                 continue;
             }
-            //@codeCoverageIgnoreStart
             $result[] = $country;
-            //@codeCoverageIgnoreEnd
         }
 
         return $result;
@@ -459,7 +458,6 @@ class KlarnaExpressController extends FrontendController
     }
 
     /**
-     *
      * @param $sCountryISO
      */
     protected function redirectForNonKlarnaCountry($sCountryISO, $blShippingOptionsSet = true)

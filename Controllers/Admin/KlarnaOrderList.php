@@ -28,11 +28,14 @@ class KlarnaOrderList extends KlarnaOrderList_parent
 
             try {
                 $oOrder->cancelKlarnaOrder($orderId, $sCountryISO);
-                $this->getEditObject()->oxorder__klsync = new Field(1);
-                $this->getEditObject()->save();
+                $oOrder->oxorder__klsync = new Field(1);
+                $oOrder->save();
             } catch (StandardException $e) {
                 if (!strstr($e->getMessage(), 'is canceled.')) {
                     Registry::get(UtilsView::class)->addErrorToDisplay($e);
+                    $_POST['oxid'] = -1;
+                    $this->resetContentCache();
+                    $this->init();
                     return;
                 }
             }
@@ -58,12 +61,16 @@ class KlarnaOrderList extends KlarnaOrderList_parent
 
             try {
                 $oOrder->cancelKlarnaOrder($orderId, $sCountryISO);
-                $this->getEditObject()->oxorder__klsync = new Field(1);
-                $this->getEditObject()->save();
+                $oOrder->oxorder__klsync = new Field(1);
+                $oOrder->save();
             } catch (StandardException $e) {
 
                 if (!strstr($e->getMessage(), 'is canceled.')) {
                     Registry::get(UtilsView::class)->addErrorToDisplay($e);
+                    $_POST['oxid'] = -1;
+                    $this->resetContentCache();
+                    $this->init();
+
                     return;
                 }
                 $e->debugOut();
@@ -71,23 +78,5 @@ class KlarnaOrderList extends KlarnaOrderList_parent
         }
 
         parent::storno();
-    }
-
-
-    /**
-     * Returns editable order object
-     *
-     * @param bool $reset
-     * @return Order
-     */
-    public function getEditObject($reset = false)
-    {
-        $soxId = $this->getEditObjectId();
-        if (($this->_oEditObject === null && isset($soxId) && $soxId != '-1') || $reset) {
-            $this->_oEditObject = oxNew(Order::class);
-            $this->_oEditObject->load($soxId);
-        }
-
-        return $this->_oEditObject;
     }
 }

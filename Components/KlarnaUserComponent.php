@@ -81,11 +81,9 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
      */
     public function changeuser_testvalues()
     {
-        $result = $this->getParent();
-
+        $result = parent::changeuser_testvalues();
         if (KlarnaUtils::isKlarnaCheckoutEnabled() && $result === 'account_user') {
 
-//            KlarnaUtils::fullyResetKlarnaSession();
             Registry::getSession()->setVariable('resetKlarnaSession', 1);
 
             if (Registry::get(Request::class)->getRequestParameter('blshowshipaddress')) {

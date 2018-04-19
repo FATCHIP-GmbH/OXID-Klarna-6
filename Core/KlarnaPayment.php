@@ -464,7 +464,6 @@ class KlarnaPayment extends BaseModel
         foreach ($this->_trackedProperties as $sPropertyName) {
             $currentCheckSum = md5(json_encode($this->{$sPropertyName}));
             if ($this->checkSums[$sPropertyName] !== $currentCheckSum) {
-                //var_dump($this->checkSums[$sPropertyName] . " $sPropertyName  $currentCheckSum");
                 if ($sPropertyName !== '_sPaymentMethod') {
                     $this->aUpdateData = array_merge($this->aUpdateData, $this->{$sPropertyName});
 

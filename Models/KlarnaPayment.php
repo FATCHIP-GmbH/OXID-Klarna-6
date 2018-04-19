@@ -161,7 +161,18 @@ class KlarnaPayment extends KlarnaPayment_parent
                 return $sessionData['payment_method_categories'][$methodData]['asset_urls'][$variant];
             }
         } else {
-            //todo
+            $from   = '/' . preg_quote('-', '/') . '/';
+            $locale = preg_replace($from, '_', strtolower(KlarnaConsts::getLocale()), 1);
+
+            //temp fix for payment name mismatch slice_it -> pay_over_time
+            if ($klName === 'pay_over_time') {
+                $klName = 'slice_it';
+            }
+
+            return sprintf("//cdn.klarna.com/1.0/shared/image/generic/badge/%s/%s/standard/pink.png",
+                $locale,
+                $klName
+            );
         }
     }
 }

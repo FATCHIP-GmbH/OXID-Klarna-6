@@ -1,0 +1,5 @@
+[{$smarty.block.parent}]
+[{if $isKlarnaPayment}]
+    [{oxscript add='document.getElementsByName("editval[oxpayments__oxaddsum]")[0].disabled = "disabled";'}]
+    [{oxscript add='document.getElementsByName("editval[oxpayments__oxaddsumtype]")[0].disabled = "disabled";'}]
+[{/if}]

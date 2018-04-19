@@ -242,6 +242,7 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
         $sCountryISO = Registry::getSession()->getVariable('sCountryISO');
         $mid         = KlarnaUtils::getAPICredentials($sCountryISO);
         preg_match('/^(?P<mid>(.)+)(\_)/', $mid['mid'], $matches);
+
         return sprintf(KlarnaConsts::KLARNA_PREFILL_NOTIF_URL, $matches['mid'], $this->getActLanguageAbbr(), strtolower($sCountryISO));
     }
 

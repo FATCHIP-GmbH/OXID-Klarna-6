@@ -96,8 +96,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                 try {
                     $this->_aOrderData = $oClient->getOrder();
                 } catch (KlarnaClientException $oEx) {
-                    $oEx->debugOut();
-
                     if ($oEx->getCode() == 401 || $oEx->getCode() == 404) {
                         // create new order. restart session.
                         if (KlarnaUtils::is_ajax()) {
@@ -729,12 +727,11 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             $oCountry                          = oxNew(Country::class);
             $this->_oUser->oxuser__oxcountryid = new Field(
                 $oCountry->getIdByCode(
-                    strtoupper($this->_aOrderData['purchase_country'])
+                    strtoupper($this->_aOrderData['shipping_address']['country'])
                 ),
                 Field::T_RAW
             );
         }
-
     }
 
     /**
@@ -748,6 +745,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             } else {
                 $this->_oUser->clearDeliveryAddress();
             }
+
             $this->_oUser->assign(KlarnaFormatter::klarnaToOxidAddress($this->_aOrderData, 'billing_address'));
 
             if (isset($this->_aOrderData['customer']['date_of_birth'])) {

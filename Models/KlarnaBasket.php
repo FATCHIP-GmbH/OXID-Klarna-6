@@ -55,8 +55,9 @@ class KlarnaBasket extends KlarnaBasket_parent
      *
      * @param bool $orderMgmtId
      * @return array
-     * @throws \oxArticleInputException
-     * @throws \oxNoArticleException
+     * @throws KlarnaBasketTooLargeException
+     * @throws \OxidEsales\Eshop\Core\Exception\ArticleInputException
+     * @throws \OxidEsales\Eshop\Core\Exception\NoArticleException
      * @internal param $orderData
      */
     public function getKlarnaOrderLines($orderMgmtId = null)
@@ -91,6 +92,10 @@ class KlarnaBasket extends KlarnaBasket_parent
             $oArt = $oItem->getArticle();
             if (!$oArt instanceof Article) {
                 $oArt = $oArt->getArticle();
+            }
+
+            if($iOrderLang){
+                $oArt->loadInLang($iOrderLang, $oArt->getId());
             }
 
             $aProcessedItem = array(
