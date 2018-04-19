@@ -4,6 +4,7 @@ namespace TopConcepts\Klarna\Core;
 
 
 use TopConcepts\Klarna\Exception\KlarnaConfigException;
+use TopConcepts\Klarna\Models\EmdPayload\KlarnaPassThrough;
 use TopConcepts\Klarna\Models\KlarnaEMD;
 use TopConcepts\Klarna\Models\KlarnaUser;
 use OxidEsales\Eshop\Application\Controller\PaymentController;
@@ -144,6 +145,7 @@ class KlarnaOrder extends BaseModel
             }
 
             $this->setAttachmentsData();
+            $this->setPassThroughField();
         }
     }
 
@@ -402,7 +404,6 @@ class KlarnaOrder extends BaseModel
 
                 return KlarnaConsts::EXTRA_CHECKBOX_NONE;
             }
-
             if ($iActiveCheckbox > KlarnaConsts::EXTRA_CHECKBOX_CREATE_USER) {
 
                 return KlarnaConsts::EXTRA_CHECKBOX_SIGN_UP;
@@ -422,7 +423,7 @@ class KlarnaOrder extends BaseModel
     protected function setAttachmentsData()
     {
         if (!$this->_oUser->isFake()) {
-            /** @var Klarna_EMD $klarnaEmd */
+            /** @var KlarnaEMD $klarnaEmd */
             $klarnaEmd = new KlarnaEMD;
             $emd       = $klarnaEmd->getAttachments($this->_oUser);
 
@@ -538,5 +539,17 @@ class KlarnaOrder extends BaseModel
         $result = preg_replace('/http:/', 'https:', $url);
 
         return $result ?: null;
+    }
+
+    /**
+     *
+     */
+    protected function setPassThroughField()
+    {
+        $oKlarnaPassThrough = new KlarnaPassThrough();
+        $data               = $oKlarnaPassThrough->getPassThroughField();
+        if (!empty($data)) {
+            $this->_aOrderData['merchant_data'] = $data;
+        }
     }
 }

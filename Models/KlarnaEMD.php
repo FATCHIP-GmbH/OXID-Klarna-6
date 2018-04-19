@@ -5,7 +5,6 @@ namespace TopConcepts\Klarna\Models;
 
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Models\EmdPayload\KlarnaCustomerAccountInfo;
-use TopConcepts\Klarna\Models\EmdPayload\KlarnaPassThrough;
 use TopConcepts\Klarna\Models\EmdPayload\KlarnaPaymentHistoryFull;
 use OxidEsales\Eshop\Application\Model\User;
 
@@ -41,9 +40,6 @@ class KlarnaEMD
         if (KlarnaUtils::getShopConfVar('blKlarnaEmdPaymentHistoryFull')) {
             $return = array_merge($return, $this->getPaymentHistoryFull($oUser));
         }
-        if (KlarnaUtils::getShopConfVar('blKlarnaEmdPassThrough')) {
-            $return = array_merge($return, $this->getPassThroughField());
-        }
 
         return $return;
     }
@@ -76,18 +72,5 @@ class KlarnaEMD
         $oKlarnaPayload = new KlarnaPaymentHistoryFull;
 
         return $oKlarnaPayload->getPaymentHistoryFull($oUser);
-    }
-
-    /**
-     * To be implemented by the merchant
-     *
-     * @return array
-     */
-    protected function getPassThroughField()
-    {
-        /** @var KlarnaPassThrough $oKlarnaPayload */
-        $oKlarnaPayload = new KlarnaPassThrough;
-
-        return $oKlarnaPayload->getPassThroughField();
     }
 }

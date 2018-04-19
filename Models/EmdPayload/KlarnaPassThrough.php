@@ -6,11 +6,10 @@ namespace TopConcepts\Klarna\Models\EmdPayload;
 class KlarnaPassThrough
 {
     /**
-     * To be implemented by the merchant
-     * @return array
+     * @return string
      */
     public function getPassThroughField()
     {
-        return array();
+        return 'To be implemented by the merchant.';
     }
 }
