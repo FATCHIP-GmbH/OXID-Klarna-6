@@ -102,7 +102,10 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase
 
     protected function setOrder($oxstorno = 0)
     {
-        $order = $this->getMock(Order::class, ['load', 'save', 'getTotalOrderSum', 'getNewOrderLinesAndTotals', 'updateKlarnaOrder']);
+        $order = $this->getMock(
+            Order::class,
+            ['load', 'save', 'getTotalOrderSum', 'getNewOrderLinesAndTotals', 'updateKlarnaOrder']
+        );
         $order->expects($this->any())->method('load')->willReturn(true);
         $order->expects($this->any())->method('save')->willReturn(true);
         $order->expects($this->any())->method('getTotalOrderSum')->willReturn(100);
@@ -143,10 +146,16 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase
 
         $warningMessage = $orderMain->getViewData()['sWarningMessage'];
 
-        $this->assertEquals($warningMessage, "<strong>Achtung!</strong> Die Daten dieser Bestellung weichen von den Daten ab, die bei Klarna gespeichert sind. KL_NO_REQUESTS_WILL_BE_SENT");
+        $this->assertEquals(
+            $warningMessage,
+            "<strong>Achtung!</strong> Die Daten dieser Bestellung weichen von den Daten ab, die bei Klarna gespeichert sind. KL_NO_REQUESTS_WILL_BE_SENT"
+        );
         $this->assertEquals(new Field(0), $order->oxorder__klsync);
 
-        $orderMain = $this->createStub(KlarnaOrderMain::class, ['isKlarnaOrder' => true, 'isCredentialsValid' => true, 'isCaptureInSync' => true]);
+        $orderMain = $this->createStub(
+            KlarnaOrderMain::class,
+            ['isKlarnaOrder' => true, 'isCredentialsValid' => true, 'isCaptureInSync' => true]
+        );
         $this->setProtectedClassProperty($orderMain, 'klarnaOrderData', ['order_amount' => 10000]);
         $orderMain->render();
 
@@ -187,7 +196,10 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase
 
         $order = $this->setOrder();
         $order->oxorder__klsync = new Field(1, Field::T_RAW);
-        $controller = $this->createStub(KlarnaOrderMain::class, ['getEditObjectId' => 'test', 'retrieveKlarnaOrder' => 'test']);
+        $controller = $this->createStub(
+            KlarnaOrderMain::class,
+            ['getEditObjectId' => 'test', 'retrieveKlarnaOrder' => 'test']
+        );
         $this->setProtectedClassProperty($controller, 'klarnaOrderData', ['remaining_authorized_amount' => 1]);
         $controller->sendOrder();
 
@@ -197,7 +209,7 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase
         $client = $this->createStub(KlarnaOrderManagementClient::class, ['captureOrder' => true]);
         $this->setProtectedClassProperty($controller, 'client', $client);
         $controller->sendOrder();
-        $klarnaOrder = $this->getProtectedClassProperty($controller,'klarnaOrderData');
+        $klarnaOrder = $this->getProtectedClassProperty($controller, 'klarnaOrderData');
         $result = $controller->getViewData()['sMessage'];
 
         $this->assertEquals('test', $klarnaOrder);
@@ -219,8 +231,6 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase
 
         $result = $controller->isCredentialsValid();
         $this->assertTrue($result);
-
-
     }
 
     /**
@@ -267,12 +277,12 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase
 
         $this->setRequestParameter('editval', 11);
         $controller = $this->createStub(KlarnaOrderMain::class, ['getEditObjectId' => 'test', 'isKlarnaOrder' => true]);
-        $this->setProtectedClassProperty($controller,'klarnaOrderData', ['captured_amount' => 1]);
+        $this->setProtectedClassProperty($controller, 'klarnaOrderData', ['captured_amount' => 1]);
         $controller->save();
         $result = $controller->getViewData()['sErrorMessage'];
         $this->assertEquals('KL_ORDER_UPDATE_CANT_BE_SENT_TO_KLARNA', $result);
 
-        $this->setProtectedClassProperty($controller,'klarnaOrderData',  ['captured_amount' => 0]);
+        $this->setProtectedClassProperty($controller, 'klarnaOrderData', ['captured_amount' => 0]);
         $controller->save();
         $result = $controller->getViewData()['sErrorMessage'];
         $this->assertEquals('KL_ORDER_UPDATE_CANT_BE_SENT_TO_KLARNA', $result);
@@ -283,13 +293,18 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase
         $result = $controller->getViewData()['sErrorMessage'];
         $this->assertEquals('test', $result);
 
-        $controller = $this->createStub(KlarnaOrderMain::class, ['getEditObjectId' => 'test', 'isKlarnaOrder' => true, 'discountChanged' => false]);
+        $controller = $this->createStub(
+            KlarnaOrderMain::class,
+            ['getEditObjectId' => 'test', 'isKlarnaOrder' => true, 'discountChanged' => false]
+        );
 
         $client = $this->getMock(KlarnaOrderManagementClient::class, ['sendOxidOrderNr', 'addShippingToCapture']);
         $client->expects($this->any())->method('sendOxidOrderNr')->willReturn(true);
-        $client->expects($this->any())->method('addShippingToCapture')->will($this->throwException(new StandardException()));
+        $client->expects($this->any())->method('addShippingToCapture')->will(
+            $this->throwException(new StandardException())
+        );
         $this->setProtectedClassProperty($controller, 'client', $client);
-        $this->setProtectedClassProperty($controller,'klarnaOrderData',  ['captured_amount' => 1]);
+        $this->setProtectedClassProperty($controller, 'klarnaOrderData', ['captured_amount' => 1]);
         $this->setRequestParameter('editval', ['oxorder__oxtrackcode' => 1]);
         $controller->save();
         $result = $controller->getViewData()['sErrorMessage'];
