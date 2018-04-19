@@ -169,8 +169,7 @@ class KlarnaOrderArticle extends KlarnaOrderArticle_parent
             $orderLines  = $this->getEditObject(true)->getNewOrderLinesAndTotals($this->orderLang);
             $sCountryISO = KlarnaUtils::getCountryISO($this->getEditObject()->oxorder__oxbillcountryid->value);
 
-            $client = KlarnaOrderManagementClient::getInstance($sCountryISO);
-            $error = $client->updateOrder($orderLines, $this->getEditObject()->oxorder__klorderid->value, $sCountryISO);
+            $error = $this->getEditObject()->updateKlarnaOrder($orderLines, $this->getEditObject()->oxorder__klorderid->value, $sCountryISO);
 
             if ($error) {
                 $this->_aViewData['sErrorMessage'] = $error;
