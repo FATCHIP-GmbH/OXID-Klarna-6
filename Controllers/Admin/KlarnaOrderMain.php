@@ -16,6 +16,7 @@ use OxidEsales\Eshop\Core\Request;
 class KlarnaOrderMain extends KlarnaOrderMain_parent
 {
     protected $klarnaOrderData;
+    protected $client;
 
     /**
      * @return mixed
@@ -181,8 +182,10 @@ class KlarnaOrderMain extends KlarnaOrderMain_parent
             try {
                 $this->_aViewData['sErrorMessage'] = '';
 
-                $client = KlarnaOrderManagementClient::getInstance($sCountryISO);
-                $response = $client->captureOrder($data, $oOrder->getFieldData('klorderid'));
+                if(!$this->client) {
+                    $this->client = KlarnaOrderManagementClient::getInstance($sCountryISO);
+                }
+                $response = $this->client->captureOrder($data, $oOrder->getFieldData('klorderid'));
             } catch (StandardException $e) {
                 $this->_aViewData['sErrorMessage'] = $e->getMessage();
 
@@ -221,13 +224,12 @@ class KlarnaOrderMain extends KlarnaOrderMain_parent
 
         if ($this->isKlarnaOrder() && $notCancelled && $inSync) {
 
-            $orderLang = (int)$oOrder->getFieldData('oxlang');
-            $edit      = Registry::getConfig()->getRequestParameter('editval');
-
+            $orderLang       = (int)$oOrder->getFieldData('oxlang');
+            $edit            = Registry::get(Request::class)->getRequestEscapedParameter('editval');
             $klorderid       = $oOrder->getFieldData('klorderid');
             $sCountryISO     = $oOrder->getFieldData('oxbillcountryid');
             $captured        = $this->klarnaOrderData['captured_amount'] > 0;
-            $discountChanged = $edit['oxorder__oxdiscount'] != $oldDiscountVal;
+            $discountChanged = $this->discountChanged($oldDiscountVal);
 
             //new discount
             if ($discountChanged) {
@@ -245,11 +247,13 @@ class KlarnaOrderMain extends KlarnaOrderMain_parent
                 }
             }
 
-            $klarnaClient = KlarnaOrderManagementClient::getInstance($sCountryISO);
+            if(!$this->client) {
+                $this->client = KlarnaOrderManagementClient::getInstance($sCountryISO);
+            }
             //new order number
             if ((int)$edit['oxorder__oxordernr'] !== $oldOrderNum) {
                 try {
-                    $klarnaClient->sendOxidOrderNr((int)$edit['oxorder__oxordernr'], $klorderid);
+                    $this->client->sendOxidOrderNr((int)$edit['oxorder__oxordernr'], $klorderid);
 
                 } catch (StandardException $e) {
                     $this->_aViewData['sErrorMessage'] = $oLang->translateString('KL_ORDER_UPDATE_CANT_BE_SENT_TO_KLARNA');
@@ -261,7 +265,7 @@ class KlarnaOrderMain extends KlarnaOrderMain_parent
                 $capture_id = $this->klarnaOrderData['captures'][0]['capture_id'];
 
                 try {
-                    $klarnaClient->addShippingToCapture($data, $klorderid, $capture_id);
+                    $this->client->addShippingToCapture($data, $klorderid, $capture_id);
                 } catch (StandardException $e) {
                     $this->_aViewData['sErrorMessage'] = $oLang->translateString('KL_ORDER_UPDATE_CANT_BE_SENT_TO_KLARNA');
                 }
@@ -270,6 +274,12 @@ class KlarnaOrderMain extends KlarnaOrderMain_parent
             $oOrder->oxorder__klsync = new Field(1);
             $oOrder->save();
         }
+    }
+
+    protected function discountChanged($oldDiscountVal)
+    {
+        $edit = Registry::get(Request::class)->getRequestEscapedParameter('editval');
+        return $edit['oxorder__oxdiscount'] != $oldDiscountVal;
     }
 
     /**

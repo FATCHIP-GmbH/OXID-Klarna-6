@@ -163,19 +163,7 @@ class KlarnaOrderArticle extends KlarnaOrderArticle_parent
     public function updateOrder()
     {
         parent::updateOrder();
-        /** @var Order $oOrder */
-        if ($this->isKlarnaOrder() && $this->getEditObject()->getFieldData('klsync') == 1) {
-
-            $orderLines  = $this->getEditObject(true)->getNewOrderLinesAndTotals($this->orderLang);
-            $sCountryISO = KlarnaUtils::getCountryISO($this->getEditObject()->oxorder__oxbillcountryid->value);
-
-            $client = KlarnaOrderManagementClient::getInstance($sCountryISO);
-            $error = $client->updateOrder($orderLines, $this->getEditObject()->oxorder__klorderid->value, $sCountryISO);
-
-            if ($error) {
-                $this->_aViewData['sErrorMessage'] = $error;
-            }
-        }
+        $this->updateKlarnaOrder(true);
     }
 
     /**
@@ -184,17 +172,7 @@ class KlarnaOrderArticle extends KlarnaOrderArticle_parent
     public function deleteThisArticle()
     {
         parent::deleteThisArticle();
-        /** @var Order $oOrder */
-        if ($this->isKlarnaOrder() && $this->getEditObject()->getFieldData('klsync') == 1) {
-
-            $orderLines  = $this->getEditObject(true)->getNewOrderLinesAndTotals($this->orderLang);
-            $sCountryISO = KlarnaUtils::getCountryISO($this->getEditObject()->oxorder__oxbillcountryid->value);
-
-            $error = $this->getEditObject()->updateKlarnaOrder($orderLines, $this->getEditObject()->oxorder__klorderid->value, $sCountryISO);
-            if ($error) {
-                $this->_aViewData['sErrorMessage'] = $error;
-            }
-        }
+        $this->updateKlarnaOrder(true);
     }
 
     /**
@@ -203,17 +181,7 @@ class KlarnaOrderArticle extends KlarnaOrderArticle_parent
     public function storno()
     {
         parent::storno();
-        /** @var Order $oOrder */
-        if ($this->isKlarnaOrder() && $this->getEditObject()->getFieldData('klsync') == 1) {
-
-            $orderLines  = $this->getEditObject()->getNewOrderLinesAndTotals($this->orderLang);
-            $sCountryISO = KlarnaUtils::getCountryISO($this->getEditObject()->oxorder__oxbillcountryid->value);
-
-            $error = $this->getEditObject()->updateKlarnaOrder($orderLines, $this->getEditObject()->oxorder__klorderid->value, $sCountryISO);
-            if ($error) {
-                $this->_aViewData['sErrorMessage'] = $error;
-            }
-        }
+        $this->updateKlarnaOrder();
     }
 
     /**
@@ -222,13 +190,19 @@ class KlarnaOrderArticle extends KlarnaOrderArticle_parent
     public function addThisArticle()
     {
         parent::addThisArticle();
+        $this->updateKlarnaOrder();
+    }
+
+    protected function updateKlarnaOrder($reset = false)
+    {
         /** @var Order $oOrder */
         if ($this->isKlarnaOrder() && $this->getEditObject()->getFieldData('klsync') == 1) {
 
-            $orderLines  = $this->getEditObject()->getNewOrderLinesAndTotals($this->orderLang);
+            $orderLines  = $this->getEditObject($reset)->getNewOrderLinesAndTotals($this->orderLang);
             $sCountryISO = KlarnaUtils::getCountryISO($this->getEditObject()->oxorder__oxbillcountryid->value);
 
             $error = $this->getEditObject()->updateKlarnaOrder($orderLines, $this->getEditObject()->oxorder__klorderid->value, $sCountryISO);
+
             if ($error) {
                 $this->_aViewData['sErrorMessage'] = $error;
             }
