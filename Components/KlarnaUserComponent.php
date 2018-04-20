@@ -80,7 +80,7 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
      * @return string
      */
     public function changeuser_testvalues()
-    {
+        {
         $result = parent::changeuser_testvalues();
         if (KlarnaUtils::isKlarnaCheckoutEnabled() && $result === 'account_user') {
 

@@ -1,12 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: arekk
- * Date: 26.03.2018
- * Time: 13:44
- */
 
 namespace TopConcepts\Klarna\Tests\Unit\Components;
+
 
 use OxidEsales\Eshop\Application\Component\UserComponent;
 use OxidEsales\Eshop\Core\Controller\BaseController;
@@ -26,9 +21,9 @@ class KlarnaUserComponentTest extends ModuleUnitTestCase
         $redirectUrl = $this->removeQueryString($this->getConfig()->getShopSecureHomeUrl()) . 'cl=KlarnaExpress';
 
         return [
-            ['KCO', true, false, null ],
+            ['KCO', true, false, null],
             ['KCO', true, true, $redirectUrl],
-            ['KP', true, true, null]
+            ['KP', true, true, null],
         ];
     }
 
@@ -61,7 +56,7 @@ class KlarnaUserComponentTest extends ModuleUnitTestCase
             ['KCO', 1, 1, 1, null],
             ['KCO', 1, 1, 1, 'fake_id'],
             ['KCO', 0, 1, null, null],
-            ['KP', 1, null, null, null]
+            ['KP', 1, null, null, null],
         ];
     }
 
@@ -79,8 +74,8 @@ class KlarnaUserComponentTest extends ModuleUnitTestCase
         $this->setRequestParameter('blshowshipaddress', $showShippingAddress);
         $this->setRequestParameter('oxaddressid', $addressIdResult);
 
-        $cmpUser = $this->getMock(UserComponent::class, ['getParent']);
-        $cmpUser->expects($this->once())->method('getParent')->willReturn('account_user');
+        $cmpUser = $this->getMock(UserComponent::class, ['_changeUser_noRedirect']);
+        $cmpUser->expects($this->once())->method('_changeUser_noRedirect')->willReturn(true);
 
         $cmpUser->changeuser_testvalues();
         $this->assertEquals($resetResult, $this->getSessionParam('resetKlarnaSession'));
@@ -102,13 +97,13 @@ class KlarnaUserComponentTest extends ModuleUnitTestCase
         \oxTestModules::addModuleObject(ViewConfig::class, $oViewConfig);
 
         $baseController = $this->getMock(BaseController::class, ['getDynUrlParams']);
-        $userComponent = $this->getMock(UserComponent::class, ['klarnaRedirect', 'getParent']);
+        $userComponent  = $this->getMock(UserComponent::class, ['klarnaRedirect', 'getParent']);
         $userComponent->expects($this->any())->method('getParent')->willReturn($baseController);
         $userComponent->expects($this->any())->method('getDynUrlParams')->willReturn('dyna');
         $userComponent->expects($this->any())->method('klarnaRedirect')->willReturn($isKlarnaRedirect);
 
-        $class  = new ReflectionClass(get_class($userComponent));
-        $sut = $class->getMethod('_getLogoutLink');
+        $class = new ReflectionClass(get_class($userComponent));
+        $sut   = $class->getMethod('_getLogoutLink');
         $sut->setAccessible(true);
 
         $result = $sut->invokeArgs($userComponent, []);
@@ -118,13 +113,14 @@ class KlarnaUserComponentTest extends ModuleUnitTestCase
 
     public function getLogoutLinkDataProvider()
     {
-        $res1 = $this->getConfig()->getShopUrl().'index.php?cl=basket&amp;fnc=logout';
-        $res2 = $this->getConfig()->getShopUrl().'index.php?cl=&amp;fnc=logout';
+        $res1 = $this->getConfig()->getShopUrl() . 'index.php?cl=basket&amp;fnc=logout';
+        $res2 = $this->getConfig()->getShopUrl() . 'index.php?cl=&amp;fnc=logout';
+
         return [
             [false, false, $res2],
             [true, true, $res1],
             [true, false, $res2],
-            [false, true, $res2]
+            [false, true, $res2],
         ];
     }
 }
