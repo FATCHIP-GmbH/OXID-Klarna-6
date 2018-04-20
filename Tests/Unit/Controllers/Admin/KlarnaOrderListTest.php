@@ -43,16 +43,15 @@ class KlarnaOrderListTest extends ModuleUnitTestCase
     {
         $order = $this->setOrder();
 
-        $controller = $this->createStub(KlarnaOrderList::class, ['getEditObjectId' => 'test', 'cancelOrder' => true]);
+        $controller = $this->createStub(KlarnaOrderList::class, ['getEditObjectId' => 'test', 'cancelOrder' => true, 'resetContentCache' => true, 'init' => true]);
 
         $this->assertFalse($order->oxorder__klsync);
         $controller->$method();
         $this->assertEquals(new Field(1), $order->oxorder__klsync);
 
         if ($method == 'storno') {
-            $mockException = $this->getMock(StandardException::class, ['debugOut'], ['is canceled.']);
+            $mockException = $this->getMock(StandardException::class, [], ['is canceled.']);
             $this->setOrder($mockException);
-            $mockException->expects($this->once())->method('debugOut');
             $controller->storno();
         }
 

@@ -32,14 +32,14 @@ class KlarnaOrderList extends KlarnaOrderList_parent
      */
     public function storno()
     {
-        $result = $this->cancelKlarnaOrder(true);
+        $result = $this->cancelKlarnaOrder();
 
         if ($result) {
             parent::storno();
         }
     }
 
-    protected function cancelKlarnaOrder($debugOut = false)
+    protected function cancelKlarnaOrder()
     {
         $orderId = $this->getEditObjectId();
         $oOrder  = oxNew(Order::class);
@@ -65,9 +65,6 @@ class KlarnaOrderList extends KlarnaOrderList_parent
                 }
 
                 return false;
-                if ($debugOut) {
-                    $e->debugOut();
-                }
             }
         }
 
