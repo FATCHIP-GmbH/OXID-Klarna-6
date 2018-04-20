@@ -7,6 +7,7 @@ use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Request;
+use TopConcepts\Klarna\Core\KlarnaConsts;
 
 /**
  * Class Klarna_oxPayment extends OXID default oxPayment class to add additional
@@ -169,7 +170,7 @@ class KlarnaPayment extends KlarnaPayment_parent
                 $klName = 'slice_it';
             }
 
-            return sprintf("//cdn.klarna.com/1.0/shared/image/generic/badge/%s/%s/standard/pink.png",
+            return sprintf("https://cdn.klarna.com/1.0/shared/image/generic/badge/%s/%s/standard/pink.png",
                 $locale,
                 $klName
             );

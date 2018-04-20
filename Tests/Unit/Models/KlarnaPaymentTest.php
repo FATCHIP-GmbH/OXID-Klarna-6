@@ -238,7 +238,8 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
         return [
             [$sessionData, 'pay_later', $sessionData['payment_method_categories'][0]['asset_urls']['standard']],
             [$sessionData, 'pay_over_time', $sessionData['payment_method_categories'][1]['asset_urls']['standard']],
-            [null, 'pay_over_time', null]
+            [null, 'pay_over_time', "https://cdn.klarna.com/1.0/shared/image/generic/badge/de_de/slice_it/standard/pink.png"],
+            [null, 'klarna_pay_now', "https://cdn.klarna.com/1.0/shared/image/generic/badge/de_de/klarna_pay_now/standard/pink.png"]
         ];
     }
 }
