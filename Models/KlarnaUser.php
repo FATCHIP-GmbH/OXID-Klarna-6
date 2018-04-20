@@ -239,11 +239,23 @@ class KlarnaUser extends KlarnaUser_parent
             }
         } else {
             $this->_type = self::NOT_EXISTING;
+            $this->setFakeUserId();
         }
 
-        $this->addToGroup('oxidnotyetordered');
-
         return $this;
+    }
+
+    /**
+     *
+     */
+    protected function setFakeUserId()
+    {
+        if (Registry::getSession()->hasVariable('sFakeUserId')) {
+            $this->setId(Registry::getSession()->getVariable('sFakeUserId'));
+        } else {
+            $this->setId();
+            Registry::getSession()->setVariable('sFakeUserId', $this->getId());
+        }
     }
 
     /**
@@ -489,6 +501,5 @@ class KlarnaUser extends KlarnaUser_parent
         }
 
         return $this->_type = self::NOT_REGISTERED;
-
     }
 }

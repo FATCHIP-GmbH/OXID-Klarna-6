@@ -176,8 +176,7 @@ class KlarnaOrder extends BaseModel
     {
         $allSets  = $this->_getPayment()->getCheckoutShippingSets($this->_oUser);
         $currency = Registry::getConfig()->getActShopCurrencyObject();
-
-        $methods = array();
+        $methods  = array();
         if (!is_array($allSets)) {
             return $methods;
         }
@@ -214,7 +213,6 @@ class KlarnaOrder extends BaseModel
         $oBasket->setShipping($this->_selectedShippingSetId);
 
         if (empty($shippingOptions)) {
-
             $oCountry = oxNew(Country::class);
             $oCountry->load($this->_oUser->getActiveCountry());
 
@@ -419,7 +417,7 @@ class KlarnaOrder extends BaseModel
     protected function setAttachmentsData()
     {
         if (!$this->_oUser->isFake()) {
-           $emd = $this->getEmd();
+            $emd = $this->getEmd();
 
             if (!empty($emd)) {
                 $this->_aOrderData['attachment'] = array(
@@ -439,6 +437,7 @@ class KlarnaOrder extends BaseModel
         /** @var KlarnaEMD $klarnaEmd */
         $klarnaEmd = new KlarnaEMD;
         $emd       = $klarnaEmd->getAttachments($this->_oUser);
+
         return $emd;
     }
 

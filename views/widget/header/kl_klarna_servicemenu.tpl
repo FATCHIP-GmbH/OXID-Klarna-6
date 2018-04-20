@@ -3,6 +3,22 @@
     [{assign var="oxcmp_user" value=false}]
 [{/if}]
 
+[{if $oxcmp_user}]
+    [{assign var="noticeListCount" value=$oxcmp_user->getNoticeListArtCnt()}]
+    [{assign var="wishListCount" value=$oxcmp_user->getWishListArtCnt()}]
+    [{assign var="recommListCount" value=$oxcmp_user->getRecommListsCount()}]
+[{else}]
+    [{assign var="noticeListCount" value="0"}]
+    [{assign var="wishListCount" value="0"}]
+    [{assign var="recommListCount" value="0"}]
+[{/if}]
+
+[{if $wishListCount eq false}]
+    [{assign var="wishListCount" value=0}]
+[{/if}]
+
+[{math equation="a+b+c+d" a=$oView->getCompareItemsCnt() b=$noticeListCount c=$wishListCount d=$recommListCount assign="notificationsCounter"}]
+
 [{if $oViewConf->getActiveTheme() === 'azure'}]
     [{include file="widget/header/servicebox.tpl"}]
     <ul id="topMenu">
@@ -10,22 +26,12 @@
             [{include file="widget/header/loginbox.tpl"}]
         </li>
         [{if !$oxcmp_user}]
-            <li><a id="registerLink" href="[{ oxgetseourl ident=$oViewConf->getSslSelfLink()|cat:"cl=register" }]" title="[{oxmultilang ident="REGISTER"}]">[{oxmultilang ident="REGISTER"}]</a></li>
+            <li><a id="registerLink" href="[{ oxgetseourl ident=$oViewConf->getSslSelfLink()|cat:"cl=register" }]"
+                   title="[{oxmultilang ident="REGISTER"}]">[{oxmultilang ident="REGISTER"}]</a></li>
         [{/if}]
     </ul>
     [{oxscript widget=$oView->getClassName()}]
 [{else}]
-    [{if $oxcmp_user}]
-        [{assign var="noticeListCount" value=$oxcmp_user->getNoticeListArtCnt()}]
-        [{assign var="wishListCount" value=$oxcmp_user->getWishListArtCnt()}]
-        [{assign var="recommListCount" value=$oxcmp_user->getRecommListsCount()}]
-    [{else}]
-        [{assign var="noticeListCount" value="0"}]
-        [{assign var="wishListCount" value="0"}]
-        [{assign var="recommListCount" value="0"}]
-    [{/if}]
-    [{math equation="a+b+c+d" a=$oView->getCompareItemsCnt() b=$noticeListCount c=$wishListCount d=$recommListCount assign="notificationsCounter"}]
-
     <div class="btn-group service-menu [{if !$oxcmp_user}]showLogin[{/if}]">
         <button type="button" class="btn dropdown-toggle" data-toggle="dropdown"
                 data-href="[{oxgetseourl ident=$oViewConf->getSelfLink()|cat:"cl=account"}]">

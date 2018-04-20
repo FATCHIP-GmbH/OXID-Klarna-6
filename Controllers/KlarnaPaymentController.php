@@ -197,7 +197,6 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
         if (!$sActShipSet) {
             $sActShipSet = Registry::getSession()->getVariable('sShipSet');
         }
-
         $oBasket = Registry::getSession()->getBasket();
         list($aAllSets) =
             Registry::get(DeliverySetList::class)->getDeliverySetData($sActShipSet, $oUser, $oBasket);

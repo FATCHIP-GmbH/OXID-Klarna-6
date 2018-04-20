@@ -51,17 +51,14 @@ class KlarnaExpressController extends FrontendController
      */
     protected $_aOrderData;
 
-
     /** @var string country selected by the user in the popup */
     protected $selectedCountryISO;
-
 
     /** @var bool show select country popup to the user */
     protected $blShowPopup;
 
     /** @var Request */
     protected $_oRequest;
-
 
     /**
      *
@@ -200,6 +197,7 @@ class KlarnaExpressController extends FrontendController
             $email        = $oSession->getVariable('klarna_checkout_user_email');
             $this->_oUser = KlarnaUtils::getFakeUser($email);
         }
+
         $this->blShowPopup = $this->showCountryPopup();
         $this->addTplParam("blShowPopUp", $this->blShowPopup);
 
