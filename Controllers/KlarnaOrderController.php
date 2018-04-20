@@ -146,9 +146,9 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
     protected function getKlarnaAllowedExternalPayments()
     {
-        $result      = array();
-        $db          = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
-        $sql         = 'SELECT oxid FROM oxpayments WHERE OXACTIVE=1 AND KLEXTERNALPAYMENT=1';
+        $result = array();
+        $db     = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
+        $sql    = 'SELECT oxid FROM oxpayments WHERE OXACTIVE=1 AND KLEXTERNALPAYMENT=1';
         /** @var ResultSet $oRs */
         $oRs = $db->select($sql);
         foreach ($oRs->getIterator() as $payment) {
@@ -158,12 +158,12 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         return $result;
     }
 
-    protected  function isKlarnaExternalPaymentMethod($paymentId, $sCountryISO)
+    protected function isKlarnaExternalPaymentMethod($paymentId, $sCountryISO)
     {
-        if (!in_array($paymentId, $this->getKlarnaAllowedExternalPayments())){
+        if (!in_array($paymentId, $this->getKlarnaAllowedExternalPayments())) {
             return false;
         }
-        if(!KlarnaUtils::isCountryActiveInKlarnaCheckout($sCountryISO)){
+        if (!KlarnaUtils::isCountryActiveInKlarnaCheckout($sCountryISO)) {
             return false;
         }
 
@@ -176,18 +176,18 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      */
     protected function isKlarnaCheckoutOrder($oBasket)
     {
-        $paymentId = $oBasket->getPaymentId();
+        $paymentId   = $oBasket->getPaymentId();
         $sCountryISO = Registry::getSession()->getVariable('sCountryISO');
 
-        if(!($paymentId === 'klarna_checkout' || $this->isKlarnaExternalPaymentMethod($paymentId, $sCountryISO))){
+        if (!($paymentId === 'klarna_checkout' || $this->isKlarnaExternalPaymentMethod($paymentId, $sCountryISO))) {
             return false;
         }
 
-        if($this->isExternalCheckout){
+        if ($this->isExternalCheckout) {
             return false;
         }
 
-        if($this->isPayPalAmazon()){
+        if ($this->isPayPalAmazon()) {
             return false;
         }
 
@@ -753,6 +753,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             }
 
             if ($this->_oUser->kl_getType() !== KlarnaUser::REGISTERED) {
+
                 $this->_oUser->save();
             }
         }
