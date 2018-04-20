@@ -39,6 +39,7 @@ class KlarnaEMD
             $return = array_merge($return, $this->getPaymentHistoryFull($oUser));
         }
 
+        var_dump($return);die;
         return $return;
     }
 

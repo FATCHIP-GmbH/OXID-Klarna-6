@@ -4,7 +4,9 @@ namespace TopConcepts\Klarna\Tests\Unit\Models;
 
 
 use OxidEsales\Eshop\Application\Model\User;
+use TopConcepts\Klarna\Models\EmdPayload\KlarnaCustomerAccountInfo;
 use TopConcepts\Klarna\Models\KlarnaEMD;
+use TopConcepts\Klarna\Tests\Unit\Models\EmdPayload\KlarnaPaymentHistoryFullTest;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaEMDTest extends ModuleUnitTestCase
@@ -17,16 +19,37 @@ class KlarnaEMDTest extends ModuleUnitTestCase
     {
         $this->setModuleConfVar('blKlarnaEmdCustomerAccountInfo', $data['blKlarnaEmdCustomerAccountInfo']);
         $this->setModuleConfVar('blKlarnaEmdPaymentHistoryFull', $data['blKlarnaEmdPaymentHistoryFull']);
-        $this->setModuleConfVar('blKlarnaEmdPassThrough', $data['blKlarnaEmdPassThrough']);
 
-        $oUser     = oxNew(User::class);
-        $klarnaEMD = $this->createStub(KlarnaEMD::class, [
-            'getCustomerAccountInfo' => ['blKlarnaEmdCustomerAccountInfo' => $expectedResult['blKlarnaEmdCustomerAccountInfo']],
-            'getPaymentHistoryFull'  => ['blKlarnaEmdPaymentHistoryFull' => $expectedResult['blKlarnaEmdPaymentHistoryFull']],
-            'getPassThroughField'    => ['blKlarnaEmdPassThrough' => $expectedResult['blKlarnaEmdPassThrough']],
+        $klarnaEMD = oxNew(KlarnaEMD::class);
+
+        $oUser = oxNew(User::class);
+        $this->createStub(KlarnaCustomerAccountInfo::class, [
+            'getCustomerAccountInfo' =>
+                ['blKlarnaEmdCustomerAccountInfo' =>
+                     ['customer_account_info' =>
+                          [
+                              [
+                                  'unique_account_identifier' => "",
+                                  'account_registration_date' => "2018-04-20T15:53:40Z",
+                                  'account_last_modified'     => "2018-04-20T15:53:40Z",
+                              ],
+                          ],
+                     ],
+                ],
         ]);
-        $result    = $klarnaEMD->getAttachments($oUser);
+        $this->createStub(KlarnaPaymentHistoryFullTest::class, [
+            'getPaymentHistoryFull' => [
+                'blKlarnaEmdPaymentHistoryFull' => [
+                    'payment_history_full' => [
+                        ['test' => 'orderhistory'],
+                    ],
+                ],
+            ],
+        ]);
 
+        $result = $klarnaEMD->getAttachments($oUser);
+//        var_dump($result);
+//        die;
         $this->assertEquals($expectedResult, $result);
     }
 
@@ -38,44 +61,56 @@ class KlarnaEMDTest extends ModuleUnitTestCase
         return [
             [
                 [
-                    'blKlarnaEmdCustomerAccountInfo' => false,
-                    'blKlarnaEmdPaymentHistoryFull'  => false,
-                    'blKlarnaEmdPassThrough'         => false,
+                    'blKlarnaEmdCustomerAccountInfo' => 0,
+                    'blKlarnaEmdPaymentHistoryFull'  => 0,
                 ],
                 [],
             ],
             [
                 [
-                    'blKlarnaEmdCustomerAccountInfo' => true,
-                    'blKlarnaEmdPaymentHistoryFull'  => false,
-                    'blKlarnaEmdPassThrough'         => false,
+                    'blKlarnaEmdCustomerAccountInfo' => 1,
+                    'blKlarnaEmdPaymentHistoryFull'  => 0,
                 ],
-                [
-                    'blKlarnaEmdCustomerAccountInfo' => ['blKlarnaEmdCustomerAccountInfo' => true],
+                ['customer_account_info' =>
+                     [
+                         [
+                             'unique_account_identifier' => "",
+                             'account_registration_date' => "2018-04-20T15:53:40Z",
+                             'account_last_modified'     => "2018-04-20T15:53:40Z",
+                         ],
+                     ],
                 ],
             ], [
                 [
-                    'blKlarnaEmdCustomerAccountInfo' => true,
-                    'blKlarnaEmdPaymentHistoryFull'  => true,
-                    'blKlarnaEmdPassThrough'         => false,
+                    'blKlarnaEmdCustomerAccountInfo' => 0,
+                    'blKlarnaEmdPaymentHistoryFull'  => 1,
                 ],
                 [
-                    'blKlarnaEmdCustomerAccountInfo' => ['blKlarnaEmdCustomerAccountInfo' => true],
-                    'blKlarnaEmdPaymentHistoryFull'  => ['blKlarnaEmdPaymentHistoryFull' => true],
+                    'payment_history_full' => [
+                        ['test' => [
+                            'orderhistory' => true,
+                        ]],
+                    ],
                 ],
-
             ], [
                 [
-                    'blKlarnaEmdCustomerAccountInfo' => true,
-                    'blKlarnaEmdPaymentHistoryFull'  => true,
-                    'blKlarnaEmdPassThrough'         => true,
+                    'blKlarnaEmdCustomerAccountInfo' => 1,
+                    'blKlarnaEmdPaymentHistoryFull'  => 1,
                 ],
-                [
-                    'blKlarnaEmdCustomerAccountInfo' => ['blKlarnaEmdCustomerAccountInfo' => true],
-                    'blKlarnaEmdPaymentHistoryFull'  => ['blKlarnaEmdPaymentHistoryFull' => true],
-                    'blKlarnaEmdPassThrough'         => ['blKlarnaEmdPassThrough' => true],
+                ['customer_account_info' =>
+                     [
+                         'unique_account_identifier' => "",
+                         'account_registration_date' => "2018-04-20T15:53:40Z",
+                         'account_last_modified'     => "2018-04-20T15:53:40Z",
+                     ],
+                 'payment_history_full'  => [
+                     ['test' => [
+                         'orderhistory' => true,
+                     ]],
+                 ],
                 ],
             ],
         ];
     }
 }
+

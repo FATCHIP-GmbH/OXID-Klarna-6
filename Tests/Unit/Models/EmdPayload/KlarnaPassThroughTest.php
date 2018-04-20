@@ -16,7 +16,7 @@ class KlarnaPassThroughTest extends ModuleUnitTestCase
     public function testGetPassThroughField()
     {
         $passThrough = new KlarnaPassThrough();
-        $this->assertEmpty($passThrough->getPassThroughField());
 
+        $this->assertEquals('To be implemented by the merchant.', $passThrough->getPassThroughField());
     }
 }
