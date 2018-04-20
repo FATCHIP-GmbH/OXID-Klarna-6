@@ -87,7 +87,7 @@ class KlarnaConfigurationTest extends ModuleUnitTestCase
             "Keine Checkbox anzeigen",
             "Kundenkonto im OXID eShop anlegen",
             "Newsletter-Anmeldung",
-            "Kundenkonto anlegen UND Newsletter-Abmeldung",
+            "Kundenkonto anlegen UND Newsletter-Anmeldung",
         ];
 
         $this->assertEquals($expected, $result);
