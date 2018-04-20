@@ -21,10 +21,10 @@ class KlarnaOrderTest extends ModuleUnitTestCase
 {
     public function testGetKlarnaCountryListByPayment()
     {
-        $payment = $this->createStub(Payment::class, ['getCountries' => ['testId']]);
+        $payment          = $this->createStub(Payment::class, ['getCountries' => ['testId']]);
         $aActiveCountries = ['testId' => 'test'];
 
-        $order = $this->createStub(KlarnaOrder::class, ['__construct' => null]);
+        $order  = $this->createStub(KlarnaOrder::class, ['__construct' => null]);
         $result = $order->getKlarnaCountryListByPayment($payment, $aActiveCountries);
 
         $this->assertEquals($result, ['test']);
@@ -35,14 +35,14 @@ class KlarnaOrderTest extends ModuleUnitTestCase
     {
         $price = $this->createStub(Price::class, ['getBruttoPrice' => 1000, 'getVat' => 0.23]);
 
-        $payment = $this->createStub(Payment::class, ['calculate' => null, 'getPrice' => $price]);
-        $payment->oxpayments__klexternalpayment = new Field(1, Field::T_RAW);
+        $payment                                 = $this->createStub(Payment::class, ['calculate' => null, 'getPrice' => $price]);
+        $payment->oxpayments__klexternalpayment  = new Field(1, Field::T_RAW);
         $payment->oxpayments__klexternalcheckout = new Field(1, Field::T_RAW);
-        $payment->oxpayments__oxlongdesc = new Field('<title>test</title>', Field::T_RAW);
+        $payment->oxpayments__oxlongdesc         = new Field('<title>test</title>', Field::T_RAW);
 
-        $paymentList = [
+        $paymentList  = [
             'klarna_checkout' => $payment,
-            'oxidpaypal' => $payment,
+            'oxidpaypal'      => $payment,
         ];
         $oPaymentList = $this->createStub(PaymentList::class, ['getPaymentList' => $paymentList]);
         \oxTestModules::addModuleObject(PaymentList::class, $oPaymentList);
@@ -57,24 +57,24 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $basket = $this->createStub(
             Basket::class,
             [
-                'getBasketCurrency' => (object)['name' => 'test'],
-                'getKlarnaOrderLines' => ['order_lines' => 'test'],
-                'getShippingId' => '',
+                'getBasketCurrency'        => (object)['name' => 'test'],
+                'getKlarnaOrderLines'      => ['order_lines' => 'test'],
+                'getShippingId'            => '',
                 'kl_calculateDeliveryCost' => $price,
-                'getPriceForPayment' => 100,
+                'getPriceForPayment'       => 100,
             ]
         );
 
-        $delivery = oxNew(DeliverySet::class);
+        $delivery                         = oxNew(DeliverySet::class);
         $delivery->oxdeliveryset__oxtitle = new Field('title', Field::T_RAW);
-        $payment = $this->createStub(PaymentController::class, ['getCheckoutShippingSets' => ['1' => $delivery]]);
+        $payment                          = $this->createStub(PaymentController::class, ['getCheckoutShippingSets' => ['1' => $delivery]]);
 
         //setup mock
         $order = $this->createStub(
             KlarnaOrder::class,
             [
-                '_getPayment' => $payment,
-                'getConfig' => Registry::getConfig(),
+                '_getPayment'                  => $payment,
+                'getConfig'                    => Registry::getConfig(),
                 'doesShippingMethodSupportKCO' => true,
             ]
         );
@@ -89,84 +89,85 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $order->__construct($basket, $user);
 
         $expected = [
-            'purchase_country' => "DE",
-            'purchase_currency' => "test",
-            'locale' => "de-DE",
-            'merchant_urls' => [
-                'terms' => "https://testurl",
-                'checkout' => "https://testurl?cl=KlarnaExpress",
-                'confirmation' => "https://testurl?cl=order&fnc=execute&klarna_order_id={checkout.order.id}",
-                'push' => "https://testurl?cl=KlarnaAcknowledge&klarna_order_id={checkout.order.id}",
+            'purchase_country'         => "DE",
+            'purchase_currency'        => "test",
+            'locale'                   => "de-DE",
+            'merchant_urls'            => [
+                'terms'              => "https://testurl",
+                'checkout'           => "https://testurl?cl=KlarnaExpress",
+                'confirmation'       => "https://testurl?cl=order&fnc=execute&klarna_order_id={checkout.order.id}",
+                'push'               => "https://testurl?cl=KlarnaAcknowledge&klarna_order_id={checkout.order.id}",
                 'cancellation_terms' => "https://testurl",
-                'validation' => 'https://testurl?cl=KlarnaValidate&s=&klarna_order_id={checkout.order.id}',
+                'validation'         => 'https://testurl?cl=KlarnaValidate&s=&klarna_order_id={checkout.order.id}',
             ],
-            'test' => "test",
-            'order_lines' =>
+            'test'                     => "test",
+            'order_lines'              =>
                 "test",
-            'shipping_countries' =>
+            'shipping_countries'       =>
                 [
                     "AT",
                     "DE",
                 ],
-            'shipping_options' =>
+            'shipping_options'         =>
                 [
                     [
-                        'id' => 1,
-                        'name' => "title",
+                        'id'          => 1,
+                        'name'        => "title",
                         'description' => null,
-                        'promo' => null,
-                        'tax_amount' => 229,
-                        'price' => 100000,
-                        'tax_rate' => 23,
+                        'promo'       => null,
+                        'tax_amount'  => 229,
+                        'price'       => 100000,
+                        'tax_rate'    => 23,
                         'preselected' => false,
                     ],
                 ],
             'external_payment_methods' => [
                 [
-                    'name' => null,
+                    'name'         => null,
                     'redirect_url' => "https://testurlindex.php?cl=order&fnc=klarnaExternalPayment&payment_id=klarna_checkout",
-                    'image_url' => null,
-                    'fee' => 100000,
-                    'description' => "test",
-                    'countries' => ["AT", "DE"],
+                    'image_url'    => null,
+                    'fee'          => 100000,
+                    'description'  => "test",
+                    'countries'    => ["AT", "DE"],
                 ],
                 [
-                    'name' => null,
+                    'name'         => null,
                     'redirect_url' => "https://testurlindex.php?cl=order&fnc=klarnaExternalPayment&payment_id=oxidpaypal&displayCartInPayPal=1",
-                    'image_url' => null,
-                    'fee' => 100000,
-                    'description' => "test",
-                    'countries' => ["AT", "DE"],
+                    'image_url'    => null,
+                    'fee'          => 100000,
+                    'description'  => "test",
+                    'countries'    => ["AT", "DE"],
                 ],
             ],
-            'external_checkouts' => [
+            'external_checkouts'       => [
                 [
-                    'name' => null,
+                    'name'         => null,
                     'redirect_url' => "https://testurlindex.php?cl=order&fnc=klarnaExternalPayment&payment_id=klarna_checkout&externalCheckout=1",
-                    'image_url' => null,
-                    'fee' => 100000,
-                    'description' => "test",
-                    'countries' => ["AT", "DE"],
+                    'image_url'    => null,
+                    'fee'          => 100000,
+                    'description'  => "test",
+                    'countries'    => ["AT", "DE"],
                 ],
                 [
-                    'name' => null,
+                    'name'         => null,
                     'redirect_url' => "https://testurlindex.php?cl=order&fnc=klarnaExternalPayment&payment_id=oxidpaypal&externalCheckout=1",
-                    'image_url' => null,
-                    'fee' => 100000,
-                    'description' => "test",
-                    'countries' => ["AT", "DE"],
+                    'image_url'    => null,
+                    'fee'          => 100000,
+                    'description'  => "test",
+                    'countries'    => ["AT", "DE"],
                 ],
             ],
-            'options' =>
+            'options'                  =>
                 [
-                    'additional_checkbox' => null,
-                    'allow_separate_shipping_address' => true,
-                    'phone_mandatory' => true,
-                    'date_of_birth_mandatory' => true,
+                    'additional_checkbox'               => null,
+                    'allow_separate_shipping_address'   => true,
+                    'phone_mandatory'                   => true,
+                    'date_of_birth_mandatory'           => true,
                     'require_validate_callback_success' => false,
-                    'shipping_details' => "Wir kümmern uns schnellstens um den Versand!",
+                    'shipping_details'                  => "Wir kümmern uns schnellstens um den Versand!",
                 ],
-            'gui' => ['options' => ['disable_autofocus']],
+            'gui'                      => ['options' => ['disable_autofocus']],
+            'merchant_data'            => 'To be implemented by the merchant.',
         ];
 
         $result = $this->getProtectedClassProperty($order, '_aOrderData');
@@ -189,7 +190,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $methodReflection = new \ReflectionMethod(KlarnaOrder::class, '_getPayment');
         $methodReflection->setAccessible(true);
 
-        $order = $this->createStub(KlarnaOrder::class, []);
+        $order  = $this->createStub(KlarnaOrder::class, []);
         $result = $methodReflection->invoke($order);
         $this->assertInstanceOf(KlarnaPaymentController::class, $result);
 
@@ -200,7 +201,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $methodReflection = new \ReflectionMethod(KlarnaOrder::class, 'getAdditionalCheckbox');
         $methodReflection->setAccessible(true);
 
-        $user = $this->createStub(User::class, ['isFake' => true]);
+        $user  = $this->createStub(User::class, ['isFake' => true]);
         $order = $this->createStub(KlarnaOrder::class, ['__construct' => null]);
         $this->setProtectedClassProperty($order, '_oUser', $user);
         $this->setModuleConfVar('iKlarnaActiveCheckbox', '22');
@@ -222,7 +223,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $this->assertEquals($result, 0);
 
         $newsSubscribed = $this->createStub(NewsSubscribed::class, ['getOptInStatus' => 1]);
-        $user = $this->createStub(User::class, ['isFake' => false, 'getNewsSubscription' => $newsSubscribed]);
+        $user           = $this->createStub(User::class, ['isFake' => false, 'getNewsSubscription' => $newsSubscribed]);
         $this->setProtectedClassProperty($order, '_oUser', $user);
         $result = $methodReflection->invoke($order);
 
@@ -247,10 +248,10 @@ class KlarnaOrderTest extends ModuleUnitTestCase
 
     public function testGetSupportedShippingMethods()
     {
-        $basket = $this->createStub(Basket::class, []);
+        $basket           = $this->createStub(Basket::class, []);
         $methodReflection = new \ReflectionMethod(KlarnaOrder::class, 'getSupportedShippingMethods');
         $methodReflection->setAccessible(true);
-        $order = $this->createStub(KlarnaOrder::class, ['__construct' => null]);
+        $order  = $this->createStub(KlarnaOrder::class, ['__construct' => null]);
         $result = $methodReflection->invokeArgs($order, [$basket]);
 
         $this->assertEmpty($result);
@@ -258,21 +259,21 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $basket = $this->createStub(
             Basket::class,
             [
-                'getShippingId' => '1',
+                'getShippingId'      => '1',
                 'getPriceForPayment' => 100,
             ]
         );
 
-        $delivery = oxNew(DeliverySet::class);
+        $delivery                         = oxNew(DeliverySet::class);
         $delivery->oxdeliveryset__oxtitle = new Field('title', Field::T_RAW);
-        $payment = $this->createStub(PaymentController::class, ['getCheckoutShippingSets' => ['1' => $delivery]]);
+        $payment                          = $this->createStub(PaymentController::class, ['getCheckoutShippingSets' => ['1' => $delivery]]);
 
         //setup mock
         $order = $this->createStub(
             KlarnaOrder::class,
             [
-                '_getPayment' => $payment,
-                'getConfig' => Registry::getConfig(),
+                '_getPayment'                  => $payment,
+                'getConfig'                    => Registry::getConfig(),
                 'doesShippingMethodSupportKCO' => false,
             ]
         );
@@ -305,7 +306,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $expected = [
             'attachment' => [
                 'content_type' => "application/vnd.klarna.internal.emd-v2+json",
-                'body' => json_encode(['test']),
+                'body'         => json_encode(['test']),
             ],
         ];
 
@@ -326,7 +327,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
 
         $result = $methodReflection->invoke($order);
 
-        $this->assertEquals($expected,$result);
+        $this->assertEquals($expected, $result);
     }
 
     public function additionalCheckboxDataProvider()
@@ -336,24 +337,24 @@ class KlarnaOrderTest extends ModuleUnitTestCase
             [
                 1,
                 [
-                    'text' => Registry::getLang()->translateString('KL_CREATE_USER_ACCOUNT', null, false),
-                    'checked' => false,
+                    'text'     => Registry::getLang()->translateString('KL_CREATE_USER_ACCOUNT', null, false),
+                    'checked'  => false,
                     'required' => false,
                 ],
             ],
             [
                 2,
                 [
-                    'text' => Registry::getLang()->translateString('KL_SUBSCRIBE_TO_NEWSLETTER', null, false),
-                    'checked' => false,
+                    'text'     => Registry::getLang()->translateString('KL_SUBSCRIBE_TO_NEWSLETTER', null, false),
+                    'checked'  => false,
                     'required' => false,
                 ],
             ],
             [
                 3,
                 [
-                    'text' => Registry::getLang()->translateString('KL_CREATE_USER_ACCOUNT_AND_SUBSCRIBE',null, false),
-                    'checked' => false,
+                    'text'     => Registry::getLang()->translateString('KL_CREATE_USER_ACCOUNT_AND_SUBSCRIBE', null, false),
+                    'checked'  => false,
                     'required' => false,
                 ],
             ],
