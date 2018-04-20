@@ -18,25 +18,7 @@ class KlarnaOrderList extends KlarnaOrderList_parent
      */
     public function deleteEntry()
     {
-        $orderId = $this->getEditObjectId();
-        $oOrder  = oxNew(Order::class);
-        $oOrder->load($orderId);
-
-        if ($oOrder->isLoaded() && $oOrder->isKlarnaOrder() && !$oOrder->getFieldData('oxstorno')) {
-            $orderId     = $oOrder->getFieldData('klorderid');
-            $sCountryISO = KlarnaUtils::getCountryISO($oOrder->getFieldData('oxbillcountryid'));
-
-            try {
-                $oOrder->cancelKlarnaOrder($orderId, $sCountryISO);
-                $this->getEditObject()->oxorder__klsync = new Field(1);
-                $this->getEditObject()->save();
-            } catch (StandardException $e) {
-                if (!strstr($e->getMessage(), 'is canceled.')) {
-                    Registry::get(UtilsView::class)->addErrorToDisplay($e);
-                    return;
-                }
-            }
-        }
+        $this->cancelKlarnaOrder();
 
         parent::deleteEntry();
     }
@@ -47,6 +29,13 @@ class KlarnaOrderList extends KlarnaOrderList_parent
      * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      */
     public function storno()
+    {
+        $this->cancelKlarnaOrder(true);
+
+        parent::storno();
+    }
+
+    protected function cancelKlarnaOrder($debugOut = false)
     {
         $orderId = $this->getEditObjectId();
         $oOrder  = oxNew(Order::class);
@@ -66,11 +55,12 @@ class KlarnaOrderList extends KlarnaOrderList_parent
                     Registry::get(UtilsView::class)->addErrorToDisplay($e);
                     return;
                 }
-                $e->debugOut();
+
+                if($debugOut) {
+                    $e->debugOut();
+                }
             }
         }
-
-        parent::storno();
     }
 
 

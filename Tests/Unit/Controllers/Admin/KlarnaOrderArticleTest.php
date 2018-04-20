@@ -288,41 +288,4 @@ class KlarnaOrderArticleTest extends ModuleUnitTestCase
             ['addThisArticle'],
         ];
     }
-//    public function testRetrieveKlarnaOrder()
-//    {
-//
-//    }
-//
-//
-//    public function testDeleteThisArticle()
-//    {
-//
-//    }
-//
-//    public function testIsCredentialsValid()
-//    {
-//
-//    }
-//
-//
-//    public function testIsKlarnaOrder()
-//    {
-//
-//    }
-//
-//    public function testAddThisArticle()
-//    {
-//
-//    }
-//
-//    public function testIsCaptureInSync()
-//    {
-//
-//    }
-//
-//
-//    public function testGetEditObject()
-//    {
-//
-//    }
 }
