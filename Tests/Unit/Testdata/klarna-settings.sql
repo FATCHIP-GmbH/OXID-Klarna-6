@@ -56,8 +56,6 @@ Insert into oxobject2group set oxid = '6af230ab9820fdb8d24a0a0484db60b1',oxshopi
 Insert into oxobject2group set oxid = '5d447d09d0238f40579932846958f224',oxshopid = '1',oxobjectid = 'klarna_pay_now',oxgroupsid = 'oxidpricec';
 Insert into oxobject2group set oxid = 'a94b24ca6b11718ff60b8e0d4c18a99f',oxshopid = '1',oxobjectid = 'klarna_pay_now',oxgroupsid = 'oxidadmin';
 
-
-
 update oxconfig set oxvarvalue =ENCODE( 'a:2:{s:2:\"de\";s:7:\"Deutsch\";s:2:\"en\";s:7:\"English\";}', 'fq45QS09_fqyx09239QQ') where oxvarname='aLanguages' and oxshopid=1;
 update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blIsKlarnaTestMode' and oxshopid=1;
 update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaLoggingEnabled' and oxshopid=1;
@@ -119,10 +117,9 @@ update oxactions set oxid = 'klarna_teaser_1',oxshopid = '1',oxtype = '3',oxtitl
 -- update oxpayments set klpaymenttypes = '',klexternalname = 'Vorkasse',klexternalpayment = '1',klexternalcheckout = '0',klpaymentimageurl = 'https://www.bronze-shop.com/media/unknown/d3/35/08/bronze-shop_zahlung-vorkasse.svg',klpaymentoption = 'other',klemdpurchasehistoryfull = '0',klpaymentimageurl_1 = 'https://www.bronze-shop.com/media/unknown/d3/35/08/bronze-shop_zahlung-vorkasse.svg' where oxpayments.oxid = 'oxidpayadvance';
 
 
-
 update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaEmdCustomerAccountInfo' and oxshopid=1;
 update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaEmdPaymentHistoryFull' and oxshopid=1;
-update oxconfig set oxvarvalue=ENCODE( '', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaEmdPassThrough' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaEmdPassThrough' and oxshopid=1;
 
 replace into oxuser set oxid = '92ebae5067055431aeaaa6f75bd9a131',oxactive = '1',oxshopid = '1',oxusername = 'steffen@topconcepts.de',oxpassword = 'c25361e25237112e0c584f9816dfd3975ffe150abc7db2cc1d1b4231c8171991b4e732556ab0cf0dadf4733f72442aba066fba1fa55af8479a9384b4dc57592a',oxpasssalt = '3d96584d0378f0a7ecb95db0086a2f70',oxustid = '',oxcompany = '',oxfname = 'Henrik',oxlname = 'Steffen',oxstreet = 'Karnapp',oxstreetnr = '25',oxaddinfo = '',oxcity = 'Hamburg',oxcountryid = 'a7c40f631fc920687.20179984',oxstateid = '',oxzip = '21079',oxfon = '040/30306900',oxfax = '',oxsal = 'MR',oxboni = '1000',oxregister = '2018-03-22 17:56:04',oxprivfon = '',oxmobfon = '',oxbirthdate = '1978-03-06',oxurl = '',oxupdatekey = '',oxupdateexp = '0',oxpoints = '0';
 replace into oxobject2group set oxid = '68ba74e29a0cc7f6618606bf623b6941',oxshopid = '1',oxobjectid = '92ebae5067055431aeaaa6f75bd9a131',oxgroupsid = 'oxidnewcustomer';

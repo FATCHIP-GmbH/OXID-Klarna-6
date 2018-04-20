@@ -20,21 +20,26 @@ class KlarnaInstallerTest extends ModuleUnitTestCase
         'klarna_slice_it',
     ];
 
-
     /**
      * Completely revert the module set-up done at the beginning of tests
      */
     protected function revertTestSuiteSetup()
     {
-        foreach (self::KLARNA_PAYMENT_IDS as $id) {
-            DatabaseProvider::getDB()->execute("DELETE FROM `oxpayments` WHERE oxid = ?", [$id]);
+        $database = DatabaseProvider::getDB();
+
+        $paymentIds = self::KLARNA_PAYMENT_IDS;
+        unset($paymentIds[3]);
+
+        foreach ($paymentIds as $id) {
+            $database->execute("DELETE FROM `oxpayments` WHERE oxid = ?", [$id]);
+            $database->execute("DELETE FROM `oxconfig` WHERE oxvarname = ?", ['blKlarnaAllowSeparateDeliveryAddress']);
         }
 
         $dbMetaDataHandler = oxNew(DbMetaDataHandler::class);
 
-        DatabaseProvider::getDB()->execute("DROP TABLE IF EXISTS `kl_ack`");
-        DatabaseProvider::getDB()->execute("DROP TABLE IF EXISTS `kl_logs`");
-        DatabaseProvider::getDB()->execute("DROP TABLE IF EXISTS `kl_anon_lookup`");
+        $database->execute("DROP TABLE IF EXISTS `kl_ack`");
+        $database->execute("DROP TABLE IF EXISTS `kl_logs`");
+        $database->execute("DROP TABLE IF EXISTS `kl_anon_lookup`");
 
         $dbMetaDataHandler->executeSql([
             "ALTER TABLE oxorder DROP `KLMERCHANTID`",
@@ -62,66 +67,32 @@ class KlarnaInstallerTest extends ModuleUnitTestCase
             "DROP TABLE IF EXISTS `kl_logs`",
             "DROP TABLE IF EXISTS `kl_anon_lookup`",
         ]);
+
+
     }
 
     /**
-     * Bring the environment back to the module being fully active
+     * Trigger onActivate to bring the environment back to the module being fully active
      * @afterClass
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      */
     public static function redoTestSuiteSetup()
     {
-        DatabaseProvider::getDb()->execute(
-            '
-            CREATE TABLE IF NOT EXISTS `kl_logs` (
-                  `OXID`          CHAR(32)
-                                  CHARACTER SET latin1 COLLATE latin1_general_ci
-                               NOT NULL DEFAULT \'\',
-                
-                  `OXSHOPID`      CHAR(32)
-                                  CHARACTER SET latin1 COLLATE latin1_general_ci
-                               NOT NULL DEFAULT \'\',
-                  `KLMETHOD`      VARCHAR(128)
-                                  CHARACTER SET utf8
-                               NOT NULL DEFAULT \'\',
-                  `KLREQUESTRAW`  TEXT CHARACTER SET utf8
-                               NOT NULL,
-                  `KLRESPONSERAW` TEXT CHARACTER SET utf8
-                               NOT NULL,
-                  `KLDATE`        DATETIME
-                               NOT NULL DEFAULT \'0000-00-00 00:00:00\',
-                  PRIMARY KEY (`OXID`),
-                  KEY `KLDATE` (`KLDATE`)
-                )
-                  ENGINE = MyISAM
-                  DEFAULT CHARSET = utf8;
-                  
+        KlarnaInstaller::onActivate();
+        $db = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
 
-            CREATE TABLE IF NOT EXISTS `kl_ack` (
-                  `OXID`       VARCHAR(32)
-                               CHARACTER SET latin1 COLLATE latin1_general_ci
-                                        NOT NULL,
-                  `KLRECEIVED` DATETIME NOT NULL,
-                  PRIMARY KEY (`OXID`)
-                )
-                  ENGINE = MyISAM
-                  COMMENT =\'List of all Klarna acknowledge requests\'
-                  DEFAULT CHARSET = utf8;
-                  
-                
-            CREATE TABLE IF NOT EXISTS `kl_anon_lookup` (
-                  `KLARTNUM` VARCHAR(32) NOT NULL,
-                  `OXARTID`  VARCHAR(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
-                  PRIMARY KEY (`KLARTNUM`)
-                )
-                  ENGINE = MyISAM
-                  COMMENT =\'Mapping of annonymous article numbers to their oxids\'
-                  DEFAULT CHARSET = utf8;');
+        $db->execute('update oxconfig set oxvarvalue=ENCODE(?, ?) where oxvarname=? and oxshopid=?',
+            [1, 'fq45QS09_fqyx09239QQ', 'blKlarnaAllowSeparateDeliveryAddress', 1]);
     }
 
+    /**
+     *
+     */
     public function testGetInstance()
     {
         $this->setProtectedClassProperty(KlarnaInstaller::getInstance(), 'instance', null);
-        $result     = KlarnaInstaller::getInstance();
+        $result = KlarnaInstaller::getInstance();
 
         $dbName     = $this->getProtectedClassProperty($result, 'dbName');
         $modulePath = $this->getProtectedClassProperty($result, 'modulePath');
@@ -133,12 +104,16 @@ class KlarnaInstallerTest extends ModuleUnitTestCase
         $this->assertEquals(Registry::getConfig()->getConfigParam('sShopDir') . 'modules/tc/klarna', $modulePath);
     }
 
+    /**
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
+     */
     public function testOnActivate()
     {
         $this->revertTestSuiteSetup();
 
-        $dbMetaDataHandler = oxNew(DbMetaDataHandler::class);
         $db                = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
+        $dbMetaDataHandler = oxNew(DbMetaDataHandler::class);
         $db->execute('DELETE FROM oxmigrations_ce WHERE version = ?', ['Klarna400']);
         KlarnaInstaller::onActivate();
 
@@ -153,12 +128,28 @@ class KlarnaInstallerTest extends ModuleUnitTestCase
             $payments->fetchRow();
         }
 
-        //test new tables
+        $this->assertTables($dbMetaDataHandler);
+        $this->assertColumns($dbMetaDataHandler);
+
+        $result = $db->getOne("SELECT count(*) FROM oxconfig WHERE oxvarname = ?", ['blKlarnaAllowSeparateDeliveryAddress']);
+        $this->assertEquals('1', $result);
+    }
+
+    /**
+     * @param $dbMetaDataHandler
+     */
+    public function assertTables($dbMetaDataHandler)
+    {
         $this->assertTrue($dbMetaDataHandler->tableExists('kl_ack'));
         $this->assertTrue($dbMetaDataHandler->tableExists('kl_anon_lookup'));
         $this->assertTrue($dbMetaDataHandler->tableExists('kl_logs'));
+    }
 
-        //test new columns
+    /**
+     * @param $dbMetaDataHandler
+     */
+    public function assertColumns($dbMetaDataHandler)
+    {
         $this->assertTrue($dbMetaDataHandler->fieldExists('KLMERCHANTID', 'oxorder'));
         $this->assertTrue($dbMetaDataHandler->fieldExists('KLSERVERMODE', 'oxorder'));
         $this->assertTrue($dbMetaDataHandler->fieldExists('KLORDERID', 'oxorder'));
@@ -188,23 +179,26 @@ class KlarnaInstallerTest extends ModuleUnitTestCase
         $this->assertTrue($dbMetaDataHandler->fieldExists('KLORDERID', 'kl_ack'));
     }
 
-    public function testOnActivateConfigVars()
-    {
-
-    }
-
-    public function testOnActivateTables()
-    {
-
-    }
-
-    public function testOnActivateActions()
-    {
-
-    }
-
+    /**
+     *
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
+     */
     public function testOnDeactivate()
     {
+        KlarnaInstaller::onDeactivate();
+        $db = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
 
+        $sql      = 'SELECT oxid, oxactive FROM oxpayments WHERE oxid IN (?, ?, ?, ?)';
+        $payments = $db->select($sql, self::KLARNA_PAYMENT_IDS);
+
+        $this->assertEquals(4, $payments->count());
+        while (!$payments->EOF) {
+            $row = $payments->getFields();
+            $this->assertEquals('0', $row['oxactive']);
+            $payments->fetchRow();
+        }
     }
+
+//$sqlPath = $testConfig->getShopPath() . 'modules/tc/klarna/Tests/' . 'Unit/Testdata/klarna-settings.sql';
 }

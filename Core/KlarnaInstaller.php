@@ -79,24 +79,6 @@ class KlarnaInstaller extends ShopConfiguration
     }
 
     /**
-     * @param $sTableName
-     * @param $sColumnName
-     * @return bool
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
-     */
-    protected function dbColumnExist($sTableName, $sColumnName)
-    {
-        $query = "SELECT * FROM information_schema.COLUMNS
-                  WHERE TABLE_SCHEMA = '" . $this->dbName . "' 
-                  AND TABLE_NAME = '$sTableName'
-                  AND COLUMN_NAME = '$sColumnName'
-                  ";
-
-        return count($this->db->select($query)) > 0;
-
-    }
-
-    /**
      * Add klarna config vars and set defaults
      */
     protected function addConfigVars()
