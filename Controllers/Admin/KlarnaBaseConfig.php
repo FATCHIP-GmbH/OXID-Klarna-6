@@ -124,6 +124,7 @@ class KlarnaBaseConfig extends ShopConfiguration
      * @return int
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
+     * @codeCoverageIgnore
      */
     protected function removeConfigKeys($aKeys)
     {
@@ -237,7 +238,6 @@ class KlarnaBaseConfig extends ShopConfiguration
 
         $result['oxid'] = $oxid;
         $result['desc'] = $oxpayment->oxpayments__oxdesc->value;
-//        $result['klpaymenttypes']           = $oxpayment->oxpayments__klpaymenttypes->value;
         $result['klexternalname']           = $oxpayment->oxpayments__klexternalname->value;
         $result['klexternalpayment']        = $oxpayment->oxpayments__klexternalpayment->value;
         $result['klexternalcheckout']       = $oxpayment->oxpayments__klexternalcheckout->value;
