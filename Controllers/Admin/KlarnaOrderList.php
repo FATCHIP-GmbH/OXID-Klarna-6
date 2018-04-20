@@ -18,30 +18,11 @@ class KlarnaOrderList extends KlarnaOrderList_parent
      */
     public function deleteEntry()
     {
-        $orderId = $this->getEditObjectId();
-        $oOrder  = oxNew(Order::class);
-        $oOrder->load($orderId);
+        $result = $this->cancelKlarnaOrder();
 
-        if ($oOrder->isLoaded() && $oOrder->isKlarnaOrder() && !$oOrder->getFieldData('oxstorno')) {
-            $orderId     = $oOrder->getFieldData('klorderid');
-            $sCountryISO = KlarnaUtils::getCountryISO($oOrder->getFieldData('oxbillcountryid'));
-
-            try {
-                $oOrder->cancelKlarnaOrder($orderId, $sCountryISO);
-                $oOrder->oxorder__klsync = new Field(1);
-                $oOrder->save();
-            } catch (StandardException $e) {
-                if (!strstr($e->getMessage(), 'is canceled.')) {
-                    Registry::get(UtilsView::class)->addErrorToDisplay($e);
-                    $_POST['oxid'] = -1;
-                    $this->resetContentCache();
-                    $this->init();
-                    return;
-                }
-            }
+        if ($result) {
+            parent::deleteEntry();
         }
-
-        parent::deleteEntry();
     }
 
 
@@ -50,6 +31,15 @@ class KlarnaOrderList extends KlarnaOrderList_parent
      * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      */
     public function storno()
+    {
+        $result = $this->cancelKlarnaOrder(true);
+
+        if ($result) {
+            parent::storno();
+        }
+    }
+
+    protected function cancelKlarnaOrder($debugOut = false)
     {
         $orderId = $this->getEditObjectId();
         $oOrder  = oxNew(Order::class);
@@ -71,12 +61,16 @@ class KlarnaOrderList extends KlarnaOrderList_parent
                     $this->resetContentCache();
                     $this->init();
 
-                    return;
+                    return true;
                 }
-                $e->debugOut();
+
+                return false;
+                if ($debugOut) {
+                    $e->debugOut();
+                }
             }
         }
 
-        parent::storno();
+        return true;
     }
 }

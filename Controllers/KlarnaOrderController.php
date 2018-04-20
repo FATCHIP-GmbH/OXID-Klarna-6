@@ -69,11 +69,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     /**
      *
      * @return string
-     * @throws StandardException
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
-     * @throws \oxSystemComponentException
      */
     public function init()
     {
@@ -96,13 +91,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                 try {
                     $this->_aOrderData = $oClient->getOrder();
                 } catch (KlarnaClientException $oEx) {
-                    if ($oEx->getCode() == 401 || $oEx->getCode() == 404) {
-                        // create new order. restart session.
-                        if (KlarnaUtils::is_ajax()) {
-                            return $this->jsonResponse(__FUNCTION__, 'restart needed', $data = null);
-                        }
-                        Registry::getUtils()->redirect($this->selfUrl, true, 302);
-                    }
+                    $oEx->debugOut();
                 }
 
                 $this->_initUser();
@@ -114,7 +103,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     /**
      * Logging push state message to database
      *
-     * @codeCoverageIgnore
+     *
      * @param $action
      * @param string $requestBody
      * @param $url
@@ -146,9 +135,9 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
     protected function getKlarnaAllowedExternalPayments()
     {
-        $result = array();
-        $db     = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
-        $sql    = 'SELECT oxid FROM oxpayments WHERE OXACTIVE=1 AND KLEXTERNALPAYMENT=1';
+        $result      = array();
+        $db          = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
+        $sql         = 'SELECT oxid FROM oxpayments WHERE OXACTIVE=1 AND KLEXTERNALPAYMENT=1';
         /** @var ResultSet $oRs */
         $oRs = $db->select($sql);
         foreach ($oRs->getIterator() as $payment) {
@@ -195,7 +184,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     }
 
     /**
-     * @codeCoverageIgnore
+     *
      * @return KlarnaCheckoutClient|KlarnaClientBase
      */
     protected function getKlarnaCheckoutClient()
@@ -204,7 +193,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     }
 
     /**
-     * @codeCoverageIgnore
+     *
      * @return KlarnaPaymentsClient|KlarnaClientBase
      */
     protected function getKlarnaPaymentsClient()
@@ -289,7 +278,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     }
 
     /**
-     * @codeCoverageIgnore
+     *
      * @throws StandardException
      */
     protected function kcoBeforeExecute()
@@ -323,7 +312,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      * Check if user is logged in, if not check if user is in oxid and log them in
      * or create a user
      *
-     * @codeCoverageIgnore
+     *
      * @return bool
      */
     protected function _validateUser()
@@ -345,7 +334,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     /**
      * Create a user in oxid from klarna checkout data
      *
-     * @codeCoverageIgnore
+     *
      * @return bool
      * @throws \oxUserException
      */
@@ -394,7 +383,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     /**
      * Save order to database, delete order_id from session and redirect to thank you page
      *
-     * @codeCoverageIgnore
+     *
      * @param Basket $oBasket
      */
     protected function kcoExecute(Basket $oBasket)
@@ -480,7 +469,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     /**
      * Ajax call for Klarna Payment. Tracks changes and controls frontend Widget by status message
      *
-     * @codeCoverageIgnore
+     *
      * @param $aPost
      * @return string
      */
@@ -558,7 +547,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
     /**
      *
-     * @codeCoverageIgnore
      * @param $aPost
      * @return string
      */
