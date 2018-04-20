@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: arekk
- * Date: 04.04.2018
- * Time: 12:33
- */
 
 namespace TopConcepts\Klarna\Tests\Unit\Models;
 
@@ -40,10 +34,10 @@ class KlarnaUserPaymentTest extends ModuleUnitTestCase
     {
         return [
             ['klarna_checkout', '//cdn.klarna.com/1.0/shared/image/generic/logo/en_gb/basic/logo_black.png', true],
-            ['klarna_pay_now', 'cdn.klarna.com/1.0/shared/image/generic/badge/de_de/pay_now/standard/pink.png', true],
-            ['klarna_pay_later', 'cdn.klarna.com/1.0/shared/image/generic/badge/de_de/pay_later/standard/pink.png', true],
-            ['other', 'cdn.klarna.com/1.0/shared/image/generic/badge/de_de//standard/pink.png', false],
-            ['klarna_fake', 'cdn.klarna.com/1.0/shared/image/generic/badge/de_de//standard/pink.png', false]
+            ['klarna_pay_now', '//cdn.klarna.com/1.0/shared/image/generic/badge/de_de/pay_now/standard/pink.png', true],
+            ['klarna_pay_later', '//cdn.klarna.com/1.0/shared/image/generic/badge/de_de/pay_later/standard/pink.png', true],
+            ['other', '//cdn.klarna.com/1.0/shared/image/generic/badge/de_de//standard/pink.png', false],
+            ['klarna_fake', '//cdn.klarna.com/1.0/shared/image/generic/badge/de_de//standard/pink.png', false]
         ];
     }
 
