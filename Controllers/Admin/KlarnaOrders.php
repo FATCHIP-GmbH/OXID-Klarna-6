@@ -23,8 +23,10 @@ class KlarnaOrders extends AdminDetailsController
     protected $_sThisTemplate = 'kl_klarna_orders.tpl';
 
     public $orderLang;
+    protected $client;
 
     /**
+     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      * @return string
      */
     public function render()
@@ -189,8 +191,10 @@ class KlarnaOrders extends AdminDetailsController
         $sCountryISO = KlarnaUtils::getCountryISO($this->getEditObject()->getFieldData('oxbillcountryid'));
 
         try {
-            $client = KlarnaOrderManagementClient::getInstance($sCountryISO);
-            $orderRefund = $client->createOrderRefund($data, $this->getEditObject()->getFieldData('klorderid'));
+            if(!$this->client) {
+                $this->client = KlarnaOrderManagementClient::getInstance($sCountryISO);
+            }
+            $orderRefund = $this->client->createOrderRefund($data, $this->getEditObject()->getFieldData('klorderid'));
         } catch (\Exception $e) {
             Registry::get("oxUtilsView")->addErrorToDisplay($e->getMessage());
         }
@@ -199,7 +203,7 @@ class KlarnaOrders extends AdminDetailsController
     }
 
     /**
-     *
+     * @codeCoverageIgnore
      */
     public function cancelOrder()
     {
