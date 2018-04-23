@@ -5,8 +5,8 @@ namespace TopConcepts\Klarna\Tests\Unit\Models;
 
 use OxidEsales\Eshop\Application\Model\User;
 use TopConcepts\Klarna\Models\EmdPayload\KlarnaCustomerAccountInfo;
+use TopConcepts\Klarna\Models\EmdPayload\KlarnaPaymentHistoryFull;
 use TopConcepts\Klarna\Models\KlarnaEMD;
-use TopConcepts\Klarna\Tests\Unit\Models\EmdPayload\KlarnaPaymentHistoryFullTest;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaEMDTest extends ModuleUnitTestCase
@@ -22,34 +22,32 @@ class KlarnaEMDTest extends ModuleUnitTestCase
 
         $klarnaEMD = oxNew(KlarnaEMD::class);
 
-        $oUser = oxNew(User::class);
-        $this->createStub(KlarnaCustomerAccountInfo::class, [
+        $oUser               = oxNew(User::class);
+        $oMockCustomerInfo   = $this->createStub(KlarnaCustomerAccountInfo::class, [
             'getCustomerAccountInfo' =>
-                ['blKlarnaEmdCustomerAccountInfo' =>
-                     ['customer_account_info' =>
-                          [
-                              [
-                                  'unique_account_identifier' => "",
-                                  'account_registration_date' => "2018-04-20T15:53:40Z",
-                                  'account_last_modified'     => "2018-04-20T15:53:40Z",
-                              ],
-                          ],
+                ['customer_account_info' =>
+                     [
+                         [
+                             'unique_account_identifier' => "test_id",
+                             'account_registration_date' => "2018-04-20T15:53:40Z",
+                             'account_last_modified'     => "2018-04-20T15:53:40Z",
+                         ],
                      ],
                 ],
         ]);
-        $this->createStub(KlarnaPaymentHistoryFullTest::class, [
-            'getPaymentHistoryFull' => [
-                'blKlarnaEmdPaymentHistoryFull' => [
-                    'payment_history_full' => [
-                        ['test' => 'orderhistory'],
-                    ],
+        $oMockPaymentHistory = $this->createStub(KlarnaPaymentHistoryFull::class, [
+            'getPaymentHistoryFull' =>
+                ['payment_history_full' =>
+                     [
+                         ['test' => 'orderhistory'],
+                     ],
                 ],
-            ],
         ]);
+        \oxTestModules::addModuleObject(KlarnaCustomerAccountInfo::class, $oMockCustomerInfo);
+        \oxTestModules::addModuleObject(KlarnaPaymentHistoryFull::class, $oMockPaymentHistory);
 
         $result = $klarnaEMD->getAttachments($oUser);
-//        var_dump($result);
-//        die;
+
         $this->assertEquals($expectedResult, $result);
     }
 
@@ -71,14 +69,15 @@ class KlarnaEMDTest extends ModuleUnitTestCase
                     'blKlarnaEmdCustomerAccountInfo' => 1,
                     'blKlarnaEmdPaymentHistoryFull'  => 0,
                 ],
-                ['customer_account_info' =>
-                     [
-                         [
-                             'unique_account_identifier' => "",
-                             'account_registration_date' => "2018-04-20T15:53:40Z",
-                             'account_last_modified'     => "2018-04-20T15:53:40Z",
-                         ],
-                     ],
+                [
+                    'customer_account_info' =>
+                        [
+                            [
+                                'unique_account_identifier' => "test_id",
+                                'account_registration_date' => "2018-04-20T15:53:40Z",
+                                'account_last_modified'     => "2018-04-20T15:53:40Z",
+                            ],
+                        ],
                 ],
             ], [
                 [
@@ -87,9 +86,9 @@ class KlarnaEMDTest extends ModuleUnitTestCase
                 ],
                 [
                     'payment_history_full' => [
-                        ['test' => [
-                            'orderhistory' => true,
-                        ]],
+                        [
+                            'test' => 'orderhistory',
+                        ],
                     ],
                 ],
             ], [
@@ -97,17 +96,19 @@ class KlarnaEMDTest extends ModuleUnitTestCase
                     'blKlarnaEmdCustomerAccountInfo' => 1,
                     'blKlarnaEmdPaymentHistoryFull'  => 1,
                 ],
-                ['customer_account_info' =>
-                     [
-                         'unique_account_identifier' => "",
-                         'account_registration_date' => "2018-04-20T15:53:40Z",
-                         'account_last_modified'     => "2018-04-20T15:53:40Z",
-                     ],
-                 'payment_history_full'  => [
-                     ['test' => [
-                         'orderhistory' => true,
-                     ]],
-                 ],
+                [
+                    'customer_account_info' => [
+                        [
+                            'unique_account_identifier' => "test_id",
+                            'account_registration_date' => "2018-04-20T15:53:40Z",
+                            'account_last_modified'     => "2018-04-20T15:53:40Z",
+                        ],
+                    ],
+                    'payment_history_full'  => [
+                        [
+                            'test' => 'orderhistory',
+                        ],
+                    ],
                 ],
             ],
         ];

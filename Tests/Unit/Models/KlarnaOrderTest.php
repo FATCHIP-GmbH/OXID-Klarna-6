@@ -35,7 +35,6 @@ class KlarnaOrderTest extends ModuleUnitTestCase
     }
 
 
-
     /**
      * @dataProvider isKPDataProvider
      * @param $paymentId

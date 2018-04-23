@@ -39,7 +39,6 @@ class KlarnaEMD
             $return = array_merge($return, $this->getPaymentHistoryFull($oUser));
         }
 
-        var_dump($return);die;
         return $return;
     }
 
@@ -52,7 +51,7 @@ class KlarnaEMD
     protected function getCustomerAccountInfo(User $oUser)
     {
         /** @var KlarnaCustomerAccountInfo $oKlarnaPayload */
-        $oKlarnaPayload = new KlarnaCustomerAccountInfo;
+        $oKlarnaPayload = oxNew(KlarnaCustomerAccountInfo::class);
 
         return $oKlarnaPayload->getCustomerAccountInfo($oUser);
     }
@@ -68,7 +67,7 @@ class KlarnaEMD
     protected function getPaymentHistoryFull(User $oUser)
     {
         /** @var KlarnaPaymentHistoryFull $oKlarnaPayload */
-        $oKlarnaPayload = new KlarnaPaymentHistoryFull;
+        $oKlarnaPayload = oxNew(KlarnaPaymentHistoryFull::class);
 
         return $oKlarnaPayload->getPaymentHistoryFull($oUser);
     }
