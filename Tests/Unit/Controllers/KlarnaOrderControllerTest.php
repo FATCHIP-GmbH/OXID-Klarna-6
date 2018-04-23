@@ -47,18 +47,18 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $oUser                      = oxNew(User::class);
         $oUser->oxuser__oxcountryid = new Field(self::COUNTRIES['AT'], Field::T_RAW);
 
-        $oPaymentController = $this->getMock(OrderController::class, ['getUser']);
-        $oPaymentController->expects($this->once())->method('getUser')->willReturn($oUser);
+        $oOrderController = $this->getMock(OrderController::class, ['getUser']);
+        $oOrderController->expects($this->once())->method('getUser')->willReturn($oUser);
 
-        $result = $oPaymentController->isCountryHasKlarnaPaymentsAvailable();
+        $result = $oOrderController->isCountryHasKlarnaPaymentsAvailable();
         $this->assertTrue($result);
 
         $oUser->oxuser__oxcountryid = new Field(self::COUNTRIES['DE'], Field::T_RAW);
-        $result                     = $oPaymentController->isCountryHasKlarnaPaymentsAvailable($oUser);
+        $result                     = $oOrderController->isCountryHasKlarnaPaymentsAvailable($oUser);
         $this->assertTrue($result);
 
         $oUser->oxuser__oxcountryid = new Field(self::COUNTRIES['AF'], Field::T_RAW);
-        $result                     = $oPaymentController->isCountryHasKlarnaPaymentsAvailable($oUser);
+        $result                     = $oOrderController->isCountryHasKlarnaPaymentsAvailable($oUser);
         $this->assertFalse($result);
     }
 
