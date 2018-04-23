@@ -215,7 +215,6 @@ class KlarnaBasket extends KlarnaBasket_parent
             if (!$this->is_fraction($this->getOrderVatAverage())) {
                 $tax_rate = KlarnaUtils::parseFloatAsInt($this->getOrderVatAverage() * 100);
             } else {
-//                var_dump('asd');die;
                 $tax_rate = KlarnaUtils::parseFloatAsInt($oWrappingCost->getVat() * 100);
             }
 

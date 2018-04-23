@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: arekk
- * Date: 18.04.2018
- * Time: 17:31
- */
 
 namespace TopConcepts\Klarna\Tests\Unit\Controllers;
 
@@ -13,6 +7,7 @@ use OxidEsales\Eshop\Application\Controller\OrderController;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Controller\BaseController;
+use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\PayPalModule\Controller\ExpressCheckoutDispatcher;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
@@ -21,11 +16,11 @@ use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaOrderControllerTest extends ModuleUnitTestCase
 {
-
-    public function testIsPayPalAmazon()
-    {
-
-    }
+    const COUNTRIES = [
+        'AT' => 'a7c40f6320aeb2ec2.72885259',
+        'DE' => 'a7c40f631fc920687.20179984',
+        'AF' => '8f241f11095306451.36998225',
+    ];
 
     public function testUpdateKlarnaAjax()
     {
@@ -49,7 +44,22 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
     public function testIsCountryHasKlarnaPaymentsAvailable()
     {
+        $oUser                      = oxNew(User::class);
+        $oUser->oxuser__oxcountryid = new Field(self::COUNTRIES['AT'], Field::T_RAW);
 
+        $oPaymentController = $this->getMock(OrderController::class, ['getUser']);
+        $oPaymentController->expects($this->once())->method('getUser')->willReturn($oUser);
+
+        $result = $oPaymentController->isCountryHasKlarnaPaymentsAvailable();
+        $this->assertTrue($result);
+
+        $oUser->oxuser__oxcountryid = new Field(self::COUNTRIES['DE'], Field::T_RAW);
+        $result                     = $oPaymentController->isCountryHasKlarnaPaymentsAvailable($oUser);
+        $this->assertTrue($result);
+
+        $oUser->oxuser__oxcountryid = new Field(self::COUNTRIES['AF'], Field::T_RAW);
+        $result                     = $oPaymentController->isCountryHasKlarnaPaymentsAvailable($oUser);
+        $this->assertFalse($result);
     }
 
     public function testKpBeforeExecute()
@@ -59,17 +69,18 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
     public function initDP()
     {
-        $userClassName = User::class;
+        $userClassName       = User::class;
         $kcoExternalPayments = ['oxidpaypal'];
+
         return [
-            ['KP', 'payId', null, null, false, $kcoExternalPayments ],
-            ['KCO', 'klarna_checkout', 'DE', null, $userClassName, $kcoExternalPayments ],
-            ['KCO', 'klarna_checkout', 'AT', null, $userClassName, $kcoExternalPayments ],
-            ['KCO', 'klarna_checkout', 'DE', 1, false, $kcoExternalPayments ],
-            ['KCO', 'klarna_checkout', 'AF', null, $userClassName, $kcoExternalPayments ],
-            ['KCO', 'bestitamazon', 'DE', null, false, $kcoExternalPayments ],
-            ['KCO', 'oxidpaypal', 'DE', null, false, $kcoExternalPayments ],
-            ['KCO', 'oxidpaypal', 'AF', null, false, $kcoExternalPayments ],
+            ['KP', 'payId', null, null, false, $kcoExternalPayments],
+            ['KCO', 'klarna_checkout', 'DE', null, $userClassName, $kcoExternalPayments],
+            ['KCO', 'klarna_checkout', 'AT', null, $userClassName, $kcoExternalPayments],
+            ['KCO', 'klarna_checkout', 'DE', 1, false, $kcoExternalPayments],
+            ['KCO', 'klarna_checkout', 'AF', null, $userClassName, $kcoExternalPayments],
+            ['KCO', 'bestitamazon', 'DE', null, false, $kcoExternalPayments],
+            ['KCO', 'oxidpaypal', 'DE', null, false, $kcoExternalPayments],
+            ['KCO', 'oxidpaypal', 'AF', null, false, $kcoExternalPayments],
         ];
     }
 
@@ -133,7 +144,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         return [
             ['bestitamazon', 0, $this->getConfig()->getSslShopUrl() . 'index.php?cl=KlarnaEpmDispatcher&fnc=amazonLogin'],
             ['oxidpaypal', 1, null],
-            ['other', 0, $this->getConfig()->getSslShopUrl() . 'index.php?cl=KlarnaExpress']
+            ['other', 0, $this->getConfig()->getSslShopUrl() . 'index.php?cl=KlarnaExpress'],
         ];
     }
 
@@ -157,7 +168,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
     public function testIncludeKPWidget()
     {
         $oSession = Registry::getSession();
-        $oBasket = oxNew(Basket::class);
+        $oBasket  = oxNew(Basket::class);
         $oBasket->setPayment('other');
         $oSession->setBasket($oBasket);
         $oSession->freeze();
@@ -165,7 +176,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $this->assertFalse($oOrderController->includeKPWidget());
 
         $oSession = Registry::getSession();
-        $oBasket = oxNew(Basket::class);
+        $oBasket  = oxNew(Basket::class);
         $oBasket->setPayment('klarna_pay_now');
         $oSession->setBasket($oBasket);
         $oSession->freeze();

@@ -1,12 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: arekk
- * Date: 17.04.2018
- * Time: 14:45
- */
 
 namespace TopConcepts\Klarna\Tests\Unit\Controllers;
+
 
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\DeliverySetList;
@@ -177,27 +172,6 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
         $result = $oPaymentController->getCheckoutShippingSets($oUser);
         $this->assertEquals($aDelSetData[0], $result);
 
-    }
-
-
-    public function testIsCountryHasKlarnaPaymentsAvailable()
-    {
-        $oUser                      = oxNew(User::class);
-        $oUser->oxuser__oxcountryid = new Field(self::COUNTRIES['AT'], Field::T_RAW);
-
-        $oPaymentController = $this->getMock(PaymentController::class, ['getUser']);
-        $oPaymentController->expects($this->once())->method('getUser')->willReturn($oUser);
-
-        $result = $oPaymentController->isCountryHasKlarnaPaymentsAvailable();
-        $this->assertTrue($result);
-
-        $oUser->oxuser__oxcountryid = new Field(self::COUNTRIES['DE'], Field::T_RAW);
-        $result                     = $oPaymentController->isCountryHasKlarnaPaymentsAvailable($oUser);
-        $this->assertTrue($result);
-
-        $oUser->oxuser__oxcountryid = new Field(self::COUNTRIES['AF'], Field::T_RAW);
-        $result                     = $oPaymentController->isCountryHasKlarnaPaymentsAvailable($oUser);
-        $this->assertFalse($result);
     }
 
     public function renderDataProvider()

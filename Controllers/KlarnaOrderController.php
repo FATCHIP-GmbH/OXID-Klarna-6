@@ -1033,7 +1033,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     /**
      * @return bool
      */
-    public function isPayPalAmazon()
+    protected function isPayPalAmazon()
     {
         return in_array(Registry::getSession()->getBasket()->getPaymentId(), array('oxidpaypal', 'bestitamazon'));
     }

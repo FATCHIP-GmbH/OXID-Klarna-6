@@ -172,7 +172,6 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
         if (!$this->aPaymentList) {
             $this->aPaymentList = parent::getPaymentList();
         }
-
         if (KlarnaUtils::isKlarnaPaymentsEnabled()) {
             // remove needless methods from the list
             unset($this->aPaymentList[KlarnaPaymentModel::KLARNA_PAYMENT_CHECKOUT_ID]);
@@ -280,23 +279,6 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
         return str_replace('Klarna ', '', $name);
     }
 
-    /**
-     *
-     * @param $oUser
-     * @return bool
-     */
-    public function isCountryHasKlarnaPaymentsAvailable($oUser = null)
-    {
-        if ($oUser === null) {
-            $oUser = $this->getUser();
-        }
-        $sCountryISO = KlarnaUtils::getCountryISO($oUser->getFieldData('oxcountryid'));
-        if (in_array($sCountryISO, KlarnaConsts::getKlarnaCoreCountries())) {
-            return true;
-        }
-
-        return false;
-    }
 
     /**
      * @return int
