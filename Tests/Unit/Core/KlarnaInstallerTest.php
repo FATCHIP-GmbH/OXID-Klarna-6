@@ -3,10 +3,10 @@
 namespace TopConcepts\Klarna\Tests\Unit\Core;
 
 
-use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\DbMetaDataHandler;
+use OxidEsales\Eshop\Core\DisplayError;
 use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Core\KlarnaInstaller;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
@@ -200,5 +200,21 @@ class KlarnaInstallerTest extends ModuleUnitTestCase
         }
     }
 
-//$sqlPath = $testConfig->getShopPath() . 'modules/tc/klarna/Tests/' . 'Unit/Testdata/klarna-settings.sql';
+    public function testPerformMigrations()
+    {
+        $mock = $this->getMock(KlarnaInstaller::class, ['getModuleMigrations']);
+        $mock->expects($this->any())->method('getModuleMigrations')->willThrowException(new \Exception('test', 404));
+
+        $class  = new \ReflectionClass(KlarnaInstaller::class);
+        $method = $class->getMethod('performMigrations');
+        $method->setAccessible(true);
+
+        $method->invoke($mock);
+
+        $result = unserialize($this->getSessionParam('Errors')['default'][0]);
+        $this->assertInstanceOf(DisplayError::class,$result);
+        $this->assertEquals('test404', $result->getOxMessage());
+
+    }
+
 }
