@@ -211,6 +211,11 @@ class KlarnaBasketTest extends ModuleUnitTestCase
 
     public function testGetKlarnaOrderLines_VouchersAndDiscounts()
     {
+        $oDiscount = oxNew(Discount::class);
+        $oDiscount->load('9fc3e801da9cdd0b2.74513077');
+        $oDiscount->oxdiscount__oxactive = new Field(1, Field::T_RAW);
+        $oDiscount->save();
+
         $oPrice = oxNew(Price::class);
         $oPrice->setPrice(269);
         $oPrice->setVat(19);
@@ -262,6 +267,9 @@ class KlarnaBasketTest extends ModuleUnitTestCase
         $result = $oBasket->getKlarnaOrderLines($orderMgmtId);
         $this->removeVouchersData();
         $this->assertEquals($orderLines, $result);
+
+        $oDiscount->oxdiscount__oxactive = new Field(0, Field::T_RAW);
+        $oDiscount->save();
     }
 
     public function testGetKlarnaOrderLines_ToLargeException()
@@ -280,7 +288,7 @@ class KlarnaBasketTest extends ModuleUnitTestCase
         $oBasket->setDiscountCalcMode(true);
         $this->setConfigParam('blAllowUnevenAmounts', true);
         foreach ($productsIds as $id) {
-            $oBasket->addToBasket($id, 1);
+            $oBasket->addToBasket($id, 2);
         }
         $oBasket->calculateBasket();
 

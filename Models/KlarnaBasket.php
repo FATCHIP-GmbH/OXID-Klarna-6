@@ -94,7 +94,7 @@ class KlarnaBasket extends KlarnaBasket_parent
                 $oArt = $oArt->getArticle();
             }
 
-            if($iOrderLang){
+            if ($iOrderLang) {
                 $oArt->loadInLang($iOrderLang, $oArt->getId());
             }
 
@@ -187,7 +187,7 @@ class KlarnaBasket extends KlarnaBasket_parent
         }
 
         if (KlarnaUtils::isKlarnaPaymentsEnabled() || $oOrder) {
-            $oDelivery = parent::getCosts('oxdelivery');
+            $oDelivery    = parent::getCosts('oxdelivery');
             $oDeliverySet = oxNew(DeliverySet::class);
             if ($iLang) {
                 $oDeliverySet->loadInLang($iLang, $this->getShippingId());
@@ -301,8 +301,8 @@ class KlarnaBasket extends KlarnaBasket_parent
     {
         $totalDiscount = oxNew(Price::class);
         $totalDiscount->setBruttoPriceMode();
-
         $discounts = $this->getDiscounts();
+
         if (!is_array($discounts)) {
             return $totalDiscount;
         }
