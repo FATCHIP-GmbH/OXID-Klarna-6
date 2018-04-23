@@ -20,9 +20,9 @@ class KlarnaUserPaymentTest extends ModuleUnitTestCase
      * @param $expectedResult
      * @param $notUsed
      */
-    public function testGetBadgeUrl($payId,$expectedResult, $notUsed)
+    public function testGetBadgeUrl($payId, $expectedResult, $notUsed)
     {
-        $userPaymentModel = oxNew(UserPayment::class);
+        $userPaymentModel                               = oxNew(UserPayment::class);
         $userPaymentModel->oxuserpayments__oxpaymentsid = new Field($payId, Field::T_RAW);
 
         $result = $userPaymentModel->getBadgeUrl();
@@ -37,7 +37,8 @@ class KlarnaUserPaymentTest extends ModuleUnitTestCase
             ['klarna_pay_now', '//cdn.klarna.com/1.0/shared/image/generic/badge/de_de/pay_now/standard/pink.png', true],
             ['klarna_pay_later', '//cdn.klarna.com/1.0/shared/image/generic/badge/de_de/pay_later/standard/pink.png', true],
             ['other', '//cdn.klarna.com/1.0/shared/image/generic/badge/de_de//standard/pink.png', false],
-            ['klarna_fake', '//cdn.klarna.com/1.0/shared/image/generic/badge/de_de//standard/pink.png', false]
+            ['klarna_fake', '//cdn.klarna.com/1.0/shared/image/generic/badge/de_de//standard/pink.png', false],
+            ['klarna_slice_it', '//cdn.klarna.com/1.0/shared/image/generic/badge/de_de/slice_it/standard/pink.png', true],
         ];
     }
 
@@ -49,7 +50,7 @@ class KlarnaUserPaymentTest extends ModuleUnitTestCase
      */
     public function testIsKlarnaPayment($payId, $notUsed, $isKlarna)
     {
-        $userPaymentModel = oxNew(UserPayment::class);
+        $userPaymentModel                               = oxNew(UserPayment::class);
         $userPaymentModel->oxuserpayments__oxpaymentsid = new Field($payId, Field::T_RAW);
 
         $this->assertEquals($isKlarna, $userPaymentModel->isKlarnaPayment());
