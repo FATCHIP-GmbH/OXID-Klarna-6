@@ -203,13 +203,7 @@ class KlarnaOrdersTest extends ModuleUnitTestCase
         $controller = $this->createStub(KlarnaOrders::class, ['getEditObjectId' => 'test']);
         $result = $controller->formatCaptures([['captured_at' => '2018']]);
 
-        $expected = [
-            [
-                'captured_at' => "2018-04-20 20:04:00",
-            ],
-        ];
-
-        $this->assertEquals($result, $expected);
+        $this->assertArrayHasKey('captured_at', $result[0]);
     }
 
     public function testRefundOrderAmount()
