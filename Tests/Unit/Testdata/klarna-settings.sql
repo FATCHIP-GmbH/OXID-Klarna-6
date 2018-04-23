@@ -142,3 +142,4 @@ INSERT INTO oxobject2category VALUES ('adc5ee42bd3c37a27a488769dabcd9ed', 'adc5e
 INSERT INTO oxmanufacturers VALUES ('3a909e7c886063857e86982c7a3c5b84', 1, 1, 'mauirippers_1_mico.png', 'Mauirippers', '', 'Mauirippers', '', '', '', '', '', 0, '2017-10-19 16:39:08');
 INSERT INTO `oxwrapping` VALUES('81b40cf210343d625.49755120', '1', '1', '1', '1', '1', 'WRAP', 'Gelbe Sterne', 'Yellow stars', '', '', 'img_geschenkpapier_1_gelb_wp.gif', '2.95', '2017-10-19 16:39:08');
 INSERT INTO `oxwrapping` VALUES('81b40cf0cd383d3a9.70988998', '1', '1', '1', '1', '1', 'CARD', 'Haifisch', 'Shark', '', '', 'img_ecard_03_wp.jpg', '3', '2017-10-19 16:39:08');
+INSERT INTO `oxdiscount` VALUES ('9fc3e801da9cdd0b2.74513077', 1, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '10% ab 200 Euro Einkaufswert', '10% on 200 Euro or more', '', '', 0, 999999, 999999, 200, '%', 10, '', 0, 0, 20, '2018-04-23 11:01:04');
