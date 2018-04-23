@@ -708,4 +708,18 @@ class KlarnaUserTest extends ModuleUnitTestCase
             ['KCO'],
         ];
     }
+
+    public function testSetFakeUserId()
+    {
+        $this->setSessionParam('sFakeUserId', 1);
+
+        $class  = new \ReflectionClass(KlarnaUser::class);
+        $method = $class->getMethod('setFakeUserId');
+        $method->setAccessible(true);
+
+        $user  = $this->createStub(KlarnaUser::class, ['getKlarnaData' => []]);
+
+        $method->invoke($user);
+        $this->assertEquals(1, $this->getProtectedClassProperty($user, '_sOXID'));
+    }
 }
