@@ -3,10 +3,10 @@
 namespace TopConcepts\Klarna\Controllers;
 
 
+use OxidEsales\Eshop\Application\Model\Order;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
 use TopConcepts\Klarna\Core\KlarnaClientBase;
 use TopConcepts\Klarna\Core\KlarnaFormatter;
-use TopConcepts\Klarna\Core\KlarnaOrder;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Models\KlarnaUser;
@@ -151,7 +151,7 @@ class KlarnaAjaxController extends FrontendController
     {
         $oSession     = $this->getSession();
         $oBasket      = $oSession->getBasket();
-        $oKlarnaOrder = new KlarnaOrder($oBasket, $this->_oUser);
+        $oKlarnaOrder = oxNew(Order::class, $oBasket, $this->_oUser);
         $oClient      = $this->getKlarnaCheckoutClient();
         $aOrderData   = $oKlarnaOrder->getOrderData();
 
@@ -162,7 +162,7 @@ class KlarnaAjaxController extends FrontendController
 
     public function setKlarnaDeliveryAddress()
     {
-        $oxidAddress = Registry::get(Request::class)->getRequestEscpaedParameter('klarna_address_id');
+        $oxidAddress = Registry::get(Request::class)->getRequestEscapedParameter('klarna_address_id');
         Registry::getSession()->setVariable('deladrid', $oxidAddress);
         Registry::getSession()->setVariable('blshowshipaddress', 1);
         Registry::getSession()->deleteVariable('klarna_checkout_order_id');
@@ -225,7 +225,7 @@ class KlarnaAjaxController extends FrontendController
 
     /**
      * Gets data from request body
-     *
+     * @codeCoverageIgnore
      * @return array
      */
     protected function getJsonRequest()
