@@ -121,10 +121,11 @@ class KlarnaBasketTest extends ModuleUnitTestCase
                     'quantity'            => 1,
                     'unit_price'          => 32900,
                     'tax_rate'            => 1900,
-                    'total_amount'        => 32900,
-                    'total_tax_amount'    => 5253,
+                    'total_amount'        => 26900,
+                    'total_tax_amount'    => 4295,
                     'quantity_unit'       => 'pcs',
                     'name'                => ($anonOn ? 'Product name 1' : 'Wakeboard LIQUID FORCE GROOVE 2010'),
+                    'total_discount_amount' => 6000,
                     'product_url'         => $homeUrl . 'index.php',
                     'image_url'           => $homeUrl . 'out/pictures/generated/product/1/540_340_75/lf_groove_2010_1.jpg',
                     'product_identifiers' => [
@@ -147,8 +148,8 @@ class KlarnaBasketTest extends ModuleUnitTestCase
                 ],
 
             ],
-            'order_amount'     => 32900,
-            'order_tax_amount' => 5253,
+            'order_amount'     => 26900,
+            'order_tax_amount' => 4295,
         ];
 
         if ($anonOn) {
@@ -181,6 +182,12 @@ class KlarnaBasketTest extends ModuleUnitTestCase
         $this->setModuleConfVar('iKlarnaValidation', 1, 'bool');
         $this->setModuleMode('KP');
 
+        $oPrice = oxNew(Price::class);
+        $oPrice->setPrice(269);
+        $oPrice->setVat(19);
+        $oBasketItem = $this->createStub(BasketItem::class, ['getUnitPrice' => $oPrice]);
+        \oxTestModules::addModuleObject(BasketItem::class, $oBasketItem);
+
         $orderLines = $this->getOrderLinesData(1);
         $ids        = ['ed6573c0259d6a6fb641d106dcb2faec'];
         /** @var Basket|KlarnaBasket $oBasket */
@@ -198,15 +205,18 @@ class KlarnaBasketTest extends ModuleUnitTestCase
 
         $this->setModuleMode('KCO');
         $this->setModuleConfVar('blKlarnaEnableAnonymization', 0, 'bool');
+        \oxTestModules::cleanAllModules();
     }
 
 
     public function testGetKlarnaOrderLines_VouchersAndDiscounts()
     {
-        $oDiscount = oxNew(Discount::class);
-        $oDiscount->load('9fc3e801da9cdd0b2.74513077');
-        $oDiscount->oxdiscount__oxactive = new Field(1, Field::T_RAW);
-        $oDiscount->save();
+        $oPrice = oxNew(Price::class);
+        $oPrice->setPrice(269);
+        $oPrice->setVat(19);
+        $oBasketItem = $this->createStub(BasketItem::class, ['getUnitPrice' => $oPrice]);
+        \oxTestModules::addModuleObject(BasketItem::class, $oBasketItem);
+
         $orderMgmtId = 'fake';
         $iLang       = 1;
         $ids         = ['ed6573c0259d6a6fb641d106dcb2faec'];
@@ -244,17 +254,14 @@ class KlarnaBasketTest extends ModuleUnitTestCase
             'total_tax_amount' => -1597,
         ];
 
-        $orderLines['order_amount']     = 20900;
-        $orderLines['order_tax_amount'] = 3337;
+        $orderLines['order_amount']     = 14900;
+        $orderLines['order_tax_amount'] = 2379;
 
         $this->addVouchersData();
         $oBasket->addVoucher('111');
         $result = $oBasket->getKlarnaOrderLines($orderMgmtId);
         $this->removeVouchersData();
         $this->assertEquals($orderLines, $result);
-
-        $oDiscount->oxdiscount__oxactive = new Field(0, Field::T_RAW);
-        $oDiscount->save();
     }
 
     public function testGetKlarnaOrderLines_ToLargeException()
@@ -270,6 +277,7 @@ class KlarnaBasketTest extends ModuleUnitTestCase
 
     protected function setUpBasket($oBasket, $productsIds)
     {
+        $oBasket->setDiscountCalcMode(true);
         $this->setConfigParam('blAllowUnevenAmounts', true);
         foreach ($productsIds as $id) {
             $oBasket->addToBasket($id, 1);
@@ -435,8 +443,14 @@ class KlarnaBasketTest extends ModuleUnitTestCase
                                                                   'unit_price'            => 300,
                                                                   'tax_rate'              => 1900,
         ];
-        $order_lines['order_amount']     = 33495;
-        $order_lines['order_tax_amount'] = 5348;
+        $order_lines['order_amount']     = 27495;
+        $order_lines['order_tax_amount'] = 4390;
+
+        $oPrice = oxNew(Price::class);
+        $oPrice->setPrice(269);
+        $oPrice->setVat(19);
+        $oBasketItem = $this->createStub(BasketItem::class, ['getUnitPrice' => $oPrice]);
+        \oxTestModules::addModuleObject(BasketItem::class, $oBasketItem);
 
         $ids = ['ed6573c0259d6a6fb641d106dcb2faec'];
         /** @var Basket|KlarnaBasket $oBasket */
