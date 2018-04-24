@@ -432,6 +432,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             $sessionData = Registry::getSession()->getVariable('klarna_session_data');
             if (!$sessionData) {
                 $this->resetKlarnaPaymentSession('basket');
+                return;
             }
         }
 
@@ -488,7 +489,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         }
 
         /** @var KlarnaPayment $oKlarnaPayment */
-        $oKlarnaPayment = new KlarnaPayment($oBasket, $oUser, $aPost);
+        $oKlarnaPayment = oxNew(KlarnaPayment::class, $oBasket, $oUser, $aPost);
 
         if (!$oKlarnaPayment->isSessionValid()) {
             $this->resetKlarnaPaymentSession();
@@ -561,7 +562,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         }
 
         /** @var  $oKlarnaPayment KlarnaPayment */
-        $oKlarnaPayment = new KlarnaPayment($oBasket, $oUser, $aPost);
+        $oKlarnaPayment = oxNew(KlarnaPayment::class, $oBasket, $oUser, $aPost);
 
         if (!$oKlarnaPayment->isSessionValid()) {
             $this->resetKlarnaPaymentSession();
@@ -903,7 +904,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      * Gets data from request body
      * @return array
      */
-    private function getJsonRequest()
+    protected function getJsonRequest()
     {
         $requestBody = file_get_contents('php://input');
 
