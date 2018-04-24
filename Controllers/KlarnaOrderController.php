@@ -432,6 +432,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             $sessionData = Registry::getSession()->getVariable('klarna_session_data');
             if (!$sessionData) {
                 $this->resetKlarnaPaymentSession('basket');
+                return;
             }
         }
 
@@ -488,7 +489,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         }
 
         /** @var KlarnaPayment $oKlarnaPayment */
-        $oKlarnaPayment = new KlarnaPayment($oBasket, $oUser, $aPost);
+        $oKlarnaPayment = oxNew(KlarnaPayment::class, $oBasket, $oUser, $aPost);
 
         if (!$oKlarnaPayment->isSessionValid()) {
             $this->resetKlarnaPaymentSession();
@@ -561,7 +562,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         }
 
         /** @var  $oKlarnaPayment KlarnaPayment */
-        $oKlarnaPayment = new KlarnaPayment($oBasket, $oUser, $aPost);
+        $oKlarnaPayment = oxNew(KlarnaPayment::class, $oBasket, $oUser, $aPost);
 
         if (!$oKlarnaPayment->isSessionValid()) {
             $this->resetKlarnaPaymentSession();
@@ -766,14 +767,16 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      */
     public function klarnaExternalPayment()
     {
-        $orderId   = Registry::getSession()->getVariable('klarna_checkout_order_id');
+        $oSession = Registry::getSession();
+
+        $orderId   = $oSession->getVariable('klarna_checkout_order_id');
         $paymentId = Registry::get(Request::class)->getRequestEscapedParameter('payment_id');
         if (!$orderId || !$paymentId || !$this->isActivePayment($paymentId)) {
             Registry::get(UtilsView::class)->addErrorToDisplay('KLARNA_WENT_WRONG_TRY_AGAIN', false, true);
             Registry::getUtils()->redirect($this->selfUrl, true, 302);
+            return;
         }
 
-        $oSession = Registry::getSession();
         $oBasket  = $oSession->getBasket();
 
         $oSession->setVariable("paymentid", $paymentId);
@@ -795,9 +798,10 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
         if ($paymentId === 'bestitamazon') {
             Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . "cl=KlarnaEpmDispatcher&fnc=amazonLogin", false);
+            return;
         }
         if ($paymentId === 'oxidpaypal') {
-            Registry::get(ExpressCheckoutDispatcher::class)->setExpressCheckout();//todo: check if other options possible. user not available.
+            return Registry::get(ExpressCheckoutDispatcher::class)->setExpressCheckout();//todo: check if other options possible. user not available.
         }
     }
 
@@ -902,32 +906,13 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     /**
      * Gets data from request body
      * @return array
+     * @codeCoverageIgnore
      */
-    private function getJsonRequest()
+    protected function getJsonRequest()
     {
         $requestBody = file_get_contents('php://input');
 
         return json_decode($requestBody, true);
-    }
-
-    /**
-     * Compares credentials specified for two countries (old one and new)
-     * Returns true if they are different
-     * "return bool
-     */
-    protected function isCountryChanged()
-    {
-        $sOldCountryISO     = Registry::getSession()->getVariable('sCountryISO');
-        $sCurrentCountryISO = strtoupper($this->_aOrderData['shipping_address']['country']);
-
-        if ($sOldCountryISO === $sCurrentCountryISO)
-            return false;
-
-        $oCountry                          = oxNew(Country::class);
-        $this->_oUser->oxuser__oxcountryid = new Field($oCountry->getIdByCode($sCurrentCountryISO), Field::T_RAW);
-        Registry::getSession()->setVariable('sCountryISO', $sCurrentCountryISO);
-
-        return true;
     }
 
     /**
