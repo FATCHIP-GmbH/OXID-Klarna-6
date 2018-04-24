@@ -288,7 +288,7 @@ class KlarnaBasketTest extends ModuleUnitTestCase
         $oBasket->setDiscountCalcMode(true);
         $this->setConfigParam('blAllowUnevenAmounts', true);
         foreach ($productsIds as $id) {
-            $oBasket->addToBasket($id, 2);
+            $oBasket->addToBasket($id, 1);
         }
         $oBasket->calculateBasket();
 
