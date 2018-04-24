@@ -938,6 +938,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             Registry::getUtils()->redirect(
                 Registry::getConfig()->getShopSecureHomeUrl() . "cl=basket", false
             );
+            return;
         }
 
         $template = parent::render();
