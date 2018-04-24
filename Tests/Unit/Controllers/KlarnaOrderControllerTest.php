@@ -10,6 +10,7 @@ use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Controller\BaseController;
+use OxidEsales\Eshop\Core\DisplayError;
 use OxidEsales\Eshop\Core\Exception\ExceptionToDisplay;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
@@ -32,9 +33,76 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         'AF' => '8f241f11095306451.36998225',
     ];
 
-    public function testKlarnaExternalPayment()
+    public function testKlarnaExternalPaymentError()
+    {
+        $mock = $this->createStub(KlarnaOrderController::class, ['init' => true]);
+        $mock->klarnaExternalPayment();
+        $result = unserialize($this->getSessionParam('Errors')['default'][0]);
+
+        $this->assertInstanceOf(DisplayError::class, $result);
+        $result = $result->getOxMessage();
+        $this->assertEquals('Ein Fehler ist aufgetreten. Bitte noch einmal versuchen.', $result);
+    }
+
+    /**
+     * @dataProvider externalPaymentDataProvider
+     * @param $paymentId
+     */
+    public function testKlarnaExternalPayment($paymentId)
+    {
+        $payment = $this->createStub(Payment::class, ['load' => true]);
+        $payment->oxpayments__oxactive = new Field(true);
+        \oxTestModules::addModuleObject(Payment::class, $payment);
+
+        $this->setSessionParam('klarna_checkout_order_id', '1');
+        $this->setRequestParameter('payment_id', $paymentId);
+
+        $oBasket = $this->createStub(KlarnaBasket::class, ['onUpdate' => true]);
+
+        $user = $this->createStub(KlarnaUser::class, ['isCreatable' => true, 'save' => true, 'onOrderExecute' => true]);
+        $this->getSession()->setBasket($oBasket);
+
+        $mock = $this->createStub(
+            KlarnaOrderController::class,
+            [
+                'klarnaExternalCheckout' => true,
+                '_createUser' => true,
+            ]
+        );
+
+        $this->setProtectedClassProperty($mock, 'isExternalCheckout', true);
+        $this->setProtectedClassProperty($mock, '_oUser', $user);
+        $this->setProtectedClassProperty(
+            $mock,
+            '_aOrderData',
+            ['selected_shipping_option' => ['id' => 'shippingOption']]
+        );
+
+        $result = $mock->klarnaExternalPayment();
+
+        if($paymentId == 'bestitamazon') {
+            $this->assertEquals(
+                Registry::getConfig()->getShopSecureHomeUrl()."cl=KlarnaEpmDispatcher&fnc=amazonLogin",
+                \oxUtilsHelper::$sRedirectUrl
+            );
+        } elseif($paymentId == 'oxidpaypal'){
+            $this->assertEquals('basket', $result);
+        } else {
+            $this->assertEquals(null, $result);
+        }
+
+        $this->assertEquals($paymentId, $this->getProtectedClassProperty($oBasket, '_sPaymentId'));
+
+    }
+
+    public function externalPaymentDataProvider()
     {
 
+        return [
+            ['test'],
+            ['bestitamazon'],
+            ['oxidpaypal'],
+        ];
     }
 
     public function testExecute()
