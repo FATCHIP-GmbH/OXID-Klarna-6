@@ -80,7 +80,7 @@ class KlarnaUser extends KlarnaUser_parent
         $blShowShippingAddress = (bool)Registry::getSession()->getVariable('blshowshipaddress');
 
         if ($this->isWritable()) {
-            $this->enableWritableFilling($blShowShippingAddress);
+            $this->enableWritableFilling($result, $blShowShippingAddress);
         } elseif ($this->_type == self::NOT_EXISTING && Registry::getSession()->hasVariable('invadr')) {
 
             $this->assign(Registry::getSession()->getVariable('invadr'));
