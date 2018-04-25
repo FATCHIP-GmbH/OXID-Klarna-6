@@ -86,7 +86,6 @@ class KlarnaOrdersTest extends ModuleUnitTestCase
                 'Diese Bestellung konnte bei Klarna im System nicht gefunden werden. Änderungen an den Bestelldaten werden daher nicht an Klarna übertragen.',
             ],
             [new StandardException('test'), 'test'],
-
         ];
     }
 

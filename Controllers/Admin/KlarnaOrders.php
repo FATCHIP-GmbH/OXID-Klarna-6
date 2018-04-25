@@ -80,7 +80,7 @@ class KlarnaOrders extends AdminDetailsController
 
         $this->addTplParam('aCaptures', $this->formatCaptures($klarnaOrderData['captures']));
         $this->addTplParam('aRefunds', $klarnaOrderData['refunds']);
-        $klarnaRef = isset($klarnaOrderData['klarna_reference']) ? $klarnaOrderData['klarna_reference'] : " - ";
+        $klarnaRef = $klarnaOrderData['klarna_reference'] ?: " - ";
         $this->addTplParam('sKlarnaRef', $klarnaRef);
         $this->addTplParam('inSync', $this->getEditObject()->getFieldData('klsync') == 1);
 
