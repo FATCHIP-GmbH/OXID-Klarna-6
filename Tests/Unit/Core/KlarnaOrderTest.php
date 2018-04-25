@@ -105,6 +105,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
                 "test",
             'shipping_countries'       =>
                 [
+                    "AD",
                     "AT",
                     "DE",
                 ],
@@ -128,7 +129,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
                     'image_url'    => null,
                     'fee'          => 100000,
                     'description'  => "test",
-                    'countries'    => ["AT", "DE"],
+                    'countries'    => ["AD", "AT", "DE"],
                 ],
                 [
                     'name'         => null,
@@ -136,7 +137,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
                     'image_url'    => null,
                     'fee'          => 100000,
                     'description'  => "test",
-                    'countries'    => ["AT", "DE"],
+                    'countries'    => ["AD", "AT", "DE"],
                 ],
             ],
             'external_checkouts'       => [
@@ -146,7 +147,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
                     'image_url'    => null,
                     'fee'          => 100000,
                     'description'  => "test",
-                    'countries'    => ["AT", "DE"],
+                    'countries'    => ["AD", "AT", "DE"],
                 ],
                 [
                     'name'         => null,
@@ -154,7 +155,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
                     'image_url'    => null,
                     'fee'          => 100000,
                     'description'  => "test",
-                    'countries'    => ["AT", "DE"],
+                    'countries'    => ["AD", "AT", "DE"],
                 ],
             ],
             'options'                  =>
