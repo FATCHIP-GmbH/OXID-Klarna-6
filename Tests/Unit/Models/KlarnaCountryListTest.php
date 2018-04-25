@@ -14,7 +14,7 @@ class KlarnaCountryListTest extends ModuleUnitTestCase
      */
     public function testLoadActiveKCOGlobalCountries()
     {
-        $expectedCountries = ['a7c40f6320aeb2ec2.72885259', 'a7c40f631fc920687.20179984'];
+        $expectedCountries = ['8f241f11095363464.89657222', 'a7c40f6320aeb2ec2.72885259', 'a7c40f631fc920687.20179984'];
         $klarnaCountryList = oxNew(KlarnaCountryList::class);
         $klarnaCountryList->loadActiveKlarnaCheckoutCountries();
         foreach ($klarnaCountryList as $country) {
@@ -48,6 +48,7 @@ class KlarnaCountryListTest extends ModuleUnitTestCase
     public function testLoadActiveKlarnaCheckoutCountries()
     {
         $expectedCountries = [
+            '8f241f11095363464.89657222',
             '8f241f11096877ac0.98748826',
             'a7c40f631fc920687.20179984',
             'a7c40f6320aeb2ec2.72885259',

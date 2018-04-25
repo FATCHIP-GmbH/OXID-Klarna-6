@@ -56,8 +56,8 @@ class KlarnaConfiguration extends KlarnaBaseConfig
 
             $this->addTplParam('blGermanyActive', $this->isGermanyActiveShopCountry());
             $this->addTplParam('blAustriaActive', $this->isAustriaActiveShopCountry());
-            $this->addTplParam('activeCountries', KlarnaUtils::getAllActiveKCOGlobalCountryList($this->_aViewData['adminlang']));
-            $this->addTplParam('kl_countryList', json_encode(KlarnaUtils::getKlarnaGlobalActiveShopCountries($this->_aViewData['adminlang'])));
+            $this->addTplParam('activeCountries', KlarnaUtils::getAllActiveKCOGlobalCountryList($this->getViewDataElement('adminlang')));
+            $this->addTplParam('kl_countryList', json_encode(KlarnaUtils::getKlarnaGlobalActiveShopCountries($this->getViewDataElement('adminlang'))));
 
 
             $this->_sThisTemplate = 'kl_klarna_kco_config.tpl';

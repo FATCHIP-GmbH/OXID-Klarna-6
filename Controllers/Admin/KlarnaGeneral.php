@@ -48,7 +48,7 @@ class KlarnaGeneral extends KlarnaBaseConfig
             'kl_notSetUpCountries',
             array_diff_key($this->_aKlarnaCountries, $this->_aKlarnaCountryCreds) ?: false
         );
-        $this->addTplParam('activeCountries', KlarnaUtils::getKlarnaGlobalActiveShopCountries($this->_aViewData['adminlang']));
+        $this->addTplParam('activeCountries', KlarnaUtils::getKlarnaGlobalActiveShopCountries($this->getViewDataElement('adminlang')));
 
         return $this->_sThisTemplate;
     }
@@ -62,7 +62,7 @@ class KlarnaGeneral extends KlarnaBaseConfig
             return $this->_aKlarnaCountryCreds;
         }
         $this->_aKlarnaCountryCreds = array();
-        foreach ($this->_aViewData['confaarrs'] as $sKey => $serializedArray) {
+        foreach ($this->getViewDataElement('confaarrs') as $sKey => $serializedArray) {
             if (strpos($sKey, 'aKlarnaCreds_') === 0) {
 
                 $this->_aKlarnaCountryCreds[substr($sKey, -2)] = $serializedArray;
@@ -110,7 +110,7 @@ class KlarnaGeneral extends KlarnaBaseConfig
         if ($this->_aKlarnaCountries) {
             return $this->_aKlarnaCountries;
         }
-        $sViewName = getViewName('oxcountry', $this->_aViewData['adminlang']);
+        $sViewName = getViewName('oxcountry', $this->getViewDataElement('adminlang'));
         $isoList   = KlarnaUtils::getKlarnaGlobalActiveShopCountryISOs();
 
         /** @var \OxidEsales\EshopCommunity\Core\Database\Adapter\Doctrine\Database $db */

@@ -119,7 +119,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
         $kcoController = new KlarnaExpressController();
         $result = $kcoController->getKlarnaModalOtherCountries();
 
-        $this->assertEquals(0, count($result));
+        $this->assertEquals(1, count($result));
 
     }
 
@@ -143,7 +143,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
         $kcoController = new KlarnaExpressController();
         $result = $kcoController->getActiveShopCountries();
 
-        $this->assertEquals(5, count($result));
+        $this->assertEquals(6, count($result));
 
         $active = ['DE', 'AT', 'CH', 'US', 'GB'];
         foreach($result as $country){

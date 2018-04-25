@@ -96,6 +96,7 @@ update oxconfig set oxvarvalue=ENCODE( 'a:0:{}', 'fq45QS09_fqyx09239QQ') where o
 
 update oxcountry set oxactive = '1' where oxcountry.oxid = 'a7c40f631fc920687.20179984'; # DE
 update oxcountry set oxactive = '1' where oxcountry.oxid = 'a7c40f6320aeb2ec2.72885259'; # AT
+update oxcountry set oxactive = '1' where oxcountry.oxid = '8f241f11095363464.89657222';
 
 Insert into oxobject2payment set oxid = 'a91137a798f381fc9ff3186a8118edeb',oxpaymentid = 'klarna_checkout',oxobjectid = 'oxidstandard',oxtype = 'oxdelset';
 Insert into oxobject2payment set oxid = 'e667f3a2469ce4b0e4cfde8a3c87a31f',oxpaymentid = 'klarna_slice_it',oxobjectid = 'oxidstandard',oxtype = 'oxdelset';
@@ -126,6 +127,7 @@ replace into oxobject2group set oxid = '68ba74e29a0cc7f6618606bf623b6941',oxshop
 replace into oxobject2group set oxid = '2d3bb655a05283ced8b2739af1cb62fd',oxshopid = '1',oxobjectid = '92ebae5067055431aeaaa6f75bd9a131',oxgroupsid = 'oxidnotyetordered';
 Insert into oxobject2payment set oxid = '59e77f69092c584bb1b26426184653b7',oxpaymentid = 'klarna_checkout',oxobjectid = 'a7c40f631fc920687.20179984',oxtype = 'oxcountry';
 Insert into oxobject2payment set oxid = '2a8ccf084fd92557af37be1930cafd88',oxpaymentid = 'klarna_checkout',oxobjectid = 'a7c40f6320aeb2ec2.72885259',oxtype = 'oxcountry';
+Insert into oxobject2payment set oxid = '2a8ccf084fd92557af37be1930cafd54',oxpaymentid = 'klarna_checkout',oxobjectid = '8f241f11095363464.89657222',oxtype = 'oxcountry';
 
 
 INSERT INTO oxuser VALUES('oxdefaultadmin', '1', 'malladmin', '1', 'info@topconcepts.de', 'a3dd89af395ff1cc82a4062b1d1035a5a73c3943f1e143c2bbb1e987de6eab78d606dae96a8f416e767f8b6148457dde75b75b7ef81a5551cddf8964bc133f51', '38431f33c5fceee570059c68fca93569', '3', '', '', 'Greg', 'Dabrowski', 'Maple Street', '2425', '', 'Any City', 'a7c40f631fc920687.20179984', '', '21079', '217-8918712', '217-8918713', 'Mr', '1000', '2003-01-01 00:00:00', '2003-01-01 00:00:00', '', '02178 918712', '1988-01-01', '', '', '0', '0', '2018-03-28 18:01:24');
