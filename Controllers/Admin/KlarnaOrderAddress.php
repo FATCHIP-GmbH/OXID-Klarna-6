@@ -32,20 +32,6 @@ class KlarnaOrderAddress extends KlarnaOrderAddress_parent
      */
     protected function setReadonlyValue($paymentId)
     {
-        $this->setViewDataElement('readonly', KlarnaPayment::isKlarnaPayment( $paymentId ));
-    }
-
-    /**
-     * Set single element to view data
-     *
-     * @param string $key
-     * @param mixed $value
-     */
-    protected function setViewDataElement($key, $value)
-    {
-        $viewData = $this->getViewData();
-        $viewData[$key] = $value;
-
-        $this->setViewData($viewData);
+        $this->addTplParam('readonly', KlarnaPayment::isKlarnaPayment( $paymentId ));
     }
 }

@@ -2,6 +2,7 @@
 
 namespace TopConcepts\Klarna\Tests\Unit\Controllers\Admin;
 
+
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\Field;
 use TopConcepts\Klarna\Controllers\Admin\KlarnaOrderAddress;
@@ -10,15 +11,33 @@ use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 class KlarnaOrderAddressTest extends ModuleUnitTestCase
 {
 
-    public function testRender()
+    /**
+     * @dataProvider testRenderDataProvider
+     * @param $paymentId
+     * @param $expectedResult
+     */
+    public function testRender($paymentId, $expectedResult)
     {
-        $order = oxNew(Order::class);
-        $order->oxorder__oxpaymenttype = new Field('klarna_checkout', Field::T_RAW);
+        $order                         = oxNew(Order::class);
+        $order->oxorder__oxpaymenttype = new Field($paymentId, Field::T_RAW);
 
-        $orderAddress = $this->createStub(KlarnaOrderAddress::class, ['getViewDataElement' => $order]);
+        $orderAddress = oxNew(KlarnaOrderAddress::class);
+        $orderAddress->addTplParam('edit', $order);
         $result = $orderAddress->render();
         $this->assertEquals("order_address.tpl", $result);
-        $this->assertTrue($orderAddress->getViewData()['readonly']);
+        $this->assertEquals($order, $orderAddress->getViewDataElement('edit'));
+        $this->assertEquals($expectedResult, $orderAddress->getViewDataElement('readonly'));
+    }
 
+    public function testRenderDataProvider()
+    {
+        return [
+            ['klarna_checkout', true],
+            ['klarna_pay_later', true],
+            ['klarna_pay_now', true],
+            ['klarna_slice_it', true],
+            ['oxidcashondel', false],
+            ['oxidpayadvance', false],
+        ];
     }
 }

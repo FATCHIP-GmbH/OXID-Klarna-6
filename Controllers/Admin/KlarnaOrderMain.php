@@ -127,7 +127,6 @@ class KlarnaOrderMain extends KlarnaOrderMain_parent
         //force reload
         $oOrder = $this->getEditObject(true);
         $inSync = $oOrder->getFieldData('klsync') == 1;
-        var_dump($cancelled, $inSync);
 
         if (!$cancelled && $inSync && $this->klarnaOrderData['remaining_authorized_amount'] != 0) {
             $orderLang = (int)$oOrder->getFieldData('oxlang');
