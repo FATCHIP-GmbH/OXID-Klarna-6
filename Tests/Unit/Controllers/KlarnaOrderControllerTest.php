@@ -10,16 +10,21 @@ use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Controller\BaseController;
+use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\DisplayError;
+use OxidEsales\Eshop\Core\Email;
 use OxidEsales\Eshop\Core\Exception\ExceptionToDisplay;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\ViewConfig;
 use OxidEsales\PayPalModule\Controller\ExpressCheckoutDispatcher;
 use TopConcepts\Klarna\Controllers\KlarnaOrderController;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
 use TopConcepts\Klarna\Core\KlarnaConsts;
+use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
 use TopConcepts\Klarna\Core\KlarnaPayment;
+use TopConcepts\Klarna\Core\KlarnaPaymentsClient;
 use TopConcepts\Klarna\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Models\KlarnaBasket;
 use TopConcepts\Klarna\Models\KlarnaUser;
@@ -80,12 +85,12 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
         $result = $mock->klarnaExternalPayment();
 
-        if($paymentId == 'bestitamazon') {
+        if ($paymentId == 'bestitamazon') {
             $this->assertEquals(
                 Registry::getConfig()->getShopSecureHomeUrl()."cl=KlarnaEpmDispatcher&fnc=amazonLogin",
                 \oxUtilsHelper::$sRedirectUrl
             );
-        } elseif($paymentId == 'oxidpaypal'){
+        } elseif ($paymentId == 'oxidpaypal') {
             $this->assertEquals('basket', $result);
         } else {
             $this->assertEquals(null, $result);
@@ -158,6 +163,39 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
         $result = $result->getOxMessage();
         $this->assertEquals('test', $result);
+    }
+
+    /**
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
+     * @throws \ReflectionException
+     */
+    public function testGetKlarnaAllowedExternalPayments()
+    {
+        $database = DatabaseProvider::getDB();
+        $database->execute("UPDATE oxpayments SET oxactive=1, klexternalpayment=1 WHERE oxid='oxidpayadvance'");
+
+        $class = new \ReflectionClass(KlarnaOrderController::class);
+        $method = $class->getMethod('getKlarnaAllowedExternalPayments');
+        $method->setAccessible(true);
+        $mock = $this->createStub(KlarnaOrderController::class, ['init' => true]);
+        $result = $method->invoke($mock);
+
+        $this->assertEquals('oxidpayadvance', $result[0]);
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function testGetKlarnaOrderClient()
+    {
+        $class = new \ReflectionClass(KlarnaOrderController::class);
+        $method = $class->getMethod('getKlarnaOrderClient');
+        $method->setAccessible(true);
+        $mock = $this->createStub(KlarnaOrderController::class, ['init' => true]);
+        $result = $method->invokeArgs($mock, ['DE']);
+
+        $this->assertInstanceOf(KlarnaOrderManagementClient::class, $result);
     }
 
     /**
@@ -242,7 +280,29 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
     public function testRender()
     {
+        $this->setModuleConfVar('sKlarnaActiveMode', KlarnaConsts::MODULE_MODE_KP);
+        $oBasket = $this->createStub(
+            KlarnaBasket::class,
+            ['getPaymentId' => 'klarna_pay_now']
+        );
+        $this->getSession()->setBasket($oBasket);
+        $this->setSessionParam('klarna_session_data', ['client_token' => 'test']);
 
+        $mock = $this->createStub(KlarnaOrderController::class, ['isCountryHasKlarnaPaymentsAvailable' => true]);
+        $result = $mock->render();
+
+        $locale = $mock->getViewData()['sLocale'];
+        $clientToken = $mock->getViewData()['client_token'];
+
+        $this->assertEquals('page/checkout/order.tpl', $result);
+        $this->assertEquals('de-de', $locale);
+        $this->assertEquals('test', $clientToken);
+        $this->assertEquals(true, $this->getProtectedClassProperty($mock, 'loadKlarnaPaymentWidget'));
+
+
+        $this->setSessionParam('paymentid', 'klarna_checkout');
+        $mock->render();
+        $this->assertEquals(Registry::getConfig()->getShopSecureHomeUrl()."cl=basket", \oxUtilsHelper::$sRedirectUrl);
     }
 
     public function testIsCountryHasKlarnaPaymentsAvailable()
@@ -267,6 +327,36 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
     public function testKpBeforeExecute()
     {
+        $mock = $this->createStub(KlarnaOrderController::class, ['_validateTermsAndConditions' => false]);
+        $mock->kpBeforeExecute();
+
+        $errors = unserialize($this->getSessionParam('Errors')['default'][0]);
+
+        $this->assertInstanceOf(DisplayError::class, $errors);
+        $errorMessage = $errors->getOxMessage();
+        $this->assertEquals('Bitte stimmen Sie den AGB und den Widerrufsbedingungen für digitale Inhalte zu.', $errorMessage);
+        $this->assertEquals(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=order', \oxUtilsHelper::$sRedirectUrl);
+
+        $oKlarnaPayment = $this->createStub(KlarnaPayment::class, ['validateOrder' => true, 'isError' => false]);
+        \oxTestModules::addModuleObject(KlarnaPayment::class, $oKlarnaPayment);
+
+        $client = $this->createStub(KlarnaPaymentsClient::class, ['createNewOrder' => ['order_id' => 'orderId', 'redirect_url' => 'testUrl']]);
+        $paymentClient = $this->createStub(KlarnaPaymentsClient::class, ['initOrder' => $client]);
+
+        $this->setRequestParameter('sAuthToken', 'testToken');
+        $mock = $this->createStub(KlarnaOrderController::class, ['_validateTermsAndConditions' => true, 'getKlarnaPaymentsClient' => $paymentClient]);
+        $mock->kpBeforeExecute();
+
+        $this->assertEquals('testToken', $this->getSessionParam('sAuthToken'));
+        $this->assertEquals('orderId', $this->getSessionParam('klarna_last_KP_order_id'));
+        $this->assertEquals('testUrl', \oxUtilsHelper::$sRedirectUrl);
+
+        $oKlarnaPayment = $this->createStub(KlarnaPayment::class, ['validateOrder' => true, 'isError' => true, 'displayErrors' => true]);
+        \oxTestModules::addModuleObject(KlarnaPayment::class, $oKlarnaPayment);
+
+        $mock->kpBeforeExecute();
+
+        $this->assertEquals(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=order', \oxUtilsHelper::$sRedirectUrl);
 
     }
 
@@ -792,4 +882,138 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $this->assertEquals($expected, json_decode(\oxUtilsHelper::$response, true));
     }
 
+    /**
+     * @throws \ReflectionException
+     */
+    public function test_createUser()
+    {
+        $orderData = [
+            'billing_address' => [
+                'street_address' => 'testBilling',
+                'email' => 'test@email.io',
+            ],
+            'shipping_address' => ['street_address' => 'testShipping'],
+            'customer' => ['date_of_birth' => 'test'],
+        ];
+
+        $user = $this->createStub(
+            KlarnaUser::class,
+            [
+                'createUser' => true,
+                'load' => true,
+                'changeUserData' => true,
+                'getId' => 'id',
+                'updateDeliveryAddress' => true,
+            ]
+        );
+
+        $class = new \ReflectionClass(KlarnaOrderController::class);
+        $method = $class->getMethod('_createUser');
+        $method->setAccessible(true);
+        $mock = $this->createStub(
+            KlarnaOrderController::class,
+            ['isRegisterNewUserNeeded' => true, 'sendChangePasswordEmail' => true]
+        );
+        $this->setProtectedClassProperty($mock, '_oUser', $user);
+        $this->setProtectedClassProperty($mock, '_aOrderData', $orderData);
+
+        $result = $method->invoke($mock);
+
+        $this->assertEquals(new Field('test@email.io', Field::T_RAW), $user->oxuser__oxusername);
+        $this->assertEquals(new Field(1, Field::T_RAW), $user->oxuser__oxactive);
+        $this->assertEquals(new Field('test'), $user->oxuser__oxbirthdate);
+        $this->assertEquals('id', $this->getSessionParam('usr'));
+        $this->assertTrue($this->getSessionParam('blNeedLogout'));
+
+        $this->assertTrue($result);
+
+        $user = $this->getMock(KlarnaUser::class, ['createUser', 'load', 'changeUserData']);
+        $user->expects($this->any())->method('changeUserData')->willThrowException(new StandardException('test'));
+        $user->expects($this->any())->method('createUser')->willReturn(true);
+        $user->expects($this->any())->method('load')->willReturn(true);
+        $this->setProtectedClassProperty($mock, '_oUser', $user);
+        $result = $method->invoke($mock);
+        $this->assertFalse($result);
+        $this->assertEquals(
+            "User could not be updated/loaded",
+            $this->getProtectedClassProperty($mock, '_aResultErrors')[0]
+        );
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function testSendChangePasswordEmail()
+    {
+        $class = new \ReflectionClass(KlarnaOrderController::class);
+        $method = $class->getMethod('sendChangePasswordEmail');
+        $method->setAccessible(true);
+
+        $email = $this->createStub(Email::class, ['sendChangePwdEmail' => true]);
+        \oxTestModules::addModuleObject(Email::class, $email);
+
+        $user = $this->createStub(KlarnaUser::class, ['resolveLocale' => true]);
+        $user->oxuser__oxusername = new Field('test', Field::T_RAW);
+        $mock = $this->createStub(KlarnaOrderController::class, ['init' => true]);
+
+        $this->setProtectedClassProperty($mock, '_oUser', $user);
+        $result = $method->invoke($mock);
+
+        $this->assertTrue($result);
+
+
+        $email = $this->createStub(Email::class, ['sendChangePwdEmail' => 'error']);
+        \oxTestModules::addModuleObject(Email::class, $email);
+
+        $result = $method->invoke($mock);
+
+        $this->assertFalse($result);
+
+        $errors = unserialize($this->getSessionParam('Errors')['default'][0]);
+
+        $this->assertInstanceOf(DisplayError::class, $errors);
+        $errorMessage = $errors->getOxMessage();
+        $this->assertEquals('Leider konnten wir Ihnen keine E-Mail zustellen.', $errorMessage);
+
+
+        $user->oxuser__oxusername->value = null;
+        $result = $method->invoke($mock);
+
+        $this->assertFalse($result);
+
+        $errors = unserialize($this->getSessionParam('Errors')['default'][0]);
+
+        $this->assertInstanceOf(DisplayError::class, $errors);
+        $errorMessage = $errors->getOxMessage();
+        $this->assertEquals('Leider konnten wir Ihnen keine E-Mail zustellen.', $errorMessage);
+    }
+
+    /**
+     * @dataProvider initUserDataProcider
+     * @param $expected
+     * @param $isUserLoggedIn
+     * @throws \ReflectionException
+     */
+    public function test_initUser($expected, $isUserLoggedIn)
+    {
+        $class = new \ReflectionClass(KlarnaOrderController::class);
+        $method = $class->getMethod('_initUser');
+        $method->setAccessible(true);
+
+        $viewConfig = $this->createStub(ViewConfig::class, ['isUserLoggedIn' => $isUserLoggedIn]);
+        $user = $this->createStub(KlarnaUser::class, ['getKlarnaData' => true]);
+        $mock = $this->createStub(KlarnaOrderController::class, ['getUser' => $user, 'getViewConfig' => $viewConfig]);
+        $method->invoke($mock);
+
+        $this->assertEquals($expected, $mock->getUser()->kl_getType());
+    }
+
+    public function initUserDataProcider()
+    {
+        return [
+            [KlarnaUser::LOGGED_IN, true],
+            [KlarnaUser::NOT_REGISTERED, false],
+        ];
+
+    }
 }
