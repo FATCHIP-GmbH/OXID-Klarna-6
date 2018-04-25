@@ -70,14 +70,10 @@ class KlarnaFormatter extends Base
         $aUserData = array();
         foreach (self::$aFieldMapper as $oxName => $klarnaName) {
             if (!empty($aAddressData[$klarnaName])) {
-                if ($klarnaName === 'date_of_birth') {
-                    if ($sKey === 'shipping_address') {
-                        continue;
-                    }
+                if ($klarnaName === 'date_of_birth' || $klarnaName === 'street_address') {
+                    continue;
                 } else if ($klarnaName === 'title') {
                     $aUserData[$sTable . $oxName] = self::formatSalutation($aAddressData[$klarnaName], strtolower($aAddressData['country']));
-                } else if ($klarnaName === 'street_address') {
-                    continue;
                 } else {
                     $aUserData[$sTable . $oxName] = trim($aAddressData[$klarnaName]);
                 }
@@ -90,10 +86,69 @@ class KlarnaFormatter extends Base
     /**
      * @param $oxObject User|Address
      * @return array
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      * @throws \TypeError
      */
     public static function oxidToKlarnaAddress($oxObject)
+    {
+        $sTable = self::validateInstance($oxObject);
+
+        $aUserData   = array();
+        $sCountryISO = strtolower(KlarnaUtils::getCountryISO($oxObject->{$sTable . 'oxcountryid'}->value));
+
+        self::compileUserData($aUserData, $oxObject, $sTable, $sCountryISO);
+
+        if (is_null($aUserData['phone'])) {
+            $value              = $oxObject->{$sTable . 'oxfon'}->value;
+            $aUserData['phone'] = !empty($value) ? $value : null;
+        }
+
+        //clean up
+        foreach ($aUserData as $key => $value) {
+            $aUserData[$key] = html_entity_decode($aUserData[$key], ENT_QUOTES);
+            if (!$value) {
+                unset($aUserData[$key]);
+            }
+        }
+
+        return $aUserData;
+    }
+
+    protected static function compileUserData(&$aUserData, $oxObject, $sTable, $sCountryISO)
+    {
+        $ignoreNames = ['date_of_birth', 'street_name', 'street_number'];
+        //Remove unwanted fields
+        $validMappedFields = array_diff(self::$aFieldMapper, $ignoreNames);
+
+        foreach ($validMappedFields as $oxName => $klarnaName) {
+            switch ($klarnaName) {
+                case 'street_address':
+                    $aUserData[$klarnaName] = "{$oxObject->{$sTable . 'oxstreet'}->value} {$oxObject->{$sTable . 'oxstreetnr'}->value}";
+                    break;
+                case 'country':
+                    $aUserData[$klarnaName] = $sCountryISO;
+                    break;
+                case 'title':
+                    $aUserData[$klarnaName] = null;
+                    $sTitle = self::formatSalutation($oxObject->{$sTable.'oxsal'}->value, $sCountryISO);
+                    if (!empty($sTitle)) {
+                        $aUserData[$klarnaName] = $sTitle;
+                    }
+                    break;
+                default:
+                    $value = $oxObject->{$sTable.$oxName}->value;
+                    $aUserData[$klarnaName] = null;
+                    if (!empty($value)) {
+                        $aUserData[$klarnaName] = $value;
+                    }
+            }
+        }
+    }
+
+    /**
+     * @param $oxObject
+     * @return string
+     */
+    protected static function validateInstance(&$oxObject)
     {
         if ($oxObject instanceof User) {
             $sTable = 'oxuser__';
@@ -103,44 +158,7 @@ class KlarnaFormatter extends Base
         } else
             throw new \TypeError('Argument must be instance of User|Address.');
 
-        $aUserData   = array();
-        $sCountryISO = strtolower(KlarnaUtils::getCountryISO($oxObject->{$sTable . 'oxcountryid'}->value));
-
-        foreach (self::$aFieldMapper as $oxName => $klarnaName) {
-
-            if ($klarnaName === 'street_address') {
-                $aUserData[$klarnaName] = "{$oxObject->{$sTable . 'oxstreet'}->value} {$oxObject->{$sTable . 'oxstreetnr'}->value}";
-            } else if ($klarnaName === 'date_of_birth') {
-                continue;
-            } else if ($klarnaName === 'country') {
-                $aUserData[$klarnaName] = $sCountryISO;
-            } else if ($klarnaName === 'title'/* && KlarnaUtils::getShopConfVar('blKlarnaSalutationMandatory')*/) {
-                if ($sTitle = self::formatSalutation($oxObject->{$sTable . 'oxsal'}->value, $sCountryISO))
-                    $aUserData[$klarnaName] = $sTitle ?: null;
-            } else if ($klarnaName === 'street_name' || $klarnaName === 'street_number') {
-                continue;
-            } else {
-                $value                  = $oxObject->{$sTable . $oxName}->value;
-                $aUserData[$klarnaName] = !empty($value) ? $value : null;
-            }
-
-        }
-
-        if (is_null($aUserData['phone'])) {
-            $value              = $oxObject->{$sTable . 'oxfon'}->value;
-            $aUserData['phone'] = !empty($value) ? $value : null;
-        }
-
-        //clean up
-        foreach ($aUserData as $key => $value) {
-            if (!$value) {
-                unset($aUserData[$key]);
-            } else {
-                $aUserData[$key] = html_entity_decode($aUserData[$key], ENT_QUOTES);
-            }
-        }
-
-        return $aUserData;
+        return $sTable;
     }
 
     /**
