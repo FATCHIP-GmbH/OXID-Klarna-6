@@ -86,7 +86,10 @@ class KlarnaBasket extends KlarnaBasket_parent
                 $quantity_unit) = KlarnaUtils::calculateOrderAmountsPricesAndTaxes($oItem);
 
             /** @var Article | BasketItem | KlarnaArticle $oArt */
-            $oArt = !($oItem->getArticle() instanceof Article) ? $oArt->getArticle(): $oItem->getArticle();
+            $oArt = $oItem->getArticle();
+            if (!$oArt instanceof Article) {
+                $oArt = $oArt->getArticle();
+            }
 
             if ($iOrderLang) {
                 $oArt->loadInLang($iOrderLang, $oArt->getId());
