@@ -62,6 +62,10 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
             Registry::getUtils()->redirect($redirectUrl, false, 302);
         }
 
+        if(!$this->client){
+            $this->client = KlarnaPaymentsClient::getInstance(); // @codeCoverageIgnore
+        }
+
         parent::init();
     }
 
@@ -98,8 +102,10 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
     }
 
     /**
-     * @return string
+     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
+     * @throws \ReflectionException
      * @throws \oxSystemComponentException
+     * @return string
      */
     public function render()
     {
@@ -124,9 +130,6 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
             $errors = $this->oKlarnaPayment->getError();
             if (!$errors) {
                 try {
-                    if(!$this->client){
-                        $this->client = KlarnaPaymentsClient::getInstance(); // @codeCoverageIgnore
-                    }
                     $this->client->initOrder($this->oKlarnaPayment)
                         ->createOrUpdateSession();
 
