@@ -38,23 +38,23 @@ class KlarnaOrderArticle extends KlarnaOrderArticle_parent
             }
 
             try {
-                $this->klarnaOrderData = $this->retrieveKlarnaOrder($this->_aViewData['sCountryISO']);
+                $this->klarnaOrderData = $this->retrieveKlarnaOrder($this->getViewDataElement('sCountryISO'));
             } catch (KlarnaWrongCredentialsException $e) {
-                $this->_aViewData['sErrorMessage'] = Registry::getLang()->translateString("KLARNA_UNAUTHORIZED_REQUEST");
+                $this->addTplParam('sErrorMessage', Registry::getLang()->translateString("KLARNA_UNAUTHORIZED_REQUEST"));
 
                 $oOrder->oxorder__klsync = new Field(0);
                 $oOrder->save();
 
                 return $result;
             } catch (KlarnaOrderNotFoundException $e) {
-                $this->_aViewData['sErrorMessage'] = Registry::getLang()->translateString("KLARNA_ORDER_NOT_FOUND");
+                $this->addTplParam('sErrorMessage', Registry::getLang()->translateString("KLARNA_ORDER_NOT_FOUND"));
 
                 $oOrder->oxorder__klsync = new Field(0);
                 $oOrder->save();
 
                 return $result;
             } catch (StandardException $e) {
-                $this->_aViewData['sErrorMessage'] = $e->getMessage();
+                $this->addTplParam('sErrorMessage', $e->getMessage());
 
                 $oOrder->oxorder__klsync = new Field(0);
                 $oOrder->save();
@@ -89,18 +89,18 @@ class KlarnaOrderArticle extends KlarnaOrderArticle_parent
     {
         $parent = parent::render();
 
-        $this->_aViewData['isKlarnaOrder'] = $this->isKlarnaOrder();
+        $this->addTplParam('isKlarnaOrder',$this->isKlarnaOrder());
         $oOrder                            = $this->getEditObject(true);
 
-        if ($this->_aViewData['isKlarnaOrder'] && $oOrder->getFieldData('oxstorno') == 0) {
+        if ($this->getViewDataElement('isKlarnaOrder') && $oOrder->getFieldData('oxstorno') == 0) {
 
             //check if credentials are valid
             if (!$this->isCredentialsValid()) {
-                $this->_aViewData['sWarningMessage'] = sprintf(Registry::getLang()->translateString("KLARNA_MID_CHANGED_FOR_COUNTRY"),
-                    $this->_aViewData['sMid'],
-                    $this->_aViewData['sCountryISO'],
-                    $this->_aViewData['currentMid']
-                );
+                $this->addTplParam('sWarningMessage', sprintf(Registry::getLang()->translateString("KLARNA_MID_CHANGED_FOR_COUNTRY"),
+                    $this->getViewDataElement('sMid'),
+                    $this->getViewDataElement('sCountryISO'),
+                    $this->getViewDataElement('currentMid')
+                ));
 
                 return $parent;
             }
@@ -108,22 +108,22 @@ class KlarnaOrderArticle extends KlarnaOrderArticle_parent
             if (Registry::get(Request::class)->getRequestEscapedParameter('fnc')) {
 
                 try {
-                    $this->klarnaOrderData = $this->retrieveKlarnaOrder($this->_aViewData['sCountryISO']);
+                    $this->klarnaOrderData = $this->retrieveKlarnaOrder($this->getViewDataElement('sCountryISO'));
                 } catch (KlarnaWrongCredentialsException $e) {
-                    $this->_aViewData['sErrorMessage'] = Registry::getLang()->translateString("KLARNA_UNAUTHORIZED_REQUEST");
+                    $this->addTplParam('sErrorMessage', Registry::getLang()->translateString("KLARNA_UNAUTHORIZED_REQUEST"));
                     $oOrder->oxorder__klsync           = new Field(0);
                     $oOrder->save();
 
                     return $parent;
                 } catch (KlarnaOrderNotFoundException $e) {
-                    $this->_aViewData['sErrorMessage'] = Registry::getLang()->translateString("KLARNA_ORDER_NOT_FOUND");
+                    $this->addTplParam('sErrorMessage', Registry::getLang()->translateString("KLARNA_ORDER_NOT_FOUND"));
 
                     $oOrder->oxorder__klsync = new Field(0);
                     $oOrder->save();
 
                     return $parent;
                 } catch (StandardException $e) {
-                    $this->_aViewData['sErrorMessage'] = $e->getMessage();
+                    $this->addTplParam('sErrorMessage', $e->getMessage());
 
                     $oOrder->oxorder__klsync = new Field(0);
                     $oOrder->save();
@@ -138,14 +138,14 @@ class KlarnaOrderArticle extends KlarnaOrderArticle_parent
                     $oOrder->oxorder__klsync = new Field(0);
 
                     $orderCancelled                      = Registry::getLang()->translateString("KLARNA_ORDER_IS_CANCELLED");
-                    $this->_aViewData['sWarningMessage'] = $orderCancelled . $apiDisabled;
+                    $this->addTplParam('sWarningMessage', $orderCancelled . $apiDisabled);
 
                 } else if ($this->klarnaOrderData['order_amount'] != KlarnaUtils::parseFloatAsInt($oOrder->getTotalOrderSum() * 100)
                            || !$this->isCaptureInSync($this->klarnaOrderData)) {
                     $oOrder->oxorder__klsync = new Field(0);
 
                     $orderNotInSync                      = Registry::getLang()->translateString("KLARNA_ORDER_NOT_IN_SYNC");
-                    $this->_aViewData['sWarningMessage'] = $orderNotInSync . $apiDisabled;
+                    $this->addTplParam('sWarningMessage', $orderNotInSync . $apiDisabled);
 
                 } else {
                     $oOrder->oxorder__klsync = new Field(1);
@@ -204,7 +204,7 @@ class KlarnaOrderArticle extends KlarnaOrderArticle_parent
             $error = $this->getEditObject()->updateKlarnaOrder($orderLines, $this->getEditObject()->oxorder__klorderid->value, $sCountryISO);
 
             if ($error) {
-                $this->_aViewData['sErrorMessage'] = $error;
+                $this->addTplParam('sErrorMessage', $error);
             }
         }
     }
@@ -231,12 +231,12 @@ class KlarnaOrderArticle extends KlarnaOrderArticle_parent
      */
     public function isCredentialsValid()
     {
-        $this->_aViewData['sMid']        = $this->getEditObject()->getFieldData('klmerchantid');
-        $this->_aViewData['sCountryISO'] = KlarnaUtils::getCountryISO($this->getEditObject()->getFieldData('oxbillcountryid'));
-        $currentMid                      = KlarnaUtils::getAPICredentials($this->_aViewData['sCountryISO']);
-        $this->_aViewData['currentMid']  = $currentMid['mid'];
+        $this->addTplParam('sMid', $this->getEditObject()->getFieldData('klmerchantid'));
+        $this->addTplParam('sCountryISO', KlarnaUtils::getCountryISO($this->getEditObject()->getFieldData('oxbillcountryid')));
+        $currentMid                      = KlarnaUtils::getAPICredentials($this->getViewDataElement('sCountryISO'));
+        $this->addTplParam('currentMid', $currentMid['mid']);
 
-        if (strstr($this->_aViewData['currentMid'], $this->_aViewData['sMid'])) {
+        if (strstr($this->getViewDataElement('currentMid'), $this->getViewDataElement('sMid'))) {
             return true;
         }
 

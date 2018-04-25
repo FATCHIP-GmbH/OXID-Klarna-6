@@ -68,8 +68,9 @@ class KlarnaBaseConfig extends ShopConfiguration
     public function render()
     {
         parent::render();
-        foreach ($this->_aViewData['confaarrs'] as $key => $arr) {
-            $this->_aViewData['confaarrs'][$key] = $this->_multilineToAarray(html_entity_decode($arr));
+        $confaarrs = $this->getViewDataElement('confaarrs');
+        foreach ($confaarrs as $key => $arr) {
+            $confaarrs[$key] = $this->_multilineToAarray(html_entity_decode($arr));
         }
     }
 
@@ -232,7 +233,7 @@ class KlarnaBaseConfig extends ShopConfiguration
      */
     public function getPaymentData($oxid, $lang = false)
     {
-        $lang      = $lang !== false ? $lang : $this->_aViewData['adminlang'];
+        $lang      = $lang !== false ? $lang : $this->getViewDataElement('adminlang');
         $oxpayment = oxnew(Payment::class);
         $oxpayment->loadInLang($lang, $oxid);
 
@@ -265,7 +266,7 @@ class KlarnaBaseConfig extends ShopConfiguration
      */
     public function getManualDownloadLink()
     {
-        $langTag = Registry::getLang()->getLanguageAbbr($this->_aViewData['adminlang']);
+        $langTag = Registry::getLang()->getLanguageAbbr($this->getViewDataElement('adminlang'));
 
         return sprintf(KlarnaConsts::KLARNA_MANUAL_DOWNLOAD_LINK, $langTag);
     }
@@ -294,7 +295,7 @@ class KlarnaBaseConfig extends ShopConfiguration
         $output = array();
 
         foreach ($this->MLVars as $fieldName) {
-            foreach ($this->_aViewData['confstrs'] as $name => $value) {
+            foreach ($this->getViewDataElement('confstrs') as $name => $value) {
                 if (strpos($name, $fieldName) === 0) {
                     $output['confstrs[' . $name . ']'] = $value;
                 }
