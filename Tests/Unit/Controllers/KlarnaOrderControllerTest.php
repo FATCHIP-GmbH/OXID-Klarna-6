@@ -24,6 +24,7 @@ use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
 use TopConcepts\Klarna\Core\KlarnaConsts;
 use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
 use TopConcepts\Klarna\Core\KlarnaPayment;
+use TopConcepts\Klarna\Core\KlarnaPaymentsClient;
 use TopConcepts\Klarna\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Models\KlarnaBasket;
 use TopConcepts\Klarna\Models\KlarnaUser;
@@ -326,6 +327,36 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
     public function testKpBeforeExecute()
     {
+        $mock = $this->createStub(KlarnaOrderController::class, ['_validateTermsAndConditions' => false]);
+        $mock->kpBeforeExecute();
+
+        $errors = unserialize($this->getSessionParam('Errors')['default'][0]);
+
+        $this->assertInstanceOf(DisplayError::class, $errors);
+        $errorMessage = $errors->getOxMessage();
+        $this->assertEquals('Bitte stimmen Sie den AGB und den Widerrufsbedingungen für digitale Inhalte zu.', $errorMessage);
+        $this->assertEquals(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=order', \oxUtilsHelper::$sRedirectUrl);
+
+        $oKlarnaPayment = $this->createStub(KlarnaPayment::class, ['validateOrder' => true, 'isError' => false]);
+        \oxTestModules::addModuleObject(KlarnaPayment::class, $oKlarnaPayment);
+
+        $client = $this->createStub(KlarnaPaymentsClient::class, ['createNewOrder' => ['order_id' => 'orderId', 'redirect_url' => 'testUrl']]);
+        $paymentClient = $this->createStub(KlarnaPaymentsClient::class, ['initOrder' => $client]);
+
+        $this->setRequestParameter('sAuthToken', 'testToken');
+        $mock = $this->createStub(KlarnaOrderController::class, ['_validateTermsAndConditions' => true, 'getKlarnaPaymentsClient' => $paymentClient]);
+        $mock->kpBeforeExecute();
+
+        $this->assertEquals('testToken', $this->getSessionParam('sAuthToken'));
+        $this->assertEquals('orderId', $this->getSessionParam('klarna_last_KP_order_id'));
+        $this->assertEquals('testUrl', \oxUtilsHelper::$sRedirectUrl);
+
+        $oKlarnaPayment = $this->createStub(KlarnaPayment::class, ['validateOrder' => true, 'isError' => true, 'displayErrors' => true]);
+        \oxTestModules::addModuleObject(KlarnaPayment::class, $oKlarnaPayment);
+
+        $mock->kpBeforeExecute();
+
+        $this->assertEquals(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=order', \oxUtilsHelper::$sRedirectUrl);
 
     }
 

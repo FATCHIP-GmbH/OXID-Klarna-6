@@ -240,6 +240,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         if (!$termsValid = $this->_validateTermsAndConditions()) {
             Registry::get(UtilsView::class)->addErrorToDisplay('KL_PLEASE_AGREE_TO_TERMS');
             Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=order', false, 302);
+            return;
         }
 
         if ($sAuthToken = Registry::get(Request::class)->getRequestEscapedParameter('sAuthToken')) {
@@ -252,8 +253,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         if ($sAuthToken || Registry::getSession()->hasVariable('sAuthToken')) {
 
             $oBasket = Registry::getSession()->getBasket();
-            /** @var KlarnaPayment $oKlarnaPayment */
-            $oKlarnaPayment = new KlarnaPayment($oBasket, $this->getUser());
+            $oKlarnaPayment = oxNew(KlarnaPayment::class,$oBasket,$this->getUser());
 
             $oClient = $this->getKlarnaPaymentsClient();
 
@@ -270,6 +270,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
             if (!$valid || !$created) {
                 Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=order', false, 302);
+                return;
             }
 
             Registry::getSession()->setVariable('klarna_last_KP_order_id', $created['order_id']);
