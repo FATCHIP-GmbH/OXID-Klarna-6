@@ -3,6 +3,7 @@
 namespace TopConcepts\Klarna\Models;
 
 
+use OxidEsales\Eshop\Core\Config;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Exception\KlarnaBasketTooLargeException;
 use OxidEsales\Eshop\Core\DatabaseProvider;
@@ -66,11 +67,7 @@ class KlarnaBasket extends KlarnaBasket_parent
         $this->klarnaOrderLines = array();
         $this->_calcItemsPrice();
 
-        if ($orderMgmtId) {
-            $oOrder = oxNew(Order::class);
-            $oOrder->load($orderMgmtId);
-            $iOrderLang = $oOrder->getFieldData('oxlang');
-        }
+        $iOrderLang = $this->getOrderLang($orderMgmtId);
 
         $aItems = $this->getContents();
         usort($aItems, array($this, 'sortOrderLines'));
@@ -89,10 +86,7 @@ class KlarnaBasket extends KlarnaBasket_parent
                 $quantity_unit) = KlarnaUtils::calculateOrderAmountsPricesAndTaxes($oItem);
 
             /** @var Article | BasketItem | KlarnaArticle $oArt */
-            $oArt = $oItem->getArticle();
-            if (!$oArt instanceof Article) {
-                $oArt = $oArt->getArticle();
-            }
+            $oArt = !($oItem->getArticle() instanceof Article) ? $oArt->getArticle(): $oItem->getArticle();
 
             if ($iOrderLang) {
                 $oArt->loadInLang($iOrderLang, $oArt->getId());
@@ -145,6 +139,18 @@ class KlarnaBasket extends KlarnaBasket_parent
         $this->_orderHash = md5(json_encode($aOrderLines));
 
         return $aOrderLines;
+    }
+
+    protected function getOrderLang($orderMgmtId)
+    {
+        $iOrderLang = null;
+        if ($orderMgmtId) {
+            $oOrder = oxNew(Order::class);
+            $oOrder->load($orderMgmtId);
+            $iOrderLang = $oOrder->getFieldData('oxlang');
+        }
+
+        return $iOrderLang;
     }
 
     /**
@@ -415,11 +421,7 @@ class KlarnaBasket extends KlarnaBasket_parent
         $myConfig       = Registry::getConfig();
         $oDeliveryPrice = oxNew(Price::class);
 
-        if (Registry::getConfig()->getConfigParam('blDeliveryVatOnTop')) {
-            $oDeliveryPrice->setNettoPriceMode();
-        } else {
-            $oDeliveryPrice->setBruttoPriceMode();
-        }
+        Registry::getConfig()->getConfigParam('blDeliveryVatOnTop')?$oDeliveryPrice->setNettoPriceMode():$oDeliveryPrice->setBruttoPriceMode();
 
         // don't calculate if not logged in
         $oUser = $this->getBasketUser();
@@ -431,6 +433,14 @@ class KlarnaBasket extends KlarnaBasket_parent
         $fDelVATPercent = $this->getAdditionalServicesVatPercent();
         $oDeliveryPrice->setVat($fDelVATPercent);
 
+        // list of active delivery costs
+        $this->handleDeliveryCosts($myConfig,$oUser,$oDeliveryPrice,$fDelVATPercent);
+
+        return $oDeliveryPrice;
+    }
+
+    protected function handleDeliveryCosts(Config $myConfig, $oUser, Price &$oDeliveryPrice, $fDelVATPercent)
+    {
         // list of active delivery costs
         if ($myConfig->getConfigParam('bl_perfLoadDelivery')) {
             /** @var DeliveryList oDeliveryList */
@@ -452,20 +462,15 @@ class KlarnaBasket extends KlarnaBasket_parent
                 }
             }
         }
-
-        return $oDeliveryPrice;
     }
 
     /**
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      * @return object
      */
     protected function _calcDeliveryCost()
     {
-        if (KlarnaUtils::isKlarnaPaymentsEnabled()) {
-            return $this->kl_calculateDeliveryCost();
-        } else {
-            return parent::_calcDeliveryCost();
-        }
+        return KlarnaUtils::isKlarnaPaymentsEnabled()?$this->kl_calculateDeliveryCost():parent::_calcDeliveryCost();
     }
 
     /**
