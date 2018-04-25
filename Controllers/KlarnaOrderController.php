@@ -229,8 +229,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      * Creates order on Klarna side
      *
      * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
-     * @throws \ReflectionException
      * @throws \oxSystemComponentException
      */
     public function kpBeforeExecute()
@@ -239,7 +237,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         // downloadable product validation for sofort
         if (!$termsValid = $this->_validateTermsAndConditions()) {
             Registry::get(UtilsView::class)->addErrorToDisplay('KL_PLEASE_AGREE_TO_TERMS');
-            Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=order', false, 302);
+            Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl().'cl=order', false, 302);
             return;
         }
 
@@ -249,33 +247,44 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             Registry::getSession()->setVariable('sTokenTimeStamp', $dt->getTimestamp());
         }
 
-
         if ($sAuthToken || Registry::getSession()->hasVariable('sAuthToken')) {
 
             $oBasket = Registry::getSession()->getBasket();
-            $oKlarnaPayment = oxNew(KlarnaPayment::class,$oBasket,$this->getUser());
-
-            $oClient = $this->getKlarnaPaymentsClient();
+            $oKlarnaPayment = oxNew(KlarnaPayment::class, $oBasket, $this->getUser());
 
             $created = false;
             $oKlarnaPayment->validateOrder();
 
-            $valid = !$oKlarnaPayment->isError() && $termsValid;
-            if ($valid) {
-                $created = $oClient->initOrder($oKlarnaPayment)->createNewOrder();
-
-            } else {
-                $oKlarnaPayment->displayErrors();
-            }
+            $valid = $this->validatePayment($created, $oKlarnaPayment, $termsValid);
 
             if (!$valid || !$created) {
-                Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=order', false, 302);
+                Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl().'cl=order', false, 302);
                 return;
             }
 
             Registry::getSession()->setVariable('klarna_last_KP_order_id', $created['order_id']);
             Registry::getUtils()->redirect($created['redirect_url'], false, 302);
         }
+    }
+
+    /**
+     * @param $created
+     * @param KlarnaPayment $oKlarnaPayment
+     * @param $termsValid
+     * @throws \oxSystemComponentException
+     * @return bool
+     */
+    protected function validatePayment(&$created, KlarnaPayment $oKlarnaPayment, $termsValid)
+    {
+        $oClient = $this->getKlarnaPaymentsClient();
+        $valid = !$oKlarnaPayment->isError() && $termsValid;
+        if ($valid) {
+            $created = $oClient->initOrder($oKlarnaPayment)->createNewOrder();
+        } else {
+            $oKlarnaPayment->displayErrors();
+        }
+
+        return $valid;
     }
 
     /**
@@ -423,47 +432,46 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
     /**
      * General Ajax entry point for this controller
+     * @throws KlarnaClientException
+     * @throws StandardException
+     * @throws \ReflectionException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderNotFoundException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaWrongCredentialsException
      */
     public function updateKlarnaAjax()
     {
         $aPost = $this->getJsonRequest();
 
-
-        if (KlarnaUtils::isKlarnaPaymentsEnabled()) {
-            $sessionData = Registry::getSession()->getVariable('klarna_session_data');
-            if (!$sessionData) {
-                $this->resetKlarnaPaymentSession('basket');
-                return;
-            }
+        $sessionData = Registry::getSession()->getVariable('klarna_session_data');
+        if (KlarnaUtils::isKlarnaPaymentsEnabled() && !$sessionData) {
+            $this->resetKlarnaPaymentSession('basket');
+            return;
         }
 
-        if (is_null($aPost['action'])) {
-            $this->jsonResponse('undefined action', 'error');
-        } else {
-            switch ($aPost['action']) {
-                case 'shipping_option_change':
-                    $this->shipping_option_change($aPost);
-                    break;
+        switch ($aPost['action']) {
+            case 'shipping_option_change':
+                $this->shipping_option_change($aPost);
+                break;
 
-                case 'shipping_address_change':
-                    $this->shipping_address_change();
-                    break;
+            case 'shipping_address_change':
+                $this->shipping_address_change();
+                break;
 
-                case 'change':
-                    $this->updateSession($aPost);
-                    break;
+            case 'change':
+                $this->updateSession($aPost);
+                break;
 
-                case 'checkOrderStatus':
-                    $this->checkOrderStatus($aPost);
-                    break;
+            case 'checkOrderStatus':
+                $this->checkOrderStatus($aPost);
+                break;
 
-                case 'addUserData':
-                    $this->addUserData($aPost);
-                    break;
+            case 'addUserData':
+                $this->addUserData($aPost);
+                break;
 
-                default:
-                    $this->jsonResponse('undefined action', 'error');
-            }
+            default:
+                $this->jsonResponse('undefined action', 'error');
         }
     }
 
@@ -473,6 +481,12 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      *
      *
      * @param $aPost
+     * @throws KlarnaClientException
+     * @throws StandardException
+     * @throws \ReflectionException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderNotFoundException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException
+     * @throws \TopConcepts\Klarna\Exception\KlarnaWrongCredentialsException
      * @return string
      */
     protected function checkOrderStatus($aPost)
@@ -504,22 +518,10 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             );
         }
 
-
         $oKlarnaPayment->setStatus('submit');
 
         if ($oKlarnaPayment->isAuthorized()) {
-
-            $reauthorizeRequired = Registry::getSession()->getVariable('reauthorizeRequired');
-
-            if ($reauthorizeRequired || $oKlarnaPayment->isOrderStateChanged() || !$oKlarnaPayment->isTokenValid()) {
-                $oKlarnaPayment->setStatus('reauthorize');
-                Registry::getSession()->deleteVariable('reauthorizeRequired');
-
-            } else if ($oKlarnaPayment->requiresFinalization()) {
-                $oKlarnaPayment->setStatus('finalize');
-                // front will ignore this status if it's payment page
-            }
-
+           $this->handleAuthorizedPayment($oKlarnaPayment);
         } else {
             $oKlarnaPayment->setStatus('authorize');
         }
@@ -545,6 +547,23 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             $oKlarnaPayment->getStatus(),
             $responseData
         );
+    }
+
+    /**
+     * @param KlarnaPayment $oKlarnaPayment
+     */
+    protected function handleAuthorizedPayment(KlarnaPayment &$oKlarnaPayment)
+    {
+        $reauthorizeRequired = Registry::getSession()->getVariable('reauthorizeRequired');
+
+        if ($reauthorizeRequired || $oKlarnaPayment->isOrderStateChanged() || !$oKlarnaPayment->isTokenValid()) {
+            $oKlarnaPayment->setStatus('reauthorize');
+            Registry::getSession()->deleteVariable('reauthorizeRequired');
+
+        } else if ($oKlarnaPayment->requiresFinalization()) {
+            $oKlarnaPayment->setStatus('finalize');
+            // front will ignore this status if it's payment page
+        }
     }
 
     /**
