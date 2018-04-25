@@ -190,10 +190,10 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase
     public function testSendorder()
     {
         $this->setOrder(1);
-//        $controller = $this->createStub(KlarnaOrderMain::class, ['getEditObjectId' => 'test']);
-//        $controller->sendOrder();
-//        $result = $controller->getViewDataElement('sErrorMessage');
-//        $this->assertEquals('KL_CAPUTRE_FAIL_ORDER_CANCELLED', $result);
+        $controller = $this->createStub(KlarnaOrderMain::class, ['getEditObjectId' => 'test']);
+        $controller->sendOrder();
+        $result = $controller->getViewDataElement('sErrorMessage');
+        $this->assertEquals('KL_CAPUTRE_FAIL_ORDER_CANCELLED', $result);
 
 
         $client     = $this->createStub(KlarnaOrderManagementClient::class, ['captureOrder' => true]);
@@ -205,9 +205,8 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase
 
         $controller->sendorder();
         $klarnaOrder = $this->getProtectedClassProperty($controller, 'klarnaOrderData');
-
         $result      = $controller->getViewDataElement('sMessage');
-        $this->assertEquals('test', $klarnaOrder);
+        $this->assertEquals(['remaining_authorized_amount' => 1], $klarnaOrder);
         $this->assertEquals('KLARNA_CAPTURE_SUCCESSFULL', $result);
 
 //

@@ -59,21 +59,7 @@ class KlarnaOrderOverview extends KlarnaOrderOverview_parent
                 return $result;
             }
 
-            if (is_array($this->klarnaOrderData)) {
-                $klarnaOrderTotalSum = KlarnaUtils::parseFloatAsInt($oOrder->getTotalOrderSum() * 100);
-
-                if ($this->klarnaOrderData['order_amount'] != $klarnaOrderTotalSum ||
-                    ($this->klarnaOrderData['remaining_authorized_amount'] != $klarnaOrderTotalSum &&
-                     $this->klarnaOrderData['remaining_authorized_amount'] != 0
-                    ) || !$this->isCaptureInSync($this->klarnaOrderData)
-                    || $this->klarnaOrderData['status'] === 'CANCELLED'
-                ) {
-                    $oOrder->oxorder__klsync = new Field(0);
-                } else {
-                    $oOrder->oxorder__klsync = new Field(1);
-                }
-                $oOrder->save();
-            }
+            $this->setInitSyncStatus($oOrder);
         }
 
         return $result;
@@ -128,26 +114,7 @@ class KlarnaOrderOverview extends KlarnaOrderOverview_parent
                 }
             }
 
-            if (is_array($this->klarnaOrderData)) {
-                $apiDisabled = Registry::getLang()->translateString("KL_NO_REQUESTS_WILL_BE_SENT");
-                if ($this->klarnaOrderData['status'] === 'CANCELLED') {
-                    $oOrder->oxorder__klsync = new Field(0);
-
-                    $orderCancelled                      = Registry::getLang()->translateString("KLARNA_ORDER_IS_CANCELLED");
-                    $this->_aViewData['sWarningMessage'] = $orderCancelled . $apiDisabled;
-
-                } else if ($this->klarnaOrderData['order_amount'] != KlarnaUtils::parseFloatAsInt($oOrder->getTotalOrderSum() * 100)
-                           || !$this->isCaptureInSync($this->klarnaOrderData)) {
-                    $oOrder->oxorder__klsync = new Field(0);
-
-                    $orderNotInSync                      = Registry::getLang()->translateString("KLARNA_ORDER_NOT_IN_SYNC");
-                    $this->_aViewData['sWarningMessage'] = $orderNotInSync . $apiDisabled;
-
-                } else {
-                    $oOrder->oxorder__klsync = new Field(1);
-                }
-                $oOrder->save();
-            }
+            $this->handleWarningMessages($oOrder);
         }
 
         return $parent;
@@ -284,5 +251,54 @@ class KlarnaOrderOverview extends KlarnaOrderOverview_parent
         }
 
         return false;
+    }
+
+    /**
+     * @param $oOrder
+     */
+    protected function setInitSyncStatus($oOrder)
+    {
+        if (is_array($this->klarnaOrderData)) {
+            $klarnaOrderTotalSum = KlarnaUtils::parseFloatAsInt($oOrder->getTotalOrderSum() * 100);
+
+            if ($this->klarnaOrderData['order_amount'] != $klarnaOrderTotalSum ||
+                ($this->klarnaOrderData['remaining_authorized_amount'] != $klarnaOrderTotalSum &&
+                 $this->klarnaOrderData['remaining_authorized_amount'] != 0
+                ) || !$this->isCaptureInSync($this->klarnaOrderData)
+                || $this->klarnaOrderData['status'] === 'CANCELLED'
+            ) {
+                $oOrder->oxorder__klsync = new Field(0);
+            } else {
+                $oOrder->oxorder__klsync = new Field(1);
+            }
+            $oOrder->save();
+        }
+    }
+
+    /**
+     * @param $oOrder
+     */
+    protected function handleWarningMessages($oOrder)
+    {
+        if (is_array($this->klarnaOrderData)) {
+            $apiDisabled = Registry::getLang()->translateString("KL_NO_REQUESTS_WILL_BE_SENT");
+            if ($this->klarnaOrderData['status'] === 'CANCELLED') {
+                $oOrder->oxorder__klsync = new Field(0);
+
+                $orderCancelled                      = Registry::getLang()->translateString("KLARNA_ORDER_IS_CANCELLED");
+                $this->_aViewData['sWarningMessage'] = $orderCancelled . $apiDisabled;
+
+            } else if ($this->klarnaOrderData['order_amount'] != KlarnaUtils::parseFloatAsInt($oOrder->getTotalOrderSum() * 100)
+                       || !$this->isCaptureInSync($this->klarnaOrderData)) {
+                $oOrder->oxorder__klsync = new Field(0);
+
+                $orderNotInSync                      = Registry::getLang()->translateString("KLARNA_ORDER_NOT_IN_SYNC");
+                $this->_aViewData['sWarningMessage'] = $orderNotInSync . $apiDisabled;
+
+            } else {
+                $oOrder->oxorder__klsync = new Field(1);
+            }
+            $oOrder->save();
+        }
     }
 }
