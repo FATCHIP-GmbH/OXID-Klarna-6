@@ -238,8 +238,8 @@ class KlarnaBaseConfig extends ShopConfiguration
         $oxpayment = oxnew(Payment::class);
         $oxpayment->loadInLang($lang, $oxid);
 
-        $result['oxid'] = $oxid;
-        $result['desc'] = $oxpayment->oxpayments__oxdesc->value;
+        $result['oxid']                            = $oxid;
+        $result['desc']                            = $oxpayment->oxpayments__oxdesc->value;
         $result['tcklarna_externalname']           = $oxpayment->oxpayments__tcklarna_externalname->value;
         $result['tcklarna_externalpayment']        = $oxpayment->oxpayments__tcklarna_externalpayment->value;
         $result['tcklarna_externalcheckout']       = $oxpayment->oxpayments__tcklarna_externalcheckout->value;
@@ -247,8 +247,8 @@ class KlarnaBaseConfig extends ShopConfiguration
         $result['tcklarna_checkoutimageurl']       = $oxpayment->oxpayments__tcklarna_checkoutimageurl->value;
         $result['tcklarna_paymentoption']          = $oxpayment->oxpayments__tcklarna_paymentoption->value;
         $result['tcklarna_emdpurchasehistoryfull'] = $oxpayment->oxpayments__tcklarna_emdpurchasehistoryfull->value;
-        $result['isCheckout']               = preg_match('/([pP]ay[pP]al|[Aa]mazon)/', $result['desc']) == 1;
-        $result['isExternalEnabled']        = $result['tcklarna_externalpayment'] == 1 || $result['tcklarna_externalcheckout'] == 1;
+        $result['isCheckout']                      = preg_match('/([pP]ay[pP]al|[Aa]mazon)/', $result['desc']) == 1;
+        $result['isExternalEnabled']               = $result['tcklarna_externalpayment'] == 1 || $result['tcklarna_externalcheckout'] == 1;
 
         return $result;
     }

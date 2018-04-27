@@ -18,7 +18,7 @@ class KlarnaDesign extends KlarnaBaseConfig
     protected $_sThisTemplate = 'tcklarna_design.tpl';
 
     /** @inheritdoc */
-    protected $MLVars = array('sKlarnaBannerSrc_');
+    protected $MLVars = ['tcklarna_sKlarnaBannerSrc_'];
 
     /**
      * Render logic

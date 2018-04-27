@@ -17,7 +17,7 @@ class KlarnaConfiguration extends KlarnaBaseConfig
     protected $_sThisTemplate = 'tcklarna_kco_config.tpl';
 
     /** @inheritdoc */
-    protected $MLVars = array('tcklarna_sKlarnaTermsConditionsURI_', 'tcklarna_sKlarnaCancellationRightsURI_', 'tcklarna_sKlarnaShippingDetails_');
+    protected $MLVars = ['tcklarna_sKlarnaTermsConditionsURI_', 'tcklarna_sKlarnaCancellationRightsURI_', 'tcklarna_sKlarnaShippingDetails_'];
 
     /**
      * Render logic

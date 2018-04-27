@@ -107,7 +107,7 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
             $oLang = Registry::getLang();
             $lang  = $oLang->getLanguageAbbr();
 
-            $varName = 'sKlarnaBannerSrc' . '_' . strtoupper($lang);
+            $varName = 'tcklarna_sKlarnaBannerSrc' . '_' . strtoupper($lang);
             if (!$sBannerScript = KlarnaUtils::getShopConfVar($varName)) {
                 $aDefaults     = KlarnaConsts::getDefaultBannerSrc();
                 $sBannerScript = $aDefaults[$lang];
