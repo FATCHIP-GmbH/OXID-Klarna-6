@@ -1,7 +1,7 @@
 [{capture append="oxidBlock_content"}]
-    <link rel="stylesheet" type="text/css" href="[{$oViewConf->getModuleUrl('klarna', 'out/src/css/bootstrap.min.css')}]"/>
+    <link rel="stylesheet" type="text/css" href="[{$oViewConf->getModuleUrl('tcklarna', 'out/src/css/bootstrap.min.css')}]"/>
     [{if !$confError}]
-        [{oxstyle include=$oViewConf->getModuleUrl('klarna', 'out/src/css/tcklarna_style.css')}]
+        [{oxstyle include=$oViewConf->getModuleUrl('tcklarna', 'out/src/css/tcklarna_style.css')}]
 
         [{include file='tcklarna_country_select_popup.tpl'}]
         [{if $sKlarnaIframe}]
@@ -28,11 +28,11 @@
             <div class="klarna-iframe-container">
                 [{$sKlarnaIframe}]
                 [{*Add oxid js code. Once the snippet is injected we can use window._klarnaCheckout*}]
-                [{oxscript include=$oViewConf->getModuleUrl('klarna','out/src/js/klarna_checkout_handler.js') priority=10}]
+                [{oxscript include=$oViewConf->getModuleUrl('tcklarna','out/src/js/klarna_checkout_handler.js') priority=10}]
             </div>
         [{else}]
             <div class="kco-placeholder"></div>
-            [{oxscript include=$oViewConf->getModuleUrl('klarna','out/src/js/klarna_checkout_handler.js') priority=10}]
+            [{oxscript include=$oViewConf->getModuleUrl('tcklarna','out/src/js/klarna_checkout_handler.js') priority=10}]
             [{oxscript add="$('#myModal').modal('show');"}]
         [{/if}]
 

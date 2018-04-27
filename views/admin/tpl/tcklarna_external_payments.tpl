@@ -1,9 +1,9 @@
 <link rel="stylesheet" href="[{$oViewConf->getResourceUrl()}]main.css">
-<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/src/css/tcklarna_admin2.css') }]">
-<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/src/css/tooltipster.bundle.min.css') }]">
-<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/src/css/tooltipster-sideTip-light.min.css') }]">
-<script type="text/javascript" src="[{ $oViewConf->getModuleUrl('klarna', 'out/src/js/libs/jquery-1.12.4.min.js') }]"></script>
-<script type="text/javascript" src="[{ $oViewConf->getModuleUrl('klarna', 'out/src/js/libs/tooltipster.bundle.min.js') }]"></script>
+<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tcklarna_admin2.css') }]">
+<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster.bundle.min.css') }]">
+<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster-sideTip-light.min.css') }]">
+<script type="text/javascript" src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/jquery-1.12.4.min.js') }]"></script>
+<script type="text/javascript" src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/tooltipster.bundle.min.js') }]"></script>
 
 <div class="[{$box|default:'box'}]" style="[{if !$box && !$bottom_buttons}]height: 100%;[{/if}]">
     <div class="main-container">
@@ -274,8 +274,8 @@
                            id="form-save-button" [{$readonly}]>
                 </div>
             </form>
-            <script src="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/src/js/tcklarna_admin_lib.js') }]"></script>
-            <script src="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/src/js/tcklarna_external_payments.js') }]"></script>
+            <script src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_lib.js') }]"></script>
+            <script src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_external_payments.js') }]"></script>
         </div>
         [{ else }]
             [{ "TCKLARNA_NO_OPTIONS_MODE"|oxmultilangassign }]

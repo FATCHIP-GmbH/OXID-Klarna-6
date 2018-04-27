@@ -1,8 +1,8 @@
 <link rel="stylesheet" href="[{$oViewConf->getResourceUrl()}]main.css">
-<link rel="stylesheet" href="[{$oViewConf->getModuleUrl('klarna', 'out/admin/src/css/tcklarna_admin2.css') }]">
+<link rel="stylesheet" href="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tcklarna_admin2.css') }]">
 <div class="[{$box|default:'box'}]" style="[{if !$box && !$bottom_buttons}]height: 100%;[{/if}]">
     <div class="start_ext_version">
-        <img src="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/src/img/checked_checkbox_green_35.png') }]"> [{$oView->getKlarnaModuleInfo()}]
+        <img src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/img/checked_checkbox_green_35.png') }]"> [{$oView->getKlarnaModuleInfo()}]
     </div>
     <div class="klarna-header">
         <div class="w7">
@@ -95,7 +95,7 @@
     <hr>
     <div class="start_user_guide">
         <div class="user-guide-img">
-            <img src="[{ $oViewConf->getModuleUrl('klarna', 'out/admin/src/img/user-guide-icon.png') }]" height="60px" width="60px">
+            <img src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/img/user-guide-icon.png') }]" height="60px" width="60px">
         </div>
 
         <div class="user-guide-text">

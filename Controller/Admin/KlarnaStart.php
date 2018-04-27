@@ -40,7 +40,7 @@ class KlarnaStart extends KlarnaBaseConfig
     {
         /** @var Module $module */
         $module = oxNew(Module::class);
-        $module->load('klarna');
+        $module->load('tcklarna');
 
         $description = strtoupper($module->getInfo('description'));
         $version     = $module->getInfo('version');

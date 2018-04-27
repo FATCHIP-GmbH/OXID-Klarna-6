@@ -42,7 +42,7 @@ class ModuleUnitTestCase extends UnitTestCase
     {
         parent::__construct($name, $data, $dataName);
 
-        $this->moduleName = 'klarna';
+        $this->moduleName = 'tcklarna';
         $this->testConfig = new TestConfig();
     }
 
@@ -94,12 +94,12 @@ class ModuleUnitTestCase extends UnitTestCase
 
     public function setModuleMode($mode)
     {
-        $this->getConfig()->saveShopConfVar(null, 'tcklarna_sKlarnaActiveMode', $mode, $this->getShopId(), 'klarna');
+        $this->getConfig()->saveShopConfVar(null, 'tcklarna_sKlarnaActiveMode', $mode, $this->getShopId(), 'tcklarna');
     }
 
     public function setModuleConfVar($name, $value, $type = null)
     {
-        $this->getConfig()->saveShopConfVar($type, $name, $value, $this->getShopId(), 'klarna');
+        $this->getConfig()->saveShopConfVar($type, $name, $value, $this->getShopId(), 'tcklarna');
     }
 
 //    /**

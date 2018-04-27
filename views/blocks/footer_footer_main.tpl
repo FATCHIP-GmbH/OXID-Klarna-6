@@ -1,6 +1,6 @@
 [{$smarty.block.parent}]
 
-[{oxscript include=$oViewConf->getModuleUrl('klarna','out/src/js/tcklarna_scripts.js') priority=10 }]
+[{oxscript include=$oViewConf->getModuleUrl('tcklarna','out/src/js/tcklarna_scripts.js') priority=10 }]
 
 [{ assign var="sKlBanner" value=$oViewConf->getKlarnaHomepageBanner() }]
 

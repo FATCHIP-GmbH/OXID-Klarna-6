@@ -197,7 +197,7 @@ abstract class KlarnaClientBase extends Base
         $shopVer     = 'OXID_' . $shopEdition . '_' . $shopRev;
 
         $module = oxNew(Module::class);
-        $module->loadByDir('klarna');
+        $module->loadByDir('tcklarna');
         $moduleDesc = $module->getDescription();
         $moduleVer  = $module->getInfo('version');
         $moduleInfo = str_replace(' ', '_', $moduleDesc . "_" . $moduleVer);

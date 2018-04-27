@@ -206,7 +206,7 @@ class KlarnaBaseConfig extends ShopConfiguration
      */
     protected function _getModuleForConfigVars()
     {
-        return 'klarna';
+        return 'tcklarna';
     }
 
     /**

@@ -33,7 +33,7 @@ use TopConcepts\Klarna\Model\KlarnaPayment;
 
 class KlarnaInstaller extends ShopConfiguration
 {
-    const KLARNA_MODULE_ID = 'klarna';
+    const KLARNA_MODULE_ID = 'tcklarna';
 
     static private $instance = null;
 
