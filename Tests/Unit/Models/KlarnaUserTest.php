@@ -6,7 +6,7 @@
  * Time: 13:15
  */
 
-namespace TopConcepts\Klarna\Models;
+namespace TopConcepts\Klarna\Model;
 
 
 use OxidEsales\Eshop\Application\Model\Address;
@@ -18,7 +18,7 @@ use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 /**
  * Class KlarnaUserTest
  * @package TopConcepts\Klarna\Models
- * @covers \TopConcepts\Klarna\Models\KlarnaUser
+ * @covers \TopConcepts\Klarna\Model\KlarnaUser
  */
 class KlarnaUserTest extends ModuleUnitTestCase
 {
@@ -46,7 +46,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
     public function testIsCreatable($type, $result)
     {
         $oUser = oxNew(User::class);
-        $oUser->kl_setType($type);
+        $oUser->tcklarna_setType($type);
         $this->assertEquals($result,  $oUser->isCreatable());
     }
 
@@ -100,7 +100,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
 
         $this->assertEquals($sessionISO, $this->getSessionParam('sCountryISO'));
         $this->assertEquals($sessionEmail, $this->getSessionParam('klarna_checkout_user_email'));
-        $this->assertEquals($userType, $oUser->kl_getType());
+        $this->assertEquals($userType, $oUser->tcklarna_getType());
     }
 
     public function resolveLocaleDataProvider()
@@ -150,7 +150,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
     {
         $oUser = $this->getMock(User::class, ['load']);
         $oUser->expects($this->never())->method('load');
-        $oUser->kl_setType(KlarnaUser::LOGGED_IN);
+        $oUser->tcklarna_setType(KlarnaUser::LOGGED_IN);
 
         $this->assertEquals($oUser, $oUser->loadByEmail('steffen@topconcepts.de'));
     }
@@ -165,7 +165,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
         $oUser = oxNew(User::class);
 
         $this->assertEquals($oUser, $oUser->loadByEmail($email));
-        $this->assertEquals($expectedType, $oUser->kl_getType());
+        $this->assertEquals($expectedType, $oUser->tcklarna_getType());
     }
 
     public function loadByEmailDataProvider()
@@ -234,7 +234,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
         // Prepare temporary address
         $oAddress = oxNew(Address::class);
         $oAddress->load('41b545c65fe99ca2898614e563a7108b');
-        $oAddress->oxaddress__kltemporary = new Field($isTemp, Field::T_RAW);
+        $oAddress->oxaddress__tcklarna_temporary = new Field($isTemp, Field::T_RAW);
         $oAddress->save();
 
 
@@ -318,7 +318,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
     public function testIsWritable($type, $result)
     {
         $oUser = oxNew(User::class);
-        $oUser->kl_setType($type);
+        $oUser->tcklarna_setType($type);
         $this->assertEquals($result,  $oUser->isWritable());
     }
 
@@ -376,11 +376,11 @@ class KlarnaUserTest extends ModuleUnitTestCase
      * @dataProvider isFakeDataProvider
      * @param $type
      */
-    public function testKl_getType($type)
+    public function testTcklarna_getType($type)
     {
         $oUser = oxNew(User::class);
-        $oUser->kl_setType($type);
-        $this->assertEquals($type, $oUser->kl_getType());
+        $oUser->tcklarna_setType($type);
+        $this->assertEquals($type, $oUser->tcklarna_getType());
     }
 
     public function deliveryCountryDataProvider()
@@ -404,7 +404,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
     public function testGetKlarnaDeliveryCountry($mode, $countryISO, $userCountryId, $expectedId)
     {
         $this->setModuleMode($mode);
-        $this->setModuleConfVar('sKlarnaDefaultCountry', 'DE');
+        $this->setModuleConfVar('tcklarna_sKlarnaDefaultCountry', 'DE');
         $this->setSessionParam('sCountryISO', $countryISO);
 
         $oUser = oxNew(User::class);
@@ -416,11 +416,11 @@ class KlarnaUserTest extends ModuleUnitTestCase
         $this->assertEquals($oCountry, $result);
     }
 
-    public function testKl_setType()
+    public function testTcklarna_setType()
     {
         $oUser = oxNew(User::class);
-        $oUser->kl_setType('myType');
-        $this->assertEquals('myType', $oUser->kl_getType());
+        $oUser->tcklarna_setType('myType');
+        $this->assertEquals('myType', $oUser->tcklarna_getType());
     }
 
     public function isFakeDataProvider()
@@ -443,7 +443,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
     public function testIsFake($type, $pass, $result)
     {
         $oUser = oxNew(User::class);
-        $oUser->kl_setType($type);
+        $oUser->tcklarna_setType($type);
         $oUser->oxuser__oxpassword = new Field($pass);
         $this->assertEquals($result,  $oUser->isFake());
     }
@@ -528,7 +528,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
      */
     public function testGetKlarnaData($selectedCountry, $invadr, $resultKeys)
     {
-        $this->setModuleConfVar('blKlarnaEnablePreFilling', false);
+        $this->setModuleConfVar('tcklarna_blKlarnaEnablePreFilling', false);
         $this->setRequestParameter('selected-country', $selectedCountry);
         $this->setSessionParam('invadr', $invadr);
 
@@ -560,14 +560,14 @@ class KlarnaUserTest extends ModuleUnitTestCase
      */
     public function testGetKlarnaData_PreFillingEnabled($userType, $showSippingAddress, $addressId, $invadr, $resultKeys)
     {
-        $this->setModuleConfVar('blKlarnaEnablePreFilling', true);
+        $this->setModuleConfVar('tcklarna_blKlarnaEnablePreFilling', true);
         $this->setSessionParam('blshowshipaddress', $showSippingAddress);
         $this->setSessionParam('deladrid', $addressId);
         $this->setSessionParam('invadr', $invadr);
 
         $oUser = oxNew(User::class);
         $oUser->load('92ebae5067055431aeaaa6f75bd9a131');
-        $oUser->kl_setType($userType);
+        $oUser->tcklarna_setType($userType);
         $result = $oUser->getKlarnaData();
 
         $this->assertEquals(array_keys($result), $resultKeys);
@@ -618,14 +618,14 @@ class KlarnaUserTest extends ModuleUnitTestCase
      * @param $session_usr
      * @param $expectedResult
      */
-    public function testKl_checkUserType($userId, $session_usr, $expectedResult)
+    public function testTcklarna_checkUserType($userId, $session_usr, $expectedResult)
     {
         $this->setSessionParam('usr', $session_usr);
         $oUser = $this->getMock(User::class, ['getId']);
         $oUser->expects($this->once())
             ->method('getId')->willReturn($userId);
 
-        $this->assertEquals($expectedResult, $oUser->kl_checkUserType());
+        $this->assertEquals($expectedResult, $oUser->tcklarna_checkUserType());
     }
 
     public function userTypeDataProvider()

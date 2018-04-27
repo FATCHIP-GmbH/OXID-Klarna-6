@@ -81,11 +81,11 @@ class ModuleUnitTestCase extends UnitTestCase
             $oPayment->load($oxid);
 
             if(in_array('payment', $values)) {
-                $oPayment->oxpayments__klexternalpayment = new Field(1, Field::T_RAW);
+                $oPayment->oxpayments__tcklarna_externalpayment = new Field(1, Field::T_RAW);
             }
 
             if(in_array('checkout', $values)) {
-                $oPayment->oxpayments__klexternalcheckout = new Field(1, Field::T_RAW);
+                $oPayment->oxpayments__tcklarna_externalcheckout = new Field(1, Field::T_RAW);
             }
 
             $oPayment->save();
@@ -94,7 +94,7 @@ class ModuleUnitTestCase extends UnitTestCase
 
     public function setModuleMode($mode)
     {
-        $this->getConfig()->saveShopConfVar(null, 'sKlarnaActiveMode', $mode, $this->getShopId(), 'klarna');
+        $this->getConfig()->saveShopConfVar(null, 'tcklarna_sKlarnaActiveMode', $mode, $this->getShopId(), 'klarna');
     }
 
     public function setModuleConfVar($name, $value, $type = null)

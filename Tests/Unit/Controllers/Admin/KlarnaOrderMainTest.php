@@ -6,10 +6,10 @@ namespace TopConcepts\Klarna\Tests\Unit\Controllers\Admin;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
-use TopConcepts\Klarna\Controllers\Admin\KlarnaOrderMain;
+use TopConcepts\Klarna\Controller\Admin\KlarnaOrderMain;
 use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
-use TopConcepts\Klarna\Exception\KlarnaOrderNotFoundException;
-use TopConcepts\Klarna\Exception\KlarnaWrongCredentialsException;
+use TopConcepts\Klarna\Core\Exception\KlarnaOrderNotFoundException;
+use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaOrderMainTest extends ModuleUnitTestCase
@@ -28,7 +28,7 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase
             ]
         );
         $controller->init();
-        $this->assertEquals(new Field(0), $order->oxorder__klsync);
+        $this->assertEquals(new Field(0), $order->oxorder__tcklarna_sync);
 
         $controller = $this->createStub(
             KlarnaOrderMain::class,
@@ -40,7 +40,7 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase
             ]
         );
         $controller->init();
-        $this->assertEquals(new Field(0), $order->oxorder__klsync);
+        $this->assertEquals(new Field(0), $order->oxorder__tcklarna_sync);
 
         $orderData  = [
             'order_amount'                => 10000,
@@ -59,7 +59,7 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase
 
         $controller->init();
 
-        $this->assertEquals(new Field(1), $order->oxorder__klsync);
+        $this->assertEquals(new Field(1), $order->oxorder__tcklarna_sync);
 
     }
 
@@ -114,7 +114,7 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase
         $order->expects($this->any())->method('updateKlarnaOrder')->willReturn('test');
         $order->oxorder__oxstorno       = new Field($oxstorno, Field::T_RAW);
         $order->oxorder__oxpaymenttype  = new Field('klarna_checkout', Field::T_RAW);
-        $order->oxorder__klmerchantid   = new Field('smid', Field::T_RAW);
+        $order->oxorder__tcklarna_merchantid   = new Field('smid', Field::T_RAW);
         $order->oxorder_oxbillcountryid = new Field('a7c40f631fc920687.20179984', Field::T_RAW);
         \oxTestModules::addModuleObject(Order::class, $order);
 
@@ -138,8 +138,8 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase
         $orderMain->render();
 
         $warningMessage = $orderMain->getViewDataElement('sWarningMessage');
-        $this->assertEquals("Die Bestellung wurde storniert. KL_NO_REQUESTS_WILL_BE_SENT", $warningMessage);
-        $this->assertEquals(new Field(0), $order->oxorder__klsync);
+        $this->assertEquals("Die Bestellung wurde storniert. TCKLARNA_NO_REQUESTS_WILL_BE_SENT", $warningMessage);
+        $this->assertEquals(new Field(0), $order->oxorder__tcklarna_sync);
 
         $orderMain = $this->createStub(KlarnaOrderMain::class, ['isKlarnaOrder' => true, 'isCredentialsValid' => true]);
         $this->setProtectedClassProperty($orderMain, 'klarnaOrderData', ['order_amount' => 1]);
@@ -149,9 +149,9 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase
 
         $this->assertEquals(
             $warningMessage,
-            "<strong>Achtung!</strong> Die Daten dieser Bestellung weichen von den Daten ab, die bei Klarna gespeichert sind. KL_NO_REQUESTS_WILL_BE_SENT"
+            "<strong>Achtung!</strong> Die Daten dieser Bestellung weichen von den Daten ab, die bei Klarna gespeichert sind. TCKLARNA_NO_REQUESTS_WILL_BE_SENT"
         );
-        $this->assertEquals(new Field(0), $order->oxorder__klsync);
+        $this->assertEquals(new Field(0), $order->oxorder__tcklarna_sync);
 
         $orderMain = $this->createStub(
             KlarnaOrderMain::class,
@@ -160,7 +160,7 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase
         $this->setProtectedClassProperty($orderMain, 'klarnaOrderData', ['order_amount' => 10000]);
         $orderMain->render();
 
-        $this->assertEquals(new Field(1), $order->oxorder__klsync);
+        $this->assertEquals(new Field(1), $order->oxorder__tcklarna_sync);
 
     }
 
@@ -193,11 +193,11 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase
         $controller = $this->createStub(KlarnaOrderMain::class, ['getEditObjectId' => 'test']);
         $controller->sendOrder();
         $result = $controller->getViewDataElement('sErrorMessage');
-        $this->assertEquals('KL_CAPUTRE_FAIL_ORDER_CANCELLED', $result);
+        $this->assertEquals('TCKLARNA_CAPUTRE_FAIL_ORDER_CANCELLED', $result);
 
 
         $order                  = $this->setOrder(0);
-        $order->oxorder__klsync = new Field(1, Field::T_RAW);
+        $order->oxorder__tcklarna_sync = new Field(1, Field::T_RAW);
         $client                 = $this->createStub(KlarnaOrderManagementClient::class, ['captureOrder' => true]);
         $controller             = $this->createStub(
             KlarnaOrderMain::class,
@@ -213,7 +213,7 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase
 
 
         $order                  = $this->setOrder();
-        $order->oxorder__klsync = new Field(1, Field::T_RAW);
+        $order->oxorder__tcklarna_sync = new Field(1, Field::T_RAW);
         $client                 = $this->getMock(KlarnaOrderManagementClient::class, ['captureOrder']);
         $client->expects($this->once())->method('captureOrder')->will($this->throwException(new StandardException('test')));
         $controller = $this->createStub(
@@ -235,8 +235,8 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase
 
         $this->setOrder();
         $this->setModuleConfVar('aKlarnaCreds_DE', '');
-        $this->setModuleConfVar('sKlarnaMerchantId', 'smid');
-        $this->setModuleConfVar('sKlarnaPassword', 'psw');
+        $this->setModuleConfVar('tcklarna_sKlarnaMerchantId', 'smid');
+        $this->setModuleConfVar('tcklarna_sKlarnaPassword', 'psw');
         $controller = $this->createStub(KlarnaOrderMain::class, ['getEditObjectId' => 'test']);
 
         $result = $controller->isCredentialsValid();
@@ -283,8 +283,8 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase
         $order                      = $this->setOrder();
         $order->oxorder__oxdiscount = new Field(10, Field::T_RAW);
         $order->oxorder__oxordernr  = new Field(1, Field::T_RAW);
-        $order->oxorder__klsync     = new Field(1, Field::T_RAW);
-        $order->oxorder__klorderid  = new Field('1', Field::T_RAW);
+        $order->oxorder__tcklarna_sync     = new Field(1, Field::T_RAW);
+        $order->oxorder__tcklarna_orderid  = new Field('1', Field::T_RAW);
 
         $client = $this->createStub(KlarnaOrderManagementClient::class, ['sendOxidOrderNr' => true]);
 
@@ -297,7 +297,7 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase
         $this->setProtectedClassProperty($controller, 'klarnaOrderData', ['captured_amount' => 1]);
         $controller->save();
         $result = $controller->getViewDataElement('sErrorMessage');
-        $this->assertEquals('KL_ORDER_UPDATE_CANT_BE_SENT_TO_KLARNA', $result);
+        $this->assertEquals('TCKLARNA_ORDER_UPDATE_CANT_BE_SENT_TO_KLARNA', $result);
 
 
         $this->setProtectedClassProperty($controller, 'klarnaOrderData', ['captured_amount' => 0]);
@@ -320,7 +320,7 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase
         $this->setRequestParameter('editval', ['oxorder__oxtrackcode' => 1]);
         $controller->save();
         $result = $controller->getViewDataElement('sErrorMessage');
-        $this->assertEquals('KL_ORDER_UPDATE_CANT_BE_SENT_TO_KLARNA', $result);
+        $this->assertEquals('TCKLARNA_ORDER_UPDATE_CANT_BE_SENT_TO_KLARNA', $result);
     }
 
     public function testRetrieveKlarnaOrder()

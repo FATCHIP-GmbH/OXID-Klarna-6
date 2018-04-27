@@ -3,11 +3,11 @@
 namespace TopConcepts\Klarna\Tests\Unit\Core;
 
 use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
-use TopConcepts\Klarna\Exception\KlarnaCaptureNotAllowedException;
-use TopConcepts\Klarna\Exception\KlarnaClientException;
-use TopConcepts\Klarna\Exception\KlarnaOrderNotFoundException;
-use TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException;
-use TopConcepts\Klarna\Exception\KlarnaWrongCredentialsException;
+use TopConcepts\Klarna\Core\Exception\KlarnaCaptureNotAllowedException;
+use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
+use TopConcepts\Klarna\Core\Exception\KlarnaOrderNotFoundException;
+use TopConcepts\Klarna\Core\Exception\KlarnaOrderReadOnlyException;
+use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaOrderManagementClientTest extends ModuleUnitTestCase

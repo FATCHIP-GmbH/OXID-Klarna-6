@@ -3,7 +3,7 @@
 namespace TopConcepts\Klarna\Tests\Unit\Controllers\Admin;
 
 use OxidEsales\Eshop\Core\Database\Adapter\Doctrine\ResultSet;
-use TopConcepts\Klarna\Controllers\Admin\KlarnaBaseConfig;
+use TopConcepts\Klarna\Controller\Admin\KlarnaBaseConfig;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaBaseConfigTest extends ModuleUnitTestCase

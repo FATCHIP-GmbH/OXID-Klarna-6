@@ -57,26 +57,26 @@ Insert into oxobject2group set oxid = '5d447d09d0238f40579932846958f224',oxshopi
 Insert into oxobject2group set oxid = 'a94b24ca6b11718ff60b8e0d4c18a99f',oxshopid = '1',oxobjectid = 'klarna_pay_now',oxgroupsid = 'oxidadmin';
 
 update oxconfig set oxvarvalue =ENCODE( 'a:2:{s:2:\"de\";s:7:\"Deutsch\";s:2:\"en\";s:7:\"English\";}', 'fq45QS09_fqyx09239QQ') where oxvarname='aLanguages' and oxshopid=1;
-update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blIsKlarnaTestMode' and oxshopid=1;
-update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaLoggingEnabled' and oxshopid=1;
-update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaSendProductUrls' and oxshopid=1;
-update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaSendImageUrls' and oxshopid=1;
-update oxconfig set oxvarvalue=ENCODE( '', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaEnableAnonymization' and oxshopid=1;
-update oxconfig set oxvarvalue=ENCODE( 'KCO', 'fq45QS09_fqyx09239QQ') where oxvarname='sKlarnaActiveMode' and oxshopid=1;
-update oxconfig set oxvarvalue=ENCODE( 'K501664_9c5b3285c29f', 'fq45QS09_fqyx09239QQ') where oxvarname='sKlarnaMerchantId' and oxshopid=1;
-update oxconfig set oxvarvalue=ENCODE( '7NvBzZ5irjFqXcbA', 'fq45QS09_fqyx09239QQ') where oxvarname='sKlarnaPassword' and oxshopid=1;
-update oxconfig set oxvarvalue=ENCODE( 'Produktname', 'fq45QS09_fqyx09239QQ') where oxvarname='sKlarnaAnonymizedProductTitle_DE' and oxshopid=1;
-update oxconfig set oxvarvalue=ENCODE( 'Product name', 'fq45QS09_fqyx09239QQ') where oxvarname='sKlarnaAnonymizedProductTitle_EN' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='tcklarna_blIsKlarnaTestMode' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='tcklarna_blKlarnaLoggingEnabled' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='tcklarna_blKlarnaSendProductUrls' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='tcklarna_blKlarnaSendImageUrls' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '', 'fq45QS09_fqyx09239QQ') where oxvarname='tcklarna_blKlarnaEnableAnonymization' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( 'KCO', 'fq45QS09_fqyx09239QQ') where oxvarname='tcklarna_sKlarnaActiveMode' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( 'K501664_9c5b3285c29f', 'fq45QS09_fqyx09239QQ') where oxvarname='tcklarna_sKlarnaMerchantId' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '7NvBzZ5irjFqXcbA', 'fq45QS09_fqyx09239QQ') where oxvarname='tcklarna_sKlarnaPassword' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( 'Produktname', 'fq45QS09_fqyx09239QQ') where oxvarname='tcklarna_sKlarnaAnonymizedProductTitle_DE' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( 'Product name', 'fq45QS09_fqyx09239QQ') where oxvarname='tcklarna_sKlarnaAnonymizedProductTitle_EN' and oxshopid=1;
 
-update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaAllowSeparateDeliveryAddress' and oxshopid=1;
-update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaMandatoryPhone' and oxshopid=1;
-update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaMandatoryBirthDate' and oxshopid=1;
-update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaEnableAutofocus' and oxshopid=1;
-update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaEnablePreFilling' and oxshopid=1;
-update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaPreFillNotification' and oxshopid=1;
-update oxconfig set oxvarvalue=ENCODE( 'DE', 'fq45QS09_fqyx09239QQ') where oxvarname='sKlarnaDefaultCountry' and oxshopid=1;
-update oxconfig set oxvarvalue=ENCODE( '2', 'fq45QS09_fqyx09239QQ') where oxvarname='iKlarnaActiveCheckbox' and oxshopid=1;
-update oxconfig set oxvarvalue=ENCODE( '2', 'fq45QS09_fqyx09239QQ') where oxvarname='iKlarnaValidation' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='tcklarna_blKlarnaAllowSeparateDeliveryAddress' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='tcklarna_blKlarnaMandatoryPhone' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='tcklarna_blKlarnaMandatoryBirthDate' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='tcklarna_blKlarnaEnableAutofocus' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='tcklarna_blKlarnaEnablePreFilling' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='tcklarna_blKlarnaPreFillNotification' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( 'DE', 'fq45QS09_fqyx09239QQ') where oxvarname='tcklarna_sKlarnaDefaultCountry' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '2', 'fq45QS09_fqyx09239QQ') where oxvarname='tcklarna_iKlarnaActiveCheckbox' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '2', 'fq45QS09_fqyx09239QQ') where oxvarname='tcklarna_iKlarnaValidation' and oxshopid=1;
 
 insert into oxconfig (oxid, oxshopid, oxmodule, oxvarname, oxvartype, oxvarvalue) values('669f53a8778b395e8b02ba711374f05b', '1', 'klarna', 'sKlarnaTermsConditionsURI_DE', 'str', ENCODE( 'https://demohost.topconcepts.net/henrik/4_0_0/ce_601/source/AGB/', 'fq45QS09_fqyx09239QQ') );
 insert into oxconfig (oxid, oxshopid, oxmodule, oxvarname, oxvartype, oxvarvalue) values('550b1b135330a4dc04dbea59cdcad076', '1', 'klarna', 'sKlarnaCancellationRightsURI_DE', 'str', ENCODE( 'https://demohost.topconcepts.net/henrik/4_0_0/ce_601/source/Widerrufsrecht/', 'fq45QS09_fqyx09239QQ') );
@@ -85,11 +85,11 @@ insert into oxconfig (oxid, oxshopid, oxmodule, oxvarname, oxvartype, oxvarvalue
 insert into oxconfig (oxid, oxshopid, oxmodule, oxvarname, oxvartype, oxvarvalue) values('744e20e55593c0fe3a752f706f10c3de', '1', 'klarna', 'sKlarnaCancellationRightsURI_EN', 'str', ENCODE( 'https://demohost.topconcepts.net/henrik/4_0_0/ce_601/source/withdrawal/', 'fq45QS09_fqyx09239QQ') );
 insert into oxconfig (oxid, oxshopid, oxmodule, oxvarname, oxvartype, oxvarvalue) values('0ddcd4b8df2950a85402157e5c21ebe3', '1', 'klarna', 'sKlarnaShippingDetails_EN', 'str', ENCODE( "We\'ll take care of quick shipping!", 'fq45QS09_fqyx09239QQ') );
 
-update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaDisplayBanner' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='tcklarna_blKlarnaDisplayBanner' and oxshopid=1;
 insert into oxconfig (oxid, oxshopid, oxmodule, oxvarname, oxvartype, oxvarvalue) values('3344c6128d6cbf3c1bc04c285a0e6e0a', '1', 'klarna', 'blKlarnaDisplayBuyNow', 'bool', ENCODE( '1', 'fq45QS09_fqyx09239QQ') );
 
 update oxconfig set oxvarvalue=ENCODE( '<script src=\"https://embed.bannerflow.com/599d7ec18d988017005eb27d?targeturl=https%3A//www.klarna.com&politeloading=off&merchantid={{merchantid}}&responsive=on\" async></script>', 'fq45QS09_fqyx09239QQ') where oxvarname='sKlarnaBannerSrc_EN' and oxshopid=1;
-update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='sKlarnaFooterDisplay' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='tcklarna_sKlarnaFooterDisplay' and oxshopid=1;
 update oxconfig set oxvarvalue=ENCODE( '<script src=\"https://embed.bannerflow.com/599d7ec18d988017005eb279?targeturl=https%3A//www.klarna.com&politeloading=off&merchantid={{merchantid}}&responsive=on\" async></script>', 'fq45QS09_fqyx09239QQ') where oxvarname='sKlarnaBannerSrc_DE' and oxshopid=1;
 update oxconfig set oxvarvalue=ENCODE( 'longBlack', 'fq45QS09_fqyx09239QQ') where oxvarname='sKlFooterValue' and oxshopid=1;
 update oxconfig set oxvarvalue=ENCODE( 'a:0:{}', 'fq45QS09_fqyx09239QQ') where oxvarname='aKlarnaDesign' and oxshopid=1;
@@ -114,13 +114,13 @@ Insert into oxobject2payment set oxid = '039e9f03b01ad423f8faff7ff548d342',oxpay
 update oxactions set oxid = 'klarna_teaser_1',oxshopid = '1',oxtype = '3',oxtitle = 'Klarna Teaser',oxlongdesc = '',oxactive = '1',oxactivefrom = '0000-00-00 00:00:00',oxactiveto = '0000-00-00 00:00:00',oxpic = 'de_klarna-banner.png',oxlink = '',oxsort = '0' where oxactions.oxid = 'klarna_teaser_1';
 
 
--- update oxpayments set klpaymenttypes = '',klexternalname = 'Nachnahme',klexternalpayment = '1',klexternalcheckout = '0',klpaymentimageurl = 'https://www.bronze-shop.com/media/unknown/42/19/72/bronze-shop_zahlung-nachname.svg',klpaymentoption = 'other',klemdpurchasehistoryfull = '0',klpaymentimageurl_1 = 'klemdpurchasehistoryfull' where oxpayments.oxid = 'oxidcashondel';
--- update oxpayments set klpaymenttypes = '',klexternalname = 'Vorkasse',klexternalpayment = '1',klexternalcheckout = '0',klpaymentimageurl = 'https://www.bronze-shop.com/media/unknown/d3/35/08/bronze-shop_zahlung-vorkasse.svg',klpaymentoption = 'other',klemdpurchasehistoryfull = '0',klpaymentimageurl_1 = 'https://www.bronze-shop.com/media/unknown/d3/35/08/bronze-shop_zahlung-vorkasse.svg' where oxpayments.oxid = 'oxidpayadvance';
+-- update oxpayments set tcklarna_paymenttypes = '',tcklarna_externalname = 'Nachnahme',tcklarna_externalpayment = '1',tcklarna_externalcheckout = '0',tcklarna_paymentimageurl = 'https://www.bronze-shop.com/media/unknown/42/19/72/bronze-shop_zahlung-nachname.svg',tcklarna_paymentoption = 'other',tcklarna_emdpurchasehistoryfull = '0',tcklarna_paymentimageurl_1 = 'tcklarna_emdpurchasehistoryfull' where oxpayments.oxid = 'oxidcashondel';
+-- update oxpayments set tcklarna_paymenttypes = '',tcklarna_externalname = 'Vorkasse',tcklarna_externalpayment = '1',tcklarna_externalcheckout = '0',tcklarna_paymentimageurl = 'https://www.bronze-shop.com/media/unknown/d3/35/08/bronze-shop_zahlung-vorkasse.svg',tcklarna_paymentoption = 'other',tcklarna_emdpurchasehistoryfull = '0',tcklarna_paymentimageurl_1 = 'https://www.bronze-shop.com/media/unknown/d3/35/08/bronze-shop_zahlung-vorkasse.svg' where oxpayments.oxid = 'oxidpayadvance';
 
 
-update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaEmdCustomerAccountInfo' and oxshopid=1;
-update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaEmdPaymentHistoryFull' and oxshopid=1;
-update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaEmdPassThrough' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='tcklarna_blKlarnaEmdCustomerAccountInfo' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='tcklarna_blKlarnaEmdPaymentHistoryFull' and oxshopid=1;
+update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='tcklarna_blKlarnaEmdPassThrough' and oxshopid=1;
 
 replace into oxuser set oxid = '92ebae5067055431aeaaa6f75bd9a131',oxactive = '1',oxshopid = '1',oxusername = 'steffen@topconcepts.de',oxpassword = 'c25361e25237112e0c584f9816dfd3975ffe150abc7db2cc1d1b4231c8171991b4e732556ab0cf0dadf4733f72442aba066fba1fa55af8479a9384b4dc57592a',oxpasssalt = '3d96584d0378f0a7ecb95db0086a2f70',oxustid = '',oxcompany = '',oxfname = 'Henrik',oxlname = 'Steffen',oxstreet = 'Karnapp',oxstreetnr = '25',oxaddinfo = '',oxcity = 'Hamburg',oxcountryid = 'a7c40f631fc920687.20179984',oxstateid = '',oxzip = '21079',oxfon = '040/30306900',oxfax = '',oxsal = 'MR',oxboni = '1000',oxregister = '2018-03-22 17:56:04',oxprivfon = '',oxmobfon = '',oxbirthdate = '1978-03-06',oxurl = '',oxupdatekey = '',oxupdateexp = '0',oxpoints = '0';
 replace into oxobject2group set oxid = '68ba74e29a0cc7f6618606bf623b6941',oxshopid = '1',oxobjectid = '92ebae5067055431aeaaa6f75bd9a131',oxgroupsid = 'oxidnewcustomer';

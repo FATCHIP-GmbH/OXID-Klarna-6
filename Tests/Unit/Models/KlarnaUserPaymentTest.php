@@ -10,7 +10,7 @@ use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 /**
  * Class KlarnaUserPaymentTest
  * @package TopConcepts\Klarna\Tests\Unit\Models
- * @covers \TopConcepts\Klarna\Models\KlarnaUserPayment
+ * @covers \TopConcepts\Klarna\Model\KlarnaUserPayment
  */
 class KlarnaUserPaymentTest extends ModuleUnitTestCase
 {

@@ -76,7 +76,7 @@ class KlarnaBasketComponentTest extends ModuleUnitTestCase
     {
         $klMode = 'KCO';
         $klSessionId = 'fakeSessionId';
-        $this->getConfig()->saveShopConfVar(null, 'sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'klarna');
+        $this->getConfig()->saveShopConfVar(null, 'tcklarna_sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'klarna');
         $this->setSessionParam('klarna_checkout_order_id', $klSessionId);
 
         // todo: checke if it is enough
@@ -90,7 +90,7 @@ class KlarnaBasketComponentTest extends ModuleUnitTestCase
     {
         $klMode = 'KCO';
         $klSessionId = 'fakeSessionId';
-        $this->getConfig()->saveShopConfVar(null, 'sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'klarna');
+        $this->getConfig()->saveShopConfVar(null, 'tcklarna_sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'klarna');
         $this->setSessionParam('klarna_checkout_order_id', $klSessionId);
 
         $cmpBasket = $this->getMock(BasketComponent::class, ['updateKlarnaOrder']);
@@ -105,7 +105,7 @@ class KlarnaBasketComponentTest extends ModuleUnitTestCase
     {
         $klMode = 'KP';
         $klSessionId = 'fakeSessionId';
-        $this->getConfig()->saveShopConfVar(null, 'sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'klarna');
+        $this->getConfig()->saveShopConfVar(null, 'tcklarna_sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'klarna');
         $this->setSessionParam('klarna_checkout_order_id', $klSessionId);
 
         $cmpBasket = $this->getMock(BasketComponent::class, ['updateKlarnaOrder']);
@@ -119,7 +119,7 @@ class KlarnaBasketComponentTest extends ModuleUnitTestCase
     {
         $klMode = 'KCO';
         $klSessionId = 'fakeSessionId';
-        $this->getConfig()->saveShopConfVar(null, 'sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'klarna');
+        $this->getConfig()->saveShopConfVar(null, 'tcklarna_sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'klarna');
 
         $this->setSessionParam('klarna_checkout_order_id', $klSessionId);
 
@@ -133,7 +133,7 @@ class KlarnaBasketComponentTest extends ModuleUnitTestCase
     {
         $klMode = 'KCO';
         $klSessionId = 'fakeSessionId';
-        $this->getConfig()->saveShopConfVar(null, 'sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'klarna');
+        $this->getConfig()->saveShopConfVar(null, 'tcklarna_sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'klarna');
         $this->setSessionParam('klarna_checkout_order_id', $klSessionId);
 
         $cmpBasket = $this->getBasketComponentMock(['updateKlarnaOrder']);

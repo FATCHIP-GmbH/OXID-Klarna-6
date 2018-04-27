@@ -7,11 +7,11 @@ use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\ViewConfig;
-use TopConcepts\Klarna\Controllers\KlarnaAjaxController;
+use TopConcepts\Klarna\Controller\KlarnaAjaxController;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
-use TopConcepts\Klarna\Exception\KlarnaClientException;
-use TopConcepts\Klarna\Models\KlarnaBasket;
-use TopConcepts\Klarna\Models\KlarnaUser;
+use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
+use TopConcepts\Klarna\Model\KlarnaBasket;
+use TopConcepts\Klarna\Model\KlarnaUser;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaAjaxControllerTest extends ModuleUnitTestCase
@@ -94,8 +94,8 @@ class KlarnaAjaxControllerTest extends ModuleUnitTestCase
         $ajaxController->$method();
         $result = $ajaxController->getViewData()['aIncludes'];
         $expected = [
-            'vouchers' => "kl_klarna_checkout_voucher_data.tpl",
-            'error' => "kl_klarna_checkout_voucher_errors.tpl",
+            'vouchers' => "tcklarna_checkout_voucher_data.tpl",
+            'error' => "tcklarna_checkout_voucher_errors.tpl",
         ];
 
         $this->assertEquals($expected, $result);
@@ -152,7 +152,7 @@ class KlarnaAjaxControllerTest extends ModuleUnitTestCase
 
         $user = $this->createStub(
             KlarnaUser::class,
-            ['kl_getType' => 3, 'updateDeliveryAddress' => true, 'save' => true, 'assign' => true]
+            ['tcklarna_getType' => 3, 'updateDeliveryAddress' => true, 'save' => true, 'assign' => true]
         );
         $user->oxuser__oxbirthdate = 'test';
         $order = [

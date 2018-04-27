@@ -3,7 +3,7 @@
 namespace TopConcepts\Klarna\Tests\Unit\Controllers;
 
 use OxidEsales\Eshop\Core\ViewConfig;
-use TopConcepts\Klarna\Controllers\KlarnaEpmDispatcher;
+use TopConcepts\Klarna\Controller\KlarnaEpmDispatcher;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaEpmDispatcherTest extends ModuleUnitTestCase

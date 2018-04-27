@@ -6,7 +6,7 @@ use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\Exception\ExceptionToDisplay;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
-use TopConcepts\Klarna\Controllers\Admin\KlarnaOrderList;
+use TopConcepts\Klarna\Controller\Admin\KlarnaOrderList;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaOrderListTest extends ModuleUnitTestCase
@@ -29,7 +29,7 @@ class KlarnaOrderListTest extends ModuleUnitTestCase
             $order->expects($this->any())->method('cancelKlarnaOrder')->willReturn(true);
         }
         $order->oxorder_oxbillcountryid = new Field('a7c40f631fc920687.20179984', Field::T_RAW);
-        $order->oxorder__klorderid = new Field('1', Field::T_RAW);
+        $order->oxorder__tcklarna_orderid = new Field('1', Field::T_RAW);
         \oxTestModules::addModuleObject(Order::class, $order);
 
         return $order;
@@ -45,9 +45,9 @@ class KlarnaOrderListTest extends ModuleUnitTestCase
 
         $controller = $this->createStub(KlarnaOrderList::class, ['getEditObjectId' => 'test', 'cancelOrder' => true, 'resetContentCache' => true, 'init' => true]);
 
-        $this->assertFalse($order->oxorder__klsync);
+        $this->assertFalse($order->oxorder__tcklarna_sync);
         $controller->$method();
-        $this->assertEquals(new Field(1), $order->oxorder__klsync);
+        $this->assertEquals(new Field(1), $order->oxorder__tcklarna_sync);
 
         if ($method == 'storno') {
             $mockException = $this->getMock(StandardException::class, [], ['is canceled.']);

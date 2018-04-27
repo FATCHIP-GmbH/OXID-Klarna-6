@@ -412,13 +412,13 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
         $oKlarnaOrder = new  KlarnaPayment($oBasket, $oUser, []);
 
         $this->setLanguage(0);
-        $oKlarnaOrder->addErrorMessage('KL_KP_INVALID_TOKEN');
+        $oKlarnaOrder->addErrorMessage('TCKLARNA_KP_INVALID_TOKEN');
         $expectedErrors = ['Ungültiger Authorization Token. Bitte probieren Sie es noch einmal.'];
         $this->assertEquals($expectedErrors, $this->getProtectedClassProperty($oKlarnaOrder, 'errors'));
 
         $this->setLanguage(1);
         $expectedErrors[] = 'Invalid authorization token. Please try again.';
-        $oKlarnaOrder->addErrorMessage('KL_KP_INVALID_TOKEN');
+        $oKlarnaOrder->addErrorMessage('TCKLARNA_KP_INVALID_TOKEN');
         $this->assertEquals($expectedErrors, $this->getProtectedClassProperty($oKlarnaOrder, 'errors'));
     }
 
@@ -511,7 +511,7 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
 
         $this->setSessionParam('klarna_session_data', ['client_token' => 'the_token']);
         $this->assertFalse($oKlarnaOrder->validateClientToken('another_token'));
-        $this->assertEquals(['KL_INVALID_CLIENT_TOKEN'], $this->getProtectedClassProperty($oKlarnaOrder, 'errors'));
+        $this->assertEquals(['TCKLARNA_INVALID_CLIENT_TOKEN'], $this->getProtectedClassProperty($oKlarnaOrder, 'errors'));
 
     }
 

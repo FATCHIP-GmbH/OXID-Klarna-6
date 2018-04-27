@@ -10,16 +10,16 @@ namespace TopConcepts\Klarna\Testes\Unit\Controllers;
 
 
 use ReflectionClass;
-use TopConcepts\Klarna\Controllers\KlarnaValidationController;
+use TopConcepts\Klarna\Controller\KlarnaValidationController;
 use TopConcepts\Klarna\Core\KlarnaLogs;
 use TopConcepts\Klarna\Core\KlarnaOrderValidator;
-use TopConcepts\Klarna\Models\KlarnaPayment;
+use TopConcepts\Klarna\Model\KlarnaPayment;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 /**
  * Class KlarnaValidationControllerTest
  * @package TopConcepts\Klarna\Testes\Unit\Controllers
- * @covers \TopConcepts\Klarna\Controllers\KlarnaValidationController
+ * @covers \TopConcepts\Klarna\Controller\KlarnaValidationController
  */
 class KlarnaValidationControllerTest extends ModuleUnitTestCase
 {
@@ -27,13 +27,13 @@ class KlarnaValidationControllerTest extends ModuleUnitTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->setModuleConfVar('blKlarnaLoggingEnabled', true, 'bool');
+        $this->setModuleConfVar('tcklarna_blKlarnaLoggingEnabled', true, 'bool');
     }
 
     public function tearDown()
     {
         parent::tearDown();
-        $this->setModuleConfVar('blKlarnaLoggingEnabled', false, 'bool');
+        $this->setModuleConfVar('tcklarna_blKlarnaLoggingEnabled', false, 'bool');
     }
 
     /**
@@ -96,7 +96,7 @@ class KlarnaValidationControllerTest extends ModuleUnitTestCase
 
         $validationController->init();
 
-        $result = $this->getDb()->select("SELECT * FROM `kl_logs` WHERE `KLORDERID` = '$randId'");
+        $result = $this->getDb()->select("SELECT * FROM `tcklarna_logs` WHERE `TCKLARNA_ORDERID` = '$randId'");
         $this->assertNotEmpty($result->count());
 
         $this->assertEquals(303, \oxUtilsHelper::$iCode);

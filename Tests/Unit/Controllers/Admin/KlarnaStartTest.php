@@ -3,7 +3,7 @@
 namespace TopConcepts\Klarna\Tests\Unit\Controllers\Admin;
 
 use OxidEsales\Eshop\Core\Module\Module;
-use TopConcepts\Klarna\Controllers\Admin\KlarnaStart;
+use TopConcepts\Klarna\Controller\Admin\KlarnaStart;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaStartTest extends ModuleUnitTestCase
@@ -13,7 +13,7 @@ class KlarnaStartTest extends ModuleUnitTestCase
     {
         $start = oxNew(KlarnaStart::class);
         $result = $start->render();
-        $this->assertEquals('kl_klarna_start.tpl', $result);
+        $this->assertEquals('tcklarna_start.tpl', $result);
 
     }
 

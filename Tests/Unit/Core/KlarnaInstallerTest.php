@@ -32,40 +32,40 @@ class KlarnaInstallerTest extends ModuleUnitTestCase
 
         foreach ($paymentIds as $id) {
             $database->execute("DELETE FROM `oxpayments` WHERE oxid = ?", [$id]);
-            $database->execute("DELETE FROM `oxconfig` WHERE oxvarname = ?", ['blKlarnaAllowSeparateDeliveryAddress']);
+            $database->execute("DELETE FROM `oxconfig` WHERE oxvarname = ?", ['tcklarna_blKlarnaAllowSeparateDeliveryAddress']);
         }
 
         $dbMetaDataHandler = oxNew(DbMetaDataHandler::class);
 
-        $database->execute("DROP TABLE IF EXISTS `kl_ack`");
-        $database->execute("DROP TABLE IF EXISTS `kl_logs`");
-        $database->execute("DROP TABLE IF EXISTS `kl_anon_lookup`");
+        $database->execute("DROP TABLE IF EXISTS `tcklarna_ack`");
+        $database->execute("DROP TABLE IF EXISTS `tcklarna_logs`");
+        $database->execute("DROP TABLE IF EXISTS `tcklarna_anon_lookup`");
 
         $dbMetaDataHandler->executeSql([
-            "ALTER TABLE oxorder DROP `KLMERCHANTID`",
-            "ALTER TABLE oxorder DROP `KLSERVERMODE`",
-            "ALTER TABLE oxorder DROP `KLORDERID`",
-            "ALTER TABLE oxorder DROP `KLSYNC`",
+            "ALTER TABLE oxorder DROP `TCKLARNA_MERCHANTID`",
+            "ALTER TABLE oxorder DROP `TCKLARNA_SERVERMODE`",
+            "ALTER TABLE oxorder DROP `TCKLARNA_ORDERID`",
+            "ALTER TABLE oxorder DROP `TCKLARNA_SYNC`",
 
-            "ALTER TABLE oxorderarticles DROP `KLTITLE`",
-            "ALTER TABLE oxorderarticles DROP `KLARTNUM`",
+            "ALTER TABLE oxorderarticles DROP `TCKLARNA_TITLE`",
+            "ALTER TABLE oxorderarticles DROP `TCKLARNA_ARTNUM`",
 
-            "ALTER TABLE oxpayments DROP `KLPAYMENTTYPES`",
-            "ALTER TABLE oxpayments DROP `KLEXTERNALNAME`",
-            "ALTER TABLE oxpayments DROP `KLEXTERNALPAYMENT`",
-            "ALTER TABLE oxpayments DROP `KLEXTERNALCHECKOUT`",
-            "ALTER TABLE oxpayments DROP `KLPAYMENTIMAGEURL`",
-            "ALTER TABLE oxpayments DROP `KLPAYMENTIMAGEURL_1`",
-            "ALTER TABLE oxpayments DROP `KLCHECKOUTIMAGEURL`",
-            "ALTER TABLE oxpayments DROP `KLCHECKOUTIMAGEURL_1`",
-            "ALTER TABLE oxpayments DROP `KLPAYMENTOPTION`",
-            "ALTER TABLE oxpayments DROP `KLEMDPURCHASEHISTORYFULL`",
+            "ALTER TABLE oxpayments DROP `TCKLARNA_PAYMENTTYPES`",
+            "ALTER TABLE oxpayments DROP `TCKLARNA_EXTERNALNAME`",
+            "ALTER TABLE oxpayments DROP `TCKLARNA_EXTERNALPAYMENT`",
+            "ALTER TABLE oxpayments DROP `TCKLARNA_EXTERNALCHECKOUT`",
+            "ALTER TABLE oxpayments DROP `TCKLARNA_PAYMENTIMAGEURL`",
+            "ALTER TABLE oxpayments DROP `TCKLARNA_PAYMENTIMAGEURL_1`",
+            "ALTER TABLE oxpayments DROP `TCKLARNA_CHECKOUTIMAGEURL`",
+            "ALTER TABLE oxpayments DROP `TCKLARNA_CHECKOUTIMAGEURL_1`",
+            "ALTER TABLE oxpayments DROP `TCKLARNA_PAYMENTOPTION`",
+            "ALTER TABLE oxpayments DROP `TCKLARNA_EMDPURCHASEHISTORYFULL`",
 
-            "ALTER TABLE oxaddress DROP `KLTEMPORARY`",
+            "ALTER TABLE oxaddress DROP `TCKLARNA_TEMPORARY`",
 
-            "DROP TABLE IF EXISTS `kl_ack`",
-            "DROP TABLE IF EXISTS `kl_logs`",
-            "DROP TABLE IF EXISTS `kl_anon_lookup`",
+            "DROP TABLE IF EXISTS `tcklarna_ack`",
+            "DROP TABLE IF EXISTS `tcklarna_logs`",
+            "DROP TABLE IF EXISTS `tcklarna_anon_lookup`",
         ]);
 
 
@@ -83,7 +83,7 @@ class KlarnaInstallerTest extends ModuleUnitTestCase
         $db = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
 
         $db->execute('update oxconfig set oxvarvalue=ENCODE(?, ?) where oxvarname=? and oxshopid=?',
-            [1, 'fq45QS09_fqyx09239QQ', 'blKlarnaAllowSeparateDeliveryAddress', 1]);
+            [1, 'fq45QS09_fqyx09239QQ', 'tcklarna_blKlarnaAllowSeparateDeliveryAddress', 1]);
     }
 
     /**
@@ -131,7 +131,7 @@ class KlarnaInstallerTest extends ModuleUnitTestCase
         $this->assertTables($dbMetaDataHandler);
         $this->assertColumns($dbMetaDataHandler);
 
-        $result = $db->getOne("SELECT count(*) FROM oxconfig WHERE oxvarname = ?", ['blKlarnaAllowSeparateDeliveryAddress']);
+        $result = $db->getOne("SELECT count(*) FROM oxconfig WHERE oxvarname = ?", ['tcklarna_blKlarnaAllowSeparateDeliveryAddress']);
         $this->assertEquals('1', $result);
     }
 
@@ -140,9 +140,9 @@ class KlarnaInstallerTest extends ModuleUnitTestCase
      */
     public function assertTables($dbMetaDataHandler)
     {
-        $this->assertTrue($dbMetaDataHandler->tableExists('kl_ack'));
-        $this->assertTrue($dbMetaDataHandler->tableExists('kl_anon_lookup'));
-        $this->assertTrue($dbMetaDataHandler->tableExists('kl_logs'));
+        $this->assertTrue($dbMetaDataHandler->tableExists('tcklarna_ack'));
+        $this->assertTrue($dbMetaDataHandler->tableExists('tcklarna_anon_lookup'));
+        $this->assertTrue($dbMetaDataHandler->tableExists('tcklarna_logs'));
     }
 
     /**
@@ -150,33 +150,33 @@ class KlarnaInstallerTest extends ModuleUnitTestCase
      */
     public function assertColumns($dbMetaDataHandler)
     {
-        $this->assertTrue($dbMetaDataHandler->fieldExists('KLMERCHANTID', 'oxorder'));
-        $this->assertTrue($dbMetaDataHandler->fieldExists('KLSERVERMODE', 'oxorder'));
-        $this->assertTrue($dbMetaDataHandler->fieldExists('KLORDERID', 'oxorder'));
-        $this->assertTrue($dbMetaDataHandler->fieldExists('KLSYNC', 'oxorder'));
+        $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_MERCHANTID', 'oxorder'));
+        $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_SERVERMODE', 'oxorder'));
+        $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_ORDERID', 'oxorder'));
+        $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_SYNC', 'oxorder'));
 
-        $this->assertTrue($dbMetaDataHandler->fieldExists('KLTITLE', 'oxorderarticles'));
-        $this->assertTrue($dbMetaDataHandler->fieldExists('KLARTNUM', 'oxorderarticles'));
+        $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_TITLE', 'oxorderarticles'));
+        $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_ARTNUM', 'oxorderarticles'));
 
-        $this->assertTrue($dbMetaDataHandler->fieldExists('KLPAYMENTTYPES', 'oxpayments'));
-        $this->assertTrue($dbMetaDataHandler->fieldExists('KLEXTERNALNAME', 'oxpayments'));
-        $this->assertTrue($dbMetaDataHandler->fieldExists('KLEXTERNALPAYMENT', 'oxpayments'));
-        $this->assertTrue($dbMetaDataHandler->fieldExists('KLEXTERNALCHECKOUT', 'oxpayments'));
-        $this->assertTrue($dbMetaDataHandler->fieldExists('KLPAYMENTIMAGEURL', 'oxpayments'));
-        $this->assertTrue($dbMetaDataHandler->fieldExists('KLPAYMENTIMAGEURL_1', 'oxpayments'));
-        $this->assertTrue($dbMetaDataHandler->fieldExists('KLCHECKOUTIMAGEURL', 'oxpayments'));
-        $this->assertTrue($dbMetaDataHandler->fieldExists('KLCHECKOUTIMAGEURL_1', 'oxpayments'));
-        $this->assertTrue($dbMetaDataHandler->fieldExists('KLPAYMENTOPTION', 'oxpayments'));
-        $this->assertTrue($dbMetaDataHandler->fieldExists('KLEMDPURCHASEHISTORYFULL', 'oxpayments'));
+        $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_PAYMENTTYPES', 'oxpayments'));
+        $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_EXTERNALNAME', 'oxpayments'));
+        $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_EXTERNALPAYMENT', 'oxpayments'));
+        $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_EXTERNALCHECKOUT', 'oxpayments'));
+        $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_PAYMENTIMAGEURL', 'oxpayments'));
+        $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_PAYMENTIMAGEURL_1', 'oxpayments'));
+        $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_CHECKOUTIMAGEURL', 'oxpayments'));
+        $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_CHECKOUTIMAGEURL_1', 'oxpayments'));
+        $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_PAYMENTOPTION', 'oxpayments'));
+        $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_EMDPURCHASEHISTORYFULL', 'oxpayments'));
 
-        $this->assertTrue($dbMetaDataHandler->fieldExists('KLTEMPORARY', 'oxaddress'));
+        $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_TEMPORARY', 'oxaddress'));
 
-        $this->assertTrue($dbMetaDataHandler->fieldExists('KLORDERID', 'kl_logs'));
-        $this->assertTrue($dbMetaDataHandler->fieldExists('KLMID', 'kl_logs'));
-        $this->assertTrue($dbMetaDataHandler->fieldExists('KLSTATUSCODE', 'kl_logs'));
-        $this->assertTrue($dbMetaDataHandler->fieldExists('KLURL', 'kl_logs'));
+        $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_ORDERID', 'tcklarna_logs'));
+        $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_MID', 'tcklarna_logs'));
+        $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_STATUSCODE', 'tcklarna_logs'));
+        $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_URL', 'tcklarna_logs'));
 
-        $this->assertTrue($dbMetaDataHandler->fieldExists('KLORDERID', 'kl_ack'));
+        $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_ORDERID', 'tcklarna_ack'));
     }
 
     /**

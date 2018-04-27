@@ -4,7 +4,7 @@ namespace TopConcepts\Klarna\Tests\Unit\Core;
 
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
 use TopConcepts\Klarna\Core\KlarnaOrder;
-use TopConcepts\Klarna\Exception\KlarnaClientException;
+use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaCheckoutClientTest extends ModuleUnitTestCase

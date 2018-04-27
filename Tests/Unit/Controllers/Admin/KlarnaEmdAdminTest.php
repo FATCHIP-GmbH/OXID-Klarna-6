@@ -2,7 +2,7 @@
 
 namespace TopConcepts\Klarna\Tests\Unit\Controllers\Admin;
 
-use TopConcepts\Klarna\Controllers\Admin\KlarnaEmdAdmin;
+use TopConcepts\Klarna\Controller\Admin\KlarnaEmdAdmin;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaEmdAdminTest extends ModuleUnitTestCase
@@ -16,7 +16,7 @@ class KlarnaEmdAdminTest extends ModuleUnitTestCase
         $result = $emd->render();
         $activePayment = $emd->getViewDataElement('activePayments');
 
-        $this->assertEquals('kl_klarna_emd_admin.tpl', $result);
+        $this->assertEquals('tcklarna_emd_admin.tpl', $result);
         $this->assertNotEmpty($activePayment);
     }
 }

@@ -1,11 +1,26 @@
 <?php
+/**
+ * Copyright 2018 Klarna AB
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 namespace TopConcepts\Klarna\Core;
 
 
-use TopConcepts\Klarna\Exception\KlarnaClientException;
-use TopConcepts\Klarna\Exception\KlarnaOrderNotFoundException;
-use TopConcepts\Klarna\Exception\KlarnaWrongCredentialsException;
+use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
+use TopConcepts\Klarna\Core\Exception\KlarnaOrderNotFoundException;
+use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
 use OxidEsales\Eshop\Core\Registry;
 
 class KlarnaPaymentsClient extends KlarnaClientBase
@@ -36,7 +51,7 @@ class KlarnaPaymentsClient extends KlarnaClientBase
      * @throws KlarnaClientException
      * @throws KlarnaOrderNotFoundException
      * @throws KlarnaWrongCredentialsException
-     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException
+     * @throws \TopConcepts\Klarna\Core\Exception\KlarnaOrderReadOnlyException
      * @throws \OxidEsales\Eshop\Core\Exception\StandardException
      * @throws \ReflectionException
      */
@@ -82,9 +97,9 @@ class KlarnaPaymentsClient extends KlarnaClientBase
      * @param string $session_id
      * @return array
      * @throws KlarnaClientException
-     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderNotFoundException
-     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException
-     * @throws \TopConcepts\Klarna\Exception\KlarnaWrongCredentialsException
+     * @throws \TopConcepts\Klarna\Core\Exception\KlarnaOrderNotFoundException
+     * @throws \TopConcepts\Klarna\Core\Exception\KlarnaOrderReadOnlyException
+     * @throws \TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException
      * @throws \OxidEsales\Eshop\Core\Exception\StandardException
      * @throws \Exception
      */
@@ -108,9 +123,9 @@ class KlarnaPaymentsClient extends KlarnaClientBase
      * @param $updateData array
      * @return array
      * @throws KlarnaClientException
-     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderNotFoundException
-     * @throws \TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException
-     * @throws \TopConcepts\Klarna\Exception\KlarnaWrongCredentialsException
+     * @throws \TopConcepts\Klarna\Core\Exception\KlarnaOrderNotFoundException
+     * @throws \TopConcepts\Klarna\Core\Exception\KlarnaOrderReadOnlyException
+     * @throws \TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException
      * @throws \OxidEsales\Eshop\Core\Exception\StandardException
      */
     public function updateSession($updateData)

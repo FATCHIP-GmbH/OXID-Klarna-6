@@ -3,7 +3,7 @@
 namespace TopConcepts\Klarna\Tests\Unit\Models;
 
 
-use TopConcepts\Klarna\Models\KlarnaCountryList;
+use TopConcepts\Klarna\Model\KlarnaCountryList;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaCountryListTest extends ModuleUnitTestCase

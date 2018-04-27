@@ -10,7 +10,7 @@ namespace TopConcepts\Klarna\Tests\Unit\Models;
 
 
 use OxidEsales\Eshop\Application\Model\Payment;
-use TopConcepts\Klarna\Models\KlarnaPayment;
+use TopConcepts\Klarna\Model\KlarnaPayment;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaPaymentTest extends ModuleUnitTestCase

@@ -4,8 +4,8 @@ namespace TopConcepts\Klarna\Tests\Unit\Core;
 
 use OxidEsales\Eshop\Core\Field;
 use TopConcepts\Klarna\Core\KlarnaFormatter;
-use TopConcepts\Klarna\Models\KlarnaAddress;
-use TopConcepts\Klarna\Models\KlarnaUser;
+use TopConcepts\Klarna\Model\KlarnaAddress;
+use TopConcepts\Klarna\Model\KlarnaUser;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaFormatterTest extends ModuleUnitTestCase

@@ -1,12 +1,27 @@
 <?php
+/**
+ * Copyright 2018 Klarna AB
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 namespace TopConcepts\Klarna\Core;
 
 
-use TopConcepts\Klarna\Exception\KlarnaConfigException;
-use TopConcepts\Klarna\Models\EmdPayload\KlarnaPassThrough;
-use TopConcepts\Klarna\Models\KlarnaEMD;
-use TopConcepts\Klarna\Models\KlarnaUser;
+use TopConcepts\Klarna\Core\Exception\KlarnaConfigException;
+use TopConcepts\Klarna\Model\EmdPayload\KlarnaPassThrough;
+use TopConcepts\Klarna\Model\KlarnaEMD;
+use TopConcepts\Klarna\Model\KlarnaUser;
 use OxidEsales\Eshop\Application\Controller\PaymentController;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Country;
@@ -129,7 +144,7 @@ class KlarnaOrder extends BaseModel
 
             $this->_aOrderData['shipping_countries'] = array_values($this->getKlarnaCountryList());
 
-            $this->_aOrderData['shipping_options'] = $this->kl_getAllSets($oBasket);
+            $this->_aOrderData['shipping_options'] = $this->tcklarna_getAllSets($oBasket);
 
             $externalMethods = $this->getExternalPaymentMethods($oBasket, $this->_oUser);
 
@@ -155,7 +170,7 @@ class KlarnaOrder extends BaseModel
      * @param Basket $oBasket
      * @return mixed :
      */
-    public function kl_getAllSets(Basket $oBasket)
+    public function tcklarna_getAllSets(Basket $oBasket)
     {
         if (is_null($this->_klarnaShippingSets)) {
             $this->_klarnaShippingSets = $this->getSupportedShippingMethods($oBasket);
@@ -187,7 +202,7 @@ class KlarnaOrder extends BaseModel
 
         foreach ($allSets as $shippingId => $shippingMethod) {
             $oBasket->setShipping($shippingId);
-            $oPrice      = $oBasket->kl_calculateDeliveryCost();
+            $oPrice      = $oBasket->tcklarna_calculateDeliveryCost();
             $basketPrice = $oBasket->getPriceForPayment() / $currency->rate;
             if ($this->doesShippingMethodSupportKCO($shippingId, $basketPrice)) {
                 $method = clone $shippingMethod;
@@ -217,7 +232,7 @@ class KlarnaOrder extends BaseModel
             $oCountry->load($this->_oUser->getActiveCountry());
 
             throw new KlarnaConfigException(sprintf(
-                Registry::getLang()->translateString('KL_ERROR_NO_SHIPPING_METHODS_SET_UP'),
+                Registry::getLang()->translateString('TCKLARNA_ERROR_NO_SHIPPING_METHODS_SET_UP'),
                 $oCountry->oxcountry__oxtitle->value
             ));
         }
@@ -307,7 +322,7 @@ class KlarnaOrder extends BaseModel
             $oPayment->calculate($oBasket);
             $aCountryISO = $this->getKlarnaCountryListByPayment($oPayment, $this->getKlarnaCountryList());
             $oPrice      = $oPayment->getPrice();
-            if ($oPayment->oxpayments__klexternalpayment->value) {
+            if ($oPayment->oxpayments__tcklarna_externalpayment->value) {
 
                 $requestParams = '';
                 if ($paymentId === 'oxidpaypal') {
@@ -315,7 +330,7 @@ class KlarnaOrder extends BaseModel
                 }
 
                 $externalPaymentMethods[] = array(
-                    'name'         => $oPayment->oxpayments__klexternalname->value,
+                    'name'         => $oPayment->oxpayments__tcklarna_externalname->value,
                     'redirect_url' => Registry::getConfig()->getSslShopUrl() .
                                       'index.php?cl=order&fnc=klarnaExternalPayment&payment_id=' . $paymentId . $requestParams,
                     'image_url'    => $this->resolveImageUrl($oPayment),
@@ -325,10 +340,10 @@ class KlarnaOrder extends BaseModel
                 );
             }
 
-            if ($oPayment->oxpayments__klexternalcheckout->value) {
+            if ($oPayment->oxpayments__tcklarna_externalcheckout->value) {
                 $requestParams             = '&externalCheckout=1';
                 $externalCheckoutMethods[] = array(
-                    'name'         => $oPayment->oxpayments__klexternalname->value,
+                    'name'         => $oPayment->oxpayments__tcklarna_externalname->value,
                     'redirect_url' => Registry::getConfig()->getSslShopUrl() .
                                       'index.php?cl=order&fnc=klarnaExternalPayment&payment_id=' . $paymentId . $requestParams,
                     'image_url'    => $this->resolveImageUrl($oPayment, true),
@@ -376,7 +391,7 @@ class KlarnaOrder extends BaseModel
      */
     public function isAutofocusEnabled()
     {
-        return KlarnaUtils::getShopConfVar('blKlarnaEnableAutofocus');
+        return KlarnaUtils::getShopConfVar('tcklarna_blKlarnaEnableAutofocus');
     }
 
     /**
@@ -395,9 +410,9 @@ class KlarnaOrder extends BaseModel
      */
     protected function getAdditionalCheckbox()
     {
-        $iActiveCheckbox = KlarnaUtils::getShopConfVar('iKlarnaActiveCheckbox');
+        $iActiveCheckbox = KlarnaUtils::getShopConfVar('tcklarna_iKlarnaActiveCheckbox');
 
-        if (!$this->_oUser->isFake() || $this->_oUser->kl_getType() === KlarnaUser::REGISTERED) {
+        if (!$this->_oUser->isFake() || $this->_oUser->tcklarna_getType() === KlarnaUser::REGISTERED) {
             if ($this->_oUser->getNewsSubscription()->getOptInStatus() == 1) {
 
                 return KlarnaConsts::EXTRA_CHECKBOX_NONE;
@@ -446,7 +461,7 @@ class KlarnaOrder extends BaseModel
      */
     protected function isSeparateDeliveryAddressAllowed()
     {
-        return KlarnaUtils::getShopConfVar('blKlarnaAllowSeparateDeliveryAddress');
+        return KlarnaUtils::getShopConfVar('tcklarna_blKlarnaAllowSeparateDeliveryAddress');
     }
 
 //    /**
@@ -454,7 +469,7 @@ class KlarnaOrder extends BaseModel
 //     */
 //    protected function isSalutationMandatory()
 //    {
-//        return KlarnaUtils::getShopConfVar('blKlarnaSalutationMandatory');
+//        return KlarnaUtils::getShopConfVar('tcklarna_blKlarnaSalutationMandatory');
 //    }
 
     /**
@@ -471,21 +486,21 @@ class KlarnaOrder extends BaseModel
                 break;
             case 1:
                 return array(
-                    'text'     => Registry::getLang()->translateString('KL_CREATE_USER_ACCOUNT'),
+                    'text'     => Registry::getLang()->translateString('TCKLARNA_CREATE_USER_ACCOUNT'),
                     'checked'  => false,
                     'required' => false,
                 );
                 break;
             case 2:
                 return array(
-                    'text'     => Registry::getLang()->translateString('KL_SUBSCRIBE_TO_NEWSLETTER'),
+                    'text'     => Registry::getLang()->translateString('TCKLARNA_SUBSCRIBE_TO_NEWSLETTER'),
                     'checked'  => false,
                     'required' => false,
                 );
                 break;
             case 3:
                 return array(
-                    'text'     => Registry::getLang()->translateString('KL_CREATE_USER_ACCOUNT_AND_SUBSCRIBE'),
+                    'text'     => Registry::getLang()->translateString('TCKLARNA_CREATE_USER_ACCOUNT_AND_SUBSCRIBE'),
                     'checked'  => false,
                     'required' => false,
                 );
@@ -501,7 +516,7 @@ class KlarnaOrder extends BaseModel
      */
     protected function isPhoneMandatory()
     {
-        return KlarnaUtils::getShopConfVar('blKlarnaMandatoryPhone');
+        return KlarnaUtils::getShopConfVar('tcklarna_blKlarnaMandatoryPhone');
     }
 
     /**
@@ -509,7 +524,7 @@ class KlarnaOrder extends BaseModel
      */
     protected function isBirthDateMandatory()
     {
-        return KlarnaUtils::getShopConfVar('blKlarnaMandatoryBirthDate');
+        return KlarnaUtils::getShopConfVar('tcklarna_blKlarnaMandatoryBirthDate');
     }
 
     /**
@@ -517,7 +532,7 @@ class KlarnaOrder extends BaseModel
      */
     protected function isValidateCallbackSuccessRequired()
     {
-        return KlarnaUtils::getShopConfVar('iKlarnaValidation') == 2;
+        return KlarnaUtils::getShopConfVar('tcklarna_iKlarnaValidation') == 2;
     }
 
     /**
@@ -525,7 +540,7 @@ class KlarnaOrder extends BaseModel
      */
     protected function isValidationEnabled()
     {
-        return KlarnaUtils::getShopConfVar('iKlarnaValidation') != 0;
+        return KlarnaUtils::getShopConfVar('tcklarna_iKlarnaValidation') != 0;
     }
 
     /**
@@ -536,9 +551,9 @@ class KlarnaOrder extends BaseModel
     protected function resolveImageUrl($oPayment, $checkoutImgUrl = false)
     {
         if ($checkoutImgUrl) {
-            $url = $oPayment->oxpayments__klcheckoutimageurl->value;
+            $url = $oPayment->oxpayments__tcklarna_checkoutimageurl->value;
         } else {
-            $url = $oPayment->oxpayments__klpaymentimageurl->value;
+            $url = $oPayment->oxpayments__tcklarna_paymentimageurl->value;
         }
 
         $result = preg_replace('/http:/', 'https:', $url);

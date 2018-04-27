@@ -18,8 +18,8 @@ use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\ShopIdCalculator;
 use ReflectionClass;
 use TopConcepts\Klarna\Core\KlarnaUtils;
-use TopConcepts\Klarna\Exception\KlarnaBasketTooLargeException;
-use TopConcepts\Klarna\Models\KlarnaBasket;
+use TopConcepts\Klarna\Core\Exception\KlarnaBasketTooLargeException;
+use TopConcepts\Klarna\Model\KlarnaBasket;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 
@@ -41,21 +41,21 @@ class KlarnaBasketTest extends ModuleUnitTestCase
     /**
      *
      */
-    public function testKl_calculateDeliveryCost()
+    public function testTcklarna_calculateDeliveryCost()
     {
         /** @var Basket $oBasket */
         $oBasket = $this->createStub(Basket::class, ['getAdditionalServicesVatPercent' => 7.00]);
         $this->setConfigParam('blDeliveryVatOnTop', true);
         $oBasket->setDeliveryPrice('price already set');
 
-        $result = $oBasket->kl_calculateDeliveryCost();
+        $result = $oBasket->tcklarna_calculateDeliveryCost();
         $this->assertEquals('price already set', $result);
 
 
         $oBasket->setDeliveryPrice(null);
         $this->setConfigParam('blCalculateDelCostIfNotLoggedIn', false);
 
-        $result = $oBasket->kl_calculateDeliveryCost();
+        $result = $oBasket->tcklarna_calculateDeliveryCost();
         $this->assertTrue($result instanceof Price);
         $this->assertTrue($result->isNettoMode());
         $this->assertEquals(0, $result->getVat());
@@ -75,7 +75,7 @@ class KlarnaBasketTest extends ModuleUnitTestCase
         $oDeliveryList = $this->createStub(DeliveryList::class, ['getDeliveryList' => [$oDelivery]]);
         \oxTestModules::addModuleObject(DeliveryList::class, $oDeliveryList);
 
-        $result = $oBasket->kl_calculateDeliveryCost();
+        $result = $oBasket->tcklarna_calculateDeliveryCost();
         $this->assertTrue($result instanceof Price);
         $this->assertEquals(7, $result->getVat());
         $this->assertEquals(100, $result->getBruttoPrice());
@@ -178,8 +178,8 @@ class KlarnaBasketTest extends ModuleUnitTestCase
     {
         $orderMgmtId = 'fake';
 
-        $this->setModuleConfVar('blKlarnaEnableAnonymization', 1, 'bool');
-        $this->setModuleConfVar('iKlarnaValidation', 1, 'bool');
+        $this->setModuleConfVar('tcklarna_blKlarnaEnableAnonymization', 1, 'bool');
+        $this->setModuleConfVar('tcklarna_iKlarnaValidation', 1, 'bool');
         $this->setModuleMode('KP');
 
         $oPrice = oxNew(Price::class);
@@ -204,7 +204,7 @@ class KlarnaBasketTest extends ModuleUnitTestCase
         $this->assertEquals($orderLines, $result);
 
         $this->setModuleMode('KCO');
-        $this->setModuleConfVar('blKlarnaEnableAnonymization', 0, 'bool');
+        $this->setModuleConfVar('tcklarna_blKlarnaEnableAnonymization', 0, 'bool');
         \oxTestModules::cleanAllModules();
     }
 

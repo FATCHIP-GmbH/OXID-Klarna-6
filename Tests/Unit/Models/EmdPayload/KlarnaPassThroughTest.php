@@ -2,13 +2,13 @@
 
 namespace TopConcepts\Klarna\Tests\Unit\Models\EmdPayload;
 
-use TopConcepts\Klarna\Models\EmdPayload\KlarnaPassThrough;
+use TopConcepts\Klarna\Model\EmdPayload\KlarnaPassThrough;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 /**
  * Class KlarnaPassThroughTest
  * @package TopConcepts\Klarna\Tests\Unit\Models\EmdPayload
- * @covers \TopConcepts\Klarna\Models\EmdPayload\KlarnaPassThrough
+ * @covers \TopConcepts\Klarna\Model\EmdPayload\KlarnaPassThrough
  */
 class KlarnaPassThroughTest extends ModuleUnitTestCase
 {

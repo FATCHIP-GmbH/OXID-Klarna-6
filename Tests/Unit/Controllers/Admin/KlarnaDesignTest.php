@@ -2,7 +2,7 @@
 
 namespace TopConcepts\Klarna\Tests\Unit\Controllers\Admin;
 
-use TopConcepts\Klarna\Controllers\Admin\KlarnaDesign;
+use TopConcepts\Klarna\Controller\Admin\KlarnaDesign;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaDesignTest extends ModuleUnitTestCase
@@ -14,7 +14,7 @@ class KlarnaDesignTest extends ModuleUnitTestCase
         $result = $obj->render();
 
         $viewData = $obj->getViewData();
-        $this->assertEquals('kl_klarna_design.tpl',$result);
+        $this->assertEquals('tcklarna_design.tpl',$result);
         $this->assertEquals('de_de', $viewData['locale']);
         $this->assertEquals('KCO', $viewData['mode']);
 

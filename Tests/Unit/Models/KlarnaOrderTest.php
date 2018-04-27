@@ -15,10 +15,10 @@ use OxidEsales\Eshop\Core\Field;
 use OxidEsales\TestingLibrary\UnitTestCase;
 use ReflectionClass;
 use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
-use TopConcepts\Klarna\Exception\KlarnaClientException;
-use TopConcepts\Klarna\Exception\KlarnaWrongCredentialsException;
-use TopConcepts\Klarna\Models\KlarnaOrder;
-use TopConcepts\Klarna\Models\KlarnaPayment;
+use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
+use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
+use TopConcepts\Klarna\Model\KlarnaOrder;
+use TopConcepts\Klarna\Model\KlarnaPayment;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaOrderTest extends ModuleUnitTestCase
@@ -236,7 +236,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $result = $order->updateKlarnaOrder($data, $id, null, $client);
         $this->assertNull($result);
 
-        $this->assertEquals(1, $order->oxorder__klsync->value);
+        $this->assertEquals(1, $order->oxorder__tcklarna_sync->value);
 
         // Test exception
         $client = $this->getMock(KlarnaOrderManagementClient::class, ['updateOrderLines']);
@@ -245,7 +245,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $order = oxNew(Order::class);
         $result = $order->updateKlarnaOrder($data, $id, null, $client);
 
-        $this->assertEquals(0, $order->oxorder__klsync->value);
+        $this->assertEquals(0, $order->oxorder__tcklarna_sync->value);
         $this->assertEquals("Test", $result);
 
     }
@@ -259,8 +259,8 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $order->load($id);
         $order->oxorder__oxpaymenttype = new Field('klarna_xxx', Field::T_RAW);
         $order->oxorder__oxstorno = new Field(0, Field::T_RAW);
-        $order->oxorder__klsync = new Field(1, Field::T_RAW);
-        $order->oxorder__klorderid = new Field('aaa', Field::T_RAW);
+        $order->oxorder__tcklarna_sync = new Field(1, Field::T_RAW);
+        $order->oxorder__tcklarna_orderid = new Field('aaa', Field::T_RAW);
         $order->save();
 
 
@@ -271,8 +271,8 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $order->load($id);
         $order->oxorder__oxpaymenttype = new Field('klarna_xxx', Field::T_RAW);
         $order->oxorder__oxstorno = new Field(0, Field::T_RAW);
-        $order->oxorder__klsync = new Field(1, Field::T_RAW);
-        $order->oxorder__klorderid = new Field('aaa', Field::T_RAW);
+        $order->oxorder__tcklarna_sync = new Field(1, Field::T_RAW);
+        $order->oxorder__tcklarna_orderid = new Field('aaa', Field::T_RAW);
 
         $order->expects($this->any())->method('cancelKlarnaOrder')->willThrowException(new KlarnaClientException("Test"));
         $result = $order->cancelOrder();
@@ -282,8 +282,8 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $order->load($id);
         $order->oxorder__oxpaymenttype = new Field('klarna_xxx', Field::T_RAW);
         $order->oxorder__oxstorno = new Field(0, Field::T_RAW);
-        $order->oxorder__klsync = new Field(1, Field::T_RAW);
-        $order->oxorder__klorderid = new Field('aaa', Field::T_RAW);
+        $order->oxorder__tcklarna_sync = new Field(1, Field::T_RAW);
+        $order->oxorder__tcklarna_orderid = new Field('aaa', Field::T_RAW);
 
         $order->expects($this->any())->method('cancelKlarnaOrder')->willThrowException(new KlarnaWrongCredentialsException("Test"));
         $result = $order->cancelOrder();
@@ -337,7 +337,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
 
         // successful update
         $order->load($id);
-        $order->oxorder__klorderid = new Field('', Field::T_RAW);
+        $order->oxorder__tcklarna_orderid = new Field('', Field::T_RAW);
         $this->setSessionParam('klarna_last_KP_order_id', 'klarnaId');
 
         $response = ['response'];
@@ -349,14 +349,14 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $result = $method->invokeArgs($order, [$client]);
         $this->assertTrue($result);
         $this->assertNull($this->getSessionParam('klarna_last_KP_order_id'));
-        $this->assertEquals('klarnaId', $order->oxorder__klorderid->value);
-        $this->assertEquals('klarnaId', $order->oxorder__klorderid->value);
+        $this->assertEquals('klarnaId', $order->oxorder__tcklarna_orderid->value);
+        $this->assertEquals('klarnaId', $order->oxorder__tcklarna_orderid->value);
 
 
 
 
         // exception
-        $order->oxorder__klorderid = new Field('', Field::T_RAW);
+        $order->oxorder__tcklarna_orderid = new Field('', Field::T_RAW);
         $order->expects($this->any())->method('isKCO')->willReturn(true);
         $this->setSessionParam('klarna_checkout_order_id', 'klarnaId');
 
@@ -397,8 +397,8 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $aList = $this->getProtectedClassProperty($oList, '_aArray');
         $oArticle = reset($aList); // get first element
 
-        $this->assertNotEmpty($oArticle->getFieldData('oxorderarticles__kltitle'));
-        $this->assertNotEmpty($oArticle->getFieldData('oxorderarticles__klartnum'));
+        $this->assertNotEmpty($oArticle->getFieldData('oxorderarticles__tcklarna_title'));
+        $this->assertNotEmpty($oArticle->getFieldData('oxorderarticles__tcklarna_artnum'));
 
         $this->setProtectedClassProperty($order, 'isAnonymous', null);
         $result = $method->invokeArgs($order, [$oBasket->getContents()]);
@@ -408,8 +408,8 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $aList = $this->getProtectedClassProperty($oList, '_aArray');
         $oArticle = reset($aList); // get first element
 
-        $this->assertNull($oArticle->getFieldData('oxorderarticles__kltitle'));
-        $this->assertNull($oArticle->getFieldData('oxorderarticles__klartnum'));
+        $this->assertNull($oArticle->getFieldData('oxorderarticles__tcklarna_title'));
+        $this->assertNull($oArticle->getFieldData('oxorderarticles__tcklarna_artnum'));
 
     }
 

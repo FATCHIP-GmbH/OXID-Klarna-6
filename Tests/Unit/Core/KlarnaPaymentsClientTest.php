@@ -4,9 +4,9 @@ namespace TopConcepts\Klarna\Tests\Unit\Core;
 
 use TopConcepts\Klarna\Core\KlarnaPayment;
 use TopConcepts\Klarna\Core\KlarnaPaymentsClient;
-use TopConcepts\Klarna\Exception\KlarnaClientException;
-use TopConcepts\Klarna\Models\KlarnaOrder;
-use TopConcepts\Klarna\Models\KlarnaUser;
+use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
+use TopConcepts\Klarna\Model\KlarnaOrder;
+use TopConcepts\Klarna\Model\KlarnaUser;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaPaymentsClientTest extends ModuleUnitTestCase

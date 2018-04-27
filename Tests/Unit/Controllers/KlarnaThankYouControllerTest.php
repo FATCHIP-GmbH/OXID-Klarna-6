@@ -12,13 +12,13 @@ namespace TopConcepts\Klarna\Testes\Unit\Controllers;
 use OxidEsales\Eshop\Application\Controller\ThankYouController;
 use OxidEsales\Eshop\Application\Model\BasketItem;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
-use TopConcepts\Klarna\Exception\KlarnaClientException;
-use TopConcepts\Klarna\Exception\KlarnaWrongCredentialsException;
+use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
+use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 /**
  * Class KlarnaThankYouControllerTest
- * @covers \TopConcepts\Klarna\Controllers\KlarnaThankYouController
+ * @covers \TopConcepts\Klarna\Controller\KlarnaThankYouController
  * @package TopConcepts\Klarna\Testes\Unit\Controllers
  */
 class KlarnaThankYouControllerTest extends ModuleUnitTestCase

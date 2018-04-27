@@ -14,7 +14,7 @@ use OxidEsales\Eshop\Core\Request;
 use ReflectionClass;
 use ReflectionObject;
 use TopConcepts\Klarna\Core\KlarnaPaymentsClient;
-use TopConcepts\Klarna\Exception\KlarnaClientException;
+use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaPaymentControllerTest extends ModuleUnitTestCase

@@ -2,7 +2,7 @@
 
 namespace TopConcepts\Klarna\Tests\Unit\Controllers\Admin;
 
-use TopConcepts\Klarna\Controllers\Admin\KlarnaGeneral;
+use TopConcepts\Klarna\Controller\Admin\KlarnaGeneral;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaGeneralTest extends ModuleUnitTestCase
@@ -12,7 +12,7 @@ class KlarnaGeneralTest extends ModuleUnitTestCase
     {
         $general = new KlarnaGeneral();
         $result = $general->render();
-        $this->assertEquals("kl_klarna_general.tpl", $result);
+        $this->assertEquals("tcklarna_general.tpl", $result);
 
         $expected = ['test' => 'test'];
         $notSet = ['notSet' => 'test'];
@@ -23,9 +23,9 @@ class KlarnaGeneralTest extends ModuleUnitTestCase
 
         $viewData = $general->getViewData();
 
-        $this->assertEquals(json_encode($notSet), $viewData['kl_countryList']);
-        $this->assertEquals($expected, $viewData['kl_countryCreds']);
-        $this->assertEquals($notSet, $viewData['kl_notSetUpCountries']);
+        $this->assertEquals(json_encode($notSet), $viewData['tcklarna_countryList']);
+        $this->assertEquals($expected, $viewData['tcklarna_countryCreds']);
+        $this->assertEquals($notSet, $viewData['tcklarna_notSetUpCountries']);
         $this->assertNotEmpty($viewData['activeCountries']);
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'xmlhttprequest';

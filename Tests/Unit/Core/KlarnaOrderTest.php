@@ -12,9 +12,9 @@ use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Price;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\EshopCommunity\Application\Model\PaymentList;
-use TopConcepts\Klarna\Controllers\KlarnaPaymentController;
+use TopConcepts\Klarna\Controller\KlarnaPaymentController;
 use TopConcepts\Klarna\Core\KlarnaOrder;
-use TopConcepts\Klarna\Exception\KlarnaConfigException;
+use TopConcepts\Klarna\Core\Exception\KlarnaConfigException;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaOrderTest extends ModuleUnitTestCase
@@ -36,8 +36,8 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $price = $this->createStub(Price::class, ['getBruttoPrice' => 1000, 'getVat' => 0.23]);
 
         $payment                                 = $this->createStub(Payment::class, ['calculate' => null, 'getPrice' => $price]);
-        $payment->oxpayments__klexternalpayment  = new Field(1, Field::T_RAW);
-        $payment->oxpayments__klexternalcheckout = new Field(1, Field::T_RAW);
+        $payment->oxpayments__tcklarna_externalpayment  = new Field(1, Field::T_RAW);
+        $payment->oxpayments__tcklarna_externalcheckout = new Field(1, Field::T_RAW);
         $payment->oxpayments__oxlongdesc         = new Field('<title>test</title>', Field::T_RAW);
 
         $paymentList  = [
@@ -60,7 +60,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
                 'getBasketCurrency'        => (object)['name' => 'test'],
                 'getKlarnaOrderLines'      => ['order_lines' => 'test'],
                 'getShippingId'            => '',
-                'kl_calculateDeliveryCost' => $price,
+                'tcklarna_calculateDeliveryCost' => $price,
                 'getPriceForPayment'       => 100,
             ]
         );
@@ -81,8 +81,8 @@ class KlarnaOrderTest extends ModuleUnitTestCase
 
         $this->setModuleConfVar('sKlarnaTermsConditionsURI_DE', 'https://testurl');
         $this->setModuleConfVar('sKlarnaCancellationRightsURI_DE', 'https://testurl');
-        $this->setModuleConfVar('iKlarnaValidation', 1);
-        $this->setModuleConfVar('blKlarnaEnableAutofocus', false);
+        $this->setModuleConfVar('tcklarna_iKlarnaValidation', 1);
+        $this->setModuleConfVar('tcklarna_blKlarnaEnableAutofocus', false);
         $this->setConfigParam('sSSLShopURL', 'https://testurl');
 
         //call constructor
@@ -205,7 +205,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $user  = $this->createStub(User::class, ['isFake' => true]);
         $order = $this->createStub(KlarnaOrder::class, ['__construct' => null]);
         $this->setProtectedClassProperty($order, '_oUser', $user);
-        $this->setModuleConfVar('iKlarnaActiveCheckbox', '22');
+        $this->setModuleConfVar('tcklarna_iKlarnaActiveCheckbox', '22');
         $result = $methodReflection->invoke($order);
 
         $this->assertEquals($result, 22);
@@ -218,7 +218,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
 
         $this->assertEquals($result, 2);
 
-        $this->setModuleConfVar('iKlarnaActiveCheckbox', '0');
+        $this->setModuleConfVar('tcklarna_iKlarnaActiveCheckbox', '0');
         $result = $methodReflection->invoke($order);
 
         $this->assertEquals($result, 0);
@@ -285,7 +285,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $this->setExpectedException(
             KlarnaConfigException::class,
             sprintf(
-                Registry::getLang()->translateString('KL_ERROR_NO_SHIPPING_METHODS_SET_UP'),
+                Registry::getLang()->translateString('TCKLARNA_ERROR_NO_SHIPPING_METHODS_SET_UP'),
                 ''
             )
         );
@@ -338,7 +338,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
             [
                 1,
                 [
-                    'text'     => Registry::getLang()->translateString('KL_CREATE_USER_ACCOUNT', null, false),
+                    'text'     => Registry::getLang()->translateString('TCKLARNA_CREATE_USER_ACCOUNT', null, false),
                     'checked'  => false,
                     'required' => false,
                 ],
@@ -346,7 +346,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
             [
                 2,
                 [
-                    'text'     => Registry::getLang()->translateString('KL_SUBSCRIBE_TO_NEWSLETTER', null, false),
+                    'text'     => Registry::getLang()->translateString('TCKLARNA_SUBSCRIBE_TO_NEWSLETTER', null, false),
                     'checked'  => false,
                     'required' => false,
                 ],
@@ -354,7 +354,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
             [
                 3,
                 [
-                    'text'     => Registry::getLang()->translateString('KL_CREATE_USER_ACCOUNT_AND_SUBSCRIBE', null, false),
+                    'text'     => Registry::getLang()->translateString('TCKLARNA_CREATE_USER_ACCOUNT_AND_SUBSCRIBE', null, false),
                     'checked'  => false,
                     'required' => false,
                 ],

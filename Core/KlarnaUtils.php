@@ -1,10 +1,25 @@
 <?php
+/**
+ * Copyright 2018 Klarna AB
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 namespace TopConcepts\Klarna\Core;
 
 
-use TopConcepts\Klarna\Models\KlarnaCountryList;
-use TopConcepts\Klarna\Models\KlarnaUser;
+use TopConcepts\Klarna\Model\KlarnaCountryList;
+use TopConcepts\Klarna\Model\KlarnaUser;
 use OxidEsales\Eshop\Application\Model\Category;
 use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\CountryList;
@@ -67,7 +82,7 @@ class KlarnaUtils
      */
     public static function getKlarnaModuleMode()
     {
-        return self::getShopConfVar('sKlarnaActiveMode');
+        return self::getShopConfVar('tcklarna_sKlarnaActiveMode');
     }
 
     /**
@@ -117,8 +132,8 @@ class KlarnaUtils
 
         if (!$aCredentials = KlarnaUtils::getShopConfVar('aKlarnaCreds_' . $sCountryISO)) {
             $aCredentials = array(
-                'mid'      => KlarnaUtils::getShopConfVar('sKlarnaMerchantId'),
-                'password' => KlarnaUtils::getShopConfVar('sKlarnaPassword'),
+                'mid'      => KlarnaUtils::getShopConfVar('tcklarna_sKlarnaMerchantId'),
+                'password' => KlarnaUtils::getShopConfVar('tcklarna_sKlarnaPassword'),
             );
         }
 
@@ -136,7 +151,7 @@ class KlarnaUtils
             return true;
         }
 
-        /** @var CountryList | \TopConcepts\Klarna\Models\KlarnaCountryList $activeKlarnaCountries */
+        /** @var CountryList | \TopConcepts\Klarna\Model\KlarnaCountryList $activeKlarnaCountries */
         $activeKlarnaCountries = oxNew(CountryList::class);
         $activeKlarnaCountries->loadActiveKlarnaCheckoutCountries();
         if (!count($activeKlarnaCountries)) {

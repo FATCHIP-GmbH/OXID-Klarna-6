@@ -3,8 +3,8 @@
 namespace TopConcepts\Klarna\Tests\Unit\Controllers;
 
 use OxidEsales\Eshop\Core\Registry;
-use TopConcepts\Klarna\Controllers\KlarnaBasketController;
-use TopConcepts\Klarna\Models\KlarnaBasket;
+use TopConcepts\Klarna\Controller\KlarnaBasketController;
+use TopConcepts\Klarna\Model\KlarnaBasket;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaBasketControllerTest extends ModuleUnitTestCase

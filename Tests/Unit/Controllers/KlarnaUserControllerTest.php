@@ -15,7 +15,7 @@ use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 /**
  * Class KlarnaUserControllerTest
  * @package TopConcepts\Klarna\Tests\Unit\Controllers
- * @covers \TopConcepts\Klarna\Controllers\KlarnaUserController
+ * @covers \TopConcepts\Klarna\Controller\KlarnaUserController
  */
 class KlarnaUserControllerTest extends ModuleUnitTestCase
 {

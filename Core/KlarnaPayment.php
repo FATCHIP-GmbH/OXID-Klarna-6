@@ -1,9 +1,24 @@
 <?php
+/**
+ * Copyright 2018 Klarna AB
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 namespace TopConcepts\Klarna\Core;
 
 
-use TopConcepts\Klarna\Models\KlarnaUser;
+use TopConcepts\Klarna\Model\KlarnaUser;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Application\Model\User;
@@ -273,7 +288,7 @@ class KlarnaPayment extends BaseModel
 
     /**
      * Compares current country ISO with country ISO stored in the session
-     * @param $oUser User | \TopConcepts\Klarna\Models\KlarnaUser
+     * @param $oUser User | \TopConcepts\Klarna\Model\KlarnaUser
      * @return bool
      */
     public static function countryWasChanged($oUser)
@@ -298,7 +313,7 @@ class KlarnaPayment extends BaseModel
         $oSession       = Registry::getSession();
         $aKPSessionData = $oSession->getVariable('klarna_session_data');
         if ($requestClientToken !== $aKPSessionData['client_token']) {
-            $this->errors[] = "KL_INVALID_CLIENT_TOKEN";
+            $this->errors[] = "TCKLARNA_INVALID_CLIENT_TOKEN";
 
             return false;
         }
@@ -327,11 +342,11 @@ class KlarnaPayment extends BaseModel
     {
         $sCountryISO = KlarnaUtils::getCountryISO($this->oUser->getFieldData('oxcountryid'));
         if (!in_array($sCountryISO, KlarnaConsts::getKlarnaCoreCountries())) {
-            $this->addErrorMessage('KL_KP_NOT_KLARNA_CORE_COUNTRY');
+            $this->addErrorMessage('TCKLARNA_KP_NOT_KLARNA_CORE_COUNTRY');
         }
 
         if (!$this->currencyToCountryMatch) {
-            $this->addErrorMessage('KL_KP_CURRENCY_DONT_MATCH');
+            $this->addErrorMessage('TCKLARNA_KP_CURRENCY_DONT_MATCH');
         }
     }
 
@@ -343,7 +358,7 @@ class KlarnaPayment extends BaseModel
         $fieldNamesToCheck = array('country', 'given_name', 'family_name');
         foreach ($fieldNamesToCheck as $fName) {
             if ($this->_aUserData['billing_address'][$fName] !== $this->_aUserData['shipping_address'][$fName]) {
-                $this->addErrorMessage('KL_KP_MATCH_ERROR');
+                $this->addErrorMessage('TCKLARNA_KP_MATCH_ERROR');
                 break;
             }
         }
@@ -357,7 +372,7 @@ class KlarnaPayment extends BaseModel
     public function validateToken()
     {
         if (!$this->isTokenValid()) {
-            $this->addErrorMessage('KL_KP_INVALID_TOKEN');
+            $this->addErrorMessage('TCKLARNA_KP_INVALID_TOKEN');
         }
     }
 
@@ -371,7 +386,7 @@ class KlarnaPayment extends BaseModel
         $this->errors = array();
 
         if ($this->isOrderStateChanged() || $this->paymentChanged) {
-            $this->addErrorMessage('KL_KP_ORDER_DATA_CHANGED');
+            $this->addErrorMessage('TCKLARNA_KP_ORDER_DATA_CHANGED');
         }
 
         $this->validateToken();

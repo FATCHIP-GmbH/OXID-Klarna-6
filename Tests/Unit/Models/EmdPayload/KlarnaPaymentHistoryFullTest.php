@@ -3,13 +3,13 @@
 namespace TopConcepts\Klarna\Tests\Unit\Models\EmdPayload;
 
 use OxidEsales\Eshop\Application\Model\User;
-use TopConcepts\Klarna\Models\EmdPayload\KlarnaPaymentHistoryFull;
+use TopConcepts\Klarna\Model\EmdPayload\KlarnaPaymentHistoryFull;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 /**
  * Class KlarnaPaymentHistoryFullTest
  * @package TopConcepts\Klarna\Tests\Unit\Models\EmdPayload
- * @covers \TopConcepts\Klarna\Models\EmdPayload\KlarnaPaymentHistoryFull
+ * @covers \TopConcepts\Klarna\Model\EmdPayload\KlarnaPaymentHistoryFull
  */
 class KlarnaPaymentHistoryFullTest extends ModuleUnitTestCase
 {

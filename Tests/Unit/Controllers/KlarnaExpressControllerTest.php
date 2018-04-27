@@ -10,16 +10,16 @@ use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\UtilsView;
-use TopConcepts\Klarna\Controllers\KlarnaExpressController;
+use TopConcepts\Klarna\Controller\KlarnaExpressController;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
-use TopConcepts\Klarna\Exception\KlarnaBasketTooLargeException;
-use TopConcepts\Klarna\Exception\KlarnaConfigException;
+use TopConcepts\Klarna\Core\Exception\KlarnaBasketTooLargeException;
+use TopConcepts\Klarna\Core\Exception\KlarnaConfigException;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 /**
  * Class KlarnaExpressControllerTest
  * @package TopConcepts\Klarna\Testes\Unit\Controllers
- * @covers \TopConcepts\Klarna\Controllers\KlarnaExpressController
+ * @covers \TopConcepts\Klarna\Controller\KlarnaExpressController
  */
 class KlarnaExpressControllerTest extends ModuleUnitTestCase
 {
@@ -301,7 +301,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
         $this->setProtectedClassProperty($keController,'blockIframeRender',true);
         $keController->init();
         $result = $keController->render();
-        $this->assertEquals('kl_klarna_checkout.tpl', $result);
+        $this->assertEquals('tcklarna_checkout.tpl', $result);
     }
 
     public function testRenderException()
@@ -318,7 +318,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
         $result = $keController->render();
 
         $this->assertEquals(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=basket',\oxUtilsHelper::$sRedirectUrl);
-        $this->assertEquals('kl_klarna_checkout.tpl', $result);
+        $this->assertEquals('tcklarna_checkout.tpl', $result);
     }
 
     public function testGetKlarnaClient()
@@ -369,7 +369,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
 
         $viewData = $this->getProtectedClassProperty($keController, '_aViewData');
         $this->assertTrue($viewData['confError']);
-        $this->assertEquals('kl_klarna_checkout.tpl', $result);
+        $this->assertEquals('tcklarna_checkout.tpl', $result);
 
     }
 
@@ -386,7 +386,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
         $keController->init();
         $result = $keController->render();
 
-        $this->assertEquals('kl_klarna_checkout.tpl', $result);
+        $this->assertEquals('tcklarna_checkout.tpl', $result);
 
 
         $keController = $this->getMock(KlarnaExpressController::class, ['getKlarnaClient', 'getConfig']);
@@ -396,6 +396,6 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
         $keController->init();
         $keController->render();
 
-        $this->assertEquals('kl_klarna_checkout.tpl', $result);
+        $this->assertEquals('tcklarna_checkout.tpl', $result);
     }
 }

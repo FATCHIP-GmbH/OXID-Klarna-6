@@ -1,4 +1,19 @@
 <?php
+/**
+ * Copyright 2018 Klarna AB
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 namespace TopConcepts\Klarna\Core;
 
@@ -109,9 +124,9 @@ class KlarnaConsts
     public static function getEmdPaymentTypeOptions()
     {
         return array(
-            'other'          => Registry::getLang()->translateString('KL_OTHER_PAYMENT'),
-            'direct banking' => Registry::getLang()->translateString('KL_DIRECT_BANKING'),
-            'card'           => Registry::getLang()->translateString('KL_CARD'),
+            'other'          => Registry::getLang()->translateString('TCKLARNA_OTHER_PAYMENT'),
+            'direct banking' => Registry::getLang()->translateString('TCKLARNA_DIRECT_BANKING'),
+            'card'           => Registry::getLang()->translateString('TCKLARNA_CARD'),
         );
     }
 
@@ -122,9 +137,9 @@ class KlarnaConsts
     public static function getFullHistoryOrdersOptions()
     {
         return array(
-            self::EMD_ORDER_HISTORY_ALL  => Registry::getLang()->translateString('KL_EMD_ORDER_HISTORY_ALL'),
-            self::EMD_ORDER_HISTORY_PAID => Registry::getLang()->translateString('KL_EMD_ORDER_HISTORY_PAID'),
-            self::EMD_ORDER_HISTORY_NONE => Registry::getLang()->translateString('KL_EMD_ORDER_HISTORY_NONE'),
+            self::EMD_ORDER_HISTORY_ALL  => Registry::getLang()->translateString('TCKLARNA_EMD_ORDER_HISTORY_ALL'),
+            self::EMD_ORDER_HISTORY_PAID => Registry::getLang()->translateString('TCKLARNA_EMD_ORDER_HISTORY_PAID'),
+            self::EMD_ORDER_HISTORY_NONE => Registry::getLang()->translateString('TCKLARNA_EMD_ORDER_HISTORY_NONE'),
         );
     }
 

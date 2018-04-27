@@ -4,9 +4,9 @@ namespace TopConcepts\Klarna\Tests\Unit\Models;
 
 
 use OxidEsales\Eshop\Application\Model\User;
-use TopConcepts\Klarna\Models\EmdPayload\KlarnaCustomerAccountInfo;
-use TopConcepts\Klarna\Models\EmdPayload\KlarnaPaymentHistoryFull;
-use TopConcepts\Klarna\Models\KlarnaEMD;
+use TopConcepts\Klarna\Model\EmdPayload\KlarnaCustomerAccountInfo;
+use TopConcepts\Klarna\Model\EmdPayload\KlarnaPaymentHistoryFull;
+use TopConcepts\Klarna\Model\KlarnaEMD;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaEMDTest extends ModuleUnitTestCase
@@ -17,8 +17,8 @@ class KlarnaEMDTest extends ModuleUnitTestCase
      */
     public function testGetAttachments($data, $expectedResult)
     {
-        $this->setModuleConfVar('blKlarnaEmdCustomerAccountInfo', $data['blKlarnaEmdCustomerAccountInfo']);
-        $this->setModuleConfVar('blKlarnaEmdPaymentHistoryFull', $data['blKlarnaEmdPaymentHistoryFull']);
+        $this->setModuleConfVar('tcklarna_blKlarnaEmdCustomerAccountInfo', $data['tcklarna_blKlarnaEmdCustomerAccountInfo']);
+        $this->setModuleConfVar('tcklarna_blKlarnaEmdPaymentHistoryFull', $data['tcklarna_blKlarnaEmdPaymentHistoryFull']);
 
         $klarnaEMD = oxNew(KlarnaEMD::class);
 
@@ -59,15 +59,15 @@ class KlarnaEMDTest extends ModuleUnitTestCase
         return [
             [
                 [
-                    'blKlarnaEmdCustomerAccountInfo' => 0,
-                    'blKlarnaEmdPaymentHistoryFull'  => 0,
+                    'tcklarna_blKlarnaEmdCustomerAccountInfo' => 0,
+                    'tcklarna_blKlarnaEmdPaymentHistoryFull'  => 0,
                 ],
                 [],
             ],
             [
                 [
-                    'blKlarnaEmdCustomerAccountInfo' => 1,
-                    'blKlarnaEmdPaymentHistoryFull'  => 0,
+                    'tcklarna_blKlarnaEmdCustomerAccountInfo' => 1,
+                    'tcklarna_blKlarnaEmdPaymentHistoryFull'  => 0,
                 ],
                 [
                     'customer_account_info' =>
@@ -81,8 +81,8 @@ class KlarnaEMDTest extends ModuleUnitTestCase
                 ],
             ], [
                 [
-                    'blKlarnaEmdCustomerAccountInfo' => 0,
-                    'blKlarnaEmdPaymentHistoryFull'  => 1,
+                    'tcklarna_blKlarnaEmdCustomerAccountInfo' => 0,
+                    'tcklarna_blKlarnaEmdPaymentHistoryFull'  => 1,
                 ],
                 [
                     'payment_history_full' => [
@@ -93,8 +93,8 @@ class KlarnaEMDTest extends ModuleUnitTestCase
                 ],
             ], [
                 [
-                    'blKlarnaEmdCustomerAccountInfo' => 1,
-                    'blKlarnaEmdPaymentHistoryFull'  => 1,
+                    'tcklarna_blKlarnaEmdCustomerAccountInfo' => 1,
+                    'tcklarna_blKlarnaEmdPaymentHistoryFull'  => 1,
                 ],
                 [
                     'customer_account_info' => [

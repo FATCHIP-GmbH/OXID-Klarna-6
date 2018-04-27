@@ -4,13 +4,13 @@ namespace TopConcepts\Klarna\Tests\Unit\Models;
 
 use OxidEsales\Eshop\Application\Model\Address;
 use OxidEsales\Eshop\Core\Field;
-use TopConcepts\Klarna\Models\KlarnaAddress;
+use TopConcepts\Klarna\Model\KlarnaAddress;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 /**
  * Class KlarnaAddressTest
  * @package TopConcepts\Klarna\Tests\Unit\Models
- * @covers \TopConcepts\Klarna\Models\KlarnaAddress
+ * @covers \TopConcepts\Klarna\Model\KlarnaAddress
  */
 class KlarnaAddressTest extends ModuleUnitTestCase
 {
@@ -21,7 +21,7 @@ class KlarnaAddressTest extends ModuleUnitTestCase
         $tmp = new Field(1, Field::T_RAW);
 
         $this->assertNull($address->isTemporary());
-        $address->oxaddress__kltemporary = $tmp;
+        $address->oxaddress__tcklarna_temporary = $tmp;
 
         $this->assertEquals($address->isTemporary(), $tmp->value);
     }

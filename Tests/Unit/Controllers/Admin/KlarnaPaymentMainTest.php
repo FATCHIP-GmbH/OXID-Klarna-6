@@ -2,7 +2,7 @@
 
 namespace TopConcepts\Klarna\Tests\Unit\Controllers\Admin;
 
-use TopConcepts\Klarna\Controllers\Admin\KlarnaPaymentMain;
+use TopConcepts\Klarna\Controller\Admin\KlarnaPaymentMain;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaPaymentMainTest extends ModuleUnitTestCase

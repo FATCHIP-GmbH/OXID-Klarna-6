@@ -15,14 +15,14 @@ use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 class KlarnaOrderArticleTest extends ModuleUnitTestCase
 {
 
-    public function testKl_setArtNum()
+    public function testTcklarna_setArtNum()
     {
         $testVal = 'string-value';
         $expectedResult = md5($testVal);
         $oOrderArticle = oxNew(OrderArticle::class);
         $oOrderArticle->oxorderarticles__oxartnum = new Field($testVal, Field::T_RAW);
-        $oOrderArticle->kl_setArtNum();
-        $this->assertEquals($expectedResult, $oOrderArticle->oxorderarticles__klartnum->value);
+        $oOrderArticle->tcklarna_setArtNum();
+        $this->assertEquals($expectedResult, $oOrderArticle->oxorderarticles__tcklarna_artnum->value);
     }
 
     /**
@@ -30,11 +30,11 @@ class KlarnaOrderArticleTest extends ModuleUnitTestCase
      * @param $iLang
      * @param $expectedResult
      */
-    public function testKl_setTitle($iLang, $expectedResult)
+    public function testTcklarna_setTitle($iLang, $expectedResult)
     {
         $oOrderArticle = oxNew(OrderArticle::class);
-        $oOrderArticle->kl_setTitle(0, $iLang);
-        $this->assertEquals($expectedResult, $oOrderArticle->oxorderarticles__kltitle->value);
+        $oOrderArticle->tcklarna_setTitle(0, $iLang);
+        $this->assertEquals($expectedResult, $oOrderArticle->oxorderarticles__tcklarna_title->value);
 
     }
 

@@ -84,7 +84,7 @@ class KlarnaOrderValidatorTest extends ModuleUnitTestCase
 
         return [
             [ $orderdata, $validArticle, [], true ],
-            [ $orderdata, $outOfStockArticle, ['KL_ERROR_NOT_ENOUGH_IN_STOCK' => 'artNum'], false ],
+            [ $orderdata, $outOfStockArticle, ['TCKLARNA_ERROR_NOT_ENOUGH_IN_STOCK' => 'artNum'], false ],
             [ $orderdata, $deletedArticle, ['ERROR_MESSAGE_ARTICLE_ARTICLE_DOES_NOT_EXIST' => 'artNum'], false ],
             [ $orderdata, $notBuyableArticle, ['ERROR_MESSAGE_ARTICLE_ARTICLE_NOT_BUYABLE' => 'artNum'], false ],
             [ $empty, $validArticle,  [], false ]

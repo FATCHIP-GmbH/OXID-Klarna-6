@@ -19,7 +19,7 @@ use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 /**
  * Class KlarnaViewConfigTest
  * @package TopConcepts\Klarna\Testes\Unit\Controllers
- * @covers \TopConcepts\Klarna\Controllers\KlarnaViewConfig
+ * @covers \TopConcepts\Klarna\Controller\KlarnaViewConfig
  */
 class KlarnaViewConfigTest extends ModuleUnitTestCase
 {
@@ -142,8 +142,8 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
     public function testGetKlarnaHomepageBanner($displayBanner, $merchantId)
     {
 
-        $this->getConfig()->saveShopConfVar(null, 'blKlarnaDisplayBanner', $displayBanner, $shopId = $this->getShopId(), $module = 'klarna');
-        $this->getConfig()->saveShopConfVar(null, 'sKlarnaMerchantId', $merchantId, $shopId = $this->getShopId(), $module = 'klarna');
+        $this->getConfig()->saveShopConfVar(null, 'tcklarna_blKlarnaDisplayBanner', $displayBanner, $shopId = $this->getShopId(), $module = 'klarna');
+        $this->getConfig()->saveShopConfVar(null, 'tcklarna_sKlarnaMerchantId', $merchantId, $shopId = $this->getShopId(), $module = 'klarna');
 
         $oViewConfig = oxNew(ViewConfig::class);
         $result = $oViewConfig->getKlarnaHomepageBanner();
@@ -204,7 +204,7 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
      */
     public function testIsShowPrefillNotif($value, $expectedResult)
     {
-        $this->getConfig()->saveShopConfVar(null, 'blKlarnaPreFillNotification',  $value, $this->getShopId(), 'klarna');
+        $this->getConfig()->saveShopConfVar(null, 'tcklarna_blKlarnaPreFillNotification',  $value, $this->getShopId(), 'klarna');
 
         $oViewConfig = oxNew(ViewConfig::class);
         $this->assertEquals($expectedResult, $oViewConfig->isShowPrefillNotif());
@@ -223,7 +223,7 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
      */
     public function testGetMode($value)
     {
-        $this->getConfig()->saveShopConfVar(null, 'sKlarnaActiveMode', $value, $this->getShopId(), 'klarna');
+        $this->getConfig()->saveShopConfVar(null, 'tcklarna_sKlarnaActiveMode', $value, $this->getShopId(), 'klarna');
         $oViewConfig = oxNew(ViewConfig::class);
         $this->assertEquals($value, $oViewConfig->getMode());
     }
@@ -295,11 +295,11 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
 
     public function testGetKlarnaFooterContent_nonKlarnaSetAsDefault()
     {
-        $this->setModuleConfVar('sKlarnaDefaultCountry', 'AF');
+        $this->setModuleConfVar('tcklarna_sKlarnaDefaultCountry', 'AF');
         $oViewConfig = oxNew(ViewConfig::class);
         $result = $oViewConfig->getKlarnaFooterContent();
         $this->assertFalse($result);
-        $this->setModuleConfVar('sKlarnaDefaultCountry', 'DE');
+        $this->setModuleConfVar('tcklarna_sKlarnaDefaultCountry', 'DE');
     }
 
     /**
@@ -311,7 +311,7 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
      */
     public function testGetKlarnaFooterContent($mode, $klFooterType, $klFooterValue, $expectedResult)
     {
-        $this->getConfig()->saveShopConfVar(null, 'sKlarnaFooterDisplay', $klFooterType, $this->getShopId(), 'klarna');
+        $this->getConfig()->saveShopConfVar(null, 'tcklarna_sKlarnaFooterDisplay', $klFooterType, $this->getShopId(), 'klarna');
         $this->getConfig()->saveShopConfVar(null, 'sKlFooterValue', $klFooterValue, $this->getShopId(), 'klarna');
         $this->setModuleMode($mode);
 
@@ -372,7 +372,7 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
     public function testGetLawNotificationsLinkKco($iso, $mid, $expectedResult)
     {
         $this->setSessionParam('sCountryISO', $iso);
-        $this->setModuleConfVar('sKlarnaMerchantId', $mid);
+        $this->setModuleConfVar('tcklarna_sKlarnaMerchantId', $mid);
         $oViewConfig = oxNew(ViewConfig::class);
         $result = $oViewConfig->getLawNotificationsLinkKco();
 
@@ -382,7 +382,7 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
 
     public function testIsPrefillIframe()
     {
-        $this->setModuleConfVar('blKlarnaEnablePreFilling', true);
+        $this->setModuleConfVar('tcklarna_blKlarnaEnablePreFilling', true);
         $oViewConfig = oxNew(ViewConfig::class);
         $result = $oViewConfig->isPrefillIframe();
 
@@ -391,7 +391,7 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
 
     public function testIsPrefillIframe_false()
     {
-        $this->setModuleConfVar('blKlarnaEnablePreFilling', false, 'bool');
+        $this->setModuleConfVar('tcklarna_blKlarnaEnablePreFilling', false, 'bool');
         $oViewConfig = oxNew(ViewConfig::class);
         $result = $oViewConfig->isPrefillIframe();
 

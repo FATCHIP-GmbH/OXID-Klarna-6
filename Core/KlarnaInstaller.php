@@ -1,4 +1,19 @@
 <?php
+/**
+ * Copyright 2018 Klarna AB
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 namespace TopConcepts\Klarna\Core;
 
@@ -14,7 +29,7 @@ use OxidEsales\Eshop\Core\Database\Adapter\Doctrine\Database;
 use OxidEsales\DoctrineMigrationWrapper\MigrationsBuilder;
 use OxidEsales\Facts\Config\ConfigFile;
 use OxidEsales\Facts\Facts;
-use TopConcepts\Klarna\Models\KlarnaPayment;
+use TopConcepts\Klarna\Model\KlarnaPayment;
 
 class KlarnaInstaller extends ShopConfiguration
 {
@@ -86,57 +101,57 @@ class KlarnaInstaller extends ShopConfiguration
         $config = Registry::getConfig();
         $shopId = $config->getShopId();
 
-        $currencies    = Registry::getConfig()->getCurrencyArray();
-        $currenciesVar = '';
-        foreach ($currencies as $currency) {
-            $currenciesVar .= $currency->name . '=>' . $currency->id;
-            if ($currency !== end($currencies)) {
-                $currenciesVar .= "\n";
-            }
-        }
+//        $currencies    = Registry::getConfig()->getCurrencyArray();
+//        $currenciesVar = '';
+//        foreach ($currencies as $currency) {
+//            $currenciesVar .= $currency->name . '=>' . $currency->id;
+//            if ($currency !== end($currencies)) {
+//                $currenciesVar .= "\n";
+//            }
+//        }
 
         $defaultConfVars = array(
             'bool'   => array(
 
-                'blIsKlarnaTestMode'                   => 1,
-                'blKlarnaLoggingEnabled'               => 0,
-                'blKlarnaAllowSeparateDeliveryAddress' => 1,
-                'blKlarnaEnableAnonymization'          => 0,
-                'blKlarnaSendProductUrls'              => 1,
-                'blKlarnaSendImageUrls'                => 1,
-                'blKlarnaMandatoryPhone'               => 1,
-                'blKlarnaMandatoryBirthDate'           => 1,
-                //                'blKlarnaSalutationMandatory'          => 1,
-                'blKlarnaShowSubtotalDetail'           => 0,
-                'blKlarnaEmdCustomerAccountInfo'       => 0,
-                'blKlarnaEmdPaymentHistoryFull'        => 0,
-                'blKlarnaEmdPassThrough'               => 0,
-                'blKlarnaEnableAutofocus'              => 1,
-                'blKlarnaEnableDHLPackstations'        => 1,
-                'blKlarnaEnablePreFilling'             => 1,
-                'blKlarnaDisplayBanner'                => 1,
-                'blKlarnaPreFillNotification'          => 1,
+                'tcklarna_blIsKlarnaTestMode'                   => 1,
+                'tcklarna_blKlarnaLoggingEnabled'               => 0,
+                'tcklarna_blKlarnaAllowSeparateDeliveryAddress' => 1,
+                'tcklarna_blKlarnaEnableAnonymization'          => 0,
+                'tcklarna_blKlarnaSendProductUrls'              => 1,
+                'tcklarna_blKlarnaSendImageUrls'                => 1,
+                'tcklarna_blKlarnaMandatoryPhone'               => 1,
+                'tcklarna_blKlarnaMandatoryBirthDate'           => 1,
+                //                'tcklarna_blKlarnaSalutationMandatory'          => 1,
+                //                'tcklarna_blKlarnaShowSubtotalDetail'           => 0,
+                'tcklarna_blKlarnaEmdCustomerAccountInfo'       => 0,
+                'tcklarna_blKlarnaEmdPaymentHistoryFull'        => 0,
+                'tcklarna_blKlarnaEmdPassThrough'               => 0,
+                'tcklarna_blKlarnaEnableAutofocus'              => 1,
+                //                'tcklarna_blKlarnaEnableDHLPackstations'        => 1,
+                'tcklarna_blKlarnaEnablePreFilling'             => 1,
+                'tcklarna_blKlarnaDisplayBanner'                => 1,
+                'tcklarna_blKlarnaPreFillNotification'          => 1,
             ),
             'str'    => array(
-                'sKlarnaActiveMode'                => KlarnaConsts::MODULE_MODE_KCO,
-                'sKlarnaMerchantId'                => '',
-                'sKlarnaPassword'                  => '',
-                'sKlarnaDefaultCountry'            => 'DE',
-                'iKlarnaActiveCheckbox'            => KlarnaConsts::EXTRA_CHECKBOX_NONE,
-                'iKlarnaValidation'                => KlarnaConsts::NO_VALIDATION,
-                'sKlarnaAnonymizedProductTitle'    => 'anonymized product',
-                'sKlarnaDefaultEURCountry'         => 'DE',
-                'sKlarnaFooterDisplay'             => 0,
+                'tcklarna_sKlarnaActiveMode'                => KlarnaConsts::MODULE_MODE_KCO,
+                'tcklarna_sKlarnaMerchantId'                => '',
+                'tcklarna_sKlarnaPassword'                  => '',
+                'tcklarna_sKlarnaDefaultCountry'            => 'DE',
+                'tcklarna_iKlarnaActiveCheckbox'            => KlarnaConsts::EXTRA_CHECKBOX_NONE,
+                'tcklarna_iKlarnaValidation'                => KlarnaConsts::NO_VALIDATION,
+                'tcklarna_sKlarnaAnonymizedProductTitle'    => 'anonymized product',
+//                'tcklarna_sKlarnaDefaultEURCountry'         => 'DE',
+                'tcklarna_sKlarnaFooterDisplay'             => 0,
 
 
                 // Multilang Data
-                'sKlarnaAnonymizedProductTitle_EN' => 'Product name',
-                'sKlarnaAnonymizedProductTitle_DE' => 'Produktname',
+                'tcklarna_sKlarnaAnonymizedProductTitle_EN' => 'Product name',
+                'tcklarna_sKlarnaAnonymizedProductTitle_DE' => 'Produktname',
             ),
             'arr'    => array(),
-            'aarr'   => array(
-                'aKlarnaCurrencies' => $currenciesVar,
-            ),
+//            'aarr'   => array(
+//                'tcklarna_aKlarnaCurrencies' => $currenciesVar,
+//            ),
             'select' => array(),
         );
 
@@ -224,8 +239,8 @@ class KlarnaInstaller extends ShopConfiguration
 
         $updateOxPayments =
             array(
-                "UPDATE `oxpayments` SET `KLPAYMENTOPTION`='card' WHERE `oxid`='oxidcreditcard';",
-                "UPDATE `oxpayments` SET `KLPAYMENTOPTION`='direct banking' WHERE `oxid`='oxiddebitnote';",
+                "UPDATE `oxpayments` SET `TCKLARNA_PAYMENTOPTION`='card' WHERE `oxid`='oxidcreditcard';",
+                "UPDATE `oxpayments` SET `TCKLARNA_PAYMENTOPTION`='direct banking' WHERE `oxid`='oxiddebitnote';",
             );
         foreach ($updateOxPayments as $sQuery) {
             $this->db->execute($sQuery);
@@ -304,7 +319,7 @@ class KlarnaInstaller extends ShopConfiguration
             $oActionKlarnaTeaser->{'oxactions__oxlink' . $sTag}  = new Field($sLink, Field::T_RAW);
             $oActionKlarnaTeaser->{'oxactions__oxpic' . $sTag}   = new Field($langFileName, Field::T_RAW);
 
-            $filePath = self::$instance->modulePath . '/out/img/' . $langFileName;
+            $filePath = self::$instance->modulePath . 'out/src/img/' . $langFileName;
             if (file_exists($filePath)) {
                 copy($filePath, $actionsMediaPath . $langFileName);
             }

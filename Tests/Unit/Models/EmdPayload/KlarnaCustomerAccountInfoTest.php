@@ -4,13 +4,13 @@ namespace TopConcepts\Klarna\Tests\Unit\Models\EmdPayload;
 
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Field;
-use TopConcepts\Klarna\Models\EmdPayload\KlarnaCustomerAccountInfo;
+use TopConcepts\Klarna\Model\EmdPayload\KlarnaCustomerAccountInfo;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 /**
  * Class KlarnaCustomerAccountInfoTest
  * @package TopConcepts\Klarna\Tests\Unit\Models\EmdPayload
- * @covers \TopConcepts\Klarna\Models\EmdPayload\KlarnaCustomerAccountInfo
+ * @covers \TopConcepts\Klarna\Model\EmdPayload\KlarnaCustomerAccountInfo
  *
  */
 class KlarnaCustomerAccountInfoTest extends ModuleUnitTestCase

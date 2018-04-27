@@ -5,7 +5,7 @@ namespace TopConcepts\Klarna\Tests\Unit\Controllers;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
-use TopConcepts\Klarna\Controllers\KlarnaAcknowledgeController;
+use TopConcepts\Klarna\Controller\KlarnaAcknowledgeController;
 use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 

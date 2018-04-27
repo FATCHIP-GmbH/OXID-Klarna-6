@@ -19,15 +19,15 @@ use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\ViewConfig;
 use OxidEsales\PayPalModule\Controller\ExpressCheckoutDispatcher;
-use TopConcepts\Klarna\Controllers\KlarnaOrderController;
+use TopConcepts\Klarna\Controller\KlarnaOrderController;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
 use TopConcepts\Klarna\Core\KlarnaConsts;
 use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
 use TopConcepts\Klarna\Core\KlarnaPayment;
 use TopConcepts\Klarna\Core\KlarnaPaymentsClient;
-use TopConcepts\Klarna\Exception\KlarnaClientException;
-use TopConcepts\Klarna\Models\KlarnaBasket;
-use TopConcepts\Klarna\Models\KlarnaUser;
+use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
+use TopConcepts\Klarna\Model\KlarnaBasket;
+use TopConcepts\Klarna\Model\KlarnaUser;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaOrderControllerTest extends ModuleUnitTestCase
@@ -114,7 +114,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
     {
         $order = $this->createStub(Order::class, ['finalizeOrder' => 1]);
         \oxTestModules::addModuleObject(Order::class, $order);
-        $user = $this->createStub(KlarnaUser::class, ['kl_getType' => 0, 'save' => true, 'onOrderExecute' => true]);
+        $user = $this->createStub(KlarnaUser::class, ['tcklarna_getType' => 0, 'save' => true, 'onOrderExecute' => true]);
         $oBasket = $this->createStub(
             KlarnaBasket::class,
             ['getPaymentId' => 'klarna_checkout', 'calculateBasket' => true]
@@ -130,7 +130,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
             '_aOrderData',
             ['merchant_requested' => ['additional_checkbox' => true]]
         );
-        $this->setModuleConfVar('iKlarnaActiveCheckbox', 1);
+        $this->setModuleConfVar('tcklarna_iKlarnaActiveCheckbox', 1);
         $mock->execute();
         $addressResult = $this->getSessionParam('sDelAddrMD5');
         $this->assertEquals('address', $addressResult);
@@ -173,7 +173,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
     public function testGetKlarnaAllowedExternalPayments()
     {
         $database = DatabaseProvider::getDB();
-        $database->execute("UPDATE oxpayments SET oxactive=1, klexternalpayment=1 WHERE oxid='oxidpayadvance'");
+        $database->execute("UPDATE oxpayments SET oxactive=1, tcklarna_externalpayment=1 WHERE oxid='oxidpayadvance'");
 
         $class = new \ReflectionClass(KlarnaOrderController::class);
         $method = $class->getMethod('getKlarnaAllowedExternalPayments');
@@ -214,7 +214,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
             '_aOrderData',
             ['merchant_requested' => ['additional_checkbox' => true]]
         );
-        $this->setModuleConfVar('iKlarnaActiveCheckbox', 2);
+        $this->setModuleConfVar('tcklarna_iKlarnaActiveCheckbox', 2);
         $result = $method->invoke($mock);
         $this->assertNull($result);
 
@@ -224,7 +224,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
             '_aOrderData',
             ['merchant_requested' => ['additional_checkbox' => true]]
         );
-        $this->setModuleConfVar('iKlarnaActiveCheckbox', 2);
+        $this->setModuleConfVar('tcklarna_iKlarnaActiveCheckbox', 2);
 
         $this->setExpectedException(StandardException::class, 'no user object');
         $method->invoke($mock);
@@ -260,7 +260,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $method = $class->getMethod('_validateUser');
         $method->setAccessible(true);
 
-        $user = $this->createStub(KlarnaUser::class, ['kl_getType' => $type]);
+        $user = $this->createStub(KlarnaUser::class, ['tcklarna_getType' => $type]);
         $mock = $this->createStub(KlarnaOrderController::class, ['_createUser' => true]);
         $this->setProtectedClassProperty($mock, '_oUser', $user);
         $result = $method->invoke($mock);
@@ -280,7 +280,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
     public function testRender()
     {
-        $this->setModuleConfVar('sKlarnaActiveMode', KlarnaConsts::MODULE_MODE_KP);
+        $this->setModuleConfVar('tcklarna_sKlarnaActiveMode', KlarnaConsts::MODULE_MODE_KP);
         $oBasket = $this->createStub(
             KlarnaBasket::class,
             ['getPaymentId' => 'klarna_pay_now']
@@ -525,7 +525,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
         $user = $this->createStub(
             KlarnaUser::class,
-            ['kl_getType' => 2, 'save' => true, 'clearDeliveryAddress' => true, 'updateDeliveryAddress' => true]
+            ['tcklarna_getType' => 2, 'save' => true, 'clearDeliveryAddress' => true, 'updateDeliveryAddress' => true]
         );
 
         $mock = $this->createStub(
@@ -659,7 +659,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
             ['getUser' => $user, 'getJsonRequest' => ['action' => 'checkOrderStatus']]
         );
 
-        $this->setModuleConfVar('sKlarnaActiveMode', KlarnaConsts::MODULE_MODE_KP);
+        $this->setModuleConfVar('tcklarna_sKlarnaActiveMode', KlarnaConsts::MODULE_MODE_KP);
         $this->setSessionParam('klarna_session_data', true);
         $this->setSessionParam('sCountryISO', 'EN');
         $this->setSessionParam('reauthorizeRequired', true);
@@ -692,7 +692,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $this->assertEquals($expected, json_decode(\oxUtilsHelper::$response, true));
 
 
-        $this->setModuleConfVar('sKlarnaActiveMode', KlarnaConsts::MODULE_MODE_KP);
+        $this->setModuleConfVar('tcklarna_sKlarnaActiveMode', KlarnaConsts::MODULE_MODE_KP);
         $this->setSessionParam('klarna_session_data', true);
 
         //INVALID TOKEN TEST
@@ -801,7 +801,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
     public function testUpdateKlarnaAjaxAddUserData()
     {
-        $this->setModuleConfVar('sKlarnaActiveMode', 'test');
+        $this->setModuleConfVar('tcklarna_sKlarnaActiveMode', 'test');
         $oBasket = $this->createStub(
             KlarnaBasket::class,
             ['getPaymentId' => 'klarna_checkout']
@@ -866,7 +866,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
     public function testUpdateKlarnaAjaxPaymentEnabled()
     {
         $mock = $this->createStub(KlarnaOrderController::class, ['getJsonRequest' => ['test' => 'test']]);
-        $this->setModuleConfVar('sKlarnaActiveMode', KlarnaConsts::MODULE_MODE_KP);
+        $this->setModuleConfVar('tcklarna_sKlarnaActiveMode', KlarnaConsts::MODULE_MODE_KP);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'xmlhttprequest';
         putenv("HTTP_X_REQUESTED_WITH=xmlhttprequest");
         $mock->updateKlarnaAjax();
@@ -1005,7 +1005,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $mock = $this->createStub(KlarnaOrderController::class, ['getUser' => $user, 'getViewConfig' => $viewConfig]);
         $method->invoke($mock);
 
-        $this->assertEquals($expected, $mock->getUser()->kl_getType());
+        $this->assertEquals($expected, $mock->getUser()->tcklarna_getType());
     }
 
     public function initUserDataProcider()
