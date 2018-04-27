@@ -78,6 +78,7 @@ class KlarnaBaseConfig extends ShopConfiguration
      * Save configuration values
      *
      * @return void
+     * @throws \Exception
      */
     public function save()
     {

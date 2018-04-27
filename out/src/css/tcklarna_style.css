@@ -165,39 +165,39 @@ div.klarna-flag {
 }
 
 .klarna-flag.se {
-    background-image: url('../admin/img/klarna-flag-se.png');
+    background-image: url('../../admin/src/img/klarna-flag-se.png');
 }
 
 .klarna-flag.gb {
-    background-image: url('../admin/img/klarna-flag-gb.png');
+    background-image: url('../../admin/src/img/klarna-flag-gb.png');
 }
 
 .klarna-flag.de {
-    background-image: url('../admin/img/klarna-flag-de.png');
+    background-image: url('../../admin/src/img/klarna-flag-de.png');
 }
 
 .klarna-flag.nl {
-    background-image: url('../admin/img/larna-flag-nl.png');
+    background-image: url('../../admin/src/img/larna-flag-nl.png');
 }
 
 .klarna-flag.at {
-    background-image: url('../admin/img/klarna-flag-at.png');
+    background-image: url('../../admin/src/img/klarna-flag-at.png');
 }
 
 .klarna-flag.no {
-    background-image: url('../admin/img/klarna-flag-no.png');
+    background-image: url('../../admin/src/img/klarna-flag-no.png');
 }
 
 .klarna-flag.fi {
-    background-image: url('../admin/img/klarna-flag-fi.png');
+    background-image: url('../../admin/src/img/klarna-flag-fi.png');
 }
 
 .klarna-flag.dk {
-    background-image: url('../admin/img/klarna-flag-dk.png');
+    background-image: url('../../admin/src/img/klarna-flag-dk.png');
 }
 
 .klarna-flag.ch {
-    background-image: url('../admin/img/klarna-flag-ch.png');
+    background-image: url('../../admin/src/img/klarna-flag-ch.png');
 }
 
 

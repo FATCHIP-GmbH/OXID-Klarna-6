@@ -89,8 +89,8 @@ class KlarnaOrder extends BaseModel
         $sLocale           = $this->_oUser->resolveLocale($sCountryISO);
         $lang              = strtoupper(Registry::getLang()->getLanguageAbbr());
         $klarnaUserData    = $this->_oUser->getKlarnaData();
-        $cancellationTerms = KlarnaUtils::getShopConfVar('sKlarnaCancellationRightsURI_' . $lang);
-        $terms             = KlarnaUtils::getShopConfVar('sKlarnaTermsConditionsURI_' . $lang);
+        $cancellationTerms = KlarnaUtils::getShopConfVar('tcklarna_sKlarnaCancellationRightsURI_' . $lang);
+        $terms             = KlarnaUtils::getShopConfVar('tcklarna_sKlarnaTermsConditionsURI_' . $lang);
 
         if (empty($cancellationTerms) || empty($terms)) {
             Registry::getSession()->setVariable('wrong_merchant_urls', true);
@@ -401,7 +401,7 @@ class KlarnaOrder extends BaseModel
     {
         $langTag = strtoupper(Registry::getLang()->getLanguageAbbr());
 
-        return KlarnaUtils::getShopConfVar('sKlarnaShippingDetails_' . $langTag);
+        return KlarnaUtils::getShopConfVar('tcklarna_sKlarnaShippingDetails_' . $langTag);
     }
 
     /**

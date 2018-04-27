@@ -140,8 +140,10 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
      */
     public function isKlarnaCheckoutEnabled()
     {
-        return KlarnaUtils::isKlarnaCheckoutEnabled()
-               && KlarnaUtils::isCountryActiveInKlarnaCheckout(Registry::getSession()->getVariable('sCountryISO'));
+        $sCountryIso = Registry::getSession()->getVariable('sCountryISO');
+
+        return KlarnaUtils::isKlarnaCheckoutEnabled() &&
+               KlarnaUtils::isCountryActiveInKlarnaCheckout($sCountryIso);
     }
 
     /**
@@ -178,8 +180,10 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
      */
     public function isCheckoutNonKlarnaCountry()
     {
+        $sCountryIso = Registry::getSession()->getVariable('sCountryISO');
+
         return KlarnaUtils::isKlarnaCheckoutEnabled() &&
-               !KlarnaUtils::isCountryActiveInKlarnaCheckout(Registry::getSession()->getVariable('sCountryISO'));
+               !KlarnaUtils::isCountryActiveInKlarnaCheckout($sCountryIso);
     }
 
     /**
@@ -206,11 +210,8 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
         } else {
             $sCountryISO2 = KlarnaUtils::getShopConfVar('tcklarna_sKlarnaDefaultCountry');
         }
-        if ($sCountryISO2 == 'DE') {
-            return true;
-        }
 
-        return false;
+        return $sCountryISO2 == 'DE';
     }
 
     /**
@@ -226,11 +227,8 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
         } else {
             $sCountryISO2 = KlarnaUtils::getShopConfVar('tcklarna_sKlarnaDefaultCountry');
         }
-        if ($sCountryISO2 == 'AT') {
-            return true;
-        }
 
-        return false;
+        return $sCountryISO2 == 'AT';
     }
 
     /**
@@ -258,7 +256,9 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
         $mid         = KlarnaUtils::getAPICredentials($sCountryISO);
         preg_match('/^(?P<mid>(.)+)(\_)/', $mid['mid'], $matches);
 
-        return sprintf(KlarnaConsts::KLARNA_PREFILL_NOTIF_URL, $matches['mid'], $this->getActLanguageAbbr(), strtolower($sCountryISO));
+        return sprintf(KlarnaConsts::KLARNA_PREFILL_NOTIF_URL,
+            $matches['mid'], $this->getActLanguageAbbr(), strtolower($sCountryISO)
+        );
     }
 
     /**

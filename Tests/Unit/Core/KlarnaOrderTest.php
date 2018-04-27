@@ -79,8 +79,8 @@ class KlarnaOrderTest extends ModuleUnitTestCase
             ]
         );
 
-        $this->setModuleConfVar('sKlarnaTermsConditionsURI_DE', 'https://testurl');
-        $this->setModuleConfVar('sKlarnaCancellationRightsURI_DE', 'https://testurl');
+        $this->setModuleConfVar('tcklarna_sKlarnaTermsConditionsURI_DE', 'https://testurl');
+        $this->setModuleConfVar('tcklarna_sKlarnaCancellationRightsURI_DE', 'https://testurl');
         $this->setModuleConfVar('tcklarna_iKlarnaValidation', 1);
         $this->setModuleConfVar('tcklarna_blKlarnaEnableAutofocus', false);
         $this->setConfigParam('sSSLShopURL', 'https://testurl');
@@ -175,7 +175,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
 
         $this->assertEquals($expected, $result);
 
-        $this->setModuleConfVar('sKlarnaCancellationRightsURI_DE', null);
+        $this->setModuleConfVar('tcklarna_sKlarnaCancellationRightsURI_DE', null);
         $result = $order->__construct($basket, $user);
         $this->assertFalse($result);
     }
