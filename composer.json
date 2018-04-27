@@ -6,7 +6,7 @@
       "blacklist-filter": [
         "documentation/**/*.*"
       ],
-      "target-directory": "tc/klarna"
+      "target-directory": "tc/tcklarna"
     }
   },
   "require": {
