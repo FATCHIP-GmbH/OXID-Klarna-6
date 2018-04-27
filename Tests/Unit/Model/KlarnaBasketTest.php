@@ -178,8 +178,8 @@ class KlarnaBasketTest extends ModuleUnitTestCase
     {
         $orderMgmtId = 'fake';
 
-        $this->setModuleConfVar('tcklarna_blKlarnaEnableAnonymization', 1, 'bool');
-        $this->setModuleConfVar('tcklarna_iKlarnaValidation', 1, 'bool');
+        $this->setModuleConfVar('blKlarnaEnableAnonymization', 1, 'bool');
+        $this->setModuleConfVar('iKlarnaValidation', 1, 'bool');
         $this->setModuleMode('KP');
 
         $oPrice = oxNew(Price::class);
@@ -204,7 +204,7 @@ class KlarnaBasketTest extends ModuleUnitTestCase
         $this->assertEquals($orderLines, $result);
 
         $this->setModuleMode('KCO');
-        $this->setModuleConfVar('tcklarna_blKlarnaEnableAnonymization', 0, 'bool');
+        $this->setModuleConfVar('blKlarnaEnableAnonymization', 0, 'bool');
         \oxTestModules::cleanAllModules();
     }
 

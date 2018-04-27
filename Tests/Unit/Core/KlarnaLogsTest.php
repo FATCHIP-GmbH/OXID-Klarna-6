@@ -14,7 +14,7 @@ class KlarnaLogsTest extends ModuleUnitTestCase
         $result = $klarnaLogs->save();
         $this->assertFalse($result);
 
-        $this->setModuleConfVar('tcklarna_blKlarnaLoggingEnabled', true, 'bool');
+        $this->setModuleConfVar('blKlarnaLoggingEnabled', true, 'bool');
         $result = $klarnaLogs->save();
         $this->assertNotFalse($result);
     }

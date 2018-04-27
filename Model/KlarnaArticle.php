@@ -69,7 +69,7 @@ class KlarnaArticle extends KlarnaArticle_parent
             $sSQL      = "SELECT art.oxid FROM {$sArticleTable} art WHERE art.OXACTIVE=1 AND art.OXARTNUM LIKE \"{$sArtNum}\"";
             $articleId = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC)->getOne($sSQL);
         } else {
-            if (KlarnaUtils::getShopConfVar('tcklarna_blKlarnaEnableAnonymization')) {
+            if (KlarnaUtils::getShopConfVar('blKlarnaEnableAnonymization')) {
                 $sSQL = "SELECT oxartid 
                             FROM tcklarna_anon_lookup 
                             JOIN {$sArticleTable} art
@@ -95,14 +95,14 @@ class KlarnaArticle extends KlarnaArticle_parent
     public function tcklarna_getOrderArticleName($counter = null, $iOrderLang = null)
     {
 
-        if (KlarnaUtils::getShopConfVar('tcklarna_blKlarnaEnableAnonymization')) {
+        if (KlarnaUtils::getShopConfVar('blKlarnaEnableAnonymization')) {
             if ($iOrderLang) {
                 $lang = strtoupper(Registry::getLang()->getLanguageAbbr($iOrderLang));
             } else {
                 $lang = strtoupper(Registry::getLang()->getLanguageAbbr());
             }
 
-            $name = KlarnaUtils::getShopConfVar('tcklarna_sKlarnaAnonymizedProductTitle_' . $lang);
+            $name = KlarnaUtils::getShopConfVar('sKlarnaAnonymizedProductTitle_' . $lang);
 
             return html_entity_decode("$name $counter", ENT_QUOTES);
         }
@@ -126,8 +126,8 @@ class KlarnaArticle extends KlarnaArticle_parent
      */
     public function tcklarna_getArticleUrl()
     {
-        if (KlarnaUtils::getShopConfVar('tcklarna_blKlarnaSendProductUrls') === true &&
-            KlarnaUtils::getShopConfVar('tcklarna_blKlarnaEnableAnonymization') === false) {
+        if (KlarnaUtils::getShopConfVar('blKlarnaSendProductUrls') === true &&
+            KlarnaUtils::getShopConfVar('blKlarnaEnableAnonymization') === false) {
 
             $link = $this->getLink(null, true);
 
@@ -144,8 +144,8 @@ class KlarnaArticle extends KlarnaArticle_parent
      */
     public function tcklarna_getArticleImageUrl()
     {
-        if (KlarnaUtils::getShopConfVar('tcklarna_blKlarnaSendImageUrls') === true &&
-            KlarnaUtils::getShopConfVar('tcklarna_blKlarnaEnableAnonymization') === false) {
+        if (KlarnaUtils::getShopConfVar('blKlarnaSendImageUrls') === true &&
+            KlarnaUtils::getShopConfVar('blKlarnaEnableAnonymization') === false) {
 
             $link = $this->getPictureUrl();
         }
@@ -158,7 +158,7 @@ class KlarnaArticle extends KlarnaArticle_parent
      */
     public function tcklarna_getArticleEAN()
     {
-        if (KlarnaUtils::getShopConfVar('tcklarna_blKlarnaEnableAnonymization') === false) {
+        if (KlarnaUtils::getShopConfVar('blKlarnaEnableAnonymization') === false) {
             $ean = $this->getFieldData('oxean');
         }
 
@@ -170,7 +170,7 @@ class KlarnaArticle extends KlarnaArticle_parent
      */
     public function tcklarna_getArticleMPN()
     {
-        if (KlarnaUtils::getShopConfVar('tcklarna_blKlarnaEnableAnonymization') === false) {
+        if (KlarnaUtils::getShopConfVar('blKlarnaEnableAnonymization') === false) {
             $mpn = $this->getFieldData('oxmpn');
         }
 
@@ -183,7 +183,7 @@ class KlarnaArticle extends KlarnaArticle_parent
     public function tcklarna_getArticleCategoryPath()
     {
         $sCategories = null;
-        if (KlarnaUtils::getShopConfVar('tcklarna_blKlarnaEnableAnonymization') === false) {
+        if (KlarnaUtils::getShopConfVar('blKlarnaEnableAnonymization') === false) {
             $oCat = $this->getCategory();
 
             if ($oCat) {
@@ -201,7 +201,7 @@ class KlarnaArticle extends KlarnaArticle_parent
      */
     public function tcklarna_getArticleManufacturer()
     {
-        if (KlarnaUtils::getShopConfVar('tcklarna_blKlarnaEnableAnonymization') === false) {
+        if (KlarnaUtils::getShopConfVar('blKlarnaEnableAnonymization') === false) {
             if (!$oManufacturer = $this->getManufacturer())
                 return null;
         }

@@ -157,8 +157,8 @@ class KlarnaOrdersTest extends ModuleUnitTestCase
 
         $this->setOrder();
         $this->setModuleConfVar('aKlarnaCreds_DE', '');
-        $this->setModuleConfVar('tcklarna_sKlarnaMerchantId', 'smid');
-        $this->setModuleConfVar('tcklarna_sKlarnaPassword', 'psw');
+        $this->setModuleConfVar('sKlarnaMerchantId', 'smid');
+        $this->setModuleConfVar('sKlarnaPassword', 'psw');
         $controller = $this->createStub(KlarnaOrders::class, ['getEditObjectId' => 'test']);
 
         $result = $controller->isCredentialsValid();

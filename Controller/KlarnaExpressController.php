@@ -89,7 +89,7 @@ class KlarnaExpressController extends FrontendController
         /**
          * KCO is not enabled. redirect to legacy oxid checkout
          */
-        if (KlarnaUtils::getShopConfVar('tcklarna_sKlarnaActiveMode') !== 'KCO') {
+        if (KlarnaUtils::getShopConfVar('sKlarnaActiveMode') !== 'KCO') {
             $oUtils->redirect(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=order', false, 302);
 
             return;
@@ -106,7 +106,7 @@ class KlarnaExpressController extends FrontendController
          * Default country is not KCO and we need the country popup without rendering the iframe.
          */
         if ($this->_oRequest->getRequestEscapedParameter('reset_klarna_country') == 1 /*&&
-            !KlarnaUtils::isCountryActiveInKlarnaCheckout(KlarnaUtils::getShopConfVar('tcklarna_sKlarnaDefaultCountry'))*/
+            !KlarnaUtils::isCountryActiveInKlarnaCheckout(KlarnaUtils::getShopConfVar('sKlarnaDefaultCountry'))*/
         ) {
             $this->blockIframeRender = true;
         }
@@ -466,7 +466,7 @@ class KlarnaExpressController extends FrontendController
          * User is coming back from legacy oxid checkout wanting to change the country to one of KCO ones
          */
         if ($this->_oRequest->getRequestEscapedParameter('reset_klarna_country') == 1) {
-            $oSession->setVariable('sCountryISO', KlarnaUtils::getShopConfVar('tcklarna_sKlarnaDefaultCountry'));
+            $oSession->setVariable('sCountryISO', KlarnaUtils::getShopConfVar('sKlarnaDefaultCountry'));
             /**
              * User is trying to access the klarna checkout for the first time and has to be redirected to legacy oxid checkout
              */
@@ -523,14 +523,14 @@ class KlarnaExpressController extends FrontendController
              * request parameter reset_klarna_country is checked and $this->blockIframeRender is set.
              */
         } else if (!$oSession->getVariable('sCountryISO') &&
-                   !KlarnaUtils::isCountryActiveInKlarnaCheckout(KlarnaUtils::getShopConfVar('tcklarna_sKlarnaDefaultCountry')) &&
+                   !KlarnaUtils::isCountryActiveInKlarnaCheckout(KlarnaUtils::getShopConfVar('sKlarnaDefaultCountry')) &&
                    $this->_oRequest->getRequestEscapedParameter('reset_klarna_country') != 1
         ) {
             /**
              * Guest user is trying to access the klarna checkout for the first time and has to be redirected to legacy oxid checkout
              */
-            $oSession->setVariable('sCountryISO', KlarnaUtils::getShopConfVar('tcklarna_sKlarnaDefaultCountry'));
-            $this->redirectForNonKlarnaCountry(KlarnaUtils::getShopConfVar('tcklarna_sKlarnaDefaultCountry'));
+            $oSession->setVariable('sCountryISO', KlarnaUtils::getShopConfVar('sKlarnaDefaultCountry'));
+            $this->redirectForNonKlarnaCountry(KlarnaUtils::getShopConfVar('sKlarnaDefaultCountry'));
         }
     }
 
@@ -547,7 +547,7 @@ class KlarnaExpressController extends FrontendController
             $this->addTplParam("sPurchaseCountry", $countryISO);
             $this->addTplParam("sKlarnaIframe", $this->getKlarnaClient()->getHtmlSnippet());
             $this->addTplParam("sCurrentUrl", Registry::get(UtilsUrl::class)->getCurrentUrl());
-            $this->addTplParam("shippingAddressAllowed", KlarnaUtils::getShopConfVar('tcklarna_blKlarnaAllowSeparateDeliveryAddress'));
+            $this->addTplParam("shippingAddressAllowed", KlarnaUtils::getShopConfVar('blKlarnaAllowSeparateDeliveryAddress'));
         }
     }
 

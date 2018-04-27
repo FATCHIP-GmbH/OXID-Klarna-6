@@ -36,7 +36,7 @@ class KlarnaUserComponentTest extends ModuleUnitTestCase
      */
     public function testLogin_noredirect($klMode, $isEnabledPrivateSales, $isKlarnaController, $redirectUrl)
     {
-        $this->getConfig()->saveShopConfVar(null, 'tcklarna_sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'tcklarna');
+        $this->getConfig()->saveShopConfVar(null, 'sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'tcklarna');
 
         $cmpUser = $this->getMock(UserComponent::class, ['klarnaRedirect']);
         $cmpUser->expects($this->any())->method('klarnaRedirect')->willReturn($isKlarnaController);
@@ -70,7 +70,7 @@ class KlarnaUserComponentTest extends ModuleUnitTestCase
      */
     public function testChangeuser_testvalues($klMode, $showShippingAddress, $resetResult, $showShippingAddressResult, $addressIdResult)
     {
-        $this->getConfig()->saveShopConfVar(null, 'tcklarna_sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'tcklarna');
+        $this->getConfig()->saveShopConfVar(null, 'sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'tcklarna');
         $this->setRequestParameter('blshowshipaddress', $showShippingAddress);
         $this->setRequestParameter('oxaddressid', $addressIdResult);
 

@@ -32,7 +32,7 @@ class KlarnaInstallerTest extends ModuleUnitTestCase
 
         foreach ($paymentIds as $id) {
             $database->execute("DELETE FROM `oxpayments` WHERE oxid = ?", [$id]);
-            $database->execute("DELETE FROM `oxconfig` WHERE oxvarname = ?", ['tcklarna_blKlarnaAllowSeparateDeliveryAddress']);
+            $database->execute("DELETE FROM `oxconfig` WHERE oxvarname = ?", ['blKlarnaAllowSeparateDeliveryAddress']);
         }
 
         $dbMetaDataHandler = oxNew(DbMetaDataHandler::class);
@@ -83,7 +83,7 @@ class KlarnaInstallerTest extends ModuleUnitTestCase
         $db = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
 
         $db->execute('update oxconfig set oxvarvalue=ENCODE(?, ?) where oxvarname=? and oxshopid=?',
-            [1, 'fq45QS09_fqyx09239QQ', 'tcklarna_blKlarnaAllowSeparateDeliveryAddress', 1]);
+            [1, 'fq45QS09_fqyx09239QQ', 'blKlarnaAllowSeparateDeliveryAddress', 1]);
     }
 
     /**
@@ -131,7 +131,7 @@ class KlarnaInstallerTest extends ModuleUnitTestCase
         $this->assertTables($dbMetaDataHandler);
         $this->assertColumns($dbMetaDataHandler);
 
-        $result = $db->getOne("SELECT count(*) FROM oxconfig WHERE oxvarname = ?", ['tcklarna_blKlarnaAllowSeparateDeliveryAddress']);
+        $result = $db->getOne("SELECT count(*) FROM oxconfig WHERE oxvarname = ?", ['blKlarnaAllowSeparateDeliveryAddress']);
         $this->assertEquals('1', $result);
     }
 

@@ -134,7 +134,7 @@ class KlarnaOrder extends KlarnaOrder_parent
         $sCountryISO = KlarnaUtils::getCountryISO($this->getFieldData('oxbillcountryid'));
 
         $aKlarnaCredentials = KlarnaUtils::getAPICredentials($sCountryISO);
-        $test               = KlarnaUtils::getShopConfVar('tcklarna_blIsKlarnaTestMode');
+        $test               = KlarnaUtils::getShopConfVar('blIsKlarnaTestMode');
 
         preg_match('/(?<mid>^[a-zA-Z0-9]+)/', $aKlarnaCredentials['mid'], $matches);
         $mid        = $matches['mid'];
@@ -333,7 +333,7 @@ class KlarnaOrder extends KlarnaOrder_parent
         if ($this->isAnonymous !== null)
             return $this->isAnonymous;
 
-        return $this->isAnonymous = KlarnaUtils::getShopConfVar('tcklarna_blKlarnaEnableAnonymization');
+        return $this->isAnonymous = KlarnaUtils::getShopConfVar('blKlarnaEnableAnonymization');
     }
 
 

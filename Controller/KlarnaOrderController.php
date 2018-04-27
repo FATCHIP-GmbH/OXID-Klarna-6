@@ -864,7 +864,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     protected function isRegisterNewUserNeeded()
     {
         $checked          = $this->_aOrderData['merchant_requested']['additional_checkbox'] === true;
-        $checkboxFunction = KlarnaUtils::getShopConfVar('tcklarna_iKlarnaActiveCheckbox');
+        $checkboxFunction = KlarnaUtils::getShopConfVar('iKlarnaActiveCheckbox');
 
         return $checkboxFunction > 0 && $checked;
     }
@@ -877,7 +877,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     protected function isNewsletterSignupNeeded()
     {
         $checked          = $this->_aOrderData['merchant_requested']['additional_checkbox'] === true;
-        $checkboxFunction = KlarnaUtils::getShopConfVar('tcklarna_iKlarnaActiveCheckbox');
+        $checkboxFunction = KlarnaUtils::getShopConfVar('iKlarnaActiveCheckbox');
 
         return $checkboxFunction > 1 && $checked;
     }

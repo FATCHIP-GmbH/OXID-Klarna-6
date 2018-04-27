@@ -20,7 +20,7 @@ class KlarnaGeneral extends KlarnaBaseConfig
     protected $_aKlarnaCountries = array();
 
     /** @inheritdoc */
-    protected $MLVars = ['tcklarna_sKlarnaAnonymizedProductTitle_'];
+    protected $MLVars = ['sKlarnaAnonymizedProductTitle_'];
 
     /**
      * Render logic

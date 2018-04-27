@@ -24,14 +24,14 @@ class KlarnaArticleTest extends ModuleUnitTestCase
 
         $this->assertNull($result);
 
-        $this->setModuleConfVar('tcklarna_blKlarnaSendProductUrls', false, 'bool');
+        $this->setModuleConfVar('blKlarnaSendProductUrls', false, 'bool');
 
         $result = $article->tcklarna_getArticleUrl();
 
         $this->assertNull($result);
 
         //revert to default state
-        $this->setModuleConfVar('tcklarna_blKlarnaSendProductUrls', true, 'bool');
+        $this->setModuleConfVar('blKlarnaSendProductUrls', true, 'bool');
 
     }
 
@@ -40,11 +40,11 @@ class KlarnaArticleTest extends ModuleUnitTestCase
         $articleClass = oxNew(Article::class);
         $articleClass->setId('adc5ee42bd3c37a27a488769d22ad9ed');
 
-        $this->setModuleConfVar('tcklarna_blKlarnaEnableAnonymization', true, 'bool');
+        $this->setModuleConfVar('blKlarnaEnableAnonymization', true, 'bool');
         $result = $articleClass->tcklarna_getArticleCategoryPath();
         $this->assertNull($result);
 
-        $this->setModuleConfVar('tcklarna_blKlarnaEnableAnonymization', false, 'bool');
+        $this->setModuleConfVar('blKlarnaEnableAnonymization', false, 'bool');
         $result = $articleClass->tcklarna_getArticleCategoryPath();
         $this->assertEquals($result, 'Angebote');
 
@@ -58,11 +58,11 @@ class KlarnaArticleTest extends ModuleUnitTestCase
     {
         $articleClass = oxNew(Article::class);
         $result = $articleClass->tcklarna_getArticleManufacturer();
-        $this->setModuleConfVar('tcklarna_blKlarnaEnableAnonymization', true, 'bool');
+        $this->setModuleConfVar('blKlarnaEnableAnonymization', true, 'bool');
 
         $this->assertNull($result);
 
-        $this->setModuleConfVar('tcklarna_blKlarnaEnableAnonymization', false, 'bool');
+        $this->setModuleConfVar('blKlarnaEnableAnonymization', false, 'bool');
         $article = $this->createStub(KlarnaArticle::class, ['getManufacturer' => false]);
         $result = $article->tcklarna_getArticleManufacturer();
         $this->assertNull($result);
@@ -80,12 +80,12 @@ class KlarnaArticleTest extends ModuleUnitTestCase
         $result = $articleClass->tcklarna_getArticleImageUrl();
         $this->assertNotNull($result);
 
-        $this->setModuleConfVar('tcklarna_blKlarnaSendImageUrls', false, 'bool');
+        $this->setModuleConfVar('blKlarnaSendImageUrls', false, 'bool');
         $result = $articleClass->tcklarna_getArticleImageUrl();
         $this->assertNull($result);
 
         //revert to default state
-        $this->setModuleConfVar('tcklarna_blKlarnaSendImageUrls', true, 'bool');
+        $this->setModuleConfVar('blKlarnaSendImageUrls', true, 'bool');
 
     }
 
@@ -111,7 +111,7 @@ class KlarnaArticleTest extends ModuleUnitTestCase
     public function testTcklarna_getOrderArticleName($configValue, $aticleName, $expectedResult, $iOrderLang)
     {
 
-        $this->setModuleConfVar('tcklarna_blKlarnaEnableAnonymization', $configValue, 'bool');
+        $this->setModuleConfVar('blKlarnaEnableAnonymization', $configValue, 'bool');
         $articleClass = oxNew(Article::class);
         $result = $articleClass->tcklarna_getOrderArticleName($aticleName, $iOrderLang);
 
@@ -140,12 +140,12 @@ class KlarnaArticleTest extends ModuleUnitTestCase
         $result = $articleClass->tcklarna_getArticleEAN();
         $this->assertEquals('test', $result);
 
-        $this->setModuleConfVar('tcklarna_blKlarnaEnableAnonymization', true, 'bool');
+        $this->setModuleConfVar('blKlarnaEnableAnonymization', true, 'bool');
         $result = $articleClass->tcklarna_getArticleEAN();
         $this->assertNull($result);
 
         //revert to default state
-        $this->setModuleConfVar('tcklarna_blKlarnaEnableAnonymization', false, 'bool');
+        $this->setModuleConfVar('blKlarnaEnableAnonymization', false, 'bool');
     }
 
     public function testKlarna_loadByArtNum()
@@ -158,12 +158,12 @@ class KlarnaArticleTest extends ModuleUnitTestCase
         $result = $articleClass->klarna_loadByArtNum('adc5ee42bd3c37a27a488769d22ad9edadc5ee42bd3c37a27a488769d22ad9ed');//64chars
         $this->assertFalse($result);
 
-        $this->setModuleConfVar('tcklarna_blKlarnaEnableAnonymization', true, 'bool');
+        $this->setModuleConfVar('blKlarnaEnableAnonymization', true, 'bool');
         $result = $articleClass->klarna_loadByArtNum(50);//non existant
         $this->assertFalse($result);
 
         //revert to default state
-        $this->setModuleConfVar('tcklarna_blKlarnaEnableAnonymization', false, 'bool');
+        $this->setModuleConfVar('blKlarnaEnableAnonymization', false, 'bool');
     }
 
     public function goodStockDataProvider()
@@ -202,11 +202,11 @@ class KlarnaArticleTest extends ModuleUnitTestCase
         $result = $articleClass->tcklarna_getArticleMPN();
         $this->assertEquals('test', $result);
 
-        $this->setModuleConfVar('tcklarna_blKlarnaEnableAnonymization', true, 'bool');
+        $this->setModuleConfVar('blKlarnaEnableAnonymization', true, 'bool');
         $result = $articleClass->tcklarna_getArticleMPN();
         $this->assertNull($result);
 
         //revert to default state
-        $this->setModuleConfVar('tcklarna_blKlarnaEnableAnonymization', false, 'bool');
+        $this->setModuleConfVar('blKlarnaEnableAnonymization', false, 'bool');
     }
 }

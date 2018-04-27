@@ -130,7 +130,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
             '_aOrderData',
             ['merchant_requested' => ['additional_checkbox' => true]]
         );
-        $this->setModuleConfVar('tcklarna_iKlarnaActiveCheckbox', 1);
+        $this->setModuleConfVar('iKlarnaActiveCheckbox', 1);
         $mock->execute();
         $addressResult = $this->getSessionParam('sDelAddrMD5');
         $this->assertEquals('address', $addressResult);
@@ -214,7 +214,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
             '_aOrderData',
             ['merchant_requested' => ['additional_checkbox' => true]]
         );
-        $this->setModuleConfVar('tcklarna_iKlarnaActiveCheckbox', 2);
+        $this->setModuleConfVar('iKlarnaActiveCheckbox', 2);
         $result = $method->invoke($mock);
         $this->assertNull($result);
 
@@ -224,7 +224,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
             '_aOrderData',
             ['merchant_requested' => ['additional_checkbox' => true]]
         );
-        $this->setModuleConfVar('tcklarna_iKlarnaActiveCheckbox', 2);
+        $this->setModuleConfVar('iKlarnaActiveCheckbox', 2);
 
         $this->setExpectedException(StandardException::class, 'no user object');
         $method->invoke($mock);
@@ -280,7 +280,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
     public function testRender()
     {
-        $this->setModuleConfVar('tcklarna_sKlarnaActiveMode', KlarnaConsts::MODULE_MODE_KP);
+        $this->setModuleConfVar('sKlarnaActiveMode', KlarnaConsts::MODULE_MODE_KP);
         $oBasket = $this->createStub(
             KlarnaBasket::class,
             ['getPaymentId' => 'klarna_pay_now']
@@ -659,7 +659,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
             ['getUser' => $user, 'getJsonRequest' => ['action' => 'checkOrderStatus']]
         );
 
-        $this->setModuleConfVar('tcklarna_sKlarnaActiveMode', KlarnaConsts::MODULE_MODE_KP);
+        $this->setModuleConfVar('sKlarnaActiveMode', KlarnaConsts::MODULE_MODE_KP);
         $this->setSessionParam('klarna_session_data', true);
         $this->setSessionParam('sCountryISO', 'EN');
         $this->setSessionParam('reauthorizeRequired', true);
@@ -692,7 +692,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $this->assertEquals($expected, json_decode(\oxUtilsHelper::$response, true));
 
 
-        $this->setModuleConfVar('tcklarna_sKlarnaActiveMode', KlarnaConsts::MODULE_MODE_KP);
+        $this->setModuleConfVar('sKlarnaActiveMode', KlarnaConsts::MODULE_MODE_KP);
         $this->setSessionParam('klarna_session_data', true);
 
         //INVALID TOKEN TEST
@@ -801,7 +801,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
     public function testUpdateKlarnaAjaxAddUserData()
     {
-        $this->setModuleConfVar('tcklarna_sKlarnaActiveMode', 'test');
+        $this->setModuleConfVar('sKlarnaActiveMode', 'test');
         $oBasket = $this->createStub(
             KlarnaBasket::class,
             ['getPaymentId' => 'klarna_checkout']
@@ -866,7 +866,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
     public function testUpdateKlarnaAjaxPaymentEnabled()
     {
         $mock = $this->createStub(KlarnaOrderController::class, ['getJsonRequest' => ['test' => 'test']]);
-        $this->setModuleConfVar('tcklarna_sKlarnaActiveMode', KlarnaConsts::MODULE_MODE_KP);
+        $this->setModuleConfVar('sKlarnaActiveMode', KlarnaConsts::MODULE_MODE_KP);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'xmlhttprequest';
         putenv("HTTP_X_REQUESTED_WITH=xmlhttprequest");
         $mock->updateKlarnaAjax();

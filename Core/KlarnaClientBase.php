@@ -64,7 +64,7 @@ abstract class KlarnaClientBase extends Base
             self::$instance               = new $calledClass();
             $aKlarnaCredentials           = KlarnaUtils::getAPICredentials($sCountryISO);
             self::$instance->aCredentials = $aKlarnaCredentials;
-            $test                         = KlarnaUtils::getShopConfVar('tcklarna_blIsKlarnaTestMode');
+            $test                         = KlarnaUtils::getShopConfVar('blIsKlarnaTestMode');
             $apiUrl                       = $test ? self::TEST_API_URL : self::LIVE_API_URL;
             $headers                      = array('Authorization' => 'Basic ' . base64_encode("{$aKlarnaCredentials['mid']}:{$aKlarnaCredentials['password']}"), 'Content-Type' => 'application/json');
             $headers                      = array_merge($headers, self::$instance->getApiClientHeader());

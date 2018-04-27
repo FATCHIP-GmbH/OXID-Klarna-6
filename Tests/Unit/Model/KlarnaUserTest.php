@@ -404,7 +404,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
     public function testGetKlarnaDeliveryCountry($mode, $countryISO, $userCountryId, $expectedId)
     {
         $this->setModuleMode($mode);
-        $this->setModuleConfVar('tcklarna_sKlarnaDefaultCountry', 'DE');
+        $this->setModuleConfVar('sKlarnaDefaultCountry', 'DE');
         $this->setSessionParam('sCountryISO', $countryISO);
 
         $oUser = oxNew(User::class);
@@ -528,7 +528,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
      */
     public function testGetKlarnaData($selectedCountry, $invadr, $resultKeys)
     {
-        $this->setModuleConfVar('tcklarna_blKlarnaEnablePreFilling', false);
+        $this->setModuleConfVar('blKlarnaEnablePreFilling', false);
         $this->setRequestParameter('selected-country', $selectedCountry);
         $this->setSessionParam('invadr', $invadr);
 
@@ -560,7 +560,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
      */
     public function testGetKlarnaData_PreFillingEnabled($userType, $showSippingAddress, $addressId, $invadr, $resultKeys)
     {
-        $this->setModuleConfVar('tcklarna_blKlarnaEnablePreFilling', true);
+        $this->setModuleConfVar('blKlarnaEnablePreFilling', true);
         $this->setSessionParam('blshowshipaddress', $showSippingAddress);
         $this->setSessionParam('deladrid', $addressId);
         $this->setSessionParam('invadr', $invadr);

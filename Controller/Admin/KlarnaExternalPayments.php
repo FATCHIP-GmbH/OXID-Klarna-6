@@ -69,7 +69,6 @@ class KlarnaExternalPayments extends KlarnaBaseConfig
 
 
     /**
-     * @codeCoverageIgnore
      * @throws \Exception
      */
     public function save()
@@ -125,6 +124,6 @@ class KlarnaExternalPayments extends KlarnaBaseConfig
      */
     protected function getActiveKlarnaMode()
     {
-        return KlarnaUtils::getShopConfVar('tcklarna_sKlarnaActiveMode');
+        return KlarnaUtils::getShopConfVar('sKlarnaActiveMode');
     }
 }

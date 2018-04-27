@@ -79,10 +79,10 @@ class KlarnaOrderTest extends ModuleUnitTestCase
             ]
         );
 
-        $this->setModuleConfVar('tcklarna_sKlarnaTermsConditionsURI_DE', 'https://testurl');
-        $this->setModuleConfVar('tcklarna_sKlarnaCancellationRightsURI_DE', 'https://testurl');
-        $this->setModuleConfVar('tcklarna_iKlarnaValidation', 1);
-        $this->setModuleConfVar('tcklarna_blKlarnaEnableAutofocus', false);
+        $this->setModuleConfVar('sKlarnaTermsConditionsURI_DE', 'https://testurl');
+        $this->setModuleConfVar('sKlarnaCancellationRightsURI_DE', 'https://testurl');
+        $this->setModuleConfVar('iKlarnaValidation', 1);
+        $this->setModuleConfVar('blKlarnaEnableAutofocus', false);
         $this->setConfigParam('sSSLShopURL', 'https://testurl');
 
         //call constructor
@@ -175,7 +175,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
 
         $this->assertEquals($expected, $result);
 
-        $this->setModuleConfVar('tcklarna_sKlarnaCancellationRightsURI_DE', null);
+        $this->setModuleConfVar('sKlarnaCancellationRightsURI_DE', null);
         $result = $order->__construct($basket, $user);
         $this->assertFalse($result);
     }
@@ -205,7 +205,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $user  = $this->createStub(User::class, ['isFake' => true]);
         $order = $this->createStub(KlarnaOrder::class, ['__construct' => null]);
         $this->setProtectedClassProperty($order, '_oUser', $user);
-        $this->setModuleConfVar('tcklarna_iKlarnaActiveCheckbox', '22');
+        $this->setModuleConfVar('iKlarnaActiveCheckbox', '22');
         $result = $methodReflection->invoke($order);
 
         $this->assertEquals($result, 22);
@@ -218,7 +218,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
 
         $this->assertEquals($result, 2);
 
-        $this->setModuleConfVar('tcklarna_iKlarnaActiveCheckbox', '0');
+        $this->setModuleConfVar('iKlarnaActiveCheckbox', '0');
         $result = $methodReflection->invoke($order);
 
         $this->assertEquals($result, 0);

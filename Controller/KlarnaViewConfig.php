@@ -70,12 +70,12 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
      */
     public function getKlarnaFooterContent()
     {
-        $sCountryISO = KlarnaUtils::getShopConfVar('tcklarna_sKlarnaDefaultCountry');
+        $sCountryISO = KlarnaUtils::getShopConfVar('sKlarnaDefaultCountry');
         if (!in_array($sCountryISO, KlarnaConsts::getKlarnaCoreCountries())) {
             return false;
         }
 
-        $klFooter = intval(KlarnaUtils::getShopConfVar('tcklarna_sKlarnaFooterDisplay'));
+        $klFooter = intval(KlarnaUtils::getShopConfVar('sKlarnaFooterDisplay'));
         if ($klFooter) {
 
             if ($klFooter === self::TCKLARNA_FOOTER_DISPLAY_PAYMENT_METHODS && KlarnaUtils::isKlarnaCheckoutEnabled()) {
@@ -103,17 +103,17 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
      */
     public function getKlarnaHomepageBanner()
     {
-        if (KlarnaUtils::getShopConfVar('tcklarna_blKlarnaDisplayBanner')) {
+        if (KlarnaUtils::getShopConfVar('blKlarnaDisplayBanner')) {
             $oLang = Registry::getLang();
             $lang  = $oLang->getLanguageAbbr();
 
-            $varName = 'tcklarna_sKlarnaBannerSrc' . '_' . strtoupper($lang);
+            $varName = 'sKlarnaBannerSrc' . '_' . strtoupper($lang);
             if (!$sBannerScript = KlarnaUtils::getShopConfVar($varName)) {
                 $aDefaults     = KlarnaConsts::getDefaultBannerSrc();
                 $sBannerScript = $aDefaults[$lang];
             }
 
-            return str_replace('{{merchantid}}', KlarnaUtils::getShopConfVar('tcklarna_sKlarnaMerchantId'), $sBannerScript);
+            return str_replace('{{merchantid}}', KlarnaUtils::getShopConfVar('sKlarnaMerchantId'), $sBannerScript);
         }
 
         return false;
@@ -132,7 +132,7 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
      */
     public function getMode()
     {
-        return KlarnaUtils::getShopConfVar('tcklarna_sKlarnaActiveMode');
+        return KlarnaUtils::getShopConfVar('sKlarnaActiveMode');
     }
 
     /**
@@ -208,7 +208,7 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
         if ($user = $this->getUser()) {
             $sCountryISO2 = $user->resolveCountry();
         } else {
-            $sCountryISO2 = KlarnaUtils::getShopConfVar('tcklarna_sKlarnaDefaultCountry');
+            $sCountryISO2 = KlarnaUtils::getShopConfVar('sKlarnaDefaultCountry');
         }
 
         return $sCountryISO2 == 'DE';
@@ -225,7 +225,7 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
         if ($user = $this->getUser()) {
             $sCountryISO2 = $user->resolveCountry();
         } else {
-            $sCountryISO2 = KlarnaUtils::getShopConfVar('tcklarna_sKlarnaDefaultCountry');
+            $sCountryISO2 = KlarnaUtils::getShopConfVar('sKlarnaDefaultCountry');
         }
 
         return $sCountryISO2 == 'AT';
@@ -266,7 +266,7 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
      */
     public function isShowPrefillNotif()
     {
-        return (bool)KlarnaUtils::getShopConfVar('tcklarna_blKlarnaPreFillNotification');
+        return (bool)KlarnaUtils::getShopConfVar('blKlarnaPreFillNotification');
     }
 
     /**
@@ -274,6 +274,6 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
      */
     public function isPrefillIframe()
     {
-        return (bool)KlarnaUtils::getShopConfVar('tcklarna_blKlarnaEnablePreFilling');
+        return (bool)KlarnaUtils::getShopConfVar('blKlarnaEnablePreFilling');
     }
 }

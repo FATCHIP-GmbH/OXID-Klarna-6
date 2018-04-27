@@ -8,10 +8,10 @@
             <tr>
                 <td class="conf-label-2">[{ oxmultilang ident="TCKLARNA_SET_TAC_URI" }]</td>
                 <td class="lang-input">
-                    [{assign var="confVarName" value="tcklarna_sKlarnaTermsConditionsURI_"|cat:$lang_tag}]
+                    [{assign var="confVarName" value="sKlarnaTermsConditionsURI_"|cat:$lang_tag}]
                     <div class="input">
                         <input type="text" class="url-input m-lang"
-                               name="confstrs[tcklarna_sKlarnaTermsConditionsURI_[{$lang_tag}]]"
+                               name="confstrs[sKlarnaTermsConditionsURI_[{$lang_tag}]]"
                                value="[{$confstrs.$confVarName}]"
                                pattern="^(https://)?([a-zA-Z0-9]([a-zA-ZäöüÄÖÜ0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}.*" required>
                     </div>
@@ -26,10 +26,10 @@
             <tr>
                 <td class="conf-label-2">[{ oxmultilang ident="TCKLARNA_SET_CANCEL_URI" }]</td>
                 <td class="lang-input">
-                    [{assign var="confVarName" value="tcklarna_sKlarnaCancellationRightsURI_"|cat:$lang_tag}]
+                    [{assign var="confVarName" value="sKlarnaCancellationRightsURI_"|cat:$lang_tag}]
                     <div class="input">
                         <input type="text" class="url-input m-lang"
-                               name="confstrs[tcklarna_sKlarnaCancellationRightsURI_[{$lang_tag}]]"
+                               name="confstrs[sKlarnaCancellationRightsURI_[{$lang_tag}]]"
                                value="[{$confstrs.$confVarName}]"
                                pattern="^(https://)?([a-zA-Z0-9]([a-zA-ZäöüÄÖÜ0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}.*" required>
                     </div>
@@ -47,7 +47,7 @@
                     [{assign var="confVarName" value="tcklarna_sKlarnaShippingDetails_"|cat:$lang_tag}]
                     <div class="input">
                         <input type="text" class="m-lang"
-                               name="confstrs[tcklarna_tcklarna_sKlarnaCahippingDetails_[{$lang_tag}]]"
+                               name="confstrs[sKlarnaShippingDetails_[{$lang_tag}]]"
                                value="[{$confstrs.$confVarName}]">
                     </div>
                 </td>

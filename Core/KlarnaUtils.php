@@ -82,7 +82,7 @@ class KlarnaUtils
      */
     public static function getKlarnaModuleMode()
     {
-        return self::getShopConfVar('tcklarna_sKlarnaActiveMode');
+        return self::getShopConfVar('sKlarnaActiveMode');
     }
 
     /**
@@ -132,8 +132,8 @@ class KlarnaUtils
 
         if (!$aCredentials = KlarnaUtils::getShopConfVar('aKlarnaCreds_' . $sCountryISO)) {
             $aCredentials = array(
-                'mid'      => KlarnaUtils::getShopConfVar('tcklarna_sKlarnaMerchantId'),
-                'password' => KlarnaUtils::getShopConfVar('tcklarna_sKlarnaPassword'),
+                'mid'      => KlarnaUtils::getShopConfVar('sKlarnaMerchantId'),
+                'password' => KlarnaUtils::getShopConfVar('sKlarnaPassword'),
             );
         }
 

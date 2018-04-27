@@ -57,15 +57,15 @@
                             <div class="selector__menu">
                                 <ul class="selector__choices">
                                     [{ foreach from=$activeCountries item="oxCountry" name="activeCountris" }]
-                                        <li class="selector__item[{if $confstrs.tcklarna_sKlarnaDefaultCountry === $oxCountry->oxcountry__oxisoalpha2->value }]--selected[{/if}]">
+                                        <li class="selector__item[{if $confstrs.sKlarnaDefaultCountry === $oxCountry->oxcountry__oxisoalpha2->value }]--selected[{/if}]">
                                             <a href="#" data-value=[{ $oxCountry->oxcountry__oxisoalpha2->value }]>
                                                 [{ $oxCountry->oxcountry__oxtitle->value }]
                                             </a>
                                         </li>
                                     [{ /foreach }]
                                 </ul>
-                                <input type="hidden" name="confstrs[tcklarna_sKlarnaDefaultCountry]"
-                                       value="[{$confstrs.tcklarna_sKlarnaDefaultCountry}]">
+                                <input type="hidden" name="confstrs[sKlarnaDefaultCountry]"
+                                       value="[{$confstrs.sKlarnaDefaultCountry}]">
                             </div>
                         </div>
                     </td>
@@ -81,11 +81,11 @@
                         <div class="input w356">
                             <div class="display">
                                 <label class="label toggle kco" for="AllowSeparateDeliveryAddress">
-                                    <input type="hidden" name="confbools[tcklarna_blKlarnaAllowSeparateDeliveryAddress]"
+                                    <input type="hidden" name="confbools[blKlarnaAllowSeparateDeliveryAddress]"
                                            value="0">
-                                    <input type="checkbox" name="confbools[tcklarna_blKlarnaAllowSeparateDeliveryAddress]"
+                                    <input type="checkbox" name="confbools[blKlarnaAllowSeparateDeliveryAddress]"
                                            value="1" id="AllowSeparateDeliveryAddress"
-                                           [{if ($confbools.tcklarna_blKlarnaAllowSeparateDeliveryAddress)}]checked[{/if}] [{ $readonly}]>
+                                           [{if ($confbools.blKlarnaAllowSeparateDeliveryAddress)}]checked[{/if}] [{ $readonly}]>
                                     <div class="toggle-control"></div>
                                 </label>
                             </div>
@@ -104,10 +104,10 @@
                         <div class="input w356">
                             <div class="display">
                                 <label class="label toggle kco" for="MandatoryPhone">
-                                    <input type="hidden" name="confbools[tcklarna_blKlarnaMandatoryPhone]" value="0">
-                                    <input type="checkbox" name="confbools[tcklarna_blKlarnaMandatoryPhone]" value="1"
+                                    <input type="hidden" name="confbools[blKlarnaMandatoryPhone]" value="0">
+                                    <input type="checkbox" name="confbools[blKlarnaMandatoryPhone]" value="1"
                                            id="MandatoryPhone"
-                                           [{if ($confbools.tcklarna_blKlarnaMandatoryPhone)}]checked[{/if}] [{ $readonly}]>
+                                           [{if ($confbools.blKlarnaMandatoryPhone)}]checked[{/if}] [{ $readonly}]>
                                     <div class="toggle-control"></div>
                                 </label>
                             </div>
@@ -126,10 +126,10 @@
                         <div class="input w356">
                             <div class="display">
                                 <label class="label toggle kco" for="MandatoryBirthDate">
-                                    <input type="hidden" name="confbools[tcklarna_blKlarnaMandatoryBirthDate]" value="0">
-                                    <input type="checkbox" name="confbools[tcklarna_blKlarnaMandatoryBirthDate]" value="1"
+                                    <input type="hidden" name="confbools[blKlarnaMandatoryBirthDate]" value="0">
+                                    <input type="checkbox" name="confbools[blKlarnaMandatoryBirthDate]" value="1"
                                            id="MandatoryBirthDate"
-                                           [{if ($confbools.tcklarna_blKlarnaMandatoryBirthDate)}]checked[{/if}] [{ $readonly}]>
+                                           [{if ($confbools.blKlarnaMandatoryBirthDate)}]checked[{/if}] [{ $readonly}]>
                                     <div class="toggle-control"></div>
                                 </label>
                             </div>
@@ -148,10 +148,10 @@
                         <div class="input w356">
                             <div class="display">
                                 <label class="label toggle kco" for="EnableAutofocus">
-                                    <input type="hidden" name="confbools[tcklarna_blKlarnaEnableAutofocus]" value="0">
-                                    <input type="checkbox" name="confbools[tcklarna_blKlarnaEnableAutofocus]" value="1"
+                                    <input type="hidden" name="confbools[blKlarnaEnableAutofocus]" value="0">
+                                    <input type="checkbox" name="confbools[blKlarnaEnableAutofocus]" value="1"
                                            id="EnableAutofocus"
-                                           [{if ($confbools.tcklarna_blKlarnaEnableAutofocus)}]checked[{/if}] [{ $readonly}]>
+                                           [{if ($confbools.blKlarnaEnableAutofocus)}]checked[{/if}] [{ $readonly}]>
                                     <div class="toggle-control"></div>
                                 </label>
                             </div>
@@ -183,7 +183,7 @@
                                 <td>
                                     <div class="input w356">
                                         <input type="radio"
-                                               name="confstrs[tcklarna_iKlarnaActiveCheckbox]"
+                                               name="confstrs[iKlarnaActiveCheckbox]"
                                                id="checkbox_[{$sValue}]"
                                                class="radio-custom"
                                                [{if $oView->getActiveCheckbox() == $sValue}]checked="checked"[{/if}]
@@ -219,7 +219,7 @@
                                 <td>
                                     <div class="input w356">
                                         <input type="radio"
-                                               name="confstrs[tcklarna_iKlarnaValidation]"
+                                               name="confstrs[iKlarnaValidation]"
                                                id="validation_[{$sValue}]"
                                                class="radio-custom"
                                                [{if $oView->getChosenValidation() == $sValue}]checked="checked"[{/if}]
@@ -296,10 +296,10 @@
                         <div class="input w356">
                             <div class="display">
                                 <label class="label toggle kco" for="EnablePreFilling">
-                                    <input type="hidden" name="confbools[tcklarna_blKlarnaEnablePreFilling]" value="0">
-                                    <input type="checkbox" name="confbools[tcklarna_blKlarnaEnablePreFilling]" value="1"
+                                    <input type="hidden" name="confbools[blKlarnaEnablePreFilling]" value="0">
+                                    <input type="checkbox" name="confbools[blKlarnaEnablePreFilling]" value="1"
                                            id="EnablePreFilling"
-                                           [{if ($confbools.tcklarna_blKlarnaEnablePreFilling)}]checked[{/if}] [{ $readonly}]>
+                                           [{if ($confbools.blKlarnaEnablePreFilling)}]checked[{/if}] [{ $readonly}]>
                                     <div class="toggle-control"></div>
                                 </label>
                             </div>
@@ -329,10 +329,10 @@
                             <div class="input w356">
                                 <div class="display">
                                     <label class="label toggle kco" for="PreFillNotification">
-                                        <input type="hidden" name="confbools[tcklarna_blKlarnaPreFillNotification]" value="0">
-                                        <input type="checkbox" name="confbools[tcklarna_blKlarnaPreFillNotification]" value="1"
+                                        <input type="hidden" name="confbools[blKlarnaPreFillNotification]" value="0">
+                                        <input type="checkbox" name="confbools[blKlarnaPreFillNotification]" value="1"
                                                id="PreFillNotification"
-                                               [{if ($confbools.tcklarna_blKlarnaPreFillNotification)}]checked[{/if}] [{ $readonly}]>
+                                               [{if ($confbools.blKlarnaPreFillNotification)}]checked[{/if}] [{ $readonly}]>
                                         <div class="toggle-control"></div>
                                     </label>
                                 </div>

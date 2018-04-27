@@ -129,7 +129,7 @@ class KlarnaBasket extends KlarnaBasket_parent
             }
 
             $aProcessedItem['name'] = $oArt->tcklarna_getOrderArticleName($counter, $iOrderLang);
-            if (KlarnaUtils::getShopConfVar('tcklarna_blKlarnaEnableAnonymization') === false) {
+            if (KlarnaUtils::getShopConfVar('blKlarnaEnableAnonymization') === false) {
                 $aProcessedItem['product_url']         = $oArt->tcklarna_getArticleUrl();
                 $aProcessedItem['image_url']           = $oArt->tcklarna_getArticleImageUrl();
                 $aProcessedItem['product_identifiers'] = array(
@@ -528,9 +528,9 @@ class KlarnaBasket extends KlarnaBasket_parent
     protected function getArtNum($oArt)
     {
         $original = $oArt->oxarticles__oxartnum->value;
-        if (KlarnaUtils::getShopConfVar('tcklarna_blKlarnaEnableAnonymization')) {
+        if (KlarnaUtils::getShopConfVar('blKlarnaEnableAnonymization')) {
             $hash = md5($original);
-            if (KlarnaUtils::getShopConfVar('tcklarna_iKlarnaValidation') != 0) {
+            if (KlarnaUtils::getShopConfVar('iKlarnaValidation') != 0) {
                 $this->addKlarnaAnonymousMapping($oArt->getId(), $hash);
             }
 

@@ -40,8 +40,8 @@
             <input type="hidden" name="fnc" value="save">
 
             <div class="products-container">
-                <input type="radio" name="confstrs[tcklarna_sKlarnaActiveMode]" id="mode_checkout"
-                       [{if $confstrs.tcklarna_sKlarnaActiveMode == 'KCO'}]checked="checked"[{/if}] value="KCO"/>
+                <input type="radio" name="confstrs[sKlarnaActiveMode]" id="mode_checkout"
+                       [{if $confstrs.sKlarnaActiveMode == 'KCO'}]checked="checked"[{/if}] value="KCO"/>
                 <label class="product" for="mode_checkout">
                     <div class="product-button"
                          style="height: 60px; border-radius: 5px; text-align: center; line-height: 60px; font-size: 18px;">
@@ -51,8 +51,8 @@
                        style="line-height: 1.619; color: #666;">[{oxmultilang ident="TCKLARNA_CHECKOUT_DESC"}]</p>
                     <i class="fa fa-check fa-2x" aria-hidden="true"></i>
                 </label>
-                <input type="radio" name="confstrs[tcklarna_sKlarnaActiveMode]" id="mode_payment"
-                       [{if $confstrs.tcklarna_sKlarnaActiveMode == 'KP'}]checked="checked" [{/if}]value="KP"/>
+                <input type="radio" name="confstrs[sKlarnaActiveMode]" id="mode_payment"
+                       [{if $confstrs.sKlarnaActiveMode == 'KP'}]checked="checked" [{/if}]value="KP"/>
                 <label class="product" for="mode_payment">
                     <div class="product-button"
                          style="height: 60px; border-radius: 5px; text-align: center; line-height: 60px; font-size: 18px;">
@@ -73,15 +73,15 @@
                                 <div class="selector" id="modeSelector">
                                     <div class="selector__menu">
                                         <ul class="selector__choices">
-                                            <li class="selector__item[{if $confbools.tcklarna_blIsKlarnaTestMode == 0}]--selected[{/if}]">
+                                            <li class="selector__item[{if $confbools.blIsKlarnaTestMode == 0}]--selected[{/if}]">
                                                 <a href="#" data-value="0">Live</a>
                                             </li>
-                                            <li class="selector__item[{if $confbools.tcklarna_blIsKlarnaTestMode == 1}]--selected[{/if}]">
+                                            <li class="selector__item[{if $confbools.blIsKlarnaTestMode == 1}]--selected[{/if}]">
                                                 <a href="#" data-value="1">Playground</a>
                                             </li>
                                         </ul>
-                                        <input type="hidden" name="confbools[tcklarna_blIsKlarnaTestMode]"
-                                               value="[{$confbools.tcklarna_blIsKlarnaTestMode}]">
+                                        <input type="hidden" name="confbools[blIsKlarnaTestMode]"
+                                               value="[{$confbools.blIsKlarnaTestMode}]">
                                     </div>
 
                                 </div>
@@ -97,8 +97,8 @@
                         <td>[{oxmultilang ident="TCKLARNA_MERCHANT_ID"}]:</td>
                         <td>
                             <div class="input">
-                                <input type="text" class="" name="confstrs[tcklarna_sKlarnaMerchantId]"
-                                       value="[{$confstrs.tcklarna_sKlarnaMerchantId}]">
+                                <input type="text" class="" name="confstrs[sKlarnaMerchantId]"
+                                       value="[{$confstrs.sKlarnaMerchantId}]">
                             </div>
                         </td>
                         <td>
@@ -111,8 +111,8 @@
                         <td>[{oxmultilang ident="TCKLARNA_PASSWORD"}]:</td>
                         <td>
                             <div class="input">
-                                <input type="password" class="" name="confstrs[tcklarna_sKlarnaPassword]"
-                                       value="[{$confstrs.tcklarna_sKlarnaPassword}]">
+                                <input type="password" class="" name="confstrs[sKlarnaPassword]"
+                                       value="[{$confstrs.sKlarnaPassword}]">
                             </div>
                         </td>
                         <td>
@@ -218,11 +218,11 @@
                             <div class="input w356">
                                 <div class="display">
                                     <label class="label toggle" for="LoggingEnabled">
-                                        <input type="hidden" name="confbools[tcklarna_blKlarnaLoggingEnabled]" value="0">
+                                        <input type="hidden" name="confbools[blKlarnaLoggingEnabled]" value="0">
                                         <input id="LoggingEnabled" type="checkbox" class="toggle_input"
-                                               name="confbools[tcklarna_blKlarnaLoggingEnabled]"
+                                               name="confbools[blKlarnaLoggingEnabled]"
                                                value="1"
-                                               [{if ($confbools.tcklarna_blKlarnaLoggingEnabled)}]checked[{/if}] [{ $readonly}]/>
+                                               [{if ($confbools.blKlarnaLoggingEnabled)}]checked[{/if}] [{ $readonly}]/>
                                         <div class="toggle-control"></div>
                                     </label>
                                 </div>
@@ -250,11 +250,11 @@
                             <div class="input w356">
                                 <div class="display">
                                     <label class="label toggle" for="SendProductUrls">
-                                        <input type="hidden" name="confbools[tcklarna_blKlarnaSendProductUrls]" value="0">
+                                        <input type="hidden" name="confbools[blKlarnaSendProductUrls]" value="0">
                                         <input type="checkbox" class="toggle_input" id="SendProductUrls"
-                                               name="confbools[tcklarna_blKlarnaSendProductUrls]"
+                                               name="confbools[blKlarnaSendProductUrls]"
                                                value="1"
-                                               [{if ($confbools.tcklarna_blKlarnaSendProductUrls)}]checked[{/if}] [{ $readonly}]/>
+                                               [{if ($confbools.blKlarnaSendProductUrls)}]checked[{/if}] [{ $readonly}]/>
                                         <div class="toggle-control"></div>
                                     </label>
                                 </div>
@@ -274,11 +274,11 @@
                             <div class="input w356">
                                 <div class="display">
                                     <label class="label toggle" for="SendImageUrls">
-                                        <input type="hidden" name="confbools[tcklarna_blKlarnaSendImageUrls]" value="0">
+                                        <input type="hidden" name="confbools[blKlarnaSendImageUrls]" value="0">
                                         <input type="checkbox" class="toggle_input"
-                                               name="confbools[tcklarna_blKlarnaSendImageUrls]"
+                                               name="confbools[blKlarnaSendImageUrls]"
                                                value="1" id="SendImageUrls"
-                                               [{if ($confbools.tcklarna_blKlarnaSendImageUrls)}]checked[{/if}] [{ $readonly}]/>
+                                               [{if ($confbools.blKlarnaSendImageUrls)}]checked[{/if}] [{ $readonly}]/>
                                         <div class="toggle-control"></div>
                                     </label>
                                 </div>
@@ -298,11 +298,11 @@
                             <div class="input w356">
                                 <div class="display">
                                     <label class="label toggle" for="anonymized">
-                                        <input type="hidden" name="confbools[tcklarna_blKlarnaEnableAnonymization]" value="0">
+                                        <input type="hidden" name="confbools[blKlarnaEnableAnonymization]" value="0">
                                         <input id="anonymized" type="checkbox" class="toggle_input"
-                                               name="confbools[tcklarna_blKlarnaEnableAnonymization]"
+                                               name="confbools[blKlarnaEnableAnonymization]"
                                                value="1"
-                                               [{if ($confbools.tcklarna_blKlarnaEnableAnonymization)}]checked[{/if}] [{ $readonly}]/>
+                                               [{if ($confbools.blKlarnaEnableAnonymization)}]checked[{/if}] [{ $readonly}]/>
                                         <div class="toggle-control"></div>
                                     </label>
                                 </div>
@@ -317,7 +317,7 @@
                     <tr class="b-border">
                         <td colspan="3" style="padding: 0;">
                             <div class="rows-wrapper"
-                                 style="[{if ($confbools.tcklarna_blKlarnaEnableAnonymization)}]display: block;[{/if}]">
+                                 style="[{if ($confbools.blKlarnaEnableAnonymization)}]display: block;[{/if}]">
                                 <table>
                                     <tbody>
                                     <tr>
@@ -348,7 +348,7 @@
                                         <td class="fw-500">[{ oxmultilang ident="TCKLARNA_ANONYMIZED_PRODUCT" }]</td>
                                         <td>
                                             <div class="input">
-                                                [{assign var="confVarName" value="tcklarna_sKlarnaAnonymizedProductTitle_"|cat:$lang_tag}]
+                                                [{assign var="confVarName" value="sKlarnaAnonymizedProductTitle_"|cat:$lang_tag}]
                                                 <input id="anonymized-value" type="text" class="" data-default-value=""
                                                        name="confstrs[[{$confVarName}]]"
                                                        value="[{ if $confstrs.$confVarName != ""}][{$confstrs.$confVarName}][{/if}]">

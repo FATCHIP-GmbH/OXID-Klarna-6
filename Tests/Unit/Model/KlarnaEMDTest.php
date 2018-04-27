@@ -17,8 +17,8 @@ class KlarnaEMDTest extends ModuleUnitTestCase
      */
     public function testGetAttachments($data, $expectedResult)
     {
-        $this->setModuleConfVar('tcklarna_blKlarnaEmdCustomerAccountInfo', $data['tcklarna_blKlarnaEmdCustomerAccountInfo']);
-        $this->setModuleConfVar('tcklarna_blKlarnaEmdPaymentHistoryFull', $data['tcklarna_blKlarnaEmdPaymentHistoryFull']);
+        $this->setModuleConfVar('blKlarnaEmdCustomerAccountInfo', $data['blKlarnaEmdCustomerAccountInfo']);
+        $this->setModuleConfVar('blKlarnaEmdPaymentHistoryFull', $data['blKlarnaEmdPaymentHistoryFull']);
 
         $klarnaEMD = oxNew(KlarnaEMD::class);
 
@@ -59,15 +59,15 @@ class KlarnaEMDTest extends ModuleUnitTestCase
         return [
             [
                 [
-                    'tcklarna_blKlarnaEmdCustomerAccountInfo' => 0,
-                    'tcklarna_blKlarnaEmdPaymentHistoryFull'  => 0,
+                    'blKlarnaEmdCustomerAccountInfo' => 0,
+                    'blKlarnaEmdPaymentHistoryFull'  => 0,
                 ],
                 [],
             ],
             [
                 [
-                    'tcklarna_blKlarnaEmdCustomerAccountInfo' => 1,
-                    'tcklarna_blKlarnaEmdPaymentHistoryFull'  => 0,
+                    'blKlarnaEmdCustomerAccountInfo' => 1,
+                    'blKlarnaEmdPaymentHistoryFull'  => 0,
                 ],
                 [
                     'customer_account_info' =>
@@ -81,8 +81,8 @@ class KlarnaEMDTest extends ModuleUnitTestCase
                 ],
             ], [
                 [
-                    'tcklarna_blKlarnaEmdCustomerAccountInfo' => 0,
-                    'tcklarna_blKlarnaEmdPaymentHistoryFull'  => 1,
+                    'blKlarnaEmdCustomerAccountInfo' => 0,
+                    'blKlarnaEmdPaymentHistoryFull'  => 1,
                 ],
                 [
                     'payment_history_full' => [
@@ -93,8 +93,8 @@ class KlarnaEMDTest extends ModuleUnitTestCase
                 ],
             ], [
                 [
-                    'tcklarna_blKlarnaEmdCustomerAccountInfo' => 1,
-                    'tcklarna_blKlarnaEmdPaymentHistoryFull'  => 1,
+                    'blKlarnaEmdCustomerAccountInfo' => 1,
+                    'blKlarnaEmdPaymentHistoryFull'  => 1,
                 ],
                 [
                     'customer_account_info' => [

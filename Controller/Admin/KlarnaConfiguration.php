@@ -17,7 +17,7 @@ class KlarnaConfiguration extends KlarnaBaseConfig
     protected $_sThisTemplate = 'tcklarna_kco_config.tpl';
 
     /** @inheritdoc */
-    protected $MLVars = ['tcklarna_sKlarnaTermsConditionsURI_', 'tcklarna_sKlarnaCancellationRightsURI_', 'tcklarna_sKlarnaShippingDetails_'];
+    protected $MLVars = ['sKlarnaTermsConditionsURI_', 'sKlarnaCancellationRightsURI_', 'tcklarna_sKlarnaShippingDetails_'];
 
     /**
      * Render logic
@@ -101,7 +101,7 @@ class KlarnaConfiguration extends KlarnaBaseConfig
      */
     public function getActiveCheckbox()
     {
-        return (int)KlarnaUtils::getShopConfVar('tcklarna_iKlarnaActiveCheckbox');
+        return (int)KlarnaUtils::getShopConfVar('iKlarnaActiveCheckbox');
     }
 
     /**
@@ -126,7 +126,7 @@ class KlarnaConfiguration extends KlarnaBaseConfig
      */
     public function getChosenValidation()
     {
-        return (int)KlarnaUtils::getShopConfVar('tcklarna_iKlarnaValidation');
+        return (int)KlarnaUtils::getShopConfVar('iKlarnaValidation');
     }
 
     /**
@@ -175,7 +175,7 @@ class KlarnaConfiguration extends KlarnaBaseConfig
     }
 
     /**
-     * @codeCoverageIgnore
+     *
      */
     public function save()
     {

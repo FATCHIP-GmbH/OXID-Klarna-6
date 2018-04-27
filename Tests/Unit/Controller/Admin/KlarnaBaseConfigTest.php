@@ -21,8 +21,16 @@ class KlarnaBaseConfigTest extends ModuleUnitTestCase
         $stub = $this->createStub(KlarnaBaseConfig::class, ['_authorize' => true, 'getEditObjectId' => 'test']);
         $stub->init();
         $stub->render();
-        $confaarrs = $stub->getViewData()['confaarrs'];
+        $confaarrs = $stub->getViewDataElement('confaarrs');
 
+
+        //'color_button =&gt; #FF150D
+        //color_button_text =&gt; #FFE47A
+        //color_checkbox =&gt; #1CFF24
+        //color_checkbox_checkmark =&gt; #7DEEFF
+        //color_header =&gt; #DA1FFF
+        //color_link =&gt; #FFB3B3
+        //radius_border =&gt; 10px'
         $this->assertEmpty($confaarrs);
     }
 
@@ -130,35 +138,35 @@ class KlarnaBaseConfigTest extends ModuleUnitTestCase
     public function testGetMultiLangData()
     {
         $confstrs       = [
-            'tcklarna_iKlarnaActiveCheckbox'               => '3',
-            'tcklarna_iKlarnaValidation'                   => '2',
-            'tcklarna_sKlarnaActiveMode'                   => 'KCO',
-            'tcklarna_sKlarnaAnonymizedProductTitle'       => 'anonymized product',
-            'tcklarna_sKlarnaAnonymizedProductTitle_DE'    => 'Produktname',
-            'tcklarna_sKlarnaAnonymizedProductTitle_EN'    => 'Product name',
-            'tcklarna_sKlarnaBannerSrc_DE'                 => '&lt;script src=&quot;https://embed.bannerflow.com/599d7ec18d988017005eb279?targeturl=https://www.klarna.com&amp;politeloading=off&amp;merchantid={{merchantid}}&amp;responsive=on&quot; async&gt;&lt;/script&gt;',
-            'tcklarna_sKlarnaCancellationRightsURI_DE'     => 'https://www.example.com/cancel_deutsch.pdf',
-            'tcklarna_sKlarnaCancellationRightsURI_EN'     => 'https://www.example.com/cancel_english.pdf',
-            'tcklarna_sKlarnaDefaultCountry'               => 'DE',
-            'tcklarna_sKlarnaFooterDisplay'                => '1',
-            'tcklarna_sKlarnaFooterValue'                  => 'longBlack',
-            'tcklarna_sKlarnaMerchantId'                   => 'K501664_9c5b3285c29f',
-            'tcklarna_sKlarnaPassword'                     => '7NvBzZ5irjFqXcbA',
-            'tcklarna_sKlarnaTermsConditionsURI_DE'        => 'https://www.example.com/tc_deutsch.pdf',
-            'tcklarna_sKlarnaTermsConditionsURI_EN'        => 'https://www.example.com/tc_english.pdf',
-            'tcklarna_tcklarna_sKlarnaCahippingDetails_DE' => '',
-            'tcklarna_tcklarna_sKlarnaCahippingDetails_EN' => '',
+            'iKlarnaActiveCheckbox'               => '3',
+            'iKlarnaValidation'                   => '2',
+            'sKlarnaActiveMode'                   => 'KCO',
+            'sKlarnaAnonymizedProductTitle'       => 'anonymized product',
+            'sKlarnaAnonymizedProductTitle_DE'    => 'Produktname',
+            'sKlarnaAnonymizedProductTitle_EN'    => 'Product name',
+            'sKlarnaBannerSrc_DE'                 => '&lt;script src=&quot;https://embed.bannerflow.com/599d7ec18d988017005eb279?targeturl=https://www.klarna.com&amp;politeloading=off&amp;merchantid={{merchantid}}&amp;responsive=on&quot; async&gt;&lt;/script&gt;',
+            'sKlarnaCancellationRightsURI_DE'     => 'https://www.example.com/cancel_deutsch.pdf',
+            'sKlarnaCancellationRightsURI_EN'     => 'https://www.example.com/cancel_english.pdf',
+            'sKlarnaDefaultCountry'               => 'DE',
+            'sKlarnaFooterDisplay'                => '1',
+            'sKlarnaFooterValue'                  => 'longBlack',
+            'sKlarnaMerchantId'                   => 'K501664_9c5b3285c29f',
+            'sKlarnaPassword'                     => '7NvBzZ5irjFqXcbA',
+            'sKlarnaTermsConditionsURI_DE'        => 'https://www.example.com/tc_deutsch.pdf',
+            'sKlarnaTermsConditionsURI_EN'        => 'https://www.example.com/tc_english.pdf',
+            'sKlarnaShippingDetails_DE' => '',
+            'sKlarnaShippingDetails_EN' => '',
             'sVersion'                                     => null,
         ];
         $expectedResult = [
-            'confstrs[tcklarna_sKlarnaAnonymizedProductTitle_DE]' => 'Produktname',
-            'confstrs[tcklarna_sKlarnaAnonymizedProductTitle_EN]' => 'Product name',
+            'confstrs[sKlarnaAnonymizedProductTitle_DE]' => 'Produktname',
+            'confstrs[sKlarnaAnonymizedProductTitle_EN]' => 'Product name',
         ];
 
         $controller = $this->createStub(KlarnaBaseConfig::class, [
             'getViewDataElement' => $confstrs,
         ]);
-        $this->setProtectedClassProperty($controller, 'MLVars', ['tcklarna_sKlarnaAnonymizedProductTitle_']);
+        $this->setProtectedClassProperty($controller, 'MLVars', ['sKlarnaAnonymizedProductTitle_']);
         $methodReflection = new \ReflectionMethod(KlarnaBaseConfig::class, 'getMultiLangData');
         $methodReflection->setAccessible(true);
 

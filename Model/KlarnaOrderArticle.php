@@ -53,7 +53,7 @@ class KlarnaOrderArticle extends KlarnaOrderArticle_parent
      */
     public function tcklarna_setTitle($index, $iOrderLang = '')
     {
-        $name                           = KlarnaUtils::getShopConfVar('tcklarna_sKlarnaAnonymizedProductTitle_' . $this->getLangTag($iOrderLang));
+        $name                           = KlarnaUtils::getShopConfVar('sKlarnaAnonymizedProductTitle_' . $this->getLangTag($iOrderLang));
         $this->oxorderarticles__tcklarna_title = new Field(html_entity_decode("$name $index", ENT_QUOTES));
     }
 

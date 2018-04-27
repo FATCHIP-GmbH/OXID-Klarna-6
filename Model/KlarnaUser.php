@@ -59,7 +59,7 @@ class KlarnaUser extends KlarnaUser_parent
         $shippingAddress = null;
         $result          = array();
 
-        if ((bool)KlarnaUtils::getShopConfVar('tcklarna_blKlarnaEnablePreFilling')) {
+        if ((bool)KlarnaUtils::getShopConfVar('blKlarnaEnablePreFilling')) {
             $this->enablePreFilling($result);
         }
 
@@ -201,7 +201,7 @@ class KlarnaUser extends KlarnaUser_parent
             if (!($sCountryISO = Registry::getSession()->getVariable('sCountryISO'))) {
 
                 if (!($sCountryId = $this->getFieldData('oxcountryid'))) {
-                    $sCountryISO = KlarnaUtils::getShopConfVar('tcklarna_sKlarnaDefaultCountry');
+                    $sCountryISO = KlarnaUtils::getShopConfVar('sKlarnaDefaultCountry');
                     $sCountryId  = $oCountry->getIdByCode($sCountryISO);
                 }
 
@@ -215,7 +215,7 @@ class KlarnaUser extends KlarnaUser_parent
         // KP
         if (KlarnaUtils::isKlarnaPaymentsEnabled()) {
             if (!($sCountryId = $this->getFieldData('oxcountryid'))) {
-                $sCountryISO = KlarnaUtils::getShopConfVar('tcklarna_sKlarnaDefaultCountry');
+                $sCountryISO = KlarnaUtils::getShopConfVar('sKlarnaDefaultCountry');
                 $sCountryId  = $oCountry->getIdByCode($sCountryISO);
             }
         }

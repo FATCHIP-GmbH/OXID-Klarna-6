@@ -42,14 +42,14 @@ class KlarnaEmail extends KlarnaEmail_parent
      */
     protected $_sChangePwdTemplatePlain = "changepwd_plain.tpl";
 
-    /**
-     * @codeCoverageIgnore
-     * KlarnaEmail constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+//    /**
+//     * @codeCoverageIgnore
+//     * KlarnaEmail constructor.
+//     */
+//    public function __construct()
+//    {
+//        parent::__construct();
+//    }
 
 
     /**

@@ -39,7 +39,6 @@ class KlarnaEmdAdmin extends KlarnaBaseConfig
 
     /**
      * @throws \Exception
-     * @codeCoverageIgnore
      */
     public function save()
     {

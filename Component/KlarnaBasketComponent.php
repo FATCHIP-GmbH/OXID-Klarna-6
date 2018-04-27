@@ -103,7 +103,6 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
 
     /**
      * Sends update request to checkout API
-     * @codeCoverageIgnore
      * @return array order data
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      * @throws \oxSystemComponentException

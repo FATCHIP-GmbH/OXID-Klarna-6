@@ -42,7 +42,7 @@ class KlarnaLogs extends BaseModel
      */
     public function save()
     {
-        if (KlarnaUtils::getShopConfVar('tcklarna_blKlarnaLoggingEnabled')) {
+        if (KlarnaUtils::getShopConfVar('blKlarnaLoggingEnabled')) {
             return parent::save();
         }
         return false;

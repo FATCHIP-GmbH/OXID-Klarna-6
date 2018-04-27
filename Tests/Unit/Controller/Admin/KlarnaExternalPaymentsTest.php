@@ -13,7 +13,7 @@ class KlarnaExternalPaymentsTest extends ModuleUnitTestCase
     public function testRender()
     {
         $controller = new KlarnaExternalPayments();
-        $this->setModuleConfVar('tcklarna_sKlarnaActiveMode', 'test');
+        $this->setModuleConfVar('sKlarnaActiveMode', 'test');
         $result = $controller->render();
 
         $viewData = $controller->getViewData();

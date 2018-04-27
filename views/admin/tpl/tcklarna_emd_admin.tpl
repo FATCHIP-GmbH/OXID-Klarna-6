@@ -33,10 +33,10 @@
                         <div class="input w356">
                             <div class="display">
                                 <label class="label toggle" for="EmdCustomerAccountInfo">
-                                    <input type="hidden" name="confbools[tcklarna_blKlarnaEmdCustomerAccountInfo]" value="0">
-                                    <input type="checkbox" name="confbools[tcklarna_blKlarnaEmdCustomerAccountInfo]" value="1"
+                                    <input type="hidden" name="confbools[blKlarnaEmdCustomerAccountInfo]" value="0">
+                                    <input type="checkbox" name="confbools[blKlarnaEmdCustomerAccountInfo]" value="1"
                                            id="EmdCustomerAccountInfo"
-                                           [{if $confbools.tcklarna_blKlarnaEmdCustomerAccountInfo}]checked[{/if}] [{ $readonly}]>
+                                           [{if $confbools.blKlarnaEmdCustomerAccountInfo}]checked[{/if}] [{ $readonly}]>
                                     <div class="toggle-control"></div>
                                 </label>
                             </div>
@@ -55,10 +55,10 @@
                         <div class="input w356">
                             <div class="display">
                                 <label class="label toggle" for="EmdPaymentHistoryFull">
-                                    <input type="hidden" name="confbools[tcklarna_blKlarnaEmdPaymentHistoryFull]" value="0">
-                                    <input type="checkbox" name="confbools[tcklarna_blKlarnaEmdPaymentHistoryFull]" value="1"
+                                    <input type="hidden" name="confbools[blKlarnaEmdPaymentHistoryFull]" value="0">
+                                    <input type="checkbox" name="confbools[blKlarnaEmdPaymentHistoryFull]" value="1"
                                            id="EmdPaymentHistoryFull"
-                                           [{if $confbools.tcklarna_blKlarnaEmdPaymentHistoryFull}]checked[{/if}] [{ $readonly}]
+                                           [{if $confbools.blKlarnaEmdPaymentHistoryFull}]checked[{/if}] [{ $readonly}]
                                            class="js-payment-history-toggle">
                                     <div class="toggle-control"></div>
                                 </label>
@@ -74,7 +74,7 @@
                 <tr>
                     <td colspan="3" class="no-padding">
                         <div class="js-payment-history-options rows-wrapper"
-                             [{if $confbools.tcklarna_blKlarnaEmdPaymentHistoryFull}]style="display: block"[{/if}]>
+                             [{if $confbools.blKlarnaEmdPaymentHistoryFull}]style="display: block"[{/if}]>
                             <div class="klarna-expandable-list bg-grey">
                                 [{foreach from=$activePayments item=payment}]
                                     <div class="klarna-row">
@@ -170,10 +170,10 @@
                         <div class="input w356">
                             <div class="display">
                                 <label class="label toggle" for="EmdPassThrough">
-                                    <input type="hidden" name="confbools[tcklarna_blKlarnaEmdPassThrough]" value="0">
-                                    <input type="checkbox" name="confbools[tcklarna_blKlarnaEmdPassThrough]" value="1"
+                                    <input type="hidden" name="confbools[blKlarnaEmdPassThrough]" value="0">
+                                    <input type="checkbox" name="confbools[blKlarnaEmdPassThrough]" value="1"
                                            id="EmdPassThrough"
-                                           [{if $confbools.tcklarna_blKlarnaEmdPassThrough}]checked[{/if}] [{ $readonly}]>
+                                           [{if $confbools.blKlarnaEmdPassThrough}]checked[{/if}] [{ $readonly}]>
                                     <div class="toggle-control"></div>
                                 </label>
                             </div>

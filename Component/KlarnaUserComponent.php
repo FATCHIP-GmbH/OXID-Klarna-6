@@ -64,12 +64,11 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
 
     /**
      * Redirect to klarna checkout
-     * @codeCoverageIgnore
      * @return bool
      */
     protected function klarnaRedirect()
     {
-        $sClass = Registry::get(Request::class)->getRequestParameter('cl');
+        $sClass = Registry::get(Request::class)->getRequestEscapedParameter('cl');
 
         return in_array($sClass, $this->_aClasses);
     }

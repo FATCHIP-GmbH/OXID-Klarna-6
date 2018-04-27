@@ -19,7 +19,7 @@ class KlarnaConfigurationTest extends ModuleUnitTestCase
         $payment->oxpayments__oxactive = new Field(2, Field::T_RAW);
         \oxTestModules::addModuleObject(Payment::class, $payment);
         $this->setConfigParam('sSSLShopURL', null);
-        $this->setModuleConfVar('tcklarna_sKlarnaActiveMode', 'KCO');
+        $this->setModuleConfVar('sKlarnaActiveMode', 'KCO');
         $controller = new KlarnaConfiguration();
         $result = $controller->render();
 
@@ -34,7 +34,7 @@ class KlarnaConfigurationTest extends ModuleUnitTestCase
         $this->assertInstanceOf(KlarnaCountryList::class, $viewData['activeCountries']);
         $this->assertEquals('{}', $viewData['tcklarna_countryList']);
         $this->assertEquals('tcklarna_kco_config.tpl', $result);
-        $this->setModuleConfVar('tcklarna_sKlarnaActiveMode', 'KP');
+        $this->setModuleConfVar('sKlarnaActiveMode', 'KP');
         $result = $controller->render();
         $this->assertEquals('tcklarna_kp_config.tpl', $result);
 
@@ -52,7 +52,7 @@ class KlarnaConfigurationTest extends ModuleUnitTestCase
         $result = $controller->getActiveCheckbox();
         $this->assertEquals(0, $result);
 
-        $this->setModuleConfVar('tcklarna_iKlarnaActiveCheckbox', 10);
+        $this->setModuleConfVar('iKlarnaActiveCheckbox', 10);
         $result = $controller->getActiveCheckbox();
         $this->assertEquals(10, $result);
     }
@@ -107,7 +107,7 @@ class KlarnaConfigurationTest extends ModuleUnitTestCase
         $result = $controller->getChosenValidation();
         $this->assertEquals(0, $result);
 
-        $this->setModuleConfVar('tcklarna_iKlarnaValidation', 10);
+        $this->setModuleConfVar('iKlarnaValidation', 10);
         $result = $controller->getActiveCheckbox();
         $this->assertEquals(10, $result);
     }

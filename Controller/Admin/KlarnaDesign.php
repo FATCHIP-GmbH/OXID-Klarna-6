@@ -3,6 +3,7 @@
 namespace TopConcepts\Klarna\Controller\Admin;
 
 
+use OxidEsales\Eshop\Core\Request;
 use TopConcepts\Klarna\Core\KlarnaConsts;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use OxidEsales\Eshop\Application\Model\Actions;
@@ -18,7 +19,7 @@ class KlarnaDesign extends KlarnaBaseConfig
     protected $_sThisTemplate = 'tcklarna_design.tpl';
 
     /** @inheritdoc */
-    protected $MLVars = ['tcklarna_sKlarnaBannerSrc_'];
+    protected $MLVars = ['sKlarnaBannerSrc_'];
 
     /**
      * Render logic
@@ -54,10 +55,9 @@ class KlarnaDesign extends KlarnaBaseConfig
 
     /**
      * Save configuration values
-     * @codeCoverageIgnore
      *
      * @return void
-     * @throws oxSystemComponentException
+     * @throws \Exception
      */
     public function save()
     {
@@ -66,14 +66,13 @@ class KlarnaDesign extends KlarnaBaseConfig
     }
 
     /**
-     * @throws oxSystemComponentException
-     * @codeCoverageIgnore
+     *
      */
     protected function saveAdditionalSetting()
     {
         $oConfig   = Registry::getConfig();
         $oShop     = $oConfig->getActiveShop();
-        $aSettings = $this->_oRequest->getRequestEscapedParameter('settings');
+        $aSettings = Registry::get(Request::class)->getRequestEscapedParameter('settings');
 
         $oKlarnaTeaserAction = oxNew(Actions::class);
         $oKlarnaTeaserAction->load('klarna_teaser_' . $oShop->getId());
@@ -81,6 +80,9 @@ class KlarnaDesign extends KlarnaBaseConfig
         $oKlarnaTeaserAction->save();
     }
 
+    /**
+     * @return array
+     */
     protected function getAdditionalSettings()
     {
         $oConfig = Registry::getConfig();

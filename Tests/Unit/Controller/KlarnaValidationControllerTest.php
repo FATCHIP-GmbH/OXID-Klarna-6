@@ -21,13 +21,13 @@ class KlarnaValidationControllerTest extends ModuleUnitTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->setModuleConfVar('tcklarna_blKlarnaLoggingEnabled', true, 'bool');
+        $this->setModuleConfVar('blKlarnaLoggingEnabled', true, 'bool');
     }
 
     public function tearDown()
     {
         parent::tearDown();
-        $this->setModuleConfVar('tcklarna_blKlarnaLoggingEnabled', false, 'bool');
+        $this->setModuleConfVar('blKlarnaLoggingEnabled', false, 'bool');
     }
 
     /**

@@ -89,8 +89,8 @@ class KlarnaOrder extends BaseModel
         $sLocale           = $this->_oUser->resolveLocale($sCountryISO);
         $lang              = strtoupper(Registry::getLang()->getLanguageAbbr());
         $klarnaUserData    = $this->_oUser->getKlarnaData();
-        $cancellationTerms = KlarnaUtils::getShopConfVar('tcklarna_sKlarnaCancellationRightsURI_' . $lang);
-        $terms             = KlarnaUtils::getShopConfVar('tcklarna_sKlarnaTermsConditionsURI_' . $lang);
+        $cancellationTerms = KlarnaUtils::getShopConfVar('sKlarnaCancellationRightsURI_' . $lang);
+        $terms             = KlarnaUtils::getShopConfVar('sKlarnaTermsConditionsURI_' . $lang);
 
         if (empty($cancellationTerms) || empty($terms)) {
             Registry::getSession()->setVariable('wrong_merchant_urls', true);
@@ -391,7 +391,7 @@ class KlarnaOrder extends BaseModel
      */
     public function isAutofocusEnabled()
     {
-        return KlarnaUtils::getShopConfVar('tcklarna_blKlarnaEnableAutofocus');
+        return KlarnaUtils::getShopConfVar('blKlarnaEnableAutofocus');
     }
 
     /**
@@ -410,7 +410,7 @@ class KlarnaOrder extends BaseModel
      */
     protected function getAdditionalCheckbox()
     {
-        $iActiveCheckbox = KlarnaUtils::getShopConfVar('tcklarna_iKlarnaActiveCheckbox');
+        $iActiveCheckbox = KlarnaUtils::getShopConfVar('iKlarnaActiveCheckbox');
 
         if (!$this->_oUser->isFake() || $this->_oUser->tcklarna_getType() === KlarnaUser::REGISTERED) {
             if ($this->_oUser->getNewsSubscription()->getOptInStatus() == 1) {
@@ -444,7 +444,6 @@ class KlarnaOrder extends BaseModel
     }
 
     /**
-     * @codeCoverageIgnore
      * @return array
      */
     protected function getEmd()
@@ -461,7 +460,7 @@ class KlarnaOrder extends BaseModel
      */
     protected function isSeparateDeliveryAddressAllowed()
     {
-        return KlarnaUtils::getShopConfVar('tcklarna_blKlarnaAllowSeparateDeliveryAddress');
+        return KlarnaUtils::getShopConfVar('blKlarnaAllowSeparateDeliveryAddress');
     }
 
 //    /**
@@ -516,7 +515,7 @@ class KlarnaOrder extends BaseModel
      */
     protected function isPhoneMandatory()
     {
-        return KlarnaUtils::getShopConfVar('tcklarna_blKlarnaMandatoryPhone');
+        return KlarnaUtils::getShopConfVar('blKlarnaMandatoryPhone');
     }
 
     /**
@@ -524,7 +523,7 @@ class KlarnaOrder extends BaseModel
      */
     protected function isBirthDateMandatory()
     {
-        return KlarnaUtils::getShopConfVar('tcklarna_blKlarnaMandatoryBirthDate');
+        return KlarnaUtils::getShopConfVar('blKlarnaMandatoryBirthDate');
     }
 
     /**
@@ -532,7 +531,7 @@ class KlarnaOrder extends BaseModel
      */
     protected function isValidateCallbackSuccessRequired()
     {
-        return KlarnaUtils::getShopConfVar('tcklarna_iKlarnaValidation') == 2;
+        return KlarnaUtils::getShopConfVar('iKlarnaValidation') == 2;
     }
 
     /**
@@ -540,7 +539,7 @@ class KlarnaOrder extends BaseModel
      */
     protected function isValidationEnabled()
     {
-        return KlarnaUtils::getShopConfVar('tcklarna_iKlarnaValidation') != 0;
+        return KlarnaUtils::getShopConfVar('iKlarnaValidation') != 0;
     }
 
     /**

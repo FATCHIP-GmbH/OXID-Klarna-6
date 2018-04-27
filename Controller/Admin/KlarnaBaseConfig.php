@@ -72,6 +72,7 @@ class KlarnaBaseConfig extends ShopConfiguration
         foreach ($confaarrs as $key => $arr) {
             $confaarrs[$key] = $this->_multilineToAarray(html_entity_decode($arr));
         }
+        $this->addTplParam('confaarrs', $confaarrs);
     }
 
     /**
@@ -93,14 +94,13 @@ class KlarnaBaseConfig extends ShopConfiguration
     protected function fillContainer()
     {
         foreach ($this->_aConfParams as $sType => $sParam) {
-
             if ($sType === 'aarr') {
                 $this->setParameter($sParam,
                     $this->convertNestedParams(
-                        $this->_oRequest->getRequestEscapedParameter($sParam)
+                        Registry::get(Request::class)->getRequestEscapedParameter($sParam)
                     ));
             } else {
-                $this->setParameter($sParam, $this->_oRequest->getRequestEscapedParameter($sParam));
+                $this->setParameter($sParam, Registry::get(Request::class)->getRequestEscapedParameter($sParam));
             }
         }
     }
@@ -154,7 +154,7 @@ class KlarnaBaseConfig extends ShopConfiguration
         /** @var Shop $oShop */
         $oShop = oxNew(Shop::class);
         if ($oShop->load($sOxid)) {
-            $oShop->assign($this->_oRequest->getRequestEscapedParameter("editval"));
+            $oShop->assign(Registry::get(Request::class)->getRequestEscapedParameter("editval"));
             $oShop->save();
         }
     }
@@ -258,7 +258,7 @@ class KlarnaBaseConfig extends ShopConfiguration
      */
     protected function getActiveKlarnaMode()
     {
-        return KlarnaUtils::getShopConfVar('tcklarna_sKlarnaActiveMode');
+        return KlarnaUtils::getShopConfVar('sKlarnaActiveMode');
     }
 
 

@@ -47,10 +47,10 @@ class KlarnaEMD
     {
         $return = array();
 
-        if (KlarnaUtils::getShopConfVar('tcklarna_blKlarnaEmdCustomerAccountInfo')) {
+        if (KlarnaUtils::getShopConfVar('blKlarnaEmdCustomerAccountInfo')) {
             $return = array_merge($return, $this->getCustomerAccountInfo($oUser));
         }
-        if (KlarnaUtils::getShopConfVar('tcklarna_blKlarnaEmdPaymentHistoryFull')) {
+        if (KlarnaUtils::getShopConfVar('blKlarnaEmdPaymentHistoryFull')) {
             $return = array_merge($return, $this->getPaymentHistoryFull($oUser));
         }
 
