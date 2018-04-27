@@ -45,7 +45,7 @@ class KlarnaInstaller extends ShopConfiguration
     /** @var  database name */
     protected $dbName;
 
-    protected $moduleRelativePath = 'modules/tc/klarna';
+    protected $moduleRelativePath = 'modules//tc/tcklarna';
     protected $modulePath;
 
     /**

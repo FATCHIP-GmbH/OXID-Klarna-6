@@ -4,7 +4,7 @@ $serviceCaller = new \OxidEsales\TestingLibrary\ServiceCaller();
 $testConfig = new \OxidEsales\TestingLibrary\TestConfig();
 
 $testDirectory = $testConfig->getEditionTestsPath($testConfig->getShopEdition());
-$klarnaTestDirectory = $testConfig->getShopPath() . 'modules/tc/klarna/Tests/';
+$klarnaTestDirectory = $testConfig->getShopPath() . 'modules//tc/tcklarna/Tests/';
 $serviceCaller->setParameter('importSql', '@' . $testDirectory . '/Fixtures/testdata.sql');
 $serviceCaller->setParameter('importSql', '@' . $klarnaTestDirectory . 'Unit/Testdata/klarna-settings.sql');
 $serviceCaller->callService('ShopPreparation', 1);

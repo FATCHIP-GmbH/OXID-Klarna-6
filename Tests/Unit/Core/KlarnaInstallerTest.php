@@ -101,7 +101,7 @@ class KlarnaInstallerTest extends ModuleUnitTestCase
         $this->assertTrue($result instanceof KlarnaInstaller);
         $this->assertTrue($db instanceof DatabaseInterface);
         $this->assertEquals(Registry::getConfig()->getConfigParam('dbName'), $dbName);
-        $this->assertEquals(Registry::getConfig()->getConfigParam('sShopDir') . 'modules/tc/klarna', $modulePath);
+        $this->assertEquals(Registry::getConfig()->getConfigParam('sShopDir') . 'modules//tc/tcklarna', $modulePath);
     }
 
     /**
