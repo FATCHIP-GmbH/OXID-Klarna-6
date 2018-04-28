@@ -194,7 +194,10 @@ class KlarnaOrders extends AdminDetailsController
      */
     public function cancelOrder()
     {
-        return $this->getEditObject()->cancelOrder();
+        $result = $this->cancelKlarnaOrder();
+        if ($result) {
+            return $this->getEditObject()->cancelOrder();
+        }
     }
 
     /**
@@ -257,14 +260,20 @@ class KlarnaOrders extends AdminDetailsController
      */
     protected function isOrderCancellationInSync()
     {
-        if (strtolower($this->getViewDataElement('sStatus')) === 'cancelled' &&
-            $this->getEditObject()->oxorder__oxstorno->value == 1) {
-            $this->addTplParam('cancelled', true);
+        if (strtolower($this->getViewDataElement('sStatus')) === 'cancelled') {
+            if ($this->getEditObject()->oxorder__oxstorno->value == 1) {
+                $this->addTplParam('cancelled', true);
 
-            return true;
+                return true;
+            }
+
+            return false;
+        }
+        if ($this->getEditObject()->oxorder__oxstorno->value == 1) {
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     /**
@@ -294,5 +303,39 @@ class KlarnaOrders extends AdminDetailsController
     protected function getKlarnaMgmtClient($sCountryISO)
     {
         return KlarnaOrderManagementClient::getInstance($sCountryISO);
+    }
+
+    /**
+     * @return bool
+     */
+    protected function cancelKlarnaOrder()
+    {
+        $orderId = $this->getEditObjectId();
+        $oOrder  = oxNew(Order::class);
+        $oOrder->load($orderId);
+
+        if ($oOrder->isLoaded() && $oOrder->isKlarnaOrder() && !$oOrder->getFieldData('oxstorno')) {
+            $orderId     = $oOrder->getFieldData('tcklarna_orderid');
+            $sCountryISO = KlarnaUtils::getCountryISO($oOrder->getFieldData('oxbillcountryid'));
+
+            try {
+                $oOrder->cancelKlarnaOrder($orderId, $sCountryISO);
+                $oOrder->oxorder__tcklarna_sync = new Field(1);
+                $oOrder->save();
+            } catch (StandardException $e) {
+                if (strstr($e->getMessage(), 'is canceled.')) {
+
+                    return true;
+                }
+
+                Registry::get(UtilsView::class)->addErrorToDisplay($e);
+                $this->resetContentCache();
+                $this->init();
+
+                return false;
+            }
+        }
+
+        return true;
     }
 }

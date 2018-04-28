@@ -182,32 +182,32 @@ class KlarnaOrder extends KlarnaOrder_parent
         return false;
     }
 
-    /**
-     * Performs standard order cancellation process
-     *
-     * @return void
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
-     */
-    public function cancelOrder()
-    {
-        // check if it is Klarna order and not already canceled
-        if ($this->isKlarnaOrder() && !$this->getFieldData('oxstorno') && $this->getFieldData('tcklarna_sync') == 1) {
-            $orderId     = $this->getFieldData('tcklarna_orderid');
-            $sCountryISO = KlarnaUtils::getCountryISO($this->getFieldData('oxbillcountryid'));
-            try {
-                $this->cancelKlarnaOrder($orderId, $sCountryISO);
-            } catch (KlarnaWrongCredentialsException $e) {
-                if (!strstr($e->getMessage(), 'is canceled.')) {
-                    return Registry::getLang()->translateString("KLARNA_UNAUTHORIZED_REQUEST");
-                }
-            } catch (KlarnaClientException $e) {
-                return $e->getMessage();
-            }
-
-        }
-
-        parent::cancelOrder();
-    }
+//    /**
+//     * Performs standard order cancellation process
+//     *
+//     * @return void
+//     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
+//     */
+//    public function cancelOrder()
+//    {
+//        // check if it is Klarna order and not already canceled
+//        if ($this->isKlarnaOrder() && !$this->getFieldData('oxstorno') && $this->getFieldData('tcklarna_sync') == 1) {
+//            $orderId     = $this->getFieldData('tcklarna_orderid');
+//            $sCountryISO = KlarnaUtils::getCountryISO($this->getFieldData('oxbillcountryid'));
+//            try {
+//                $this->cancelKlarnaOrder($orderId, $sCountryISO);
+//            } catch (KlarnaWrongCredentialsException $e) {
+//                if (!strstr($e->getMessage(), 'is canceled.')) {
+//                    return Registry::getLang()->translateString("KLARNA_UNAUTHORIZED_REQUEST");
+//                }
+//            } catch (KlarnaClientException $e) {
+//                return $e->getMessage();
+//            }
+//
+//        }
+//
+//        parent::cancelOrder();
+//    }
 
     /**
      * @param $orderId

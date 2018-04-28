@@ -248,12 +248,12 @@ $aModule = array(
         array(
             'template' => 'order_list.tpl',
             'block'    => 'admin_order_list_filter',
-            'file'     => '/views/blocks/admin/order_list_admin_order_list_filter.tpl',
+            'file'     => 'views/blocks/admin/order_list_admin_order_list_filter.tpl',
         ),
         array(
             'template' => 'payment_main.tpl',
             'block'    => 'admin_payment_main_form',
-            'file'     => '/views/blocks/admin/payment_main_admin_payment_main_form.tpl',
+            'file'     => 'views/blocks/admin/payment_main_admin_payment_main_form.tpl',
         ),
     ),
     'settings'    => array(),

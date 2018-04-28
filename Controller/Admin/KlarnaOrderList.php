@@ -33,7 +33,6 @@ class KlarnaOrderList extends KlarnaOrderList_parent
     public function storno()
     {
         $result = $this->cancelKlarnaOrder();
-
         if ($result) {
             parent::storno();
         }
@@ -54,15 +53,15 @@ class KlarnaOrderList extends KlarnaOrderList_parent
                 $oOrder->oxorder__tcklarna_sync = new Field(1);
                 $oOrder->save();
             } catch (StandardException $e) {
-
-                if (!strstr($e->getMessage(), 'is canceled.')) {
-                    Registry::get(UtilsView::class)->addErrorToDisplay($e);
-                    $_POST['oxid'] = -1;
-                    $this->resetContentCache();
-                    $this->init();
+                if (strstr($e->getMessage(), 'is canceled.')) {
 
                     return true;
                 }
+
+                Registry::get(UtilsView::class)->addErrorToDisplay($e);
+                $_POST['oxid'] = -1;
+                $this->resetContentCache();
+                $this->init();
 
                 return false;
             }
