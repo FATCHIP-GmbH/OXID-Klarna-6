@@ -249,49 +249,6 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $this->assertEquals("Test", $result);
 
     }
-    public function testCancelOrder()
-    {
-        $response = ['response'];
-        $id = $this->prepareKlarnaOrder();
-
-        $order = $this->getMock(Order::class, ['cancelKlarnaOrder'] );
-        $order->expects($this->any())->method('cancelKlarnaOrder')->willReturn($response);
-        $order->load($id);
-        $order->oxorder__oxpaymenttype = new Field('klarna_xxx', Field::T_RAW);
-        $order->oxorder__oxstorno = new Field(0, Field::T_RAW);
-        $order->oxorder__tcklarna_sync = new Field(1, Field::T_RAW);
-        $order->oxorder__tcklarna_orderid = new Field('aaa', Field::T_RAW);
-        $order->save();
-
-
-        $result = $order->cancelOrder();
-        $this->assertNull($result);
-
-        // throws KlarnaClientException
-        $order->load($id);
-        $order->oxorder__oxpaymenttype = new Field('klarna_xxx', Field::T_RAW);
-        $order->oxorder__oxstorno = new Field(0, Field::T_RAW);
-        $order->oxorder__tcklarna_sync = new Field(1, Field::T_RAW);
-        $order->oxorder__tcklarna_orderid = new Field('aaa', Field::T_RAW);
-
-        $order->expects($this->any())->method('cancelKlarnaOrder')->willThrowException(new KlarnaClientException("Test"));
-        $result = $order->cancelOrder();
-        $this->assertEquals("Test", $result);
-
-        // throws KlarnaWrongCredentialsException
-        $order->load($id);
-        $order->oxorder__oxpaymenttype = new Field('klarna_xxx', Field::T_RAW);
-        $order->oxorder__oxstorno = new Field(0, Field::T_RAW);
-        $order->oxorder__tcklarna_sync = new Field(1, Field::T_RAW);
-        $order->oxorder__tcklarna_orderid = new Field('aaa', Field::T_RAW);
-
-        $order->expects($this->any())->method('cancelKlarnaOrder')->willThrowException(new KlarnaWrongCredentialsException("Test"));
-        $result = $order->cancelOrder();
-        $this->assertEquals("KLARNA_UNAUTHORIZED_REQUEST", $result);
-
-
-        $this->removeKlarnaOrder($id);
-    }
 
     public function testCaptureKlarnaOrder()
     {
