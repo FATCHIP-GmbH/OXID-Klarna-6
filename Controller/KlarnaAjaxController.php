@@ -22,6 +22,7 @@ use OxidEsales\Eshop\Application\Model\Order;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
 use TopConcepts\Klarna\Core\KlarnaClientBase;
 use TopConcepts\Klarna\Core\KlarnaFormatter;
+use TopConcepts\Klarna\Core\KlarnaOrder;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Model\KlarnaUser;
@@ -166,7 +167,7 @@ class KlarnaAjaxController extends FrontendController
     {
         $oSession     = $this->getSession();
         $oBasket      = $oSession->getBasket();
-        $oKlarnaOrder = oxNew(Order::class, $oBasket, $this->_oUser);
+        $oKlarnaOrder = oxNew(KlarnaOrder::class, $oBasket, $this->_oUser);
         $oClient      = $this->getKlarnaCheckoutClient();
         $aOrderData   = $oKlarnaOrder->getOrderData();
 
