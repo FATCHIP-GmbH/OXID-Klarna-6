@@ -7,6 +7,10 @@ use OxidEsales\Eshop\Core\Database\Adapter\Doctrine\ResultSet;
 use TopConcepts\Klarna\Controller\Admin\KlarnaBaseConfig;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
+/**
+ * Class KlarnaBaseConfigTest
+ * @package TopConcepts\Klarna\Tests\Unit\Controller\Admin
+ */
 class KlarnaBaseConfigTest extends ModuleUnitTestCase
 {
     public function testGetAllActiveOxPaymentIds()
@@ -18,20 +22,36 @@ class KlarnaBaseConfigTest extends ModuleUnitTestCase
 
     public function testRender()
     {
-        $stub = $this->createStub(KlarnaBaseConfig::class, ['_authorize' => true, 'getEditObjectId' => 'test']);
+        $stub           = $this->createStub(KlarnaBaseConfig::class, [
+            '_authorize'         => true,
+            'getEditObjectId'    => 'test',
+            'getViewDataElement' => [
+                'aKlarnaDesign' => 'color_button =&gt; #D5FF4D
+color_button_text =&gt; #40FF53
+color_checkbox =&gt; #FF40DF
+color_checkbox_checkmark =&gt; #FFC387
+color_header =&gt; #FF7AC6
+color_link =&gt; #FFA200
+radius_border =&gt; 4px',
+            ],
+        ]);
+        $expectedResult = [
+            'aKlarnaDesign' =>
+                [
+                    'color_button'             => '#D5FF4D',
+                    'color_button_text'        => '#40FF53',
+                    'color_checkbox'           => '#FF40DF',
+                    'color_checkbox_checkmark' => '#FFC387',
+                    'color_header'             => '#FF7AC6',
+                    'color_link'               => '#FFA200',
+                    'radius_border'            => '4px',
+                ],
+        ];
         $stub->init();
         $stub->render();
-        $confaarrs = $stub->getViewDataElement('confaarrs');
+        $result = $this->getProtectedClassProperty($stub, '_aViewData')['confaarrs'];
 
-
-        //'color_button =&gt; #FF150D
-        //color_button_text =&gt; #FFE47A
-        //color_checkbox =&gt; #1CFF24
-        //color_checkbox_checkmark =&gt; #7DEEFF
-        //color_header =&gt; #DA1FFF
-        //color_link =&gt; #FFB3B3
-        //radius_border =&gt; 10px'
-        $this->assertEmpty($confaarrs);
+        $this->assertEquals($expectedResult, $result);
     }
 
     public function testSave()
@@ -138,25 +158,25 @@ class KlarnaBaseConfigTest extends ModuleUnitTestCase
     public function testGetMultiLangData()
     {
         $confstrs       = [
-            'iKlarnaActiveCheckbox'               => '3',
-            'iKlarnaValidation'                   => '2',
-            'sKlarnaActiveMode'                   => 'KCO',
-            'sKlarnaAnonymizedProductTitle'       => 'anonymized product',
-            'sKlarnaAnonymizedProductTitle_DE'    => 'Produktname',
-            'sKlarnaAnonymizedProductTitle_EN'    => 'Product name',
-            'sKlarnaBannerSrc_DE'                 => '&lt;script src=&quot;https://embed.bannerflow.com/599d7ec18d988017005eb279?targeturl=https://www.klarna.com&amp;politeloading=off&amp;merchantid={{merchantid}}&amp;responsive=on&quot; async&gt;&lt;/script&gt;',
-            'sKlarnaCancellationRightsURI_DE'     => 'https://www.example.com/cancel_deutsch.pdf',
-            'sKlarnaCancellationRightsURI_EN'     => 'https://www.example.com/cancel_english.pdf',
-            'sKlarnaDefaultCountry'               => 'DE',
-            'sKlarnaFooterDisplay'                => '1',
-            'sKlarnaFooterValue'                  => 'longBlack',
-            'sKlarnaMerchantId'                   => 'K501664_9c5b3285c29f',
-            'sKlarnaPassword'                     => '7NvBzZ5irjFqXcbA',
-            'sKlarnaTermsConditionsURI_DE'        => 'https://www.example.com/tc_deutsch.pdf',
-            'sKlarnaTermsConditionsURI_EN'        => 'https://www.example.com/tc_english.pdf',
-            'sKlarnaShippingDetails_DE' => '',
-            'sKlarnaShippingDetails_EN' => '',
-            'sVersion'                                     => null,
+            'iKlarnaActiveCheckbox'            => '3',
+            'iKlarnaValidation'                => '2',
+            'sKlarnaActiveMode'                => 'KCO',
+            'sKlarnaAnonymizedProductTitle'    => 'anonymized product',
+            'sKlarnaAnonymizedProductTitle_DE' => 'Produktname',
+            'sKlarnaAnonymizedProductTitle_EN' => 'Product name',
+            'sKlarnaBannerSrc_DE'              => '&lt;script src=&quot;https://embed.bannerflow.com/599d7ec18d988017005eb279?targeturl=https://www.klarna.com&amp;politeloading=off&amp;merchantid={{merchantid}}&amp;responsive=on&quot; async&gt;&lt;/script&gt;',
+            'sKlarnaCancellationRightsURI_DE'  => 'https://www.example.com/cancel_deutsch.pdf',
+            'sKlarnaCancellationRightsURI_EN'  => 'https://www.example.com/cancel_english.pdf',
+            'sKlarnaDefaultCountry'            => 'DE',
+            'sKlarnaFooterDisplay'             => '1',
+            'sKlarnaFooterValue'               => 'longBlack',
+            'sKlarnaMerchantId'                => 'K501664_9c5b3285c29f',
+            'sKlarnaPassword'                  => '7NvBzZ5irjFqXcbA',
+            'sKlarnaTermsConditionsURI_DE'     => 'https://www.example.com/tc_deutsch.pdf',
+            'sKlarnaTermsConditionsURI_EN'     => 'https://www.example.com/tc_english.pdf',
+            'sKlarnaShippingDetails_DE'        => '',
+            'sKlarnaShippingDetails_EN'        => '',
+            'sVersion'                         => null,
         ];
         $expectedResult = [
             'confstrs[sKlarnaAnonymizedProductTitle_DE]' => 'Produktname',
