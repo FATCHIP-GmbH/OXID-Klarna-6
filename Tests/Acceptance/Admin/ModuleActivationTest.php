@@ -5,13 +5,14 @@ namespace TopConcepts\Klarna\Tests\Acceptance\Admin;
 use OxidEsales\TestingLibrary\AcceptanceTestCase;
 
 /**
- * Admin interface functionality.
- *
+ * Admin Module test
  */
 class ModuleActivationTest extends AcceptanceTestCase
 {
     /**
-     * Testing modules in vendor directory. Checking when any file with source code class of module is deleted.
+     * Testing module activation/deactivation
+     *
+     * @throws \Exception
      */
     public function testModuleSettings()
     {
