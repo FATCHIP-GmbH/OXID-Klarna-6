@@ -1,11 +1,27 @@
 <?php
+/**
+ * Copyright 2018 Klarna AB
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 namespace TopConcepts\Klarna\Core;
 
 
-use TopConcepts\Klarna\Exception\KlarnaOrderNotFoundException;
-use TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException;
-use TopConcepts\Klarna\Exception\KlarnaWrongCredentialsException;
+use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
+use TopConcepts\Klarna\Core\Exception\KlarnaOrderNotFoundException;
+use TopConcepts\Klarna\Core\Exception\KlarnaOrderReadOnlyException;
+use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
 use OxidEsales\Eshop\Core\Registry;
 
 class KlarnaCheckoutClient extends KlarnaClientBase
@@ -51,26 +67,11 @@ class KlarnaCheckoutClient extends KlarnaClientBase
         try {
             // update existing order
             return $this->postOrder($requestBody, $this->getOrderId());
-        } catch (KlarnaOrderNotFoundException $oEx) {
+        } catch (KlarnaClientException $oEx) {
             /**
              * Try again with a new session ( no order id )
              */
             $oEx->debugOut();
-
-            return $this->postOrder($requestBody);
-        } catch (KlarnaOrderReadOnlyException $oEx) {
-            /**
-             * Try again with a new session ( no order id )
-             */
-            $oEx->debugOut();
-
-            return $this->postOrder($requestBody);
-        } catch (KlarnaWrongCredentialsException $oEx) {
-            /**
-             * Try again with a new session ( no order id )
-             */
-            $oEx->debugOut();
-
             return $this->postOrder($requestBody);
         }
     }
@@ -78,13 +79,13 @@ class KlarnaCheckoutClient extends KlarnaClientBase
     /**
      * @param $data
      * @param string $order_id
-     * @return mixed
+     * @throws KlarnaClientException
      * @throws KlarnaOrderNotFoundException
      * @throws KlarnaOrderReadOnlyException
      * @throws KlarnaWrongCredentialsException
-     * @throws \TopConcepts\Klarna\Exception\KlarnaClientException
      * @throws \OxidEsales\Eshop\Core\Exception\StandardException
      * @throws \Exception
+     * @return array|bool
      */
     protected function postOrder($data, $order_id = '')
     {
@@ -112,7 +113,7 @@ class KlarnaCheckoutClient extends KlarnaClientBase
      * @throws KlarnaOrderNotFoundException
      * @throws KlarnaOrderReadOnlyException
      * @throws KlarnaWrongCredentialsException
-     * @throws \TopConcepts\Klarna\Exception\KlarnaClientException
+     * @throws \TopConcepts\Klarna\Core\Exception\KlarnaClientException
      * @throws \OxidEsales\Eshop\Core\Exception\StandardException
      * @throws \Exception
      */

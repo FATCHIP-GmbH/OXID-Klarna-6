@@ -1,10 +1,26 @@
 <?php
+/**
+ * Copyright 2018 Klarna AB
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 namespace TopConcepts\Klarna\Core;
 
 
-use TopConcepts\Klarna\Models\KlarnaCountryList;
-use TopConcepts\Klarna\Models\KlarnaUser;
+use OxidEsales\Eshop\Core\Field;
+use TopConcepts\Klarna\Model\KlarnaCountryList;
+use TopConcepts\Klarna\Model\KlarnaUser;
 use OxidEsales\Eshop\Application\Model\Category;
 use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\CountryList;
@@ -32,7 +48,19 @@ class KlarnaUtils
         $oUser = oxNew(User::class);
         $oUser->loadByEmail($email);
 
+        $sCountryISO = Registry::getSession()->getVariable('sCountryISO');
+        if ($sCountryISO) {
+            $oCountry   = oxNew(Country::class);
+            $sCountryId = $oCountry->getIdByCode($sCountryISO);
+            $oCountry->load($sCountryId);
+            $oUser->oxuser__oxcountryid = new Field($sCountryId);
+            $oUser->oxuser__oxcountry   = new Field($oCountry->oxcountry__oxtitle->value);
+        }
         Registry::getConfig()->setUser($oUser);
+
+        if ($email) {
+            Registry::getSession()->setVariable('klarna_checkout_user_email', $email);
+        }
 
         return $oUser;
     }
@@ -46,7 +74,7 @@ class KlarnaUtils
         $config = Registry::getConfig();
         $shopId = $config->getShopId();
 
-        return $config->getShopConfVar($name, $shopId, 'klarna');
+        return $config->getShopConfVar($name, $shopId, 'tcklarna');
     }
 
     /**
@@ -60,24 +88,6 @@ class KlarnaUtils
         $oCountry->load($sCountryId);
 
         return $oCountry->getFieldData('oxisoalpha2');
-    }
-
-    /**
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
-     */
-    public static function getKlarnaAllowedExternalPayments()
-    {
-        $result      = array();
-        $db          = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
-        $sql         = 'SELECT oxid FROM oxpayments WHERE OXACTIVE=1 AND KLEXTERNALPAYMENT=1';
-        /** @var ResultSet $oRs */
-        $oRs = $db->select($sql);
-        foreach ($oRs->getIterator() as $payment) {
-            $result[] = $payment['oxid'];
-        }
-
-        return $result;
     }
 
     /**
@@ -154,7 +164,7 @@ class KlarnaUtils
             return true;
         }
 
-        /** @var CountryList | \TopConcepts\Klarna\Models\KlarnaCountryList $activeKlarnaCountries */
+        /** @var CountryList | \TopConcepts\Klarna\Model\KlarnaCountryList $activeKlarnaCountries */
         $activeKlarnaCountries = oxNew(CountryList::class);
         $activeKlarnaCountries->loadActiveKlarnaCheckoutCountries();
         if (!count($activeKlarnaCountries)) {
@@ -225,22 +235,6 @@ class KlarnaUtils
         return $oCountryList;
     }
 
-
-    /**
-     * @return bool
-     */
-    public static function isKlarnaExternalPaymentMethod()
-    {
-        if (
-            in_array(Registry::getSession()->getBasket()->getPaymentId(), self::getKlarnaAllowedExternalPayments()) &&
-            KlarnaUtils::isCountryActiveInKlarnaCheckout(Registry::getSession()->getVariable('sCountryISO'))
-        ) {
-            return true;
-        }
-
-        return false;
-    }
-
     /**
      * @param $oItem
      * @return array
@@ -258,14 +252,17 @@ class KlarnaUtils
             $basket_unit_price  = self::parseFloatAsInt($unitPrice->getBruttoPrice() * 100);
         }
 
-        if ($regular_unit_price === $basket_unit_price) {
-            $total_amount          = $basket_unit_price * $quantity;
-            $total_discount_amount = 0;
-        } else {
-            $unit_price_diff       = $regular_unit_price - $basket_unit_price;
-            $total_discount_amount = $unit_price_diff * $quantity;
-            $total_amount          = $basket_unit_price * $quantity;
-        }
+//        if ($regular_unit_price === $basket_unit_price) {
+//            $total_amount          = $basket_unit_price * $quantity;
+//            $total_discount_amount = 0;
+//        } else {
+//            $unit_price_diff       = ;
+//            $total_discount_amount = $unit_price_diff * $quantity;
+//            $total_amount          = $basket_unit_price * $quantity;
+//        }
+
+        $total_discount_amount = ($regular_unit_price - $basket_unit_price) * $quantity;
+        $total_amount          = $basket_unit_price * $quantity;
 
         if ($oItem->isBundle()) {
             $tax_rate = self::parseFloatAsInt($oItem->getUnitPrice()->getVat() * 100);
@@ -338,14 +335,12 @@ class KlarnaUtils
         Registry::getSession()->deleteVariable('kp_order_id');
         Registry::getSession()->deleteVariable('amazonOrderReferenceId');
         Registry::getSession()->deleteVariable('klarna_checkout_user_email');
-//        Registry::getSession()->deleteVariable('deladrid');
         Registry::getSession()->deleteVariable('externalCheckout');
         Registry::getSession()->deleteVariable('sFakeUserId');
         Registry::getSession()->deleteVariable('sAuthToken');
         Registry::getSession()->deleteVariable('klarna_session_data');
         Registry::getSession()->deleteVariable('finalizeRequired');
         Registry::getSession()->deleteVariable('sCountryISO');
-//        Registry::getSession()->setVariable('blshowshipaddress', 0);
     }
 
     /**

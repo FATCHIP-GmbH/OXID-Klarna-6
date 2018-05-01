@@ -1,17 +1,31 @@
 <?php
+/**
+ * Copyright 2018 Klarna AB
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 namespace TopConcepts\Klarna\Core;
 
 
-use TopConcepts\Klarna\Exception\KlarnaClientException;
-use TopConcepts\Klarna\Exception\KlarnaOrderNotFoundException;
-use TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException;
-use TopConcepts\Klarna\Exception\KlarnaWrongCredentialsException;
+use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
+use TopConcepts\Klarna\Core\Exception\KlarnaOrderNotFoundException;
+use TopConcepts\Klarna\Core\Exception\KlarnaOrderReadOnlyException;
+use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
 use OxidEsales\Eshop\Core\Base;
 use OxidEsales\Eshop\Core\Module\Module;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\UtilsView;
-
 
 abstract class KlarnaClientBase extends Base
 {
@@ -158,6 +172,7 @@ abstract class KlarnaClientBase extends Base
 
     /**
      * @param $aErrors
+     * @codeCoverageIgnore
      */
     public static function addErrors($aErrors)
     {
@@ -182,7 +197,7 @@ abstract class KlarnaClientBase extends Base
         $shopVer     = 'OXID_' . $shopEdition . '_' . $shopRev;
 
         $module = oxNew(Module::class);
-        $module->loadByDir('klarna');
+        $module->loadByDir('tcklarna');
         $moduleDesc = $module->getDescription();
         $moduleVer  = $module->getInfo('version');
         $moduleInfo = str_replace(' ', '_', $moduleDesc . "_" . $moduleVer);
@@ -219,14 +234,14 @@ abstract class KlarnaClientBase extends Base
         $mid        = $this->aCredentials['mid'];
         $oKlarnaLog = new KlarnaLogs;
         $aData      = array(
-            'kl_logs__klmethod'      => $action,
-            'kl_logs__klurl'         => $url,
-            'kl_logs__klorderid'     => $order_id,
-            'kl_logs__klmid'         => $mid,
-            'kl_logs__klstatuscode'  => $statusCode,
-            'kl_logs__klrequestraw'  => $requestBody,
-            'kl_logs__klresponseraw' => $responseRaw,
-            'kl_logs__kldate'        => date("Y-m-d H:i:s"),
+            'tcklarna_logs__tcklarna_method'      => $action,
+            'tcklarna_logs__tcklarna_url'         => $url,
+            'tcklarna_logs__tcklarna_orderid'     => $order_id,
+            'tcklarna_logs__tcklarna_mid'         => $mid,
+            'tcklarna_logs__tcklarna_statuscode'  => $statusCode,
+            'tcklarna_logs__tcklarna_requestraw'  => $requestBody,
+            'tcklarna_logs__tcklarna_responseraw' => $responseRaw,
+            'tcklarna_logs__tcklarna_date'        => date("Y-m-d H:i:s"),
         );
         $oKlarnaLog->assign($aData);
         $oKlarnaLog->save();

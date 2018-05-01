@@ -1,4 +1,19 @@
 <?php
+/**
+ * Copyright 2018 Klarna AB
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 namespace TopConcepts\Klarna\Core;
 
@@ -14,11 +29,11 @@ use OxidEsales\Eshop\Core\Database\Adapter\Doctrine\Database;
 use OxidEsales\DoctrineMigrationWrapper\MigrationsBuilder;
 use OxidEsales\Facts\Config\ConfigFile;
 use OxidEsales\Facts\Facts;
-use TopConcepts\Klarna\Models\KlarnaPayment;
+use TopConcepts\Klarna\Model\KlarnaPayment;
 
 class KlarnaInstaller extends ShopConfiguration
 {
-    const KLARNA_MODULE_ID = 'klarna';
+    const KLARNA_MODULE_ID = 'tcklarna';
 
     static private $instance = null;
 
@@ -30,7 +45,7 @@ class KlarnaInstaller extends ShopConfiguration
     /** @var  database name */
     protected $dbName;
 
-    protected $moduleRelativePath = 'modules/tc/klarna';
+    protected $moduleRelativePath = 'modules//tc/tcklarna';
     protected $modulePath;
 
     /**
@@ -40,7 +55,7 @@ class KlarnaInstaller extends ShopConfiguration
     public static function getInstance()
     {
         if (!self::$instance) {
-            self::$instance = new KlarnaInstaller;
+            self::$instance = new KlarnaInstaller();
             /** @var Database db */
             self::$instance->db         = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
             self::$instance->dbName     = Registry::getConfig()->getConfigParam('dbName');
@@ -55,6 +70,9 @@ class KlarnaInstaller extends ShopConfiguration
      */
     public static function onActivate()
     {
+        $oMetaData = oxNew(DbMetaDataHandler::class);
+        $oMetaData->updateViews();
+
         $instance = self::getInstance();
 
         $instance->performMigrations();
@@ -76,24 +94,6 @@ class KlarnaInstaller extends ShopConfiguration
     }
 
     /**
-     * @param $sTableName
-     * @param $sColumnName
-     * @return bool
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
-     */
-    protected function dbColumnExist($sTableName, $sColumnName)
-    {
-        $query = "SELECT * FROM information_schema.COLUMNS
-                  WHERE TABLE_SCHEMA = '" . $this->dbName . "' 
-                  AND TABLE_NAME = '$sTableName'
-                  AND COLUMN_NAME = '$sColumnName'
-                  ";
-
-        return count($this->db->select($query)) > 0;
-
-    }
-
-    /**
      * Add klarna config vars and set defaults
      */
     protected function addConfigVars()
@@ -101,14 +101,14 @@ class KlarnaInstaller extends ShopConfiguration
         $config = Registry::getConfig();
         $shopId = $config->getShopId();
 
-        $currencies    = Registry::getConfig()->getCurrencyArray();
-        $currenciesVar = '';
-        foreach ($currencies as $currency) {
-            $currenciesVar .= $currency->name . '=>' . $currency->id;
-            if ($currency !== end($currencies)) {
-                $currenciesVar .= "\n";
-            }
-        }
+//        $currencies    = Registry::getConfig()->getCurrencyArray();
+//        $currenciesVar = '';
+//        foreach ($currencies as $currency) {
+//            $currenciesVar .= $currency->name . '=>' . $currency->id;
+//            if ($currency !== end($currencies)) {
+//                $currenciesVar .= "\n";
+//            }
+//        }
 
         $defaultConfVars = array(
             'bool'   => array(
@@ -121,13 +121,13 @@ class KlarnaInstaller extends ShopConfiguration
                 'blKlarnaSendImageUrls'                => 1,
                 'blKlarnaMandatoryPhone'               => 1,
                 'blKlarnaMandatoryBirthDate'           => 1,
-                //                'blKlarnaSalutationMandatory'          => 1,
-                'blKlarnaShowSubtotalDetail'           => 0,
+                //                'tcklarna_blKlarnaSalutationMandatory'          => 1,
+                //                'tcklarna_blKlarnaShowSubtotalDetail'           => 0,
                 'blKlarnaEmdCustomerAccountInfo'       => 0,
                 'blKlarnaEmdPaymentHistoryFull'        => 0,
                 'blKlarnaEmdPassThrough'               => 0,
                 'blKlarnaEnableAutofocus'              => 1,
-                'blKlarnaEnableDHLPackstations'        => 1,
+                //                'tcklarna_blKlarnaEnableDHLPackstations'        => 1,
                 'blKlarnaEnablePreFilling'             => 1,
                 'blKlarnaDisplayBanner'                => 1,
                 'blKlarnaPreFillNotification'          => 1,
@@ -140,7 +140,7 @@ class KlarnaInstaller extends ShopConfiguration
                 'iKlarnaActiveCheckbox'            => KlarnaConsts::EXTRA_CHECKBOX_NONE,
                 'iKlarnaValidation'                => KlarnaConsts::NO_VALIDATION,
                 'sKlarnaAnonymizedProductTitle'    => 'anonymized product',
-                'sKlarnaDefaultEURCountry'         => 'DE',
+//                'tcklarna_sKlarnaDefaultEURCountry'         => 'DE',
                 'sKlarnaFooterDisplay'             => 0,
 
 
@@ -149,9 +149,9 @@ class KlarnaInstaller extends ShopConfiguration
                 'sKlarnaAnonymizedProductTitle_DE' => 'Produktname',
             ),
             'arr'    => array(),
-            'aarr'   => array(
-                'aKlarnaCurrencies' => $currenciesVar,
-            ),
+//            'aarr'   => array(
+//                'tcklarna_aKlarnaCurrencies' => $currenciesVar,
+//            ),
             'select' => array(),
         );
 
@@ -239,8 +239,8 @@ class KlarnaInstaller extends ShopConfiguration
 
         $updateOxPayments =
             array(
-                "UPDATE `oxpayments` SET `KLPAYMENTOPTION`='card' WHERE `oxid`='oxidcreditcard';",
-                "UPDATE `oxpayments` SET `KLPAYMENTOPTION`='direct banking' WHERE `oxid`='oxiddebitnote';",
+                "UPDATE `oxpayments` SET `TCKLARNA_PAYMENTOPTION`='card' WHERE `oxid`='oxidcreditcard';",
+                "UPDATE `oxpayments` SET `TCKLARNA_PAYMENTOPTION`='direct banking' WHERE `oxid`='oxiddebitnote';",
             );
         foreach ($updateOxPayments as $sQuery) {
             $this->db->execute($sQuery);
@@ -255,7 +255,7 @@ class KlarnaInstaller extends ShopConfiguration
     protected function getModuleMigrations()
     {
         $config = new ConfigFile();
-        $config->setVar(ConfigFile::PARAMETER_SOURCE_PATH, $config->sShopDir . '/modules/tc/klarna');
+        $config->setVar(ConfigFile::PARAMETER_SOURCE_PATH, $config->sShopDir . '/modules/tc/tcklarna');
         $migrationsBuilder = new MigrationsBuilder();
 
         return $migrationsBuilder->build(new Facts($config->getVar(ConfigFile::PARAMETER_SOURCE_PATH) . '/migration', $config));
@@ -266,29 +266,25 @@ class KlarnaInstaller extends ShopConfiguration
      */
     protected function performMigrations()
     {
-        try{
+        try {
             $migrations = $this->getModuleMigrations();
             $migrations->execute('migrations:migrate');
-
-
-        } catch (\Exception $e){
-            Registry::getUtilsView()->addErrorToDisplay($e->getMessage() .  $e->getCode());
+        } catch (\Exception $e) {
+            Registry::getUtilsView()->addErrorToDisplay($e->getMessage() . $e->getCode());
         }
 
         $this->updateViews();
     }
-
 
     /**
      * Performs full view update
      */
     protected function updateViews()
     {
-
         //preventing edit for anyone except malladmin
         //if (Registry::getSession()->getVariable("malladmin")) {
-            $oMetaData = oxNew(DbMetaDataHandler::class);
-            $oMetaData->updateViews();
+        $oMetaData = oxNew(DbMetaDataHandler::class);
+        $oMetaData->updateViews();
         //}
     }
 
@@ -323,7 +319,7 @@ class KlarnaInstaller extends ShopConfiguration
             $oActionKlarnaTeaser->{'oxactions__oxlink' . $sTag}  = new Field($sLink, Field::T_RAW);
             $oActionKlarnaTeaser->{'oxactions__oxpic' . $sTag}   = new Field($langFileName, Field::T_RAW);
 
-            $filePath = self::$instance->modulePath . '/out/img/' . $langFileName;
+            $filePath = self::$instance->modulePath . 'out/src/img/' . $langFileName;
             if (file_exists($filePath)) {
                 copy($filePath, $actionsMediaPath . $langFileName);
             }

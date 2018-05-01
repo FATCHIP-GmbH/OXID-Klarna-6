@@ -1,13 +1,28 @@
 <?php
+/**
+ * Copyright 2018 Klarna AB
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 namespace TopConcepts\Klarna\Core;
 
 
-use TopConcepts\Klarna\Exception\KlarnaCaptureNotAllowedException;
-use TopConcepts\Klarna\Exception\KlarnaClientException;
-use TopConcepts\Klarna\Exception\KlarnaOrderNotFoundException;
-use TopConcepts\Klarna\Exception\KlarnaOrderReadOnlyException;
-use TopConcepts\Klarna\Exception\KlarnaWrongCredentialsException;
+use TopConcepts\Klarna\Core\Exception\KlarnaCaptureNotAllowedException;
+use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
+use TopConcepts\Klarna\Core\Exception\KlarnaOrderNotFoundException;
+use TopConcepts\Klarna\Core\Exception\KlarnaOrderReadOnlyException;
+use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 
 class KlarnaOrderManagementClient extends KlarnaClientBase
@@ -279,7 +294,8 @@ class KlarnaOrderManagementClient extends KlarnaClientBase
             throw new KlarnaOrderNotFoundException(sprintf($message, $this->formatErrorMessage($oResponse)), 404);
         }
         if ($oResponse->status_code == 403) {
-            if ($oResponse->error_code === "CAPTURE_NOT_ALLOWED") {
+            $aResponse = json_decode($oResponse->body, true);
+            if ($aResponse['error_code'] === "CAPTURE_NOT_ALLOWED") {
                 throw new KlarnaCaptureNotAllowedException(sprintf($message, $this->formatErrorMessage($oResponse)), 403);
             } else {
                 throw new KlarnaOrderReadOnlyException(sprintf($message, $this->formatErrorMessage($oResponse)), 403);
