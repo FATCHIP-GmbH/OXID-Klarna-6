@@ -57,9 +57,9 @@ class KlarnaValidationController extends FrontendController
                 $redirectUrl ?: ''
             );
 
-//            header("", true, $responseStatus);
-//            Registry::getUtils()->showMessageAndExit('');
-            Registry::getUtils()->redirect("", false, $responseStatus);
+            header("", true, $responseStatus);
+            Registry::getUtils()->showMessageAndExit('');
+//            Registry::getUtils()->redirect("", false, $responseStatus);
 
         } else {
             $sid            = Registry::get(Request::class)->getRequestEscapedParameter('s');

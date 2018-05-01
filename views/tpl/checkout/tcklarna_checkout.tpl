@@ -28,11 +28,11 @@
             <div class="klarna-iframe-container">
                 [{$sKlarnaIframe}]
                 [{*Add oxid js code. Once the snippet is injected we can use window._klarnaCheckout*}]
-                [{oxscript include=$oViewConf->getModuleUrl('tcklarna','out/src/js/klarna_checkout_handler.js') priority=10}]
+                [{oxscript include=$oViewConf->getModuleUrl('tcklarna','out/src/js/tcklarna_checkout_handler.js') priority=10}]
             </div>
         [{else}]
             <div class="kco-placeholder"></div>
-            [{oxscript include=$oViewConf->getModuleUrl('tcklarna','out/src/js/klarna_checkout_handler.js') priority=10}]
+            [{oxscript include=$oViewConf->getModuleUrl('tcklarna','out/src/js/tcklarna_checkout_handler.js') priority=10}]
             [{oxscript add="$('#myModal').modal('show');"}]
         [{/if}]
 

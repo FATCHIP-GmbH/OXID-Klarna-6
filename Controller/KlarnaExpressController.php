@@ -331,13 +331,13 @@ class KlarnaExpressController extends FrontendController
         return $result;
     }
 
-    /**
-     * @return bool
-     */
-    public function isUserLoggedIn()
-    {
-        return $this->_oUser->tcklarna_getType() === KlarnaUser::LOGGED_IN;
-    }
+//    /**
+//     * @return bool
+//     */
+//    public function isUserLoggedIn()
+//    {
+//        return $this->_oUser->tcklarna_getType() === KlarnaUser::LOGGED_IN;
+//    }
 
     /**
      * @return array
@@ -557,11 +557,17 @@ class KlarnaExpressController extends FrontendController
     protected function resolveUser()
     {
         $oSession = $this->getSession();
+        /** @var KlarnaUser|User $oUser */
         if ($oUser = $this->getUser()) {
             $oUser->tcklarna_checkUserType();
         } else {
             $email = $oSession->getVariable('klarna_checkout_user_email');
+            /** @var KlarnaUser|User $oUser */
             $oUser = KlarnaUtils::getFakeUser($email);
+        }
+
+        if ($oUser->isWritable()) {
+            $oUser->save();
         }
 
         return $oUser;

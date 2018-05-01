@@ -324,7 +324,7 @@ class KlarnaUser extends KlarnaUser_parent
      */
     public function isWritable()
     {
-        return $this->_type == self::LOGGED_IN || $this->_type == self::NOT_REGISTERED;
+        return $this->_type !== self::REGISTERED;
     }
 
     /**
@@ -347,9 +347,9 @@ class KlarnaUser extends KlarnaUser_parent
 
         if ($oAddress->isValid()) {
             // save only unique address for 
-            if (!$sAddressOxid = $oAddress->klExists()){
+            if (!$sAddressOxid = $oAddress->klExists()) {
                 $sAddressOxid = $oAddress->save();
-                if($this->isFake()){
+                if ($this->isFake()) {
                     $oAddress->oxaddress__tcklarna_temporary = new Field(1, Field::T_RAW);
                 }
             }
@@ -402,7 +402,7 @@ class KlarnaUser extends KlarnaUser_parent
         $oAddress->load(Registry::getSession()->getVariable('deladrid'));
         Registry::getSession()->setVariable('deladrid', null);
         Registry::getSession()->setVariable('blshowshipaddress', 0);
-        if ($oAddress->isTemporary()){
+        if ($oAddress->isTemporary()) {
             $oAddress->delete();
         }
     }
@@ -413,8 +413,8 @@ class KlarnaUser extends KlarnaUser_parent
     public function getKlarnaPaymentCurrency()
     {
         $country2currency = KlarnaConsts::getCountry2CurrencyArray();
-        $cur = $this->resolveCountry();
-        if(isset($country2currency[$cur])){
+        $cur              = $this->resolveCountry();
+        if (isset($country2currency[$cur])) {
 
             return $country2currency[$cur];
         }
@@ -528,9 +528,12 @@ class KlarnaUser extends KlarnaUser_parent
         }
     }
 
+    /**
+     * @return int
+     */
     public function tcklarna_checkUserType()
     {
-        if($this->getId() === Registry::getSession()->getVariable('usr')){
+        if ($this->getId() === Registry::getSession()->getVariable('usr')) {
 
             return $this->_type = self::LOGGED_IN;
         }

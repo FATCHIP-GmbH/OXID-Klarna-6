@@ -18,6 +18,7 @@
 namespace TopConcepts\Klarna\Core;
 
 
+use OxidEsales\Eshop\Core\Field;
 use TopConcepts\Klarna\Model\KlarnaCountryList;
 use TopConcepts\Klarna\Model\KlarnaUser;
 use OxidEsales\Eshop\Application\Model\Category;
@@ -47,7 +48,19 @@ class KlarnaUtils
         $oUser = oxNew(User::class);
         $oUser->loadByEmail($email);
 
+        $sCountryISO = Registry::getSession()->getVariable('sCountryISO');
+        if ($sCountryISO) {
+            $oCountry   = oxNew(Country::class);
+            $sCountryId = $oCountry->getIdByCode($sCountryISO);
+            $oCountry->load($sCountryId);
+            $oUser->oxuser__oxcountryid = new Field($sCountryId);
+            $oUser->oxuser__oxcountry   = new Field($oCountry->oxcountry__oxtitle->value);
+        }
         Registry::getConfig()->setUser($oUser);
+
+        if ($email) {
+            Registry::getSession()->setVariable('klarna_checkout_user_email', $email);
+        }
 
         return $oUser;
     }
