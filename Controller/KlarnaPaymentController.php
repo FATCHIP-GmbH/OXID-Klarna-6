@@ -77,8 +77,8 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
             Registry::getUtils()->redirect($redirectUrl, false, 302);
         }
 
-        if(!$this->client){
-            $this->client = KlarnaPaymentsClient::getInstance(); // @codeCoverageIgnore
+        if (!$this->client) {
+            $this->client = KlarnaPaymentsClient::getInstance($this->userCountryISO); // @codeCoverageIgnore
         }
 
         parent::init();
@@ -90,26 +90,26 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
      */
     protected function redirectToKCO()
     {
-        $sessionCountry = Registry::getSession()->getVariable('sCountryISO');
+        $sessionCountry         = Registry::getSession()->getVariable('sCountryISO');
         $sessionAmazonReference = Registry::getSession()->getVariable('amazonOrderReferenceId');
 
-        if(!KlarnaUtils::isKlarnaCheckoutEnabled()){
+        if (!KlarnaUtils::isKlarnaCheckoutEnabled()) {
             return false;
         }
 
-        if(!(KlarnaUtils::isCountryActiveInKlarnaCheckout($sessionCountry))){
+        if (!(KlarnaUtils::isCountryActiveInKlarnaCheckout($sessionCountry))) {
             return false;
         }
 
-        if(!(KlarnaUtils::isCountryActiveInKlarnaCheckout($this->userCountryISO))){
+        if (!(KlarnaUtils::isCountryActiveInKlarnaCheckout($this->userCountryISO))) {
             return false;
         }
 
-        if($sessionAmazonReference){
+        if ($sessionAmazonReference) {
             return false;
         }
 
-        if($this->oRequest->getRequestEscapedParameter('non_kco_global_country')){
+        if ($this->oRequest->getRequestEscapedParameter('non_kco_global_country')) {
             return false;
         }
 

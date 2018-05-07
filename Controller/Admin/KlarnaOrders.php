@@ -13,6 +13,7 @@ use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\UtilsView;
+use TopConcepts\Klarna\Model\KlarnaOrder;
 
 class KlarnaOrders extends AdminDetailsController
 {
@@ -40,17 +41,19 @@ class KlarnaOrders extends AdminDetailsController
 
             return parent::render();
         }
+        $oOrder          = $this->getEditObject();
+        $this->orderLang = $oOrder->getFieldData('oxlang');
 
-        $this->orderLang = $this->getEditObject()->getFieldData('oxlang');
+        $this->addTplParam('oOrder', $oOrder);
+        $sCountryISO = KlarnaUtils::getCountryISO($oOrder->getFieldData('oxbillcountryid'));
 
-        $this->addTplParam('oOrder', $this->getEditObject());
-        if (!$this->isCredentialsValid()) {
+        if (!$this->isCredentialsValid($sCountryISO)) {
             $wrongCredsMsg = sprintf(
                 Registry::getLang()->translateString("KLARNA_MID_CHANGED_FOR_COUNTRY"),
                 $this->getViewDataElement('sMid'),
                 $this->getViewDataElement('sCountryISO'),
-                $this->getViewDataElement('currentMid')
-            );
+                $this->getViewDataElement('currentMid'));
+
             $this->addTplParam('wrongCredentials', $wrongCredsMsg);
 
             return parent::render();
@@ -89,6 +92,7 @@ class KlarnaOrders extends AdminDetailsController
 
     /**
      * Returns editable order object
+     * @return KlarnaOrder|Order
      */
     public function getEditObject()
     {
@@ -221,9 +225,9 @@ class KlarnaOrders extends AdminDetailsController
      * @return bool
      * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      */
-    public function isCredentialsValid()
+    public function isCredentialsValid($sCountryISO)
     {
-        $currentMid = KlarnaUtils::getAPICredentials($this->getViewDataElement('sCountryISO'));
+        $currentMid = KlarnaUtils::getAPICredentials($sCountryISO);
 
         $this->addTplParam('sMid', $this->getEditObject()->getFieldData('tcklarna_merchantid'));
         $this->addTplParam(

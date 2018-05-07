@@ -224,7 +224,7 @@ class KlarnaPaymentsClient extends KlarnaClientBase
     {
         $successCodes = array(200, 201, 204);
         $errorCodes   = array(400, 500, 503);
-        $message      = "$class::$method %s";
+        $message      = "%s";
         try {
             if (in_array($oResponse->status_code, $successCodes)) {
                 KlarnaPayment::cleanUpSession();

@@ -22,6 +22,7 @@ class KlarnaOrderArticle extends KlarnaOrderArticle_parent
 
     /**
      * @return mixed
+     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      */
     public function init()
     {

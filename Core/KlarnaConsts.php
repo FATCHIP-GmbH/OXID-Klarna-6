@@ -174,24 +174,26 @@ class KlarnaConsts
         $oLang = Registry::getLang();
 
         $lang = $oLang->getLanguageAbbr();
-        if($isAdmin){
+        if ($isAdmin) {
             $langArray = $oLang->getLanguageArray();
-            $lang = $langArray[$oLang->getTplLanguage()]->abbr;
+            $lang      = $langArray[$oLang->getTplLanguage()]->abbr;
         }
 
-        $defaultLocales = array(
+        $defaultLocales = [
             'en' => 'en-GB',
             'nb' => 'nb-NO',
             'da' => 'da-DK',
             'de' => 'de-DE',
             'nl' => 'nl-NL',
             'fi' => 'fi-FI',
-            'sv' => 'sv-SE'
-        );
-        if($byCountry){
+            'sv' => 'sv-SE',
+            'at' => 'de-AT',
+            'us' => 'en-US'
+        ];
+        if ($byCountry) {
             $sCountryISO = Registry::getSession()->getVariable('sCountryISO');
 
-            $result = array_filter($defaultLocales, function($value) use($sCountryISO){
+            $result = array_filter($defaultLocales, function ($value) use ($sCountryISO) {
                 return strpos($value, $sCountryISO) !== false;
             });
 
@@ -209,7 +211,7 @@ class KlarnaConsts
     {
         return array(
             'de' => '<script src="https://embed.bannerflow.com/599d7ec18d988017005eb279?targeturl=https%3A//www.klarna.com&politeloading=off&merchantid={{merchantid}}&responsive=on" async></script>',
-            'en' => '<script src="https://embed.bannerflow.com/599d7ec18d988017005eb27d?targeturl=https%3A//www.klarna.com&politeloading=off&merchantid={{merchantid}}&responsive=on" async></script>'
+            'en' => '<script src="https://embed.bannerflow.com/599d7ec18d988017005eb27d?targeturl=https%3A//www.klarna.com&politeloading=off&merchantid={{merchantid}}&responsive=on" async></script>',
         );
     }
 
