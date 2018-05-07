@@ -277,7 +277,7 @@ class KlarnaOrderManagementClient extends KlarnaClientBase
     {
         $successCodes = array(200, 201, 204);
         $errorCodes   = array(400, 422, 500);
-        $message      = "$class::$method %s";
+        $message      = "%s";
         if (in_array($oResponse->status_code, $successCodes)) {
             if ($oResponse->body) {
                 $result = json_decode($oResponse->body, true);
