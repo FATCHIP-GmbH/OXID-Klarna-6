@@ -23,6 +23,8 @@ class KlarnaExternalPayments extends KlarnaBaseConfig
      *
      * @see admin/oxAdminDetails::render()
      * @return string
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
      */
     public function render()
     {
