@@ -34,7 +34,7 @@ class ModuleActivationTest extends AcceptanceTestCase
     {
         $this->openListItem($moduleTitle);
         $this->frame("edit");
-        $this->clickAndWait("//form[@id='myedit']//input[@value='Activate']", "list");
+        $this->clickAndWait("//form[@id='myedit']//input[@value='Activate']", 2);
         $this->waitForFrameToLoad('list');
         $this->assertElementPresent("//form[@id='myedit']//input[@value='Deactivate']");
         $this->assertTextPresent($moduleTitle);
@@ -50,9 +50,11 @@ class ModuleActivationTest extends AcceptanceTestCase
     {
         $this->openListItem($moduleTitle);
         $this->frame("edit");
-        $this->clickAndWait("//form[@id='myedit']//input[@value='Deactivate']", "list");
+        $this->clickAndWait("//form[@id='myedit']//input[@value='Deactivate']", 2);
         $this->waitForFrameToLoad('list');
         $this->assertElementPresent("//form[@id='myedit']//input[@value='Activate']");
     }
+
+
 
 }
