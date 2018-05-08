@@ -18,6 +18,7 @@
 namespace TopConcepts\Klarna\Component;
 
 
+use TopConcepts\Klarna\Core\KlarnaPayment;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Request;
@@ -63,6 +64,9 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
                 );
             }
         }
+        if ($oViewConfig->isKlarnaPaymentsEnabled()) {
+            KlarnaPayment::cleanUpSession();
+        }
     }
 
     /**
@@ -97,7 +101,7 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
      * @return string
      */
     public function changeuser_testvalues()
-        {
+    {
         $result = parent::changeuser_testvalues();
         if (KlarnaUtils::isKlarnaCheckoutEnabled() && $result === 'account_user') {
 
