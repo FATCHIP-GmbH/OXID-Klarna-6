@@ -98,7 +98,7 @@ class KlarnaBasket extends KlarnaBasket_parent
                 $total_discount_amount,
                 $tax_rate,
                 $total_tax_amount,
-                $quantity_unit) = KlarnaUtils::calculateOrderAmountsPricesAndTaxes($oItem);
+                $quantity_unit) = KlarnaUtils::calculateOrderAmountsPricesAndTaxes($oItem, $orderMgmtId);
 
             /** @var Article | BasketItem | KlarnaArticle $oArt */
             $oArt = $oItem->getArticle();
