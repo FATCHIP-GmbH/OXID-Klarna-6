@@ -296,7 +296,7 @@ class KlarnaUser extends KlarnaUser_parent
     /**
      * @return int
      */
-    public function tcklarna_getType()
+    public function getType()
     {
         return $this->_type;
     }
@@ -304,7 +304,7 @@ class KlarnaUser extends KlarnaUser_parent
     /**
      * @param int $iType
      */
-    public function tcklarna_setType($iType)
+    public function setType($iType)
     {
         $this->_type = $iType;
     }
@@ -314,8 +314,7 @@ class KlarnaUser extends KlarnaUser_parent
      */
     public function isFake()
     {
-
-        return ($this->tcklarna_getType() && $this->tcklarna_getType() !== self::LOGGED_IN) || !$this->oxuser__oxpassword->value;
+        return ($this->getType() && $this->getType() !== self::LOGGED_IN) || !$this->oxuser__oxpassword->value;
     }
 
     /**

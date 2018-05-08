@@ -183,7 +183,7 @@ class KlarnaExpressController extends FrontendController
         }
 
         try {
-            $this->getKlarnaClient()
+            $this->getKlarnaClient(Registry::getSession()->getVariable('sCountryISO'))
                 ->initOrder($oKlarnaOrder)
                 ->createOrUpdateOrder();
 
@@ -243,7 +243,7 @@ class KlarnaExpressController extends FrontendController
     {
         $oUser = $this->getUser();
 
-        if ($oUser && $oUser->tcklarna_getType() === KlarnaUser::LOGGED_IN) {
+        if ($oUser && $oUser->getType() === KlarnaUser::LOGGED_IN) {
             return true;
         }
 
@@ -253,9 +253,9 @@ class KlarnaExpressController extends FrontendController
     /**
      * @return KlarnaCheckoutClient | \TopConcepts\Klarna\Core\KlarnaClientBase
      */
-    public function getKlarnaClient()
+    public function getKlarnaClient($sCountryISO)
     {
-        return KlarnaCheckoutClient::getInstance();
+        return KlarnaCheckoutClient::getInstance($sCountryISO);
     }
 
     /**
@@ -336,7 +336,7 @@ class KlarnaExpressController extends FrontendController
 //     */
 //    public function isUserLoggedIn()
 //    {
-//        return $this->_oUser->tcklarna_getType() === KlarnaUser::LOGGED_IN;
+//        return $this->_oUser->getType() === KlarnaUser::LOGGED_IN;
 //    }
 
     /**
@@ -536,16 +536,16 @@ class KlarnaExpressController extends FrontendController
 
     protected function addTemplateParameters()
     {
-        $countryISO = $this->getKlarnaClient()->getLoadedPurchaseCountry();
+        $sCountryISO = Registry::getSession()->getVariable('sCountryISO');
 
         if (!KlarnaUtils::is_ajax()) {
-            Registry::getSession()->setVariable('sCountryISO', $countryISO);
+            Registry::getSession()->setVariable('sCountryISO', $sCountryISO);
             $oCountry = oxNew(Country::class);
-            $oCountry->load($oCountry->getIdByCode($countryISO));
+            $oCountry->load($oCountry->getIdByCode($sCountryISO));
             $this->addTplParam("sCountryName", $oCountry->oxcountry__oxtitle->value);
 
-            $this->addTplParam("sPurchaseCountry", $countryISO);
-            $this->addTplParam("sKlarnaIframe", $this->getKlarnaClient()->getHtmlSnippet());
+            $this->addTplParam("sPurchaseCountry", $sCountryISO);
+            $this->addTplParam("sKlarnaIframe", $this->getKlarnaClient($sCountryISO)->getHtmlSnippet());
             $this->addTplParam("sCurrentUrl", Registry::get(UtilsUrl::class)->getCurrentUrl());
             $this->addTplParam("shippingAddressAllowed", KlarnaUtils::getShopConfVar('blKlarnaAllowSeparateDeliveryAddress'));
         }

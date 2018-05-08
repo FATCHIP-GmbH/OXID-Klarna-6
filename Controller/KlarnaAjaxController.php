@@ -121,9 +121,9 @@ class KlarnaAjaxController extends FrontendController
     {
         if ($this->_oUser = $this->getUser()) {
             if ($this->getViewConfig()->isUserLoggedIn()) {
-                $this->_oUser->tcklarna_setType(KlarnaUser::LOGGED_IN);
+                $this->_oUser->setType(KlarnaUser::LOGGED_IN);
             } else {
-                $this->_oUser->tcklarna_setType(KlarnaUser::NOT_REGISTERED);
+                $this->_oUser->setType(KlarnaUser::NOT_REGISTERED);
             }
         } else {
             $this->_oUser                      = KlarnaUtils::getFakeUser($this->_aOrderData['billing_address']['email']);
@@ -148,7 +148,7 @@ class KlarnaAjaxController extends FrontendController
             $this->_oUser->clearDeliveryAddress();
 
         $this->_oUser->assign(KlarnaFormatter::klarnaToOxidAddress($this->_aOrderData, 'billing_address'));
-        if ($this->_oUser->tcklarna_getType() !== KlarnaUser::REGISTERED) {
+        if ($this->_oUser->getType() !== KlarnaUser::REGISTERED) {
             $this->_oUser->save();
         }
         if (isset($this->_aOrderData['customer']['date_of_birth'])) {

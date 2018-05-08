@@ -336,7 +336,6 @@ class KlarnaUtils
         Registry::getSession()->deleteVariable('amazonOrderReferenceId');
         Registry::getSession()->deleteVariable('klarna_checkout_user_email');
         Registry::getSession()->deleteVariable('externalCheckout');
-        Registry::getSession()->deleteVariable('sFakeUserId');
         Registry::getSession()->deleteVariable('sAuthToken');
         Registry::getSession()->deleteVariable('klarna_session_data');
         Registry::getSession()->deleteVariable('finalizeRequired');
@@ -352,5 +351,16 @@ class KlarnaUtils
         $result = preg_replace('/<(\/)?[a-z]+[^<]*>/', '', $text);
 
         return $result ?: null;
+    }
+
+    /**
+     * @param $iso3
+     * @return false|string
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     */
+    public static function getCountryIso2fromIso3($iso3)
+    {
+        $sql = 'SELECT oxisoalpha2 FROM oxcountry WHERE oxisoalpha3 = ?';
+        return DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC)->getOne($sql, [$iso3]);
     }
 }

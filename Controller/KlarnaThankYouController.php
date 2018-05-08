@@ -61,6 +61,7 @@ class KlarnaThankYouController extends KlarnaThankYouController_parent
         $this->addTplParam("sPaymentId", Registry::getSession()->getVariable('paymentid'));
 
         KlarnaUtils::fullyResetKlarnaSession();
+        Registry::getSession()->deleteVariable('sFakeUserId');
 
         return $render;
     }

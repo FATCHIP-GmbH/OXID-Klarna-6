@@ -46,7 +46,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
     public function testIsCreatable($type, $result)
     {
         $oUser = oxNew(User::class);
-        $oUser->tcklarna_setType($type);
+        $oUser->setType($type);
         $this->assertEquals($result,  $oUser->isCreatable());
     }
 
@@ -100,7 +100,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
 
         $this->assertEquals($sessionISO, $this->getSessionParam('sCountryISO'));
         $this->assertEquals($sessionEmail, $this->getSessionParam('klarna_checkout_user_email'));
-        $this->assertEquals($userType, $oUser->tcklarna_getType());
+        $this->assertEquals($userType, $oUser->getType());
     }
 
     public function resolveLocaleDataProvider()
@@ -150,7 +150,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
     {
         $oUser = $this->getMock(User::class, ['load']);
         $oUser->expects($this->never())->method('load');
-        $oUser->tcklarna_setType(KlarnaUser::LOGGED_IN);
+        $oUser->setType(KlarnaUser::LOGGED_IN);
 
         $this->assertEquals($oUser, $oUser->loadByEmail('steffen@topconcepts.de'));
     }
@@ -165,7 +165,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
         $oUser = oxNew(User::class);
 
         $this->assertEquals($oUser, $oUser->loadByEmail($email));
-        $this->assertEquals($expectedType, $oUser->tcklarna_getType());
+        $this->assertEquals($expectedType, $oUser->getType());
     }
 
     public function loadByEmailDataProvider()
@@ -318,7 +318,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
     public function testIsWritable($type, $result)
     {
         $oUser = oxNew(User::class);
-        $oUser->tcklarna_setType($type);
+        $oUser->setType($type);
         $this->assertEquals($result,  $oUser->isWritable());
     }
 
@@ -376,11 +376,11 @@ class KlarnaUserTest extends ModuleUnitTestCase
      * @dataProvider isFakeDataProvider
      * @param $type
      */
-    public function testTcklarna_getType($type)
+    public function testgetType($type)
     {
         $oUser = oxNew(User::class);
-        $oUser->tcklarna_setType($type);
-        $this->assertEquals($type, $oUser->tcklarna_getType());
+        $oUser->setType($type);
+        $this->assertEquals($type, $oUser->getType());
     }
 
     public function deliveryCountryDataProvider()
@@ -416,11 +416,11 @@ class KlarnaUserTest extends ModuleUnitTestCase
         $this->assertEquals($oCountry, $result);
     }
 
-    public function testTcklarna_setType()
+    public function testsetType()
     {
         $oUser = oxNew(User::class);
-        $oUser->tcklarna_setType('myType');
-        $this->assertEquals('myType', $oUser->tcklarna_getType());
+        $oUser->setType('myType');
+        $this->assertEquals('myType', $oUser->getType());
     }
 
     public function isFakeDataProvider()
@@ -443,7 +443,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
     public function testIsFake($type, $pass, $result)
     {
         $oUser = oxNew(User::class);
-        $oUser->tcklarna_setType($type);
+        $oUser->setType($type);
         $oUser->oxuser__oxpassword = new Field($pass);
         $this->assertEquals($result,  $oUser->isFake());
     }
@@ -567,7 +567,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
 
         $oUser = oxNew(User::class);
         $oUser->load('92ebae5067055431aeaaa6f75bd9a131');
-        $oUser->tcklarna_setType($userType);
+        $oUser->setType($userType);
         $result = $oUser->getKlarnaData();
 
         $this->assertEquals(array_keys($result), $resultKeys);
