@@ -18,6 +18,7 @@
 namespace TopConcepts\Klarna\Core;
 
 
+use OxidEsales\Eshop\Application\Model\BasketItem;
 use OxidEsales\Eshop\Core\Field;
 use TopConcepts\Klarna\Model\KlarnaCountryList;
 use TopConcepts\Klarna\Model\KlarnaUser;
@@ -236,18 +237,26 @@ class KlarnaUtils
     }
 
     /**
-     * @param $oItem
+     * @param BasketItem $oItem
+     * @param $isOrderMgmt
      * @return array
+     * @throws \oxArticleInputException
+     * @throws \oxNoArticleException
      */
-    public static function calculateOrderAmountsPricesAndTaxes($oItem)
+    public static function calculateOrderAmountsPricesAndTaxes($oItem, $isOrderMgmt)
     {
-        $quantity = self::parseFloatAsInt($oItem->getAmount());
-        if ($oItem->isBundle()) {
-            $regular_unit_price = 0;
-            $basket_unit_price  = 0;
-        } else {
-            $regUnitPrice       = $oItem->getRegularUnitPrice();
-            $unitPrice          = $oItem->getUnitPrice();
+        $quantity           = self::parseFloatAsInt($oItem->getAmount());
+        $regular_unit_price = 0;
+        $basket_unit_price  = 0;
+
+        if (!$oItem->isBundle()) {
+            $regUnitPrice = $oItem->getRegularUnitPrice();
+            if ($isOrderMgmt) {
+                $unitPrice = $oItem->getArticle()->getUnitPrice();
+            } else {
+                $unitPrice = $oItem->getUnitPrice();
+            }
+
             $regular_unit_price = self::parseFloatAsInt($regUnitPrice->getBruttoPrice() * 100);
             $basket_unit_price  = self::parseFloatAsInt($unitPrice->getBruttoPrice() * 100);
         }
