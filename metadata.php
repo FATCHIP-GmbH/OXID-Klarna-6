@@ -96,7 +96,6 @@ $aModule = array(
         'KlarnaValidate'         => KlarnaValidationController::class,
     ),
     'extend'      => array(
-        Email::class              => KlarnaEmail::class,
         // models
         Basket::class             => KlarnaBasket::class,
         User::class               => KlarnaUser::class,
@@ -138,8 +137,6 @@ $aModule = array(
         'tcklarna_checkout_login_box.tpl'      => 'tc/tcklarna/views/tpl/checkout/inc/tcklarna_checkout_login_box.tpl',
         'tcklarna_checkout_address_box.tpl'    => 'tc/tcklarna/views/tpl/checkout/inc/tcklarna_checkout_address_box.tpl',
         'tcklarna_servicemenu.tpl'             => 'tc/tcklarna/views/tpl/widget/header/tcklarna_servicemenu.tpl',
-        'changepwd.tpl'                        => 'tc/tcklarna/views/tpl/emails/html/changepwd.tpl',
-        'changepwd_plain.tpl'                  => 'tc/tcklarna/views/tpl/emails/plain/changepwd.tpl',
         //admin
         'tcklarna_general.tpl'                 => 'tc/tcklarna/views/admin/tpl/tcklarna_general.tpl',
         'tcklarna_design.tpl'                  => 'tc/tcklarna/views/admin/tpl/tcklarna_design.tpl',
