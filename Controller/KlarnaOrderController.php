@@ -102,6 +102,9 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             if ($this->isKlarnaCheckoutOrder($oBasket)) {
                 if ($newCountry = $this->isCountryChanged()) {
                     $this->_aOrderData = [
+                        'merchant_urls'    => [
+                            'checkout' => Registry::getConfig()->getSslShopUrl() . "?cl=KlarnaExpress",
+                        ],
                         'billing_address'  => [
                             'country' => $newCountry,
                             'email'   => Registry::getSession()->getVariable('klarna_checkout_user_email'),
