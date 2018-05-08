@@ -18,6 +18,7 @@
 namespace TopConcepts\Klarna\Controller;
 
 
+use OxidEsales\Eshop\Application\Controller\ForgotPasswordController;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\PayPalModule\Controller\ExpressCheckoutDispatcher;
 use OxidEsales\PayPalModule\Controller\StandardDispatcher;
@@ -402,9 +403,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
         try {
             $this->_oUser->changeUserData($this->_oUser->oxuser__oxusername->value, $password, $password, $aBillingAddress, $aDeliveryAddress);
-            if ($password)
-                $this->sendChangePasswordEmail();
-
         } catch (StandardException $oException) {
             $this->_aResultErrors[] = 'User could not be updated/loaded';//todo:translate
 
@@ -418,6 +416,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         }
 
         $this->setUser($this->_oUser);
+
         $this->_oUser->updateDeliveryAddress(KlarnaFormatter::klarnaToOxidAddress($this->_aOrderData, 'shipping_address'));
 
         return true;
@@ -455,6 +454,11 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                 $this->_oUser->clearDeliveryAddress();
             // performing special actions after user finishes order (assignment to special user groups)
             $this->_oUser->onOrderExecute($oBasket, $iSuccess);
+
+            if ($this->isRegisterNewUserNeeded()) {
+                $oEmail = oxNew(\OxidEsales\Eshop\Core\Email::class);
+                $oEmail->sendForgotPwdEmail($this->_oUser->oxuser__oxusername->value);
+            }
 
             Registry::getSession()->setVariable('paymentid', 'klarna_checkout');
 
@@ -924,7 +928,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
         $iSuccess = false;
         if ($sEmail) {
-            $iSuccess = $oEmail->sendChangePwdEmail($sEmail, 'Set password for your new account.');
+            $iSuccess = $oEmail->SendForgotPwdEmail($sEmail);
         }
 
         if ($iSuccess !== true) {
