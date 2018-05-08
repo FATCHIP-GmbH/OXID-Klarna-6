@@ -119,21 +119,30 @@ class KlarnaAjaxController extends FrontendController
      */
     protected function _initUser()
     {
+        $oSession = $this->getSession();
+
         if ($this->_oUser = $this->getUser()) {
             if ($this->getViewConfig()->isUserLoggedIn()) {
                 $this->_oUser->setType(KlarnaUser::LOGGED_IN);
             } else {
                 $this->_oUser->setType(KlarnaUser::NOT_REGISTERED);
             }
+        } else if ($oSession->hasVariable('oFakeKlarnaUser')) {
+            $this->_oUser = $oSession->getVariable('oFakeKlarnaUser');
         } else {
-            $this->_oUser                      = KlarnaUtils::getFakeUser($this->_aOrderData['billing_address']['email']);
-            $oCountry                          = oxNew(Country::class);
-            $this->_oUser->oxuser__oxcountryid = new Field(
-                $oCountry->getIdByCode(
-                    strtoupper($this->_aOrderData['shipping_address']['country'])
-                ),
-                Field::T_RAW
-            );
+            $this->_oUser = KlarnaUtils::getFakeUser($this->_aOrderData['billing_address']['email']);
+        }
+        $oCountry                          = oxNew(Country::class);
+        $this->_oUser->oxuser__oxcountryid = new Field(
+            $oCountry->getIdByCode(
+                strtoupper($this->_aOrderData['billing_address']['country'])
+            ),
+            Field::T_RAW
+        );
+        if ($this->_oUser->isWritable()) {
+            $this->_oUser->save();
+        } else {
+            $oSession->setVariable('oFakeKlarnaUser', $this->_oUser);
         }
     }
 
@@ -148,11 +157,13 @@ class KlarnaAjaxController extends FrontendController
             $this->_oUser->clearDeliveryAddress();
 
         $this->_oUser->assign(KlarnaFormatter::klarnaToOxidAddress($this->_aOrderData, 'billing_address'));
-        if ($this->_oUser->getType() !== KlarnaUser::REGISTERED) {
-            $this->_oUser->save();
-        }
         if (isset($this->_aOrderData['customer']['date_of_birth'])) {
             $this->_oUser->oxuser__oxbirthdate = new Field($this->_aOrderData['customer']['date_of_birth']);
+        }
+        if ($this->_oUser->isWritable()) {
+            $this->_oUser->save();
+        }else {
+            $this->getSession()->setVariable('oFakeKlarnaUser', $this->_oUser);
         }
     }
 

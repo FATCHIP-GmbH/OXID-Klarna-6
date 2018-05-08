@@ -361,6 +361,7 @@ class KlarnaUtils
     public static function getCountryIso2fromIso3($iso3)
     {
         $sql = 'SELECT oxisoalpha2 FROM oxcountry WHERE oxisoalpha3 = ?';
+
         return DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC)->getOne($sql, [$iso3]);
     }
 }
