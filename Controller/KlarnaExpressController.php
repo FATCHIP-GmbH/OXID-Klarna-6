@@ -176,6 +176,7 @@ class KlarnaExpressController extends FrontendController
         $orderData = $oKlarnaOrder->getOrderData();
 
         if (!KlarnaUtils::isCountryActiveInKlarnaCheckout(strtoupper($orderData['purchase_country']))) {
+
             $sUrl = Registry::getConfig()->getShopHomeURL() . 'cl=user';
             Registry::getUtils()->redirect($sUrl, false, 302);
 
@@ -539,7 +540,6 @@ class KlarnaExpressController extends FrontendController
         $sCountryISO = Registry::getSession()->getVariable('sCountryISO');
 
         if (!KlarnaUtils::is_ajax()) {
-            Registry::getSession()->setVariable('sCountryISO', $sCountryISO);
             $oCountry = oxNew(Country::class);
             $oCountry->load($oCountry->getIdByCode($sCountryISO));
             $this->addTplParam("sCountryName", $oCountry->oxcountry__oxtitle->value);
