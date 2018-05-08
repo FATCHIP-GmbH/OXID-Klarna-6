@@ -4,7 +4,15 @@
  * Returns data for klarna testing
  */
 return [
-    'sKlarnaKPMerchantId' => '',
-    'sKlarnaKPPassword' => '',
-    'sKlarnaEncodeKey' => ''
+    'sKlarnaKPMerchantId'   => '<Klarna KPMerchantId>',
+    'sKlarnaKPPassword'     => '<Klarna KPPassword>',
+    'sKlarnaEncodeKey'      => '<Klarna EncodeKey>',
+    'sKlarnaKCOMerchantId'  => '<Klarna KCOMerchantId>',
+    'sKlarnaKCOPassword'    => '<Klarna KCOPassword>',
+    'sKlarnaPayNowBank'     => '<Klarna PayNowBank>',
+    'sKlarnaPayNowLoginPin' => '<Klarna PayNowLoginPin>',
+    'sKlarnaPayNowTan'      => '<Klarna PayNowTan>',
+    'sKlarnaPayNowIban'     => '<Klarna PayNowIban>',
+    'sKlarnaBDate'          => '<Klarna BDate>',
+    'sKlarnaPhoneNumber'    => '<Klarna PhoneNumber>'
 ];
