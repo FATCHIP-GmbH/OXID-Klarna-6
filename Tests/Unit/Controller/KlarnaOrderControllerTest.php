@@ -1005,7 +1005,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $mock = $this->createStub(KlarnaOrderController::class, ['getUser' => $user, 'getViewConfig' => $viewConfig]);
         $method->invoke($mock);
 
-        $this->assertEquals($expected, $mock->getUser()->tcklarna_getType());
+        $this->assertEquals($expected, $mock->getUser()->getType());
     }
 
     public function initUserDataProcider()

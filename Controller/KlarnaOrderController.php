@@ -83,31 +83,45 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     /**
      *
      * @return string
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      */
     public function init()
     {
         parent::init();
 
-        $this->oRequest = Registry::get(Request::class);
-
         if (KlarnaUtils::isKlarnaCheckoutEnabled()) {
+            $this->oRequest = Registry::get(Request::class);
+            $oBasket        = Registry::getSession()->getBasket();
+            $this->selfUrl  = Registry::getConfig()->getShopSecureHomeUrl() . 'cl=KlarnaExpress';
 
-            $this->selfUrl = Registry::getConfig()->getShopSecureHomeUrl() . 'cl=KlarnaExpress';
             if ($this->oRequest->getRequestEscapedParameter('externalCheckout') == 1) {
                 Registry::getSession()->setVariable('externalCheckout', true);
             }
             $this->isExternalCheckout = Registry::getSession()->getVariable('externalCheckout');
 
-            $oBasket = Registry::getSession()->getBasket();
             if ($this->isKlarnaCheckoutOrder($oBasket)) {
+                if ($newCountry = $this->isCountryChanged()) {
+                    $this->_aOrderData = [
+                        'billing_address'  => [
+                            'country' => $newCountry,
+                            'email'   => Registry::getSession()->getVariable('klarna_checkout_user_email'),
+                        ],
+                        'shipping_address' => [
+                            'country' => $newCountry,
+                            'email'   => Registry::getSession()->getVariable('klarna_checkout_user_email'),
+                        ],
+                    ];
+                    KlarnaUtils::fullyResetKlarnaSession();
+                    Registry::getSession()->setVariable('sCountryISO', $newCountry);
+                } else {
+                    $oClient = $this->getKlarnaCheckoutClient();
+                    try {
+                        $this->_aOrderData = $oClient->getOrder();
+                    } catch (KlarnaClientException $oEx) {
+                        $oEx->debugOut();
+                    }
 
-                $oClient = $this->getKlarnaCheckoutClient();
-                try {
-                    $this->_aOrderData = $oClient->getOrder();
-                } catch (KlarnaClientException $oEx) {
-                    $oEx->debugOut();
                 }
-
                 $this->_initUser();
                 $this->updateUserObject();
             }
@@ -343,7 +357,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      */
     protected function _validateUser()
     {
-        switch ($this->_oUser->tcklarna_getType()) {
+        switch ($this->_oUser->getType()) {
 
             case KlarnaUser::NOT_EXISTING:
             case KlarnaUser::NOT_REGISTERED:
@@ -428,8 +442,8 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
         if ($iSuccess === 1) {
             if (
-                ($this->_oUser->tcklarna_getType() === KlarnaUser::NOT_REGISTERED ||
-                 $this->_oUser->tcklarna_getType() === KlarnaUser::NOT_EXISTING) &&
+                ($this->_oUser->getType() === KlarnaUser::NOT_REGISTERED ||
+                 $this->_oUser->getType() === KlarnaUser::NOT_EXISTING) &&
                 $this->isRegisterNewUserNeeded()
             ) {
                 $this->_oUser->save();
@@ -744,9 +758,9 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     {
         if ($this->_oUser = $this->getUser()) {
             if ($this->getViewConfig()->isUserLoggedIn()) {
-                $this->_oUser->tcklarna_setType(KlarnaUser::LOGGED_IN);
+                $this->_oUser->setType(KlarnaUser::LOGGED_IN);
             } else {
-                $this->_oUser->tcklarna_setType(KlarnaUser::NOT_REGISTERED);
+                $this->_oUser->setType(KlarnaUser::NOT_REGISTERED);
             }
         } else {
             $this->_oUser = KlarnaUtils::getFakeUser($this->_aOrderData['billing_address']['email']);
@@ -779,7 +793,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                 $this->_oUser->oxuser__oxbirthdate = new Field($this->_aOrderData['customer']['date_of_birth']);
             }
 
-            if ($this->_oUser->tcklarna_getType() !== KlarnaUser::REGISTERED) {
+            if ($this->_oUser->getType() !== KlarnaUser::REGISTERED) {
 
                 $this->_oUser->save();
             }
@@ -1063,5 +1077,22 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     protected function isPayPalAmazon()
     {
         return in_array(Registry::getSession()->getBasket()->getPaymentId(), array('oxidpaypal', 'bestitamazon'));
+    }
+
+    /**
+     * @return bool|false|string
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     */
+    protected function isCountryChanged()
+    {
+        $requestData = $this->getJsonRequest();
+        $newCountry  = KlarnaUtils::getCountryIso2fromIso3(strtoupper($requestData['country']));
+        $oldCountry  = Registry::getSession()->getVariable('sCountryISO');
+
+        if (!$newCountry) {
+            return false;
+        }
+
+        return $newCountry != $oldCountry ? $newCountry : false;
     }
 }

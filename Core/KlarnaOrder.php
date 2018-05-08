@@ -412,7 +412,7 @@ class KlarnaOrder extends BaseModel
     {
         $iActiveCheckbox = KlarnaUtils::getShopConfVar('iKlarnaActiveCheckbox');
 
-        if (!$this->_oUser->isFake() || $this->_oUser->tcklarna_getType() === KlarnaUser::REGISTERED) {
+        if (!$this->_oUser->isFake() || $this->_oUser->getType() === KlarnaUser::REGISTERED) {
             if ($this->_oUser->getNewsSubscription()->getOptInStatus() == 1) {
 
                 return KlarnaConsts::EXTRA_CHECKBOX_NONE;
