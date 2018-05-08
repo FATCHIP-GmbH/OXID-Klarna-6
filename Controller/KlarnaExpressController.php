@@ -367,16 +367,16 @@ class KlarnaExpressController extends FrontendController
         return $list;
     }
 
-    /**
-     *
-     */
-    public function cleanUpSession()
-    {
-        $oSession = Registry::getSession();
-        $oSession->deleteVariable('sCountryISO');
-        $oSession->deleteVariable('klarna_checkout_order_id');
-        $oSession->deleteVariable('klarna_checkout_user_email');
-    }
+//    /**
+//     *
+//     */
+//    public function cleanUpSession()
+//    {
+//        $oSession = Registry::getSession();
+//        $oSession->deleteVariable('sCountryISO');
+//        $oSession->deleteVariable('klarna_checkout_order_id');
+//        $oSession->deleteVariable('klarna_checkout_user_email');
+//    }
 
     /**
      * @param $sCountryISO
@@ -559,7 +559,7 @@ class KlarnaExpressController extends FrontendController
         $oSession = $this->getSession();
         /** @var KlarnaUser|User $oUser */
         if ($oUser = $this->getUser()) {
-            $oUser->tcklarna_checkUserType();
+            $oUser->checkUserType();
         } else {
             $email = $oSession->getVariable('klarna_checkout_user_email');
             /** @var KlarnaUser|User $oUser */

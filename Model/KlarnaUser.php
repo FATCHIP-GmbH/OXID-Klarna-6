@@ -530,7 +530,7 @@ class KlarnaUser extends KlarnaUser_parent
     /**
      * @return int
      */
-    public function tcklarna_checkUserType()
+    public function checkUserType()
     {
         if ($this->getId() === Registry::getSession()->getVariable('usr')) {
 

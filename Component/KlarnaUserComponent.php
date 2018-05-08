@@ -52,6 +52,7 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
         Registry::getSession()->setVariable("iShowSteps", 1);
         $oViewConfig = oxNew(ViewConfig::class);
         if ($oViewConfig->isKlarnaCheckoutEnabled()) {
+            KlarnaUtils::fullyResetKlarnaSession();
             if ($this->klarnaRedirect()) {
                 Registry::getUtils()->redirect(
                     $this->getConfig()->getShopSecureHomeUrl() . 'cl=KlarnaExpress',
