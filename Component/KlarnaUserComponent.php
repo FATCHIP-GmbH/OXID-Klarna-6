@@ -53,6 +53,8 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
         $oViewConfig = oxNew(ViewConfig::class);
         if ($oViewConfig->isKlarnaCheckoutEnabled()) {
             KlarnaUtils::fullyResetKlarnaSession();
+            Registry::getSession()->deleteVariable('oFakeKlarnaUser');
+            Registry::getSession()->deleteVariable('sFakeUserId');
             if ($this->klarnaRedirect()) {
                 Registry::getUtils()->redirect(
                     $this->getConfig()->getShopSecureHomeUrl() . 'cl=KlarnaExpress',

@@ -557,9 +557,12 @@ class KlarnaExpressController extends FrontendController
     protected function resolveUser()
     {
         $oSession = $this->getSession();
+
         /** @var KlarnaUser|User $oUser */
         if ($oUser = $this->getUser()) {
             $oUser->checkUserType();
+        } else if ($oSession->hasVariable('oFakeKlarnaUser')) {
+            $oUser = $oSession->getVariable('oFakeKlarnaUser');
         } else {
             $email = $oSession->getVariable('klarna_checkout_user_email');
             /** @var KlarnaUser|User $oUser */
@@ -568,6 +571,8 @@ class KlarnaExpressController extends FrontendController
 
         if ($oUser->isWritable()) {
             $oUser->save();
+        } else {
+            $oSession->setVariable('oFakeKlarnaUser', $oUser);
         }
 
         return $oUser;
