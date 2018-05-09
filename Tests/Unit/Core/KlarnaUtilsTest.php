@@ -1,7 +1,8 @@
 <?php
 
-namespace TopConcepts\Klarna\Tests\Unit\Model;
+namespace TopConcepts\Klarna\Tests\Unit\Core;
 
+use OxidEsales\Eshop\Application\Model\Article;
 use OxidEsales\Eshop\Application\Model\BasketItem;
 use OxidEsales\Eshop\Application\Model\Category;
 use OxidEsales\Eshop\Application\Model\CountryList;
@@ -26,16 +27,36 @@ class KlarnaUtilsTest extends ModuleUnitTestCase
 
         $price = $this->createStub(Price::class, ['getVat' => 100]);
         $item = $this->createStub(BasketItem::class, ['isBundle' => true, 'getUnitPrice' => $price]);
-        $result = KlarnaUtils::calculateOrderAmountsPricesAndTaxes($item);
+        $result = KlarnaUtils::calculateOrderAmountsPricesAndTaxes($item, false);
         $this->assertEquals($expected, $result);
 
         $price = $this->createStub(Price::class, ['getVat' => 100, 'getBruttoPrice' => 20]);
         $priceUnit = $this->createStub(Price::class, ['getVat' => 100, 'getBruttoPrice' => 10]);
+
+        $article = $this->createStub(Article::class, ['getUnitPrice' => $price]);
+
+        $item = $this->createStub(
+            BasketItem::class,
+            ['isBundle' => false, 'getUnitPrice' => $price, 'getArticle' => $article, 'getRegularUnitPrice' => $priceUnit]
+        );
+        $result = KlarnaUtils::calculateOrderAmountsPricesAndTaxes($item, true);
+        $expected = [
+            0,
+            1000,
+            0,
+            0,
+            10000,
+            0,
+            "pcs",
+        ];
+        $this->assertEquals($expected, $result);
+
+
         $item = $this->createStub(
             BasketItem::class,
             ['isBundle' => false, 'getUnitPrice' => $price, 'getRegularUnitPrice' => $priceUnit]
         );
-        $result = KlarnaUtils::calculateOrderAmountsPricesAndTaxes($item);
+        $result = KlarnaUtils::calculateOrderAmountsPricesAndTaxes($item, false);
         $expected = [
             0,
             1000,

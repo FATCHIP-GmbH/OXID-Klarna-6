@@ -96,21 +96,4 @@ class KlarnaCheckoutClientTest extends ModuleUnitTestCase
         $this->assertEquals($result, $order);
 
     }
-
-    public function testGetLoadedPurchaseCountry()
-    {
-        $checkoutClient = oxNew(KlarnaCheckoutClient::class);
-
-        $result = $checkoutClient->getLoadedPurchaseCountry();
-        $this->assertFalse($result);
-
-        $order = $this->getMockBuilder(KlarnaOrder::class)->disableOriginalConstructor()->getMock();
-        $this->setProtectedClassProperty($checkoutClient,'aOrder',$order);
-        $result = $checkoutClient->getLoadedPurchaseCountry();
-        $this->assertNull($result);
-
-        $this->setSessionParam('sCountryISO', 'test');
-        $result = $checkoutClient->getLoadedPurchaseCountry();
-        $this->assertEquals($result, 'test');
-    }
 }

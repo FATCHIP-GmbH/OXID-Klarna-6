@@ -65,7 +65,7 @@ class KlarnaFormatterTest extends ModuleUnitTestCase
     {
 
         $result = KlarnaFormatter::klarnaToOxidAddress($addressData, $address);
-        $this->assertEquals($result, $expected);
+        $this->assertEquals($expected, $result);
 
     }
 
@@ -88,6 +88,7 @@ class KlarnaFormatterTest extends ModuleUnitTestCase
 
         $expectedShipping = [
             'oxaddress__oxcountryid' => "2db455824e4a19cc7.14731328",
+            'oxaddress__oxbirthdate' => '01 test'
         ];
 
         $addressDataShippingWithTitle['shipping_address'] = [

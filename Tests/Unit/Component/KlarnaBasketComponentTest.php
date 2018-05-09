@@ -75,7 +75,6 @@ class KlarnaBasketComponentTest extends ModuleUnitTestCase
         $this->getConfig()->saveShopConfVar(null, 'sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'tcklarna');
         $this->setSessionParam('klarna_checkout_order_id', $klSessionId);
 
-        // todo: checke if it is enough
         $cmpBasket = $this->getMock(BasketComponent::class, ['updateKlarnaOrder']);
         $cmpBasket->expects($this->once())->method('updateKlarnaOrder');
 

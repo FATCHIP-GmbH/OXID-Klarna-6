@@ -18,7 +18,6 @@
 namespace TopConcepts\Klarna\Controller;
 
 
-use OxidEsales\Eshop\Application\Controller\ForgotPasswordController;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\PayPalModule\Controller\ExpressCheckoutDispatcher;
 use OxidEsales\PayPalModule\Controller\StandardDispatcher;
@@ -381,6 +380,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      *
      * @return bool
      * @throws \oxUserException
+     * @throws \oxSystemComponentException
      */
     protected function _createUser()
     {
@@ -401,13 +401,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         $password = $this->isRegisterNewUserNeeded() ? $this->getRandomPassword(8) : null;
         $this->_oUser->setPassword($password);
 
-        try {
-            $this->_oUser->changeUserData($this->_oUser->oxuser__oxusername->value, $password, $password, $aBillingAddress, $aDeliveryAddress);
-        } catch (StandardException $oException) {
-            $this->_aResultErrors[] = 'User could not be updated/loaded';//todo:translate
-
-            return false;
-        }
+        $this->_oUser->changeUserData($this->_oUser->oxuser__oxusername->value, $password, $password, $aBillingAddress, $aDeliveryAddress);
 
         // login only if registered a new account with password
         if ($this->isRegisterNewUserNeeded()) {

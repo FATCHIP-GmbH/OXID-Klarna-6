@@ -57,7 +57,7 @@ $aLang = array(
     'TCKLARNA_LOGIN_INTO_AMAZON'                 => 'Please click the button below to login into amazon service',
     'KLARNA_ORDER_NOT_IN_SYNC'             => '<strong>Warning!</strong> This order\'s data is different on Klarna\'s side. ',
     'KLARNA_ORDER_IS_CANCELLED'            => 'Order is cancelled. ',
-    'KLARNA_SEE_ORDER_IN_PORTAL'           => '<a href="%s" target="_blank" class="alert-link">See this order in the Klarna Portal</a>',//todo:translate
+    'KLARNA_SEE_ORDER_IN_PORTAL'           => '<a href="%s" target="_blank" class="alert-link">See this order in the Klarna Portal</a>',
 
     'KLARNA_WENT_WRONG_TRY_AGAIN' => 'Something went wrong. Please try again',
     'KLARNA_WRONG_URLS_CONFIG'    => 'Configuration error - check terms/cancellation terms settings',

@@ -114,7 +114,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
     {
         $order = $this->createStub(Order::class, ['finalizeOrder' => 1]);
         \oxTestModules::addModuleObject(Order::class, $order);
-        $user = $this->createStub(KlarnaUser::class, ['tcklarna_getType' => 0, 'save' => true, 'onOrderExecute' => true]);
+        $user = $this->createStub(KlarnaUser::class, ['getType' => 0, 'save' => true, 'onOrderExecute' => true]);
         $oBasket = $this->createStub(
             KlarnaBasket::class,
             ['getPaymentId' => 'klarna_checkout', 'calculateBasket' => true]
@@ -260,7 +260,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $method = $class->getMethod('_validateUser');
         $method->setAccessible(true);
 
-        $user = $this->createStub(KlarnaUser::class, ['tcklarna_getType' => $type]);
+        $user = $this->createStub(KlarnaUser::class, ['getType' => $type]);
         $mock = $this->createStub(KlarnaOrderController::class, ['_createUser' => true]);
         $this->setProtectedClassProperty($mock, '_oUser', $user);
         $result = $method->invoke($mock);
@@ -676,7 +676,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $this->assertEquals('authorize', $oPayment->getStatus());
 
         $expected = [
-            'action' => "TopConcepts\Klarna\Controllers\KlarnaOrderController::checkOrderStatus",
+            'action' => "TopConcepts\Klarna\Controller\KlarnaOrderController::checkOrderStatus",
             'status' => "authorize",
             'data' =>
                 [
@@ -714,7 +714,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $mock->updateKlarnaAjax();
 
         $expected = [
-            'action' => "TopConcepts\Klarna\Controllers\KlarnaOrderController::checkOrderStatus",
+            'action' => "TopConcepts\Klarna\Controller\KlarnaOrderController::checkOrderStatus",
             'status' => "refresh",
             'data' => ['refreshUrl' => null],
         ];
@@ -740,7 +740,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $mock->updateKlarnaAjax();
 
         $expected = [
-            'action' => "TopConcepts\Klarna\Controllers\KlarnaOrderController::checkOrderStatus",
+            'action' => "TopConcepts\Klarna\Controller\KlarnaOrderController::checkOrderStatus",
             'status' => "authorize",
             'data' =>
                 [
@@ -783,7 +783,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $mock->updateKlarnaAjax();
 
         $expected = [
-            'action' => "TopConcepts\Klarna\Controllers\KlarnaOrderController::checkOrderStatus",
+            'action' => "TopConcepts\Klarna\Controller\KlarnaOrderController::checkOrderStatus",
             'status' => "finalize",
             'data' =>
                 [
@@ -828,7 +828,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $mock->updateKlarnaAjax();
 
         $expected = [
-            'action' => "TopConcepts\Klarna\Controllers\KlarnaOrderController::addUserData",
+            'action' => "TopConcepts\Klarna\Controller\KlarnaOrderController::addUserData",
             'status' => "refresh",
             'data' => ['refreshUrl' => null],
         ];
@@ -854,7 +854,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $mock->updateKlarnaAjax();
 
         $expected = [
-            'action' => "TopConcepts\Klarna\Controllers\KlarnaOrderController::addUserData",
+            'action' => "TopConcepts\Klarna\Controller\KlarnaOrderController::addUserData",
             'status' => "updateUser",
             'data' => ['update' => []],
         ];
@@ -926,18 +926,6 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $this->assertTrue($this->getSessionParam('blNeedLogout'));
 
         $this->assertTrue($result);
-
-        $user = $this->getMock(KlarnaUser::class, ['createUser', 'load', 'changeUserData']);
-        $user->expects($this->any())->method('changeUserData')->willThrowException(new StandardException('test'));
-        $user->expects($this->any())->method('createUser')->willReturn(true);
-        $user->expects($this->any())->method('load')->willReturn(true);
-        $this->setProtectedClassProperty($mock, '_oUser', $user);
-        $result = $method->invoke($mock);
-        $this->assertFalse($result);
-        $this->assertEquals(
-            "User could not be updated/loaded",
-            $this->getProtectedClassProperty($mock, '_aResultErrors')[0]
-        );
     }
 
     /**
@@ -945,11 +933,12 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
      */
     public function testSendChangePasswordEmail()
     {
+        $this->setLanguage(1);
         $class = new \ReflectionClass(KlarnaOrderController::class);
         $method = $class->getMethod('sendChangePasswordEmail');
         $method->setAccessible(true);
 
-        $email = $this->createStub(Email::class, ['sendChangePwdEmail' => true]);
+        $email = $this->createStub(Email::class, ['SendForgotPwdEmail' => true]);
         \oxTestModules::addModuleObject(Email::class, $email);
 
         $user = $this->createStub(KlarnaUser::class, ['resolveLocale' => true]);
@@ -958,7 +947,6 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
         $this->setProtectedClassProperty($mock, '_oUser', $user);
         $result = $method->invoke($mock);
-
         $this->assertTrue($result);
 
 
@@ -973,7 +961,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
         $this->assertInstanceOf(DisplayError::class, $errors);
         $errorMessage = $errors->getOxMessage();
-        $this->assertEquals('Leider konnten wir Ihnen keine E-Mail zustellen.', $errorMessage);
+        $this->assertEquals('Please enter a valid e-mail address!', $errorMessage);
 
 
         $user->oxuser__oxusername->value = null;
@@ -985,7 +973,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
         $this->assertInstanceOf(DisplayError::class, $errors);
         $errorMessage = $errors->getOxMessage();
-        $this->assertEquals('Leider konnten wir Ihnen keine E-Mail zustellen.', $errorMessage);
+        $this->assertEquals('Please enter a valid e-mail address!', $errorMessage);
     }
 
     /**
@@ -1001,7 +989,8 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $method->setAccessible(true);
 
         $viewConfig = $this->createStub(ViewConfig::class, ['isUserLoggedIn' => $isUserLoggedIn]);
-        $user = $this->createStub(KlarnaUser::class, ['getKlarnaData' => true]);
+        $user = $this->getMock(User::class, ['getKlarnaData']);
+        $user->expects($this->any())->method('getKlarnaData')->willReturn(['test']);
         $mock = $this->createStub(KlarnaOrderController::class, ['getUser' => $user, 'getViewConfig' => $viewConfig]);
         $method->invoke($mock);
 

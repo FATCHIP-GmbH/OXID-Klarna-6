@@ -34,7 +34,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
             [KlarnaUser::NOT_EXISTING, true],
             [KlarnaUser::REGISTERED, false],
             [KlarnaUser::NOT_REGISTERED, true],
-            [KlarnaUser::LOGGED_IN, false]
+            [KlarnaUser::LOGGED_IN, false],
         ];
     }
 
@@ -47,14 +47,14 @@ class KlarnaUserTest extends ModuleUnitTestCase
     {
         $oUser = oxNew(User::class);
         $oUser->setType($type);
-        $this->assertEquals($result,  $oUser->isCreatable());
+        $this->assertEquals($result, $oUser->isCreatable());
     }
 
     public function saveDataProvider()
     {
         return [
             ['KP', null],
-            ['KCO', 'DE']
+            ['KCO', 'DE'],
         ];
     }
 
@@ -67,7 +67,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
     {
         $this->setModuleMode($mode);
         $this->setSessionParam('sCountryISO', null);
-        $oUser = oxNew(User::class);
+        $oUser                      = oxNew(User::class);
         $oUser->oxuser__oxcountryid = new Field('a7c40f631fc920687.20179984', Field::T_RAW);
         $oUser->save();
 
@@ -78,7 +78,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
     {
         return [
             ['KP', null, 'fake@email', null],
-            ['KCO', 'DE', null, KlarnaUser::LOGGED_IN]
+            ['KCO', 'DE', null, KlarnaUser::LOGGED_IN],
         ];
     }
 
@@ -94,7 +94,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
         $this->setModuleMode($mode);
         $this->setSessionParam('sCountryISO', null);
         $this->setSessionParam('klarna_checkout_user_email', 'fake@email');
-        $oUser = oxNew(User::class);
+        $oUser                    = oxNew(User::class);
         $oUser->oxuser__oxcountry = new Field('a7c40f631fc920687.20179984', Field::T_RAW);
         $oUser->login('info@topconcepts.de', 'muhipo2015');
 
@@ -118,7 +118,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
      * @param $langId
      * @param $expectedResult
      */
-    public function testResolveLocale($iso, $langId,  $expectedResult)
+    public function testResolveLocale($iso, $langId, $expectedResult)
     {
         $oUser = oxNew(User::class);
         $this->setLanguage($langId);
@@ -173,7 +173,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
         return [
             ['info@topconcepts.de', KlarnaUser::REGISTERED],
             ['not_registered@topconcepts.de', KlarnaUser::NOT_REGISTERED],
-            ['not_existing@topconcepts.de', KlarnaUser::NOT_EXISTING]
+            ['not_existing@topconcepts.de', KlarnaUser::NOT_EXISTING],
         ];
     }
 
@@ -181,7 +181,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
     {
         $this->setSessionParam('klarna_checkout_order_id', 'some_fake_id');
 
-        $oUser = oxNew(User::class);
+        $oUser  = oxNew(User::class);
         $result = $oUser->logout();
 
         $this->assertNull($this->getSessionParam('klarna_checkout_order_id'));
@@ -206,7 +206,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
      */
     public function testResolveCountry($countryId, $iso)
     {
-        $oUser = oxNew(User::class);
+        $oUser                      = oxNew(User::class);
         $oUser->oxuser__oxcountryid = new Field($countryId, Field::T_RAW);
 
         $this->assertEquals($iso, $oUser->resolveCountry());
@@ -216,7 +216,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
     {
         return [
             ['41b545c65fe99ca2898614e563a7108b', 1, false],
-            ['41b545c65fe99ca2898614e563a7108a', 0, true]
+            ['41b545c65fe99ca2898614e563a7108a', 0, true],
         ];
     }
 
@@ -253,7 +253,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
     {
         return [
             ['8f241f110953facc6.31621036', 'AW'],
-            ['a7c40f632a0804ab5.18804076', 'GB']
+            ['a7c40f632a0804ab5.18804076', 'GB'],
         ];
     }
 
@@ -264,7 +264,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
      */
     public function testGetUserCountryISO2($countryId, $expectedResult)
     {
-        $oUser = oxNew(User::class);
+        $oUser                      = oxNew(User::class);
         $oUser->oxuser__oxcountryid = new Field($countryId, Field::T_RAW);
 
         $result = $oUser->getUserCountryISO2();
@@ -277,7 +277,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
         return [
             ['0000-00-00', null, true],
             ['1988-01-01', null, false],
-            ['1988-01-01', '41b545c65fe99ca2898614e563a7108f', false]
+            ['1988-01-01', '41b545c65fe99ca2898614e563a7108f', false],
         ];
     }
 
@@ -297,16 +297,16 @@ class KlarnaUserTest extends ModuleUnitTestCase
         $result = $oUser->getKlarnaPaymentData();
 
         $this->assertTrue($bday_resultIsNull === is_null($result['customer']['date_of_birth']));
-        $this->assertEquals($result['billing_address'] !== $result['shipping_address'],  boolval($deladrid));
+        $this->assertEquals($result['billing_address'] !== $result['shipping_address'], boolval($deladrid));
     }
 
     public function isWritableDataProvider()
     {
         return [
-            [KlarnaUser::NOT_EXISTING, false],
-            [KlarnaUser::REGISTERED, false],
+            [KlarnaUser::NOT_EXISTING, true],
             [KlarnaUser::NOT_REGISTERED, true],
             [KlarnaUser::LOGGED_IN, true],
+            [KlarnaUser::REGISTERED, false],
         ];
     }
 
@@ -319,14 +319,14 @@ class KlarnaUserTest extends ModuleUnitTestCase
     {
         $oUser = oxNew(User::class);
         $oUser->setType($type);
-        $this->assertEquals($result,  $oUser->isWritable());
+        $this->assertEquals($result, $oUser->isWritable());
     }
 
     public function updateDeliveryAddressDataProvider()
     {
         $aAddress = [
-            'name' => 'Zyggy',
-            'street' => 'qwdqw'
+            'name'   => 'Zyggy',
+            'street' => 'qwdqw',
         ];
 
         return [
@@ -351,7 +351,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
             ->method('klExists')->willReturn($klExists);
 
 
-        $oUser = $this->getMock(User::class, ['buildAddress','isFake', 'updateSessionDeliveryAddressId']);
+        $oUser = $this->getMock(User::class, ['buildAddress', 'isFake', 'updateSessionDeliveryAddressId']);
         $oUser->expects($this->once())->method('buildAddress')->willReturn($oAddress);
         $oUser->expects($this->any())->method('isFake')->willReturn($isFake);
         $oUser->expects($this->once())->method('updateSessionDeliveryAddressId');
@@ -407,9 +407,9 @@ class KlarnaUserTest extends ModuleUnitTestCase
         $this->setModuleConfVar('sKlarnaDefaultCountry', 'DE');
         $this->setSessionParam('sCountryISO', $countryISO);
 
-        $oUser = oxNew(User::class);
+        $oUser                      = oxNew(User::class);
         $oUser->oxuser__oxcountryid = new Field($userCountryId, Field::T_RAW);
-        $result =$oUser->getKlarnaDeliveryCountry();
+        $result                     = $oUser->getKlarnaDeliveryCountry();
 
         $oCountry = oxNew(Country::class);
         $oCountry->load($expectedId);
@@ -445,14 +445,14 @@ class KlarnaUserTest extends ModuleUnitTestCase
         $oUser = oxNew(User::class);
         $oUser->setType($type);
         $oUser->oxuser__oxpassword = new Field($pass);
-        $this->assertEquals($result,  $oUser->isFake());
+        $this->assertEquals($result, $oUser->isFake());
     }
 
     public function getAttachmentsDataProvider()
     {
         return [
             [false, ['content_type' => 'application/vnd.klarna.internal.emd-v2+json',
-                    'body'         => json_encode(['one', 'two'])]],
+                     'body'         => json_encode(['one', 'two'])]],
             [true, null],
         ];
     }
@@ -476,7 +476,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
     {
         return [
             ['KP', null],
-            ['KCO', 'DE']
+            ['KCO', 'DE'],
         ];
     }
 
@@ -491,14 +491,14 @@ class KlarnaUserTest extends ModuleUnitTestCase
         $this->setModuleMode($mode);
         $oUser = oxNew(User::class);
         $oUser->setId('_testUser');
-        $oUser->oxuser__oxactive = new Field(1, Field::T_RAW);
-        $oUser->oxuser__oxshopid = new Field($this->getConfig()->getBaseShopId(), Field::T_RAW);
+        $oUser->oxuser__oxactive   = new Field(1, Field::T_RAW);
+        $oUser->oxuser__oxshopid   = new Field($this->getConfig()->getBaseShopId(), Field::T_RAW);
         $oUser->oxuser__oxusername = new Field('aaa@bbb.lt', Field::T_RAW);
-        $oUser->oxuser__oxfname = new Field('a', Field::T_RAW);
-        $oUser->oxuser__oxlname = new Field('b', Field::T_RAW);
+        $oUser->oxuser__oxfname    = new Field('a', Field::T_RAW);
+        $oUser->oxuser__oxlname    = new Field('b', Field::T_RAW);
         $oUser->oxuser__oxusername = new Field('aaa@bbb.lt', Field::T_RAW);
         $oUser->oxuser__oxpassword = new Field('pass', Field::T_RAW);
-        $oUser->oxuser__oxactive = new Field(1, Field::T_RAW);
+        $oUser->oxuser__oxactive   = new Field(1, Field::T_RAW);
         $oUser->save();
 
         $aInvAdress = array('oxuser__oxfname'     => 'xxx',
@@ -541,11 +541,10 @@ class KlarnaUserTest extends ModuleUnitTestCase
 
     public function getKlarnaDataProvider_PFE()
     {
-
         return [
-            [0, 0, null, null, ['customer']],
+            [0, 0, null, null, ['customer', 'billing_address']],
             [0, 0, null, 1, ['customer', 'billing_address']],
-            [1, 0, null, null, ['customer']],
+            [1, 0, null, null, ['customer', 'billing_address']],
             [3, 0, null, null, ['customer', 'billing_address']],
             [2, 1, '41b545c65fe99ca2898614e563a7108a', null, ['customer', 'billing_address', 'shipping_address']],
         ];
@@ -556,6 +555,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
      * @param $userType
      * @param $showSippingAddress
      * @param $addressId
+     * @param $invadr
      * @param $resultKeys
      */
     public function testGetKlarnaData_PreFillingEnabled($userType, $showSippingAddress, $addressId, $invadr, $resultKeys)
@@ -618,14 +618,14 @@ class KlarnaUserTest extends ModuleUnitTestCase
      * @param $session_usr
      * @param $expectedResult
      */
-    public function testTcklarna_checkUserType($userId, $session_usr, $expectedResult)
+    public function testcheckUserType($userId, $session_usr, $expectedResult)
     {
         $this->setSessionParam('usr', $session_usr);
         $oUser = $this->getMock(User::class, ['getId']);
         $oUser->expects($this->once())
             ->method('getId')->willReturn($userId);
 
-        $this->assertEquals($expectedResult, $oUser->tcklarna_checkUserType());
+        $this->assertEquals($expectedResult, $oUser->checkUserType());
     }
 
     public function userTypeDataProvider()
@@ -717,7 +717,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
         $method = $class->getMethod('setFakeUserId');
         $method->setAccessible(true);
 
-        $user  = $this->createStub(KlarnaUser::class, ['getKlarnaData' => []]);
+        $user = $this->createStub(KlarnaUser::class, ['getKlarnaData' => []]);
 
         $method->invoke($user);
         $this->assertEquals(1, $this->getProtectedClassProperty($user, '_sOXID'));

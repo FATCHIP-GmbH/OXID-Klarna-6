@@ -194,14 +194,17 @@ class KlarnaOrders extends AdminDetailsController
     }
 
     /**
-     * @codeCoverageIgnore
+     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      */
     public function cancelOrder()
     {
-        $result = $this->cancelKlarnaOrder();
+        $oOrder = $this->getEditObject();
+        $result = $this->cancelKlarnaOrder($oOrder);
         if ($result) {
-            return $this->getEditObject()->cancelOrder();
+            $oOrder->cancelOrder();
         }
+
+        return $result;
     }
 
     /**
@@ -273,7 +276,8 @@ class KlarnaOrders extends AdminDetailsController
 
             return false;
         }
-        if ($this->getEditObject()->oxorder__oxstorno->value == 1) {
+        if ($this->getEditObject()->getFieldData('oxstorno') == 1) {
+
             return false;
         }
 
@@ -310,15 +314,17 @@ class KlarnaOrders extends AdminDetailsController
     }
 
     /**
+     * @param KlarnaOrder|Order $oOrder
      * @return bool
+     * @throws \oxSystemComponentException
      */
-    protected function cancelKlarnaOrder()
+    protected function cancelKlarnaOrder($oOrder)
     {
-        $orderId = $this->getEditObjectId();
-        $oOrder  = oxNew(Order::class);
-        $oOrder->load($orderId);
+        if (!$oOrder->isLoaded()) {
+            return false;
+        }
 
-        if ($oOrder->isLoaded() && $oOrder->isKlarnaOrder() && !$oOrder->getFieldData('oxstorno')) {
+        if ($oOrder->isKlarnaOrder() && !$oOrder->getFieldData('oxstorno')) {
             $orderId     = $oOrder->getFieldData('tcklarna_orderid');
             $sCountryISO = KlarnaUtils::getCountryISO($oOrder->getFieldData('oxbillcountryid'));
 
@@ -333,13 +339,21 @@ class KlarnaOrders extends AdminDetailsController
                 }
 
                 Registry::get(UtilsView::class)->addErrorToDisplay($e);
-                $this->resetContentCache();
-                $this->init();
+                $this->resetCache();
 
                 return false;
             }
         }
 
         return true;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    protected function resetCache()
+    {
+        $this->resetContentCache();
+        $this->init();
     }
 }
