@@ -68,7 +68,7 @@ class KlarnaOrderManagementClientTest extends ModuleUnitTestCase
             $response->body = json_encode(['test' => 'test']);
         }
 
-        if ($code == 400) {
+        if ($code == 400 || $code == 401) {
             $response->body = json_encode(['error_messages' => ['test']]);
         }
 
