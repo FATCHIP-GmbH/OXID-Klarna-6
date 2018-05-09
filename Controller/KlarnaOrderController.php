@@ -18,7 +18,6 @@
 namespace TopConcepts\Klarna\Controller;
 
 
-use OxidEsales\Eshop\Application\Controller\ForgotPasswordController;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\PayPalModule\Controller\ExpressCheckoutDispatcher;
 use OxidEsales\PayPalModule\Controller\StandardDispatcher;
