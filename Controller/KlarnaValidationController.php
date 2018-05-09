@@ -57,7 +57,7 @@ class KlarnaValidationController extends FrontendController
                 $redirectUrl ?: ''
             );
 
-            header("", true, $responseStatus);
+            $this->setValidResponseHeader($responseStatus);
             Registry::getUtils()->showMessageAndExit('');
 //            Registry::getUtils()->redirect("", false, $responseStatus);
 
@@ -126,5 +126,16 @@ class KlarnaValidationController extends FrontendController
         $aKlarnaOrderData = json_decode($this->requestBody, true);
         $this->order_id         = $aKlarnaOrderData['order_id'];
         return new KlarnaOrderValidator($aKlarnaOrderData);
+    }
+
+    /**
+     * @param $responseStatus
+     * @return bool
+     */
+    protected function setValidResponseHeader($responseStatus)
+    {
+        header("", true, $responseStatus);
+
+        return true;
     }
 }
