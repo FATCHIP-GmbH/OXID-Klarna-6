@@ -128,6 +128,7 @@ class KlarnaValidationController extends FrontendController
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $responseStatus
      * @return bool
      */

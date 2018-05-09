@@ -927,9 +927,9 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
         $this->assertTrue($result);
     }
-    
+
     /**
-     * @dataProvider initUserDataProcider
+     * @dataProvider initUserDataProvider
      * @param $expected
      * @param $isUserLoggedIn
      * @throws \ReflectionException
@@ -949,7 +949,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $this->assertEquals($expected, $mock->getUser()->getType());
     }
 
-    public function initUserDataProcider()
+    public function initUserDataProvider()
     {
         return [
             [KlarnaUser::LOGGED_IN, true],

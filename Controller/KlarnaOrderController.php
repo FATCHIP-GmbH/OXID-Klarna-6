@@ -401,8 +401,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
         $password = $this->isRegisterNewUserNeeded() ? $this->getRandomPassword(8) : null;
         $this->_oUser->setPassword($password);
-        $this->_oUser->oxuser__oxrights = new Field('user', Field::T_RAW);
-        $this->_oUser->save();
 
         $this->_oUser->changeUserData($this->_oUser->oxuser__oxusername->value, $password, $password, $aBillingAddress, $aDeliveryAddress);
 
@@ -436,7 +434,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             Registry::getSession()->deleteVariable('klarna_checkout_order_id');
 
             Registry::get(UtilsView::class)->addErrorToDisplay($e);
-
         }
 
         if ($iSuccess === 1) {
