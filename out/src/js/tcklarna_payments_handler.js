@@ -146,7 +146,6 @@ window.klarnaAsyncCallback = function () {
             data: JSON.stringify(data),
             statusCode: {
                 404: function () {
-                    console.log('Retrying to send request.');//todo:REMOVE
                     klarnaSendXHR(data);
                 },
                 200: handleResponse
