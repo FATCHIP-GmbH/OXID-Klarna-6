@@ -15,6 +15,8 @@ use OxidEsales\EshopCommunity\Application\Model\PaymentList;
 use TopConcepts\Klarna\Controller\KlarnaPaymentController;
 use TopConcepts\Klarna\Core\KlarnaOrder;
 use TopConcepts\Klarna\Core\Exception\KlarnaConfigException;
+use TopConcepts\Klarna\Model\KlarnaEMD;
+use TopConcepts\Klarna\Model\KlarnaUser;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaOrderTest extends ModuleUnitTestCase
@@ -202,7 +204,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $methodReflection = new \ReflectionMethod(KlarnaOrder::class, 'getAdditionalCheckbox');
         $methodReflection->setAccessible(true);
 
-        $user  = $this->createStub(User::class, ['isFake' => true]);
+        $user  = $this->createStub(User::class, ['getType' => KlarnaUser::NOT_EXISTING]);
         $order = $this->createStub(KlarnaOrder::class, ['__construct' => null]);
         $this->setProtectedClassProperty($order, '_oUser', $user);
         $this->setModuleConfVar('iKlarnaActiveCheckbox', '22');
@@ -211,7 +213,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $this->assertEquals($result, 22);
 
 
-        $user = $this->createStub(User::class, ['isFake' => false]);
+        $user = $this->createStub(User::class, ['getType' => KlarnaUser::REGISTERED]);
         $this->setProtectedClassProperty($order, '_oUser', $user);
 
         $result = $methodReflection->invoke($order);
@@ -224,7 +226,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $this->assertEquals($result, 0);
 
         $newsSubscribed = $this->createStub(NewsSubscribed::class, ['getOptInStatus' => 1]);
-        $user           = $this->createStub(User::class, ['isFake' => false, 'getNewsSubscription' => $newsSubscribed]);
+        $user           = $this->createStub(User::class, ['getType' => KlarnaUser::REGISTERED, 'getNewsSubscription' => $newsSubscribed]);
         $this->setProtectedClassProperty($order, '_oUser', $user);
         $result = $methodReflection->invoke($order);
 
@@ -297,7 +299,9 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $methodReflection = new \ReflectionMethod(KlarnaOrder::class, 'setAttachmentsData');
         $methodReflection->setAccessible(true);
 
-        $order = $this->createStub(KlarnaOrder::class, ['__construct' => null, 'getEmd' => ['test']]);
+        $oMockKlarnaEMD = $this->createStub(KlarnaEMD::class, ['getAttachments' => ['test']]);
+        \oxTestModules::addModuleObject(KlarnaEMD::class, $oMockKlarnaEMD);
+        $order = $this->createStub(KlarnaOrder::class, ['__construct' => null]);
 
         $user = $this->createStub(User::class, ['isFake' => false]);
         $this->setProtectedClassProperty($order, '_oUser', $user);

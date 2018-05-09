@@ -449,7 +449,7 @@ class KlarnaOrder extends BaseModel
     protected function getEmd()
     {
         /** @var KlarnaEMD $klarnaEmd */
-        $klarnaEmd = new KlarnaEMD;
+        $klarnaEmd = oxNew(KlarnaEMD::class);
         $emd       = $klarnaEmd->getAttachments($this->_oUser);
 
         return $emd;
