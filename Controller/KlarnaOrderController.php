@@ -916,29 +916,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     }
 
     /**
-     * @return bool
-     */
-    protected function sendChangePasswordEmail()
-    {
-        $sEmail = $this->_oUser->oxuser__oxusername->value;
-        $oEmail = oxNew(Email::class);
-
-        $iSuccess = false;
-        if ($sEmail) {
-            $iSuccess = $oEmail->SendForgotPwdEmail($sEmail);
-        }
-
-        if ($iSuccess !== true) {
-            $sError = ($iSuccess === false) ? 'ERROR_MESSAGE_PASSWORD_EMAIL_INVALID' : 'MESSAGE_NOT_ABLE_TO_SEND_EMAIL';
-            Registry::get(UtilsView::class)->addErrorToDisplay($sError, false, true);
-
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * @param $len int
      * @return string
      */

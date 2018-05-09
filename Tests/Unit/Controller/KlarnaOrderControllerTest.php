@@ -927,55 +927,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
         $this->assertTrue($result);
     }
-
-    /**
-     * @throws \ReflectionException
-     */
-    public function testSendChangePasswordEmail()
-    {
-        $this->setLanguage(1);
-        $class = new \ReflectionClass(KlarnaOrderController::class);
-        $method = $class->getMethod('sendChangePasswordEmail');
-        $method->setAccessible(true);
-
-        $email = $this->createStub(Email::class, ['SendForgotPwdEmail' => true]);
-        \oxTestModules::addModuleObject(Email::class, $email);
-
-        $user = $this->createStub(KlarnaUser::class, ['resolveLocale' => true]);
-        $user->oxuser__oxusername = new Field('test', Field::T_RAW);
-        $mock = $this->createStub(KlarnaOrderController::class, ['init' => true]);
-
-        $this->setProtectedClassProperty($mock, '_oUser', $user);
-        $result = $method->invoke($mock);
-        $this->assertTrue($result);
-
-
-        $email = $this->createStub(Email::class, ['sendChangePwdEmail' => 'error']);
-        \oxTestModules::addModuleObject(Email::class, $email);
-
-        $result = $method->invoke($mock);
-
-        $this->assertFalse($result);
-
-        $errors = unserialize($this->getSessionParam('Errors')['default'][0]);
-
-        $this->assertInstanceOf(DisplayError::class, $errors);
-        $errorMessage = $errors->getOxMessage();
-        $this->assertEquals('Please enter a valid e-mail address!', $errorMessage);
-
-
-        $user->oxuser__oxusername->value = null;
-        $result = $method->invoke($mock);
-
-        $this->assertFalse($result);
-
-        $errors = unserialize($this->getSessionParam('Errors')['default'][0]);
-
-        $this->assertInstanceOf(DisplayError::class, $errors);
-        $errorMessage = $errors->getOxMessage();
-        $this->assertEquals('Please enter a valid e-mail address!', $errorMessage);
-    }
-
+    
     /**
      * @dataProvider initUserDataProcider
      * @param $expected
