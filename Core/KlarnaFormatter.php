@@ -24,6 +24,7 @@ use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Base;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
+use TopConcepts\Klarna\Model\KlarnaUser;
 
 /**
  * Class KlarnaFormatter
@@ -100,7 +101,7 @@ class KlarnaFormatter extends Base
     }
 
     /**
-     * @param $oxObject User|Address
+     * @param $oxObject KlarnaUser|User|Address
      * @return array
      * @throws \TypeError
      */

@@ -926,18 +926,6 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $this->assertTrue($this->getSessionParam('blNeedLogout'));
 
         $this->assertTrue($result);
-
-        $user = $this->getMock(KlarnaUser::class, ['createUser', 'load', 'changeUserData']);
-        $user->expects($this->any())->method('changeUserData')->willThrowException(new StandardException('test'));
-        $user->expects($this->any())->method('createUser')->willReturn(true);
-        $user->expects($this->any())->method('load')->willReturn(true);
-        $this->setProtectedClassProperty($mock, '_oUser', $user);
-        $result = $method->invoke($mock);
-        $this->assertFalse($result);
-        $this->assertEquals(
-            "User could not be updated/loaded",
-            $this->getProtectedClassProperty($mock, '_aResultErrors')[0]
-        );
     }
 
     /**
