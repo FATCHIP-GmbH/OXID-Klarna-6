@@ -181,7 +181,6 @@ var KlarnaApi;
                 data: JSON.stringify(data),
                 statusCode: {
                     404: function () {
-                        console.log('Retrying to send request.');//todo:REMOVE
                         klarnaSendXHR(data);
                     },
                     200: function () {
@@ -207,19 +206,19 @@ var KlarnaApi;
 
         api.on({
             'shipping_option_change': function shipping_option_change(eventData) {
-                console.log("Event:" + arguments.callee.name, eventData);
+                // console.log("Event:" + arguments.callee.name, eventData);
                 eventData.action = arguments.callee.name;
                 klarnaSendXHR(eventData);
             },
 
             'shipping_address_change': function shipping_address_change(eventData) {
-                console.log("Event:" + arguments.callee.name, eventData);
+                // console.log("Event:" + arguments.callee.name, eventData);
                 eventData.action = arguments.callee.name;
                 klarnaSendXHR(eventData);
             },
 
             'change': function change(eventData) {
-                console.log("Event:" + arguments.callee.name, eventData);
+                // console.log("Event:" + arguments.callee.name, eventData);
                 eventData.action = arguments.callee.name;
                 // Shows modal after iframe is loaded and there is no user data injected
                 if (eventData['postal_code'] === ""/* || getQueryParameter('reset_klarna_country')*/) {

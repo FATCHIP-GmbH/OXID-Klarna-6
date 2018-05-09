@@ -40,9 +40,9 @@ class KlarnaValidationController extends FrontendController
     {
         parent::init();
 
-        $redirectUrl      = null;
+        $redirectUrl       = null;
         $this->requestBody = $this->getRequestBody();
-        $validator        = $this->getValidator();
+        $validator         = $this->getValidator();
         $validator->validateOrder();
 
         if ($validator->isValid()) {
@@ -57,10 +57,8 @@ class KlarnaValidationController extends FrontendController
                 $redirectUrl ?: ''
             );
 
-            header("", true, $responseStatus);
+            $this->setValidResponseHeader($responseStatus);
             Registry::getUtils()->showMessageAndExit('');
-//            Registry::getUtils()->redirect("", false, $responseStatus);
-
         } else {
             $sid            = Registry::get(Request::class)->getRequestEscapedParameter('s');
             $redirectUrl    = Registry::getConfig()->getSslShopUrl() . "index.php?cl=basket&force_sid=$sid&klarnaInvalid=1&";
@@ -101,8 +99,8 @@ class KlarnaValidationController extends FrontendController
             'tcklarna_logs__tcklarna_orderid'     => $order_id,
             'tcklarna_logs__tcklarna_requestraw'  => $requestBody,
             'tcklarna_logs__tcklarna_responseraw' => "Code: " . $response .
-                                        " \nHeader Location:" . $redirectUrl .
-                                        " \nERRORS:" . var_export($errors, true),
+                                                     " \nHeader Location:" . $redirectUrl .
+                                                     " \nERRORS:" . var_export($errors, true),
             'tcklarna_logs__tcklarna_date'        => date("Y-m-d H:i:s"),
         );
         $oKlarnaLog->assign($aData);
@@ -124,7 +122,19 @@ class KlarnaValidationController extends FrontendController
     protected function getValidator()
     {
         $aKlarnaOrderData = json_decode($this->requestBody, true);
-        $this->order_id         = $aKlarnaOrderData['order_id'];
+        $this->order_id   = $aKlarnaOrderData['order_id'];
+
         return new KlarnaOrderValidator($aKlarnaOrderData);
+    }
+
+    /**
+     * @param $responseStatus
+     * @return bool
+     */
+    protected function setValidResponseHeader($responseStatus)
+    {
+        header("", true, $responseStatus);
+
+        return true;
     }
 }

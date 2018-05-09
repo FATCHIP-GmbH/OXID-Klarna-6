@@ -4,7 +4,11 @@ namespace TopConcepts\Klarna\Tests\Unit\Component;
 
 
 use OxidEsales\Eshop\Application\Component\BasketComponent;
+use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Core\Exception\StandardException;
+use OxidEsales\Eshop\Core\Registry;
+use TopConcepts\Klarna\Component\KlarnaBasketComponent;
+use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 /**
@@ -75,7 +79,6 @@ class KlarnaBasketComponentTest extends ModuleUnitTestCase
         $this->getConfig()->saveShopConfVar(null, 'sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'tcklarna');
         $this->setSessionParam('klarna_checkout_order_id', $klSessionId);
 
-        // todo: checke if it is enough
         $cmpBasket = $this->getMock(BasketComponent::class, ['updateKlarnaOrder']);
         $cmpBasket->expects($this->once())->method('updateKlarnaOrder');
 
@@ -138,6 +141,24 @@ class KlarnaBasketComponentTest extends ModuleUnitTestCase
         $cmpBasket->tobasket();
 
         $this->assertEquals(null, $this->getSessionParam('klarna_checkout_order_id'));
+    }
+
+    public function testUpdateKlarnaOrder()
+    {
+        $basket = $this->createStub(Basket::class, ['getKlarnaOrderLines' => ['test']]);
+        Registry::getSession()->setBasket($basket);
+
+        $client = $this->createStub(KlarnaCheckoutClient::class, ['createOrUpdateOrder' => ['testResult']]);
+
+        $basketComponent = $this->createStub(KlarnaBasketComponent::class, ['getKlarnaCheckoutClient' => $client]);
+
+        $class  = new \ReflectionClass(KlarnaBasketComponent::class);
+        $method = $class->getMethod('updateKlarnaOrder');
+        $method->setAccessible(true);
+
+        $result = $method->invoke($basketComponent);
+
+        $this->assertEquals(['testResult'], $result);
     }
 
 }
