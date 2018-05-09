@@ -395,6 +395,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         }
 
         $this->_oUser->createUser();
+
         //NECESSARY to have all fields initialized.
         $this->_oUser->load($this->_oUser->getId());
 
@@ -433,7 +434,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             Registry::getSession()->deleteVariable('klarna_checkout_order_id');
 
             Registry::get(UtilsView::class)->addErrorToDisplay($e);
-
         }
 
         if ($iSuccess === 1) {
@@ -910,29 +910,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         $checkboxFunction = KlarnaUtils::getShopConfVar('iKlarnaActiveCheckbox');
 
         return $checkboxFunction > 1 && $checked;
-    }
-
-    /**
-     * @return bool
-     */
-    protected function sendChangePasswordEmail()
-    {
-        $sEmail = $this->_oUser->oxuser__oxusername->value;
-        $oEmail = oxNew(Email::class);
-
-        $iSuccess = false;
-        if ($sEmail) {
-            $iSuccess = $oEmail->SendForgotPwdEmail($sEmail);
-        }
-
-        if ($iSuccess !== true) {
-            $sError = ($iSuccess === false) ? 'ERROR_MESSAGE_PASSWORD_EMAIL_INVALID' : 'MESSAGE_NOT_ABLE_TO_SEND_EMAIL';
-            Registry::get(UtilsView::class)->addErrorToDisplay($sError, false, true);
-
-            return false;
-        }
-
-        return true;
     }
 
     /**

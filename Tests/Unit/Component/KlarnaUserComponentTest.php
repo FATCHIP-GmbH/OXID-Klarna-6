@@ -7,6 +7,7 @@ use OxidEsales\Eshop\Application\Component\UserComponent;
 use OxidEsales\Eshop\Core\Controller\BaseController;
 use OxidEsales\Eshop\Core\ViewConfig;
 use ReflectionClass;
+use TopConcepts\Klarna\Component\KlarnaUserComponent;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 /**
@@ -122,5 +123,21 @@ class KlarnaUserComponentTest extends ModuleUnitTestCase
             [true, false, $res2],
             [false, true, $res2],
         ];
+    }
+
+    public function testGetKlarnaRedirect()
+    {
+        $this->setRequestParameter('cl', 'test');
+        $userComp = oxNew(KlarnaUserComponent::class);
+
+        $class  = new \ReflectionClass(KlarnaUserComponent::class);
+        $method = $class->getMethod('klarnaRedirect');
+        $method->setAccessible(true);
+
+        $this->setProtectedClassProperty($userComp, '_aClasses', ['test']);
+
+        $result = $method->invoke($userComp);
+
+        $this->assertTrue($result);
     }
 }
