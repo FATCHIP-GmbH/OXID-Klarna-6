@@ -261,15 +261,6 @@ class KlarnaUtils
             $basket_unit_price  = self::parseFloatAsInt($unitPrice->getBruttoPrice() * 100);
         }
 
-//        if ($regular_unit_price === $basket_unit_price) {
-//            $total_amount          = $basket_unit_price * $quantity;
-//            $total_discount_amount = 0;
-//        } else {
-//            $unit_price_diff       = ;
-//            $total_discount_amount = $unit_price_diff * $quantity;
-//            $total_amount          = $basket_unit_price * $quantity;
-//        }
-
         $total_discount_amount = ($regular_unit_price - $basket_unit_price) * $quantity;
         $total_amount          = $basket_unit_price * $quantity;
 

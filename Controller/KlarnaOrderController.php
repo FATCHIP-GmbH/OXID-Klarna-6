@@ -395,11 +395,14 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         }
 
         $this->_oUser->createUser();
+
         //NECESSARY to have all fields initialized.
         $this->_oUser->load($this->_oUser->getId());
 
         $password = $this->isRegisterNewUserNeeded() ? $this->getRandomPassword(8) : null;
         $this->_oUser->setPassword($password);
+        $this->_oUser->oxuser__oxrights = new Field('user', Field::T_RAW);
+        $this->_oUser->save();
 
         $this->_oUser->changeUserData($this->_oUser->oxuser__oxusername->value, $password, $password, $aBillingAddress, $aDeliveryAddress);
 
