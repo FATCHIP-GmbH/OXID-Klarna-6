@@ -430,7 +430,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
     public function testLastResortRenderRedirectDataProvider()
     {
         return [
-            ['AF', 'http://greg.ox6.demohost.topconcepts.net/index.php?cl=user'],
+            ['AF', Registry::getConfig()->getShopUrl() . 'index.php?cl=user'],
             ['DE', null],
         ];
     }
@@ -456,7 +456,11 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
 
         $controller->determineUserControllerAccess($oRequest);
 
-        $this->assertEquals($expectedResult, \oxUtilsHelper::$sRedirectUrl);
+        if ($expectedResult) {
+            $this->assertStringEndsWith($expectedResult, \oxUtilsHelper::$sRedirectUrl);
+        } else {
+            $this->assertEquals($expectedResult, \oxUtilsHelper::$sRedirectUrl);
+        }
     }
 
     /**
@@ -466,7 +470,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
     {
         return [
             [1, null],
-            [null, 'https://greg.ox6.demohost.topconcepts.net/index.php?cl=user&non_kco_global_country=AF'],
+            [null, 'cl=user&non_kco_global_country=AF'],
         ];
     }
 
