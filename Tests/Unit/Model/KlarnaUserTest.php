@@ -618,14 +618,14 @@ class KlarnaUserTest extends ModuleUnitTestCase
      * @param $session_usr
      * @param $expectedResult
      */
-    public function testTcklarna_checkUserType($userId, $session_usr, $expectedResult)
+    public function testcheckUserType($userId, $session_usr, $expectedResult)
     {
         $this->setSessionParam('usr', $session_usr);
         $oUser = $this->getMock(User::class, ['getId']);
         $oUser->expects($this->once())
             ->method('getId')->willReturn($userId);
 
-        $this->assertEquals($expectedResult, $oUser->tcklarna_checkUserType());
+        $this->assertEquals($expectedResult, $oUser->checkUserType());
     }
 
     public function userTypeDataProvider()
