@@ -114,7 +114,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
     {
         $order = $this->createStub(Order::class, ['finalizeOrder' => 1]);
         \oxTestModules::addModuleObject(Order::class, $order);
-        $user = $this->createStub(KlarnaUser::class, ['tcklarna_getType' => 0, 'save' => true, 'onOrderExecute' => true]);
+        $user = $this->createStub(KlarnaUser::class, ['getType' => 0, 'save' => true, 'onOrderExecute' => true]);
         $oBasket = $this->createStub(
             KlarnaBasket::class,
             ['getPaymentId' => 'klarna_checkout', 'calculateBasket' => true]
@@ -945,11 +945,12 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
      */
     public function testSendChangePasswordEmail()
     {
+        $this->setLanguage(1);
         $class = new \ReflectionClass(KlarnaOrderController::class);
         $method = $class->getMethod('sendChangePasswordEmail');
         $method->setAccessible(true);
 
-        $email = $this->createStub(Email::class, ['sendChangePwdEmail' => true]);
+        $email = $this->createStub(Email::class, ['SendForgotPwdEmail' => true]);
         \oxTestModules::addModuleObject(Email::class, $email);
 
         $user = $this->createStub(KlarnaUser::class, ['resolveLocale' => true]);
@@ -958,7 +959,6 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
         $this->setProtectedClassProperty($mock, '_oUser', $user);
         $result = $method->invoke($mock);
-
         $this->assertTrue($result);
 
 
@@ -973,7 +973,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
         $this->assertInstanceOf(DisplayError::class, $errors);
         $errorMessage = $errors->getOxMessage();
-        $this->assertEquals('Leider konnten wir Ihnen keine E-Mail zustellen.', $errorMessage);
+        $this->assertEquals('Please enter a valid e-mail address!', $errorMessage);
 
 
         $user->oxuser__oxusername->value = null;
@@ -985,7 +985,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
         $this->assertInstanceOf(DisplayError::class, $errors);
         $errorMessage = $errors->getOxMessage();
-        $this->assertEquals('Leider konnten wir Ihnen keine E-Mail zustellen.', $errorMessage);
+        $this->assertEquals('Please enter a valid e-mail address!', $errorMessage);
     }
 
     /**
@@ -1001,7 +1001,8 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $method->setAccessible(true);
 
         $viewConfig = $this->createStub(ViewConfig::class, ['isUserLoggedIn' => $isUserLoggedIn]);
-        $user = $this->createStub(User::class, ['getKlarnaData' => true]);
+        $user = $this->getMock(User::class, ['getKlarnaData']);
+        $user->expects($this->any())->method('getKlarnaData')->willReturn(['test']);
         $mock = $this->createStub(KlarnaOrderController::class, ['getUser' => $user, 'getViewConfig' => $viewConfig]);
         $method->invoke($mock);
 
