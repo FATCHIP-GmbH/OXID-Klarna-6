@@ -124,7 +124,6 @@ class KlarnaOrder extends BaseModel
         if (!empty($cancellationTerms)) {
             $this->_aOrderData["merchant_urls"]["cancellation_terms"] = $cancellationTerms;
         }
-
         $this->_aOrderData = array_merge(
             $this->_aOrderData,
             $klarnaUserData

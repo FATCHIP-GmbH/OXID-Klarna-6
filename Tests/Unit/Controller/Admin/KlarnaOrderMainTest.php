@@ -196,7 +196,6 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase
         $result = $controller->getViewDataElement('sErrorMessage');
         $this->assertEquals('TCKLARNA_CAPUTRE_FAIL_ORDER_CANCELLED', $result);
 
-
         $order                  = $this->setOrder(0);
         $order->oxorder__tcklarna_sync = new Field(1, Field::T_RAW);
         $controller             = $this->createStub(
