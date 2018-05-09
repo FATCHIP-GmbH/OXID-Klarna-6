@@ -676,7 +676,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $this->assertEquals('authorize', $oPayment->getStatus());
 
         $expected = [
-            'action' => "TopConcepts\Klarna\Controllers\KlarnaOrderController::checkOrderStatus",
+            'action' => "TopConcepts\Klarna\Controller\KlarnaOrderController::checkOrderStatus",
             'status' => "authorize",
             'data' =>
                 [
@@ -714,7 +714,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $mock->updateKlarnaAjax();
 
         $expected = [
-            'action' => "TopConcepts\Klarna\Controllers\KlarnaOrderController::checkOrderStatus",
+            'action' => "TopConcepts\Klarna\Controller\KlarnaOrderController::checkOrderStatus",
             'status' => "refresh",
             'data' => ['refreshUrl' => null],
         ];
@@ -740,7 +740,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $mock->updateKlarnaAjax();
 
         $expected = [
-            'action' => "TopConcepts\Klarna\Controllers\KlarnaOrderController::checkOrderStatus",
+            'action' => "TopConcepts\Klarna\Controller\KlarnaOrderController::checkOrderStatus",
             'status' => "authorize",
             'data' =>
                 [
@@ -783,7 +783,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $mock->updateKlarnaAjax();
 
         $expected = [
-            'action' => "TopConcepts\Klarna\Controllers\KlarnaOrderController::checkOrderStatus",
+            'action' => "TopConcepts\Klarna\Controller\KlarnaOrderController::checkOrderStatus",
             'status' => "finalize",
             'data' =>
                 [
@@ -828,7 +828,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $mock->updateKlarnaAjax();
 
         $expected = [
-            'action' => "TopConcepts\Klarna\Controllers\KlarnaOrderController::addUserData",
+            'action' => "TopConcepts\Klarna\Controller\KlarnaOrderController::addUserData",
             'status' => "refresh",
             'data' => ['refreshUrl' => null],
         ];
@@ -854,7 +854,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $mock->updateKlarnaAjax();
 
         $expected = [
-            'action' => "TopConcepts\Klarna\Controllers\KlarnaOrderController::addUserData",
+            'action' => "TopConcepts\Klarna\Controller\KlarnaOrderController::addUserData",
             'status' => "updateUser",
             'data' => ['update' => []],
         ];
@@ -1001,7 +1001,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $method->setAccessible(true);
 
         $viewConfig = $this->createStub(ViewConfig::class, ['isUserLoggedIn' => $isUserLoggedIn]);
-        $user = $this->createStub(KlarnaUser::class, ['getKlarnaData' => true]);
+        $user = $this->createStub(User::class, ['getKlarnaData' => true]);
         $mock = $this->createStub(KlarnaOrderController::class, ['getUser' => $user, 'getViewConfig' => $viewConfig]);
         $method->invoke($mock);
 
