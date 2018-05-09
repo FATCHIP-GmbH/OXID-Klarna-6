@@ -152,6 +152,7 @@ class KlarnaOrderMain extends KlarnaOrderMain_parent
                 $response = $oOrder->captureKlarnaOrder($data, $oOrder->getFieldData('tcklarna_orderid'), $sCountryISO);
             } catch (StandardException $e) {
                 $this->addTplParam('sErrorMessage', $e->getMessage());
+
                 return $result;
             }
             if ($response === true) {

@@ -70,6 +70,7 @@ class KlarnaUser extends KlarnaUser_parent
             $result['billing_address']['country'] = $sCountryISO;
             Registry::getSession()->setVariable('sCountryISO', $sCountryISO);
         }
+
         return $result;
     }
 
