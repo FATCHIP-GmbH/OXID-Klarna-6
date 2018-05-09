@@ -260,7 +260,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $method = $class->getMethod('_validateUser');
         $method->setAccessible(true);
 
-        $user = $this->createStub(KlarnaUser::class, ['tcklarna_getType' => $type]);
+        $user = $this->createStub(KlarnaUser::class, ['getType' => $type]);
         $mock = $this->createStub(KlarnaOrderController::class, ['_createUser' => true]);
         $this->setProtectedClassProperty($mock, '_oUser', $user);
         $result = $method->invoke($mock);

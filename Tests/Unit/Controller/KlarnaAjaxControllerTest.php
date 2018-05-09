@@ -8,6 +8,7 @@ use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\ViewConfig;
+use OxidEsales\Eshop\Application\Model\User;
 use TopConcepts\Klarna\Controller\KlarnaAjaxController;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
 use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
@@ -130,7 +131,8 @@ class KlarnaAjaxControllerTest extends ModuleUnitTestCase
     public function test_initUser()
     {
 
-        $user = $this->createStub(KlarnaUser::class, ['getKlarnaData' => true]);
+        $user = $this->getMock(User::class, ['getKlarnaData']);
+        $user->expects($this->any())->method('getKlarnaData')->willReturn([]);
         $ajaxController = $this->createStub(KlarnaAjaxController::class, ['getUser' => $user]);
         $ajaxController->_initUser();
         $result = $this->getProtectedClassProperty($user, '_type');
