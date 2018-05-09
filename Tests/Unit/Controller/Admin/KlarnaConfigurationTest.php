@@ -7,6 +7,7 @@ use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Core\Field;
 use TopConcepts\Klarna\Controller\Admin\KlarnaConfiguration;
+use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Model\KlarnaCountryList;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
@@ -133,5 +134,20 @@ class KlarnaConfigurationTest extends ModuleUnitTestCase
             ['isAustriaActiveShopCountry'],
             ['isGBActiveShopCountry'],
         ];
+    }
+
+    public function testSave()
+    {
+        $this->setRequestParameter('kpMethods', []);
+        $config = oxNew(KlarnaConfiguration::class);
+        $this->setModuleConfVar('sKlarnaActiveMode' , 'KCO');
+        $config->save();
+
+        $this->assertFalse(KlarnaUtils::isKlarnaPaymentsEnabled());
+
+        $this->setModuleConfVar('sKlarnaActiveMode' , 'KP');
+        $config->save();
+
+        $this->assertTrue(KlarnaUtils::isKlarnaPaymentsEnabled());
     }
 }
