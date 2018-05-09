@@ -100,13 +100,13 @@ class KlarnaExpressController extends FrontendController
          */
         $this->checkForSessionResetFlag();
 
-        $this->determineUserControllerAccess();
+        $this->determineUserControllerAccess($this->_oRequest);
 
         /**
-         * Default country is not KCO and we need the country popup without rendering the iframe.
+         * Returning from legacy checkout for guest user.
+         * Request parameter reset_klarna_country is checked and $this->blockIframeRender is set.
          */
-        if ($this->_oRequest->getRequestEscapedParameter('reset_klarna_country') == 1 /*&&
-            !KlarnaUtils::isCountryActiveInKlarnaCheckout(KlarnaUtils::getShopConfVar('sKlarnaDefaultCountry'))*/
+        if ($this->_oRequest->getRequestEscapedParameter('reset_klarna_country') == 1
         ) {
             $this->blockIframeRender = true;
         }
@@ -129,7 +129,7 @@ class KlarnaExpressController extends FrontendController
         /**
          * Reload page with ssl if not secure already.
          */
-        $this->checkSsl();
+        $this->checkSsl($this->_oRequest);
 
         /**
          * Check if we have a logged in user.
@@ -264,6 +264,7 @@ class KlarnaExpressController extends FrontendController
      * @return array|bool
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
+     * @throws \oxSystemComponentException
      */
     public function getFormattedUserAddresses()
     {
@@ -459,14 +460,15 @@ class KlarnaExpressController extends FrontendController
 
     /**
      * @param $oSession
+     * @param Request $oRequest
      * @throws \oxSystemComponentException
      */
-    protected function handleLoggedInUserWithNonKlarnaCountry($oSession)
+    protected function handleLoggedInUserWithNonKlarnaCountry($oSession, $oRequest)
     {
         /**
          * User is coming back from legacy oxid checkout wanting to change the country to one of KCO ones
          */
-        if ($this->_oRequest->getRequestEscapedParameter('reset_klarna_country') == 1) {
+        if ($oRequest->getRequestEscapedParameter('reset_klarna_country') == 1) {
             $oSession->setVariable('sCountryISO', KlarnaUtils::getShopConfVar('sKlarnaDefaultCountry'));
             /**
              * User is trying to access the klarna checkout for the first time and has to be redirected to legacy oxid checkout
@@ -482,15 +484,16 @@ class KlarnaExpressController extends FrontendController
      * Redirect to legacy oxid checkout if country not valid for Klarna Checkout.
      * Receive redirects from legacy oxid checkout when changing back to a country handled by KCO
      *
+     * @param Request $oRequest
      * @throws \oxSystemComponentException
      */
-    protected function determineUserControllerAccess()
+    protected function determineUserControllerAccess($oRequest)
     {
         $oSession = Registry::getSession();
         /**
          * A country has been selected from the country popup.
          */
-        $this->selectedCountryISO = $this->_oRequest->getRequestEscapedParameter('selected-country');
+        $this->selectedCountryISO = $oRequest->getRequestEscapedParameter('selected-country');
         if ($this->selectedCountryISO) {
             $oSession->setVariable('sCountryISO', $this->selectedCountryISO);
 
@@ -508,28 +511,29 @@ class KlarnaExpressController extends FrontendController
              */
             $this->handleCountryChangeFromPopup();
 
-            /**
-             * Logged in user with a non KCO country attempting to render the klarna checkout.
-             */
-        } else if ($this->getUser() && $this->getUser()->getUserCountryISO2() && !KlarnaUtils::isCountryActiveInKlarnaCheckout($this->getUser()->getUserCountryISO2())) {
+            return;
+        }
+        /**
+         * Logged in user with a non KCO country attempting to render the klarna checkout.
+         */
+        if ($this->getUser() /*&& $this->getUser()->getUserCountryISO2()*/ && !KlarnaUtils::isCountryActiveInKlarnaCheckout($this->getUser()->getUserCountryISO2())) {
             /**
              * User is coming back from legacy oxid checkout wanting to change the country to one of KCO ones
              * or user is trying to access the klarna checkout for the first time and has to be redirected to
              * legacy oxid checkout
              */
-            $this->handleLoggedInUserWithNonKlarnaCountry($oSession);
-            /**
-             * Guest user attempting to render the klarna checkout when non KCO country is set to default.
-             * Returning from legacy checkout for guest user in this scenario is done below where
-             * request parameter reset_klarna_country is checked and $this->blockIframeRender is set.
-             */
-        } else if (!$oSession->getVariable('sCountryISO') &&
-                   !KlarnaUtils::isCountryActiveInKlarnaCheckout(KlarnaUtils::getShopConfVar('sKlarnaDefaultCountry')) &&
-                   $this->_oRequest->getRequestEscapedParameter('reset_klarna_country') != 1
+            $this->handleLoggedInUserWithNonKlarnaCountry($oSession, $oRequest);
+
+            return;
+        }
+
+        /**
+         * Default country is not KCO and we need the country popup without rendering the iframe.
+         */
+        if (!$oSession->getVariable('sCountryISO') &&
+            !KlarnaUtils::isCountryActiveInKlarnaCheckout(KlarnaUtils::getShopConfVar('sKlarnaDefaultCountry')) &&
+            $this->_oRequest->getRequestEscapedParameter('reset_klarna_country') != 1
         ) {
-            /**
-             * Guest user is trying to access the klarna checkout for the first time and has to be redirected to legacy oxid checkout
-             */
             $oSession->setVariable('sCountryISO', KlarnaUtils::getShopConfVar('sKlarnaDefaultCountry'));
             $this->redirectForNonKlarnaCountry(KlarnaUtils::getShopConfVar('sKlarnaDefaultCountry'));
         }
@@ -552,7 +556,7 @@ class KlarnaExpressController extends FrontendController
     }
 
     /**
-     *
+     * @throws \oxSystemComponentException
      */
     protected function resolveUser()
     {
@@ -579,15 +583,17 @@ class KlarnaExpressController extends FrontendController
     }
 
     /**
+     * @param Request $oRequest
      * @return string
      */
-    protected function checkSsl()
+    protected function checkSsl($oRequest)
     {
-        $blAlreadyRedirected = $this->_oRequest->getRequestEscapedParameter('sslredirect') == 'forced';
+        $blAlreadyRedirected = $oRequest->getRequestEscapedParameter('sslredirect') == 'forced';
         $oConfig             = $this->getConfig();
         $oUtils              = Registry::getUtils();
         if ($oConfig->getCurrentShopURL() != $oConfig->getSSLShopURL() && !$blAlreadyRedirected) {
             $sUrl = $oConfig->getShopSecureHomeUrl() . 'sslredirect=forced&cl=KlarnaExpress';
+
             $oUtils->redirect($sUrl, false, 302);
         }
     }
