@@ -95,14 +95,6 @@ class KlarnaUser extends KlarnaUser_parent
 
         $blShowShippingAddress = (bool)Registry::getSession()->getVariable('blshowshipaddress');
 
-//        if ($this->isWritable()) {
-//            $this->enableWritableFilling($result, $blShowShippingAddress);
-//        } elseif ($this->_type == self::NOT_EXISTING && Registry::getSession()->hasVariable('invadr')) {
-//
-//            $this->assign(Registry::getSession()->getVariable('invadr'));
-//            $billingAddress            = KlarnaFormatter::oxidToKlarnaAddress($this);
-//            $result['billing_address'] = isset($billingAddress) ? $billingAddress : null;
-//        }
         $billingAddress            = KlarnaFormatter::oxidToKlarnaAddress($this);
         $result['billing_address'] = isset($billingAddress) ? $billingAddress : null;
 
@@ -116,26 +108,6 @@ class KlarnaUser extends KlarnaUser_parent
     }
 
     /**
-     * @param $result
-     * @param $blShowShippingAddress
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
-     */
-    protected function enableWritableFilling(&$result, $blShowShippingAddress)
-    {
-        $billingAddress            = KlarnaFormatter::oxidToKlarnaAddress($this);
-        $result['billing_address'] = isset($billingAddress) ? $billingAddress : null;
-
-        if (Registry::getSession()->hasVariable('deladrid') && $blShowShippingAddress) {
-            $delAddressOxid = Registry::getSession()->getVariable('deladrid');
-            $oAddress       = oxNew(Address::class);
-            $oAddress->load($delAddressOxid);
-            $shippingAddress            = KlarnaFormatter::oxidToKlarnaAddress($oAddress);
-            $result['shipping_address'] = isset($shippingAddress) ? $shippingAddress : null;
-        }
-    }
-
-    /**
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      * @return array
      */
     public function getKlarnaPaymentData()
