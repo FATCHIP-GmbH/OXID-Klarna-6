@@ -152,7 +152,7 @@ class KlarnaOrdersTest extends ModuleUnitTestCase
     public function testIsCredentialsValid()
     {
         $controller = $this->createStub(KlarnaOrders::class, ['getEditObjectId' => 'test']);
-        $result     = $controller->isCredentialsValid();
+        $result     = $controller->isCredentialsValid('DE');
         $this->assertFalse($result);
 
         $this->setOrder();
@@ -161,7 +161,7 @@ class KlarnaOrdersTest extends ModuleUnitTestCase
         $this->setModuleConfVar('sKlarnaPassword', 'psw');
         $controller = $this->createStub(KlarnaOrders::class, ['getEditObjectId' => 'test']);
 
-        $result = $controller->isCredentialsValid();
+        $result = $controller->isCredentialsValid('DE');
         $this->assertTrue($result);
     }
 

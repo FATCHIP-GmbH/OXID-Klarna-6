@@ -57,7 +57,8 @@ class KlarnaAjaxControllerTest extends ModuleUnitTestCase
 
         $oOrder = $this->createStub(Order::class, []);
         \oxTestModules::addModuleObject(Order::class, $oOrder);
-        $user = $this->createStub(KlarnaUser::class, []);
+        $user = $this->createStub(KlarnaUser::class, ['getKlarnaData' => []]);
+
         $client = $this->createStub(KlarnaCheckoutClient::class, ['createOrUpdateOrder' => []]);
         $ajaxController = $this->createStub(KlarnaAjaxController::class, ['getKlarnaCheckoutClient' => $client]);
         $this->setProtectedClassProperty($ajaxController, '_oUser', $user);
