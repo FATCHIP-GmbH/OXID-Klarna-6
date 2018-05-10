@@ -14,5 +14,7 @@ return [
     'sKlarnaPayNowTan'      => '<Klarna PayNowTan>',
     'sKlarnaPayNowIban'     => '<Klarna PayNowIban>',
     'sKlarnaBDate'          => '<Klarna BDate>',
-    'sKlarnaPhoneNumber'    => '<Klarna PhoneNumber>'
+    'sKlarnaPhoneNumber'    => '<Klarna PhoneNumber>',
+    'sKlarnaKCOEmail'       => '<Klarna KCOEmail>',
+    'sKlarnaKCOPostalCode'  => '<Klarna KCOPostalCode>'
 ];
