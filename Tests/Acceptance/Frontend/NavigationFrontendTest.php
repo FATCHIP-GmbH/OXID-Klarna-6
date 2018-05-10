@@ -2,8 +2,11 @@
 
 namespace TopConcepts\Klarna\Tests\Acceptance\Frontend;
 
+use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\DatabaseProvider;
+use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\TestingLibrary\AcceptanceTestCase;
+use TopConcepts\Klarna\Core\KlarnaConsts;
 
 
 class NavigationFrontendTest extends AcceptanceTestCase
@@ -26,8 +29,8 @@ class NavigationFrontendTest extends AcceptanceTestCase
 
         $this->waitForFrameToLoad("klarna-checkout-iframe", 2000);
         $this->selectFrame('klarna-checkout-iframe');
-        $this->type("//div[@id='customer-details-next']//input[@id='email']","ferreira@topconcepts.com");
-        $this->type("//div[@id='customer-details-next']//input[@id='postal_code']","21079");
+        $this->type("//div[@id='customer-details-next']//input[@id='email']",$this->getKlarnaDataByName('sKlarnaKCOEmail'));
+        $this->type("//div[@id='customer-details-next']//input[@id='postal_code']",'21079');
         $this->click("//select[@id='title']");
         $this->click("//option[@id='title__option__herr']");
         $this->type("//div[@id='customer-details-next']//input[@id='given_name']","concepts");
@@ -51,13 +54,14 @@ class NavigationFrontendTest extends AcceptanceTestCase
      * @param $radio
      * @param $desc
      * @param $iframe
+     * @param null $country
      * @throws \Exception
      * @dataProvider klarnaKPMethodsProvider
      */
-    public function testFrontendKpOrder($title, $radio,$desc, $iframe)
+    public function testFrontendKpOrder($title, $radio,$desc, $iframe, $country = null)
     {
         //Navigate untill step 3
-        $this->navigateToPay();
+        $this->navigateToPay($country);
 
         //step 3
         $this->assertTextPresent($title);
@@ -69,9 +73,39 @@ class NavigationFrontendTest extends AcceptanceTestCase
         if($iframe != 'klarna-pay-now-fullscreen') {
             $this->waitForFrameToLoad($iframe, 2000);
             $this->selectFrame($iframe);
-            $this->type("//div[@id='purchase-approval-date-of-birth__root']//input[@id='purchase-approval-date-of-birth']",$this->getKlarnaDataByName('sKlarnaBDate'));
-            $this->type("//div[@id='purchase-approval-phone-number__root']//input[@id='purchase-approval-phone-number']",$this->getKlarnaDataByName('sKlarnaPhoneNumber'));
-            $this->click("//div[@id='purchase-approval-accept-terms']//input[@type='checkbox']");
+
+            if($country == 'FI' || $country == 'DK' || $country == 'NO' || $country == 'SE'){
+
+                $phone = $this->getKlarnaDataByName('sKlarnaPhoneNumber');
+                switch ($country)
+                {
+                    case "FI":
+                        $number = "311280-999J";
+                        break;
+                    case "DK":
+                        $number = "171035-4509";
+                        $phone = "41468007";
+                        break;
+                    case "NO":
+                        $number = "11058811111";
+                        $phone = "48404583";
+                        break;
+                    case "SE":
+                        $number = "880330-7019";
+                        break;
+                    default:
+                        $number = "";
+                }
+
+
+                $this->type("//div[@id='purchase-approval-national-identification-number__root']//input[@id='purchase-approval-national-identification-number']",$number);
+                $this->type("//div[@id='purchase-approval-phone-number__root']//input[@id='purchase-approval-phone-number']",$phone);
+            } else {
+                $this->type("//div[@id='purchase-approval-date-of-birth__root']//input[@id='purchase-approval-date-of-birth']",$this->getKlarnaDataByName('sKlarnaBDate'));
+                $this->type("//div[@id='purchase-approval-phone-number__root']//input[@id='purchase-approval-phone-number']",$this->getKlarnaDataByName('sKlarnaPhoneNumber'));
+                $this->click("//div[@id='purchase-approval-accept-terms']//input[@type='checkbox']");
+            }
+
             $this->clickAndWait("//div[@id='purchase-approval-continue__loading-wrapper-wrapper']");
         }
 
@@ -88,8 +122,8 @@ class NavigationFrontendTest extends AcceptanceTestCase
 
             $this->selectFrame('inner-frame');
 
-            $this->type("//form[@id='WizardForm']//input[@id='BankCodeSearch']",'88888888');
-            $this->typeKeys("BankCodeSearch",'88888888');
+            $this->type("//form[@id='WizardForm']//input[@id='BankCodeSearch']",$this->getKlarnaDataByName('sKlarnaPayNowBank'));
+            $this->typeKeys("BankCodeSearch",$this->getKlarnaDataByName('sKlarnaPayNowBank'));
             $this->click("//form[@id='WizardForm']//button");
 
             $this->type("//form[@id='WizardForm']//input[@id='BackendFormLOGINNAMEUSERID']",$this->getKlarnaDataByName('sKlarnaPayNowLoginPin'));
@@ -118,13 +152,53 @@ class NavigationFrontendTest extends AcceptanceTestCase
 
         return [
             ['Pay Later', 'klarna_pay_later', 'Pay X days after delivery', 'klarna-pay-later-fullscreen'],
+            ['Pay Later', 'klarna_pay_later', 'Pay X days after delivery', 'klarna-pay-later-fullscreen', 'AT'],
+            ['Pay Later', 'klarna_pay_later', 'Pay X days after delivery', 'klarna-pay-later-fullscreen', 'DK'],
+            ['Pay Later', 'klarna_pay_later', 'Pay X days after delivery', 'klarna-pay-later-fullscreen', 'FI'],
+            ['Pay Later', 'klarna_pay_later', 'Pay X days after delivery', 'klarna-pay-later-fullscreen', 'NL'],
+            ['Pay Later', 'klarna_pay_later', 'Pay X days after delivery', 'klarna-pay-later-fullscreen', 'NO'],
+            ['Pay Later', 'klarna_pay_later', 'Pay X days after delivery', 'klarna-pay-later-fullscreen', 'SE'],
+            ['Pay Later', 'klarna_pay_later', 'Pay X days after delivery', 'klarna-pay-later-fullscreen', 'GB'],
             ['Slice It', 'klarna_slice_it', 'Pay over time', 'klarna-pay-over-time-fullscreen'],
             ['Pay Now', 'klarna_pay_now', 'Easy and direct payment', 'klarna-pay-now-fullscreen'],
         ];
     }
 
-    protected function navigateToPay()
+    /**
+     * @throws \Exception
+     */
+    public function testKpPayNowDebitOrder()
     {
+        $this->prepareKPDatabase('KP');
+
+        //Navigate untill step 3
+        $this->navigateToPay();
+        $this->click("//input[@value='klarna_pay_now']");
+        $this->assertTextPresent('Easy and direct payment');
+        $this->selectFrame("klarna-pay-now-main");
+        $this->click("payment-selector-direct_debit");
+        $this->selectFrame('relative=top');
+        $this->click("css=.nextStep");
+        $this->waitForFrameToLoad('klarna-pay-now-fullscreen', 2000);
+        $this->selectFrame('klarna-pay-now-fullscreen');
+        $this->type("//div[@id='purchase-approval-date-of-birth__root']//input[@id='purchase-approval-date-of-birth']",$this->getKlarnaDataByName('sKlarnaBDate'));
+        $this->type("//div[@id='purchase-approval-phone-number__root']//input[@id='purchase-approval-phone-number']",$this->getKlarnaDataByName('sKlarnaPhoneNumber'));
+        $this->click("//div[@id='purchase-approval-accept-terms']//input[@type='checkbox']");
+        $this->clickAndWait("//div[@id='purchase-approval-continue__loading-wrapper-wrapper']");
+        $this->assertTextPresent("Konto bestätigen");
+        $this->click("//div[@id='direct-debit-mandate-review__bottom']//button");
+        $this->assertTextPresent("Großartig!");
+        $this->click("//div[@id='direct-debit-confirmation__bottom']//button");
+        $this->selectFrame('relative=top');
+        $this->clickAndWait("//form[@id='orderConfirmAgbBottom']//button");
+        $this->waitForItemAppear("thankyouPage", 60);
+        $this->waitForText("We will inform you immediately if an item is not deliverable.");
+        $this->assertTextPresent("We will inform you immediately if an item is not deliverable.");
+    }
+
+    protected function navigateToPay($country = null)
+    {
+        $userLogin = "user";
 
         $this->openNewWindow($this->getTestConfig()->getShopUrl(), false);
         $this->addToBasket('05848170643ab0deb9914566391c0c63');
@@ -132,8 +206,13 @@ class NavigationFrontendTest extends AcceptanceTestCase
         $this->assertTextPresent('Continue to the next step');
         $this->clickAndWait("css=.nextStep");
 
+        if ($country) {
+           $this->switchCurrency(KlarnaConsts::getCountry2CurrencyArray()[$country]);
+           $userLogin = "user_".strtolower($country);
+        }
+
         //login//step1
-        $this->type("//form[@name='login']//input[@name='lgn_usr']", "user@oxid-esales.com");
+        $this->type("//form[@name='login']//input[@name='lgn_usr']", $userLogin."@oxid-esales.com");
         $this->type("//form[@name='login']//input[@name='lgn_pwd']", "12345");
         $this->clickAndWait("//form[@name='login']//button");
 
@@ -209,5 +288,11 @@ class NavigationFrontendTest extends AcceptanceTestCase
         }
 
         return $varValue;
+    }
+
+    public function switchCurrency($currency)
+    {
+        $this->click("css=.currencies-menu");
+        $this->clickAndWait("//ul//*[text()='$currency']");
     }
 }
