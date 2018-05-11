@@ -2,14 +2,11 @@
 
 namespace TopConcepts\Klarna\Tests\Acceptance\Frontend;
 
-use OxidEsales\Eshop\Application\Model\User;
-use OxidEsales\Eshop\Core\DatabaseProvider;
-use OxidEsales\Eshop\Core\Registry;
-use OxidEsales\TestingLibrary\AcceptanceTestCase;
 use TopConcepts\Klarna\Core\KlarnaConsts;
+use TopConcepts\Klarna\Tests\Acceptance\AcceptanceKlarnaTest;
 
 
-class NavigationFrontendTest extends AcceptanceTestCase
+class NavigationFrontendTest extends AcceptanceKlarnaTest
 {
 
     /**
@@ -70,7 +67,7 @@ class NavigationFrontendTest extends AcceptanceTestCase
         $this->assertTextPresent($desc);
 
         $this->click("css=.nextStep");
-        if($iframe != 'klarna-pay-now-fullscreen') {
+        if($iframe != 'klarna-pay-now-fullscreen' && $country != 'GB') {
             $this->waitForFrameToLoad($iframe, 2000);
             $this->selectFrame($iframe);
 
@@ -87,7 +84,7 @@ class NavigationFrontendTest extends AcceptanceTestCase
                         $phone = "41468007";
                         break;
                     case "NO":
-                        $number = "11058811111";
+                        $number = "01018043587";
                         $phone = "48404583";
                         break;
                     case "SE":
@@ -146,6 +143,11 @@ class NavigationFrontendTest extends AcceptanceTestCase
         $this->assertTextPresent("We will inform you immediately if an item is not deliverable.");
     }
 
+    /**
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
+     * @return array
+     */
     public function klarnaKPMethodsProvider()
     {
         $this->prepareKPDatabase('KP');
@@ -221,38 +223,6 @@ class NavigationFrontendTest extends AcceptanceTestCase
         $this->clickAndWait("css=.nextStep");
     }
 
-    protected function prepareKPDatabase($type)
-    {
-        $klarnaKey = $this->getKlarnaDataByName('sKlarnaEncodeKey');
-
-        $sql = "DELETE FROM `oxconfig` WHERE `OXVARNAME`='sKlarnaActiveMode'";
-        DatabaseProvider::getDb()->execute($sql);
-
-        $encode = "ENCODE('{$type}', '{$klarnaKey}')";
-
-        $sql = "INSERT INTO `oxconfig` VALUES ('4060f0f9f705d470282a2ce5ed936e48', 1, 'tcklarna', 'sKlarnaActiveMode', 'str', {$encode}, 'now()')";
-        DatabaseProvider::getDb()->execute($sql);
-
-        $sql = "DELETE FROM `oxconfig` WHERE `OXVARNAME`='sKlarnaMerchantId'";
-        DatabaseProvider::getDb()->execute($sql);
-
-        $klarnaMerchantId = $this->getKlarnaDataByName('sKlarna'.$type.'MerchantId');
-        $encode = "ENCODE('{$klarnaMerchantId}', '{$klarnaKey}')";
-
-        $sql = "INSERT INTO `oxconfig` VALUES ('f3b48ef3f7c17c916ef6018768377988', 1, 'tcklarna', 'sKlarnaMerchantId', 'str', {$encode}, 'now()')";
-        DatabaseProvider::getDb()->execute($sql);
-
-        $sql = "DELETE FROM `oxconfig` WHERE `OXVARNAME`='sKlarnaPassword'";
-        DatabaseProvider::getDb()->execute($sql);
-
-        $klarnaPassword = $this->getKlarnaDataByName('sKlarna'.$type.'Password');
-        $encode = "ENCODE('{$klarnaPassword}', '{$klarnaKey}')";
-
-        $sql = "INSERT INTO `oxconfig` VALUES ('efbd96702f6cead0967cd37ad2cdf49d', 1, 'tcklarna', 'sKlarnaPassword', 'str', {$encode}, 'now()')";
-        DatabaseProvider::getDb()->execute($sql);
-
-    }
-
     /**
      * Adds tests sql data to database.
      *
@@ -267,27 +237,8 @@ class NavigationFrontendTest extends AcceptanceTestCase
         if (file_exists($sFileName)) {
             $this->importSql($sFileName);
         }
-    }
 
-    /**
-     * Returns klarna data by variable name
-     *
-     * @param $varName
-     *
-     * @return mixed|null|string
-     * @throws \Exception
-     */
-    protected function getKlarnaDataByName($varName)
-    {
-        if (!$varValue = getenv($varName)) {
-            $varValue = $this->getArrayValueFromFile($varName, __DIR__ .'/../klarnaData.php');
-        }
-
-        if (!$varValue) {
-            throw new \Exception('Undefined variable: ' . $varName);
-        }
-
-        return $varValue;
+        $this->activateTheme('flow');
     }
 
     public function switchCurrency($currency)
