@@ -2,7 +2,6 @@
 
 namespace TopConcepts\Klarna\Tests\Acceptance\Admin;
 
-use OxidEsales\EshopCommunity\Tests\Acceptance\AcceptanceTestCase;
 use TopConcepts\Klarna\Tests\Acceptance\AcceptanceKlarnaTest;
 
 class AdminTest extends AcceptanceKlarnaTest
@@ -32,6 +31,26 @@ class AdminTest extends AcceptanceKlarnaTest
 
         $this->assertKlarnaData($oxid, 'CAPTURED');
 
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testOrderManagementCancel()
+    {
+        $this->clearTemp();
+        $this->activateTheme('flow');
+        $this->prepareKPDatabase('KCO');
+        $this->createNewOrder();
+
+        $this->loginAdmin("Administer Orders", "Orders", false, 'admin', 'admin');
+        $this->openListItem('ÅåÆæØø');
+        sleep(3);//wait for klarna tab
+        $this->openTab('Klarna');
+
+        $this->clickAndWait("//form[@id='cancel']//input[@type='submit']");
+
+        $this->assertTextPresent('Order is cancelled. See this order in the Klarna Portal.');
     }
 
     /**

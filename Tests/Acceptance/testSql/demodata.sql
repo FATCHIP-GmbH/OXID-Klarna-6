@@ -1559,6 +1559,8 @@ DELETE FROM `oxconfig` WHERE `OXID`='fbfc332b0056d6f04a5e39458862ff04';
 INSERT INTO `oxconfig` VALUES ('fbfc332b0056d6f04a5e39458862ff04', 1, 'tcklarna', 'blKlarnaSendProductUrls', 'bool', 0x07, '2018-05-02 09:42:30');
 DELETE FROM `oxconfig` WHERE `OXID`='fcf1763e0a8166c9b8847791ca6725de';
 INSERT INTO `oxconfig` VALUES ('fcf1763e0a8166c9b8847791ca6725de', 1, 'tcklarna', 'sKlarnaAnonymizedProductTitle', 'str', 0x4DC501593C5C65DFD42F1D7501D31A0CA59B, '2018-04-30 17:04:24');
+DELETE FROM `oxconfig` WHERE `OXVARNAME`='iKlarnaActiveCheckbox';
+INSERT INTO `oxconfig` VALUES ('7a7c2b6fd42a8c29fcb0e99cc20cf78d', 1, 'tcklarna', 'iKlarnaActiveCheckbox', 'str', 0xB0, '2018-05-14 15:10:08');
 
 DELETE FROM `oxconfig` WHERE `OXID`='0c606f1dd218a67f676b3fe7fa2ee440';
 INSERT INTO `oxconfig` VALUES ('0c606f1dd218a67f676b3fe7fa2ee440', 1, 'module:oepaypal', 'sOEPayPalLogoImageOption', 'select', 0x8F25AE9BDC69, '2018-05-11 13:20:07');

@@ -2,7 +2,11 @@
 
 namespace TopConcepts\Klarna\Tests\Acceptance\Frontend;
 
+use OxidEsales\Eshop\Application\Model\User;
+use OxidEsales\Eshop\Core\DatabaseProvider;
+use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Core\KlarnaConsts;
+use TopConcepts\Klarna\Model\KlarnaUser;
 use TopConcepts\Klarna\Tests\Acceptance\AcceptanceKlarnaTest;
 
 
@@ -13,12 +17,13 @@ class NavigationFrontendTest extends AcceptanceKlarnaTest
      * Test new order guest user
      * @throws \Exception
      */
-    public function testFrontendKcoOrder()
+    public function testFrontendKcoOrderCreateAccountAndSubscribe()
     {
         $this->prepareKPDatabase('KCO');
 
         $this->openNewWindow($this->getTestConfig()->getShopUrl(), false);
         $this->addToBasket('05848170643ab0deb9914566391c0c63');
+        $this->addToBasket('058de8224773a1d5fd54d523f0c823e0');
         $this->clickAndWait("link=Go to Checkout");
         $this->assertTextPresent('Please choose your shipping country');
         $this->clickAndWait("//form[@id='select-country-form']//button[@value='DE']");
@@ -39,11 +44,97 @@ class NavigationFrontendTest extends AcceptanceKlarnaTest
         $this->type("//div[@id='customer-details-next']//input[@id='date_of_birth']","01011980");
 
         $this->clickAndWait("//div[@id='customer-details-next']//button[@id='button-primary']");
-        $this->clickAndWait("//div[@id='terms-consent-next']//input[@type='checkbox']");
+        $this->clickAndWait("//div[@id='shipping-selector-next']//*[text()='Example Set1: UPS 48 hours']");
+        $this->click("css=.terms-consent__text");
+        $this->click("css=.additional-checkbox__text");
         $this->clickAndWait("//div[@id='buy-button-next']//button");
         $this->waitForFrameToLoad('relative=top');
         $this->selectFrame('relative=top');
         $this->assertTextPresent("Thank you");
+        /** @var KlarnaUser $klarnaUser */
+        $klarnaUser = oxNew(User::class);
+        $klarnaUser->loadByEmail($this->getKlarnaDataByName('sKlarnaKCOEmail'));
+
+        $oDb = DatabaseProvider::getDb();
+        $sQ  = "SELECT `oxid` FROM `oxuser` WHERE `oxusername` = " . $oDb->quote($this->getKlarnaDataByName('sKlarnaKCOEmail'));
+        if (!Registry::getConfig()->getConfigParam('blMallUsers')) {
+            $sQ .= " AND `oxshopid` = " . $oDb->quote(Registry::getConfig()->getShopId());
+        }
+        $sId    = $oDb->getOne($sQ);
+        $exists = $klarnaUser->load($sId);
+
+        $this->assertTrue($exists);
+        $this->assertTrue(isset($klarnaUser->oxuser__oxpassword->value));
+
+    }
+
+    /**
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
+     * @throws \Exception
+     */
+    public function testFrontendKcoOrderLoginAndCountry($country = null)
+    {
+        $this->clearTemp();
+        $this->prepareKPDatabase('KCO');
+        $this->openNewWindow($this->getTestConfig()->getShopUrl(), false);
+        $this->addToBasket('05848170643ab0deb9914566391c0c63');
+        $this->addToBasket('058de8224773a1d5fd54d523f0c823e0');
+        $this->clickAndWait("link=Go to Checkout");
+        $this->assertTextPresent('Please choose your shipping country');
+        $this->clickAndWait("//form[@id='select-country-form']//button[@value='DE']");
+        $this->assertTextPresent('Your chosen country');
+
+        //login
+        $userLogin = "user";
+        $country = 'NO';
+
+        if ($country) {
+            $this->switchCurrency(KlarnaConsts::getCountry2CurrencyArray()[$country]);
+            $userLogin = "user_".strtolower($country);
+        }
+
+        $this->click("klarnaLoginWidget");
+        $this->type("//form[@name='login']//input[@name='lgn_usr']", $userLogin."@oxid-esales.com");
+        $this->type("//form[@name='login']//input[@name='lgn_pwd']", "12345");
+        $this->clickAndWait("//form[@name='login']//button");
+
+//        $this->waitForFrameToLoad("pgw-iframe", 2000);
+//        $this->selectFrame('pgw-iframe');
+//        $this->type("text-card_number", "4111111111111111");
+//        $this->type("text-expiry_date", "0130");
+//        $this->type("text-security_code", "1111");
+
+
+        $this->selectFrame("klarna-checkout-iframe");
+        $this->clickAndWait("//div[@id='shipping-selector-next']//*[text()='Example Set1: UPS 48 hours']");
+        $this->clickAndWait("//div[@id='buy-button-next']//button");
+        $this->waitForFrameToLoad('relative=top');
+        $this->selectFrame('relative=top');
+        $this->assertTextPresent("Thank you");
+    }
+
+     /**
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
+     * @return array
+     */
+    public function klarnaKCOMethodsProvider()
+    {
+        $this->prepareKPDatabase('KCO');
+
+        return [
+            ['Pay Later', 'klarna_pay_later', 'Pay X days after delivery', 'klarna-pay-later-fullscreen'],
+            ['Pay Later', 'klarna_pay_later', 'Pay X days after delivery', 'klarna-pay-later-fullscreen', 'AT'],
+            ['Pay Later', 'klarna_pay_later', 'Pay X days after delivery', 'klarna-pay-later-fullscreen', 'DK'],
+            ['Pay Later', 'klarna_pay_later', 'Pay X days after delivery', 'klarna-pay-later-fullscreen', 'FI'],
+            ['Pay Later', 'klarna_pay_later', 'Pay X days after delivery', 'klarna-pay-later-fullscreen', 'NL'],
+            ['Pay Later', 'klarna_pay_later', 'Pay X days after delivery', 'klarna-pay-later-fullscreen', 'NO'],
+            ['Pay Later', 'klarna_pay_later', 'Pay X days after delivery', 'klarna-pay-later-fullscreen', 'SE'],
+            ['Pay Later', 'klarna_pay_later', 'Pay X days after delivery', 'klarna-pay-later-fullscreen', 'GB'],
+            ['Slice It', 'klarna_slice_it', 'Pay over time', 'klarna-pay-over-time-fullscreen'],
+            ['Pay Now', 'klarna_pay_now', 'Easy and direct payment', 'klarna-pay-now-fullscreen'],
+        ];
     }
 
     /**

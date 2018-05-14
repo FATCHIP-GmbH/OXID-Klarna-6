@@ -17,6 +17,7 @@ class AcceptanceKlarnaTest extends AcceptanceTestCase
      * @param $oxid
      * @param string $expectedStatus
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \oxSystemComponentException
      */
     public function assertKlarnaData($oxid, $expectedStatus = "AUTHORIZED")
     {
