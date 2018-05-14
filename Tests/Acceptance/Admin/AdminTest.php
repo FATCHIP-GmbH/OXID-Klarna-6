@@ -13,6 +13,7 @@ class AdminTest extends AcceptanceKlarnaTest
      */
     public function testOrderManagementCaputre()
     {
+        $this->clearTemp();
         $this->activateTheme('flow');
         $this->prepareKPDatabase('KCO');
         $this->createNewOrder();
@@ -99,18 +100,19 @@ class AdminTest extends AcceptanceKlarnaTest
      * @param string $user Shop admin username.
      * @param string $pass Shop admin password.
      * @param string $language Shop admin language.
+     * @throws \Exception
      */
     public function loginAdmin(
         $menuLink1 = null,
         $menuLink2 = null,
         $forceMainShop = false,
-        $user = "admin@myoxideshop.com",
-        $pass = "admin0303",
+        $user = "",
+        $pass = "",
         $language = "English"
     ) {
         $this->openNewWindow(shopURL."admin");
-        $this->type("usr", $user);
-        $this->type("pwd", $pass);
+        $this->type("usr", $this->getKlarnaDataByName('sKlarnaAdminUser'));
+        $this->type("pwd", $this->getKlarnaDataByName('sKlarnaAdminPsw'));
         $this->clickAndWait("//input[@type='submit']");
 
         $this->frame("navigation");

@@ -46,7 +46,7 @@ class AcceptanceKlarnaTest extends AcceptanceTestCase
             if($col == 'oxbillcountryid')
             {
                 $oCountry   = oxNew(Country::class);
-                $sCountryId = $oCountry->getIdByCode($item);
+                $sCountryId = $oCountry->getIdByCode($orderData['billing_address'][$item]);
 
                 $this->assertEquals($sCountryId, $order->getFieldData('oxbillcountryid'));
                 continue;
