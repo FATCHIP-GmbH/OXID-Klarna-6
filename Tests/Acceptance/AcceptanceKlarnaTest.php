@@ -105,7 +105,7 @@ class AcceptanceKlarnaTest extends AcceptanceTestCase
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
      * @throws \Exception
      */
-    public function prepareKPDatabase($type)
+    public function prepareKlarnaDatabase($type)
     {
         $klarnaKey = $this->getKlarnaDataByName('sKlarnaEncodeKey');
 
@@ -135,6 +135,16 @@ class AcceptanceKlarnaTest extends AcceptanceTestCase
         $sql = "INSERT INTO `oxconfig` VALUES ('efbd96702f6cead0967cd37ad2cdf49d', 1, 'tcklarna', 'sKlarnaPassword', 'str', {$encode}, 'now()')";
         DatabaseProvider::getDb()->execute($sql);
 
+        if($type == 'KCO') {
+            $sql = "UPDATE oxuser SET oxbirthdate='1980-01-01', oxfon='02079460125' WHERE oxusername = 'user_gb@oxid-esales.com'";
+            DatabaseProvider::getDb()->execute($sql);
+        }
+
+    }
+
+    public function delayLoad($sec = 5)
+    {
+        sleep($sec);
     }
 
 }

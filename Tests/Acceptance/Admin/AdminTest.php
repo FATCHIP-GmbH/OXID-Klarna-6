@@ -14,7 +14,7 @@ class AdminTest extends AcceptanceKlarnaTest
     {
         $this->clearTemp();
         $this->activateTheme('flow');
-        $this->prepareKPDatabase('KCO');
+        $this->prepareKlarnaDatabase('KCO');
         $this->createNewOrder();
 
         $this->loginAdmin("Administer Orders", "Orders", false, 'admin', 'admin');
@@ -40,7 +40,7 @@ class AdminTest extends AcceptanceKlarnaTest
     {
         $this->clearTemp();
         $this->activateTheme('flow');
-        $this->prepareKPDatabase('KCO');
+        $this->prepareKlarnaDatabase('KCO');
         $this->createNewOrder();
 
         $this->loginAdmin("Administer Orders", "Orders", false, 'admin', 'admin');
