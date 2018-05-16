@@ -14,5 +14,10 @@ return [
     'sKlarnaPayNowTan'      => '<Klarna PayNowTan>',
     'sKlarnaPayNowIban'     => '<Klarna PayNowIban>',
     'sKlarnaBDate'          => '<Klarna BDate>',
-    'sKlarnaPhoneNumber'    => '<Klarna PhoneNumber>'
+    'sKlarnaPhoneNumber'    => '<Klarna PhoneNumber>',
+    'sKlarnaKCOEmail'       => '<Klarna KCOEmail>',
+    'sKlarnaAdminUser'      => '<Klarna AdminUser>',
+    'sKlarnaAdminPsw'       => '<Klarna AdminPsw>',
+    'sPaypalClientLogin'    => '<Klarna PaypalClientLogin>',
+    'sPaypalClientPsw'      => '<Klarna PaypalClientPsw>'
 ];

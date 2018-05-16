@@ -193,7 +193,7 @@ class KlarnaArticle extends KlarnaArticle_parent
 
         }
 
-        return $sCategories;
+        return $sCategories ?: null;
     }
 
     /**
