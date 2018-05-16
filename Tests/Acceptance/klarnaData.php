@@ -17,5 +17,7 @@ return [
     'sKlarnaPhoneNumber'    => '<Klarna PhoneNumber>',
     'sKlarnaKCOEmail'       => '<Klarna KCOEmail>',
     'sKlarnaAdminUser'      => '<Klarna AdminUser>',
-    'sKlarnaAdminPsw'       => '<Klarna AdminPsw>'
+    'sKlarnaAdminPsw'       => '<Klarna AdminPsw>',
+    'sPaypalClientLogin'    => '<Klarna PaypalClientLogin>',
+    'sPaypalClientPsw'      => '<Klarna PaypalClientPsw>'
 ];
