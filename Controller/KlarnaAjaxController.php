@@ -144,6 +144,9 @@ class KlarnaAjaxController extends FrontendController
         } else {
             $oSession->setVariable('oFakeKlarnaUser', $this->_oUser);
         }
+
+        $oBasket = Registry::getSession()->getBasket();
+        $oBasket->setBasketUser($this->_oUser);
     }
 
     /**
