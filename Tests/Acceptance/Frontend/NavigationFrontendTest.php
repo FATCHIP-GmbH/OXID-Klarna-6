@@ -104,6 +104,7 @@ class NavigationFrontendTest extends AcceptanceKlarnaTest
         $this->waitForItemAppear("thankyouPage", 60);
         $this->waitForText("We will inform you immediately if an item is not deliverable.");
         $this->assertTextPresent("We will inform you immediately if an item is not deliverable.");
+        $this->assertKlarnaData();
     }
 
     /**
@@ -159,6 +160,7 @@ class NavigationFrontendTest extends AcceptanceKlarnaTest
         $this->waitForItemAppear("thankyouPage", 60);
         $this->waitForText("We will inform you immediately if an item is not deliverable.");
         $this->assertTextPresent("We will inform you immediately if an item is not deliverable.");
+        $this->assertKlarnaData();
     }
 
     protected function navigateToPay($country = null)

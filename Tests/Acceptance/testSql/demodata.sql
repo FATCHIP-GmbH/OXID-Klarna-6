@@ -813,7 +813,6 @@ INSERT INTO `oxobject2payment` VALUES ('37404525ad5a4d3201d6155750e38685', 'klar
 DELETE FROM `oxobject2payment` WHERE `OXID`='39f7eadd708c3071c678fae7d588767f';
 INSERT INTO `oxobject2payment` VALUES ('39f7eadd708c3071c678fae7d588767f', 'oxidpayadvance', '8f241f11096176795.61257067', 'oxcountry', '2018-04-30 13:57:49');
 DELETE FROM `oxobject2payment` WHERE `OXID`='3c89d41313e8cddb4572d6858e7fcd8d';
--- INSERT INTO `oxobject2payment` VALUES ('3c89d41313e8cddb4572d6858e7fcd8d', 'bestitamazon', 'a7c40f632e04633c9.47194042', 'oxcountry', '2018-04-30 13:58:23');
 DELETE FROM `oxobject2payment` WHERE `OXID`='401ec9db0f70c3aa20e51d39bf929b98';
 INSERT INTO `oxobject2payment` VALUES ('401ec9db0f70c3aa20e51d39bf929b98', 'oxidpaypal', 'a7c40f632e04633c9.47194042', 'oxcountry', '2018-04-30 13:58:01');
 DELETE FROM `oxobject2payment` WHERE `OXID`='46223e9f2a428c9e648b0725d71dcae5';
@@ -821,7 +820,6 @@ INSERT INTO `oxobject2payment` VALUES ('46223e9f2a428c9e648b0725d71dcae5', 'oxid
 DELETE FROM `oxobject2payment` WHERE `OXID`='464ea59e46edc543c469ccb589f387f4';
 INSERT INTO `oxobject2payment` VALUES ('464ea59e46edc543c469ccb589f387f4', 'klarna_pay_now', 'a7c40f632cdd63c52.64272623', 'oxcountry', '2018-04-30 13:57:55');
 DELETE FROM `oxobject2payment` WHERE `OXID`='46aba238cc23e97fdb6d784c940c9598';
--- INSERT INTO `oxobject2payment` VALUES ('46aba238cc23e97fdb6d784c940c9598', 'bestitamazon', 'a7c40f63293c19d65.37472814', 'oxcountry', '2018-04-30 13:58:23');
 DELETE FROM `oxobject2payment` WHERE `OXID`='4860893e2e8f5d219f0ef9c53fb077c0';
 INSERT INTO `oxobject2payment` VALUES ('4860893e2e8f5d219f0ef9c53fb077c0', 'oxidcashondel', 'a7c40f632848c5217.53322339', 'oxcountry', '2018-04-30 13:58:05');
 DELETE FROM `oxobject2payment` WHERE `OXID`='4a47e9c520be82d76e6db24879fdd44c';
@@ -831,7 +829,6 @@ INSERT INTO `oxobject2payment` VALUES ('4c4d8f5ba2599fc842d2c65193b0cfd4', 'oxid
 DELETE FROM `oxobject2payment` WHERE `OXID`='500f516c897def045cc9d5488b3bbcfc';
 INSERT INTO `oxobject2payment` VALUES ('500f516c897def045cc9d5488b3bbcfc', 'oxidpayadvance', 'a7c40f632cdd63c52.64272623', 'oxcountry', '2018-04-30 13:57:49');
 DELETE FROM `oxobject2payment` WHERE `OXID`='505029576c61ea3b69e1a4c9965a53c8';
--- INSERT INTO `oxobject2payment` VALUES ('505029576c61ea3b69e1a4c9965a53c8', 'bestitamazon', 'a7c40f631fc920687.20179984', 'oxcountry', '2018-04-30 13:58:23');
 DELETE FROM `oxobject2payment` WHERE `OXID`='551fd82f5f197fc1fef2441df990daa5';
 INSERT INTO `oxobject2payment` VALUES ('551fd82f5f197fc1fef2441df990daa5', 'oxidinvoice', '1b842e732a23255b1.91207750', 'oxdelset', '2018-04-30 13:58:53');
 DELETE FROM `oxobject2payment` WHERE `OXID`='5b45463d5a9e68b0d0813d002fd8921d';
@@ -1020,7 +1017,7 @@ INSERT INTO `oxpayments` VALUES ('klarna_slice_it', 1, 'Klarna Ratenkauf', 0, 'a
 DELETE FROM `oxpayments` WHERE `OXID`='oxempty';
 INSERT INTO `oxpayments` VALUES ('oxempty', 1, 'Empty', 0, 'abs', 0, 0, 0, 0, '', 0, 'Empty', '', '', '', '', '', 'for other countries', 'An example. Maybe for use with other countries', '', '', 100, '2018-04-30 16:04:55', '', '', 0, 0, '', '', '', '', 'other', 0);
 DELETE FROM `oxpayments` WHERE `OXID`='oxidcashondel';
-INSERT INTO `oxpayments` VALUES ('oxidcashondel', 1, 'Nachnahme', 7.5, 'abs', 0, 0, 0, 1000000, '', 1, 'COD (Cash on Delivery)', '', '', '', '', '', '', '', '', '', 600, '2018-04-30 16:04:55', '', '', 0, 0, '', '', '', '', 'other', 0);
+INSERT INTO `oxpayments` VALUES ('oxidcashondel', 1, 'Nachnahme', 7.5, 'abs', 0, 0, 0, 1000000, '', 1, 'COD (Cash on Delivery)', '', '', '', '', '', '', '', '', '', 600, now(), '', 'Nachnahme', 1, 0, 'https://example.com', 'https://example.com', '', '', 'other', 0);
 DELETE FROM `oxpayments` WHERE `OXID`='oxidcreditcard';
 INSERT INTO `oxpayments` VALUES ('oxidcreditcard', 1, 'Kreditkarte', 20.9, 'abs', 0, 500, 0, 1000000, 'kktype__@@kknumber__@@kkmonth__@@kkyear__@@kkname__@@kkpruef__@@', 1, 'Credit Card', 'kktype__@@kknumber__@@kkmonth__@@kkyear__@@kkname__@@kkpruef__@@', '', '', '', '', 'Die Belastung Ihrer Kreditkarte erfolgt mit dem Abschluss der Bestellung.', 'Your Credit Card will be charged when you submit the order.', '', '', 500, '2018-04-30 16:05:58', '', '', 0, 0, '', '', '', '', 'card', 0);
 DELETE FROM `oxpayments` WHERE `OXID`='oxiddebitnote';
@@ -1747,7 +1744,17 @@ INSERT INTO `oxuser` (`OXID`, `OXACTIVE`, `OXRIGHTS`, `OXSHOPID`, `OXUSERNAME`, 
 '2870103d88c4e8ed34a82fd9e2dfaaf2', '', '', 'Kai', 'Øster', 'Vestre Ringvej', '111', '', 'Fredericia', '8f241f110957e6ef8.56458418', '', '7000', '', '', 'MR', 1000,
 '2011-02-01 08:41:25', '2011-02-01 08:41:25', '', '', '0000-00-00', '', '', 0, 0, now());
 
+DELETE FROM `oxuser` WHERE `OXID`='testUserBE';
+INSERT INTO `oxuser` (`OXID`, `OXACTIVE`, `OXRIGHTS`, `OXSHOPID`, `OXUSERNAME`, `OXPASSWORD`, `OXPASSSALT`, `OXUSTID`, `OXCOMPANY`, `OXFNAME`, `OXLNAME`,
+`OXSTREET`, `OXSTREETNR`, `OXADDINFO`, `OXCITY`, `OXCOUNTRYID`, `OXSTATEID`, `OXZIP`, `OXFON`, `OXFAX`, `OXSAL`, `OXBONI`, `OXCREATE`, `OXREGISTER`, `OXPRIVFON`,
+`OXMOBFON`, `OXBIRTHDATE`, `OXURL`, `OXUPDATEKEY`, `OXUPDATEEXP`, `OXPOINTS`, `OXTIMESTAMP`) VALUES ('testUserBE', 1, 'user', 1,
+'user_be@oxid-esales.com', 'a6fb5a064996bc08357c37d99adb70a916d8bbc295a02afe19fae7b0bb7f933b7d4c2bea2a8c77c86e2980184e328d2f156e0597a19d47791e3ba2dc3b4aff16',
+'2870103d88c4e8ed34a82fd9e2dfaaf2', '', '', 'Pomeroy', 'Petit', 'Paul Henri Spaak Building, Wiertzstraat', '60', '', 'Brussel', 'a7c40f632e04633c9.47194042', '', '1047', '', '', 'MR', 1000,
+'2011-02-01 08:41:25', '2011-02-01 08:41:25', '', '', '0000-00-00', '', '', 0, 0, now());
+
 DELETE FROM `oxconfig` WHERE `OXVARNAME`='aCurrencies';
 INSERT INTO `oxconfig` VALUES ('4b61af797b77277348879a5b6a0db0b9', 1, '', 'aCurrencies', 'arr', 0x4DBA422A71E248F1C8D0AAA75254034721EA2B8A1671B182951FDDBE1D08B9FD882747B25C2F781FFFBD6D5A81DB7737C0B2952AD9CE742B746857D4C9E9CD6BB7B35F6EDDFC2EFAFC8AB764B24EF7DFCA65C60744799DADAED6BEF95296AA7C457588A135D55B3499E5D072BCD639CE9A01DD0BA2FE1DE9B2847AB292F0E01F268984B688947BF6606EE1F9B257FF0952A1EFC0A7857EB373FB5B51227D9E5D99A5066C9B03CDF2E76F18D66BC9FEB170AFB1BB9312B3CCB49A4D6B2616F6FE3B2534A7BF75C1E2F9991FF9FDEFCC1E9B21629799C006C6C838113483C8C9365388359537F6D609264F84A0A4F1FB069CC5A20D6592D915FB9D459B3E9BBFD3650FCAF8BA19519689C37BDBBBEC0F2D41B1D336FA4B9A4943E1B05E32A7F75D35836D4793B14E275AB5F62B1AA98070D55C715EF5CE3CF3A7E3B0D8E200230A, now());
+
+DELETE FROM `oxobject2group` WHERE  `OXOBJECTID`='oxidcashondel';
 
 
