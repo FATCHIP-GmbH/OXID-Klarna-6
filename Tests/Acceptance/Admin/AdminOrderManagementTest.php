@@ -4,7 +4,7 @@ namespace TopConcepts\Klarna\Tests\Acceptance\Admin;
 
 use TopConcepts\Klarna\Tests\Acceptance\AcceptanceKlarnaTest;
 
-class AdminTest extends AcceptanceKlarnaTest
+class AdminOrderManagementTest extends AcceptanceKlarnaTest
 {
 
     /**
@@ -51,22 +51,6 @@ class AdminTest extends AcceptanceKlarnaTest
         $this->clickAndWait("//form[@id='cancel']//input[@type='submit']");
 
         $this->assertTextPresent('Order is cancelled. See this order in the Klarna Portal.');
-    }
-
-    /**
-     * Adds tests sql data to database.
-     *
-     * @param string $sTestSuitePath
-     */
-    public function addTestData($sTestSuitePath)
-    {
-        parent::addTestData($sTestSuitePath);
-
-        $sTestSuitePath = realpath(__DIR__.'/../testSql/');
-        $sFileName = $sTestSuitePath.'/demodata.sql';
-        if (file_exists($sFileName)) {
-            $this->importSql($sFileName);
-        }
     }
 
     /**

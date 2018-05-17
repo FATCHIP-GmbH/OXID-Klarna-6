@@ -19,10 +19,19 @@ class AcceptanceKlarnaTest extends AcceptanceTestCase
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      * @throws \oxSystemComponentException
      */
-    public function assertKlarnaData($oxid, $expectedStatus = "AUTHORIZED")
+    public function assertKlarnaData($oxid = null, $expectedStatus = "AUTHORIZED")
     {
-        $sql = "SELECT TCKLARNA_ORDERID from `oxorder` WHERE `OXID`='$oxid'";
-        $klarnaId = DatabaseProvider::getDb()->getOne($sql);
+        $sql = "SELECT OXID, TCKLARNA_ORDERID from `oxorder` ORDER BY `oxorderdate` DESC LIMIT 1";
+
+        if($oxid) {
+            $sql = "SELECT OXID, TCKLARNA_ORDERID from `oxorder` WHERE `OXID`='$oxid'";
+            $klarnaId = DatabaseProvider::getDb()->getOne($sql);
+        } else{
+            $result = DatabaseProvider::getDb()->getRow($sql);
+            $oxid = $result[0];
+            $klarnaId = $result[1];
+        }
+
 
         /** @var KlarnaOrderManagementClient|KlarnaClientBase $klarnaClient */
         $klarnaClient = KlarnaOrderManagementClient::getInstance();
@@ -65,7 +74,9 @@ class AcceptanceKlarnaTest extends AcceptanceTestCase
         $this->assertEquals('ACCEPTED', $orderData['fraud_status']);
 
         $orderAmount = KlarnaUtils::parseFloatAsInt($order->getTotalOrderSum() * 100);
-        $this->assertEquals($orderAmount, $orderData['captured_amount']);
+        if($expectedStatus == 'CAPTURED'){
+            $this->assertEquals($orderAmount, $orderData['captured_amount']);
+        }
         $this->assertEquals($orderAmount, $orderData['order_amount']);
     }
     /**
@@ -147,4 +158,48 @@ class AcceptanceKlarnaTest extends AcceptanceTestCase
         sleep($sec);
     }
 
+    public function switchCurrency($currency)
+    {
+        $this->click("css=.currencies-menu");
+        $this->clickAndWait("//ul//*[text()='$currency']");
+    }
+
+    /**
+     * Adds tests sql data to database.
+     *
+     * @param string $sTestSuitePath
+     */
+    public function addTestData($sTestSuitePath)
+    {
+        parent::addTestData($sTestSuitePath);
+
+        $sTestSuitePath = realpath(__DIR__ .'/testSql/');
+        $sFileName = $sTestSuitePath . '/demodata.sql';
+        if (file_exists($sFileName)) {
+            $this->importSql($sFileName);
+        }
+
+        $this->activateTheme('flow');
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function fillKcoForm()
+    {
+        $this->waitForFrameToLoad("klarna-checkout-iframe", 2000);
+        $this->selectFrame('klarna-checkout-iframe');
+        $this->type("//div[@id='customer-details-next']//input[@id='email']",$this->getKlarnaDataByName('sKlarnaKCOEmail'));
+        $this->type("//div[@id='customer-details-next']//input[@id='postal_code']",'21079');
+        $this->click("//select[@id='title']");
+        $this->click("//option[@id='title__option__herr']");
+        $this->type("//div[@id='customer-details-next']//input[@id='given_name']","concepts");
+        $this->type("//div[@id='customer-details-next']//input[@id='family_name']","test");
+        $this->type("//div[@id='customer-details-next']//input[@id='street_name']","Karnapp");
+        $this->type("//div[@id='customer-details-next']//input[@id='street_number']","25");
+        $this->type("//div[@id='customer-details-next']//input[@id='city']","Hamburg");
+        $this->type("//div[@id='customer-details-next']//input[@id='phone']","30306900");
+        $this->type("//div[@id='customer-details-next']//input[@id='date_of_birth']","01011980");
+        $this->clickAndWait("//div[@id='customer-details-next']//button[@id='button-primary']");
+    }
 }

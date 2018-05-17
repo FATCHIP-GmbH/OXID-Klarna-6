@@ -136,6 +136,7 @@ class KlarnaExpressController extends FrontendController
          * If not create a fake one.
          */
         $this->_oUser = $this->resolveUser();
+        $oBasket->setBasketUser($this->_oUser);
 
         $this->blShowPopup = $this->showCountryPopup();
         $this->addTplParam("blShowPopUp", $this->blShowPopup);
