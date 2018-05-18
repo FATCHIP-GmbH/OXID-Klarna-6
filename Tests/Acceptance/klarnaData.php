@@ -19,5 +19,7 @@ return [
     'sKlarnaAdminUser'      => '<Klarna AdminUser>',
     'sKlarnaAdminPsw'       => '<Klarna AdminPsw>',
     'sPaypalClientLogin'    => '<Klarna PaypalClientLogin>',
-    'sPaypalClientPsw'      => '<Klarna PaypalClientPsw>'
+    'sPaypalClientPsw'      => '<Klarna PaypalClientPsw>',
+    'sAmazonClientLogin'    => '<Klarna AmazonClientLogin>',
+    'sAmazonClientPsw'      => '<Klarna AmazonClientPsw>'
 ];
