@@ -46,11 +46,11 @@ class NavigationFrontEndPaypalTest extends AcceptanceKlarnaTest
         $this->checkForFailedToOpenPayPalPageError();
         $this->payWithPaypal();
 
-        $this->waitForText("Please check all data on this overview before submitting your order!", 60);
+        $this->waitForText("Please check all data on this overview before submitting your order!", false, 60);
         $this->assertTextPresent("Please check all data on this overview before submitting your order!");
         $this->clickAndWait("//form[@id='orderConfirmAgbBottom']//button");
 
-        $this->waitForText("Thank you", 120);
+        $this->waitForText("Thank you", false, 120);
         $this->assertTextPresent("Thank you");
     }
 

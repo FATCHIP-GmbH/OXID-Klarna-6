@@ -10,7 +10,7 @@ use TopConcepts\Klarna\Core\KlarnaClientBase;
 use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 
-class AcceptanceKlarnaTest extends AcceptanceTestCase
+abstract class AcceptanceKlarnaTest extends AcceptanceTestCase
 {
 
     /**

@@ -34,28 +34,30 @@ class AdminOrderManagementTest extends AcceptanceKlarnaTest
         $oxid = $this->getValue("//form[@id='myedit']//input[@name='oxid']");
 
         $this->assertKlarnaData($oxid, 'CAPTURED');
+        $this->stopMinkSession();
 
     }
 
-//    /**
-//     * @throws \Exception
-//     */
-//    public function testOrderManagementCancel()
-//    {
-//        $this->clearTemp();
-//        $this->activateTheme('flow');
-//        $this->prepareKlarnaDatabase('KCO');
-//        $this->createNewOrder();
-//
-//        $this->loginAdmin("Administer Orders", "Orders", false, 'admin', 'admin');
-//        $this->openListItem('ÅåÆæØø');
-//        $this->delayLoad(3);//wait for klarna tab
-//        $this->openTab('Klarna');
-//
-//        $this->clickAndWait("//form[@id='cancel']//input[@type='submit']");
-//
-//        $this->assertTextPresent('Order is cancelled. See this order in the Klarna Portal.');
-//    }
+    /**
+     * @throws \Exception
+     */
+    public function testOrderManagementCancel()
+    {
+        $this->clearTemp();
+        $this->activateTheme('flow');
+        $this->prepareKlarnaDatabase('KCO');
+        $this->createNewOrder();
+
+        $this->loginAdmin("Administer Orders", "Orders", false, 'admin', 'admin');
+        $this->openListItem('ÅåÆæØø');
+        $this->delayLoad(3);//wait for klarna tab
+        $this->openTab('Klarna');
+
+        $this->clickAndWait("//form[@id='cancel']//input[@type='submit']");
+
+        $this->assertTextPresent('Order is cancelled. See this order in the Klarna Portal.');
+        $this->stopMinkSession();
+    }
 
     /**
      * @throws \Exception
@@ -95,6 +97,7 @@ class AdminOrderManagementTest extends AcceptanceKlarnaTest
         $this->clickAndWait("//div[@id='buy-button-next']//button");
         $this->waitForFrameToLoad('relative=top');
         $this->selectFrame('relative=top');
+        $this->waitForText("Thank you", false, 60);
         $this->assertTextPresent("Thank you");
     }
 
