@@ -32,9 +32,17 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
         //Fill order info
         $this->fillKcoForm();
 
+        //diferent delivery address
+        $this->click("//div[@id='klarna-checkout-shipping-address']//*[text()='Ship to a different address']");
+        $this->type("//div[@id='klarna-checkout-shipping-address']//input[@name='shipping_address.street_name']","Bodestraße");
+        $this->type("//div[@id='klarna-checkout-shipping-address']//input[@name='shipping_address.street_number']","1");
+        $this->type("//div[@id='klarna-checkout-shipping-address']//input[@name='shipping_address.postal_code']","10178");
+        $this->type("//div[@id='klarna-checkout-shipping-address']//input[@name='shipping_address.city']","Berlin");
+        $this->clickAndWait("//div[@id='klarna-checkout-shipping-address']//button[@type='submit']");
+
         $this->clickAndWait("//div[@id='shipping-selector-next']//*[text()='Example Set1: UPS 48 hours']");
-        $this->click("id=terms_consent__box");
-        $this->click("id=additional_checkbox__box");
+        $this->click("css=.terms-consent__text");
+        $this->click("css=.additional-checkbox__text");
         $this->clickAndWait("//div[@id='buy-button-next']//button");
         $this->waitForFrameToLoad('relative=top');
         $this->selectFrame('relative=top');
@@ -60,6 +68,41 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
     }
 
     /**
+     * Test new order guest user
+     * @throws \Exception
+     */
+    public function testFrontendKcoOrderNachnahme()
+    {
+        $this->prepareKlarnaDatabase('KCO');
+
+        $this->openNewWindow($this->getTestConfig()->getShopUrl(), false);
+        $this->addToBasket('05848170643ab0deb9914566391c0c63');
+        $this->addToBasket('058de8224773a1d5fd54d523f0c823e0');
+        $this->clickAndWait("link=Go to Checkout");
+        $this->assertTextPresent('Please choose your shipping country');
+        $this->clickAndWait("//form[@id='select-country-form']//button[@value='DE']");
+        $this->assertTextPresent('Your chosen country');
+
+        //Fill order info
+        $this->fillKcoForm();
+
+        $this->clickAndWait("//div[@id='shipping-selector-next']//*[text()='Example Set1: UPS 48 hours']");
+        $this->clickAndWait("payment-selector-external_nachnahme__left");
+        $this->clickAndWait("//div[@id='buy-button-next']//button");
+        $this->waitForFrameToLoad("relative=top");
+        $this->waitForText("Please check all data on this overview before submitting your order!");
+        $this->assertTextPresent("Please check all data on this overview before submitting your order!");
+        $this->selectFrame("relative=top");
+        $this->clickAndWait("//form[@id='orderConfirmAgbBottom']//button");
+        $this->waitForItemAppear("thankyouPage", 60);
+        $this->waitForText("We will inform you immediately if an item is not deliverable.");
+        $this->assertTextPresent("We will inform you immediately if an item is not deliverable.");
+
+        $this->assertKlarnaData();
+
+    }
+
+    /**
      * @dataProvider klarnaKCOMethodsProvider
      * @param $country
      *
@@ -77,7 +120,9 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
         $this->assertTextPresent('Your chosen country');
 
         //login
-        $this->switchCurrency(KlarnaConsts::getCountry2CurrencyArray()[$country]);
+        $currency = KlarnaConsts::getCountry2CurrencyArray()[$country];
+        $this->switchCurrency($currency?$currency:'EUR');
+
         $userLogin = "user_".strtolower($country);
         $this->click("klarnaLoginWidget");
         $this->type("//form[@name='login']//input[@name='lgn_usr']", $userLogin."@oxid-esales.com");
@@ -95,6 +140,12 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
             case "NL":
                 $phone = "0642227516";
                 break;
+            case "GB":
+                $phone = "07907920647";
+                break;
+            case "BE":
+                $phone = "0488836320";
+                break;
             default:
                 $phone = "30306900";
         }
@@ -104,7 +155,9 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
 
         if($this->isElementPresent("button-primary__loading-wrapper")) {
             $this->type("//div[@id='customer-details-next']//input[@id='phone']",$phone);
-            $this->type("//div[@id='customer-details-next']//input[@id='date_of_birth']","01011980");
+            if($this->isElementPresent("//div[@id='customer-details-next']//input[@id='date_of_birth']")){
+                $this->type("//div[@id='customer-details-next']//input[@id='date_of_birth']","01011980");
+            }
             $this->clickAndWait("button-primary__loading-wrapper");
         }
         $this->delayLoad();
@@ -128,6 +181,7 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
         $this->delayLoad();
         $this->waitForText("Thank you");
         $this->assertTextPresent("Thank you");
+        $this->assertKlarnaData();
         $this->stopMinkSession();//force browser restart to clean previous order address
     }
 
@@ -141,6 +195,7 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
         $this->prepareKlarnaDatabase('KCO');
 
         return [
+            ['BE'],
             ['GB'],
             ['FI'],
             ['AT'],
