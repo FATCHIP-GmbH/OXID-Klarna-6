@@ -56,7 +56,7 @@
         var $modal = $('#myModal');
 
         [{if $blShowPopUp && $sKlarnaIframe}]
-        showModal = true;
+            showModal = true;
         [{/if}]
 
         $('#resetCountry').on('click', 'a', function () {

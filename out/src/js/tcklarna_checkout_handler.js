@@ -27,6 +27,23 @@ if (!Array.prototype.remove) {
 var KlarnaApi;
 
 (function () {
+    function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
+
     $('.drop-trigger').each(function () {
         $(this).click(function () {
             var clicked = this;
@@ -221,9 +238,12 @@ var KlarnaApi;
                 // console.log("Event:" + arguments.callee.name, eventData);
                 eventData.action = arguments.callee.name;
                 // Shows modal after iframe is loaded and there is no user data injected
-                if (eventData['postal_code'] === ""/* || getQueryParameter('reset_klarna_country')*/) {
+                console.log(eventData);
+                console.log(getCookie('blockCountryModal'));
+                if (eventData['postal_code'] === "" && getCookie('blockCountryModal') != 1) {
                     if (showModal) {
                         $('#myModal').modal('show');
+                        document.cookie = "blockCountryModal=1"
                     }
                 }
 

@@ -41,7 +41,6 @@ class AcceptanceKlarnaTest extends AcceptanceTestCase
         $order->load($oxid);
 
         $aFieldMapper = [
-            'oxbillemail' => 'email',
             'oxbillfname' => 'given_name',
             'oxbilllname' => 'family_name',
             'joinedAddress' => 'street_address',
@@ -49,27 +48,22 @@ class AcceptanceKlarnaTest extends AcceptanceTestCase
             'oxbillcity' => 'city',
             'oxbillcountryid' => 'country',
         ];
+        $this->validateAddress($order, $orderData['billing_address'], $aFieldMapper);
 
-        $this->assertEquals($order->getFieldData('oxbillemail'), $orderData['billing_address']['email']);
+        if($order->getFieldData('oxbillstreet') != $order->getFieldData('oxdelstreet')) {
+            $aFieldMapper = [
+                'oxdelfname' => 'given_name',
+                'oxdellname' => 'family_name',
+                'joinedAddress' => 'street_address',
+                'oxdelzip' => 'postal_code',
+                'oxdelcity' => 'city',
+                'oxdelcountryid' => 'country',
+            ];
 
-        foreach ($aFieldMapper as $col => $item) {
-            if($col == 'oxbillcountryid')
-            {
-                $oCountry   = oxNew(Country::class);
-                $sCountryId = $oCountry->getIdByCode($orderData['billing_address'][$item]);
-
-                $this->assertEquals($sCountryId, $order->getFieldData('oxbillcountryid'));
-                continue;
-            }
-            if ($col == 'joinedAddress') {
-                $streetAddress = $order->getFieldData('oxbillstreet').' '.$order->getFieldData('oxbillstreetnr');
-                $this->assertEquals($streetAddress, $orderData['billing_address'][$item]);
-                continue;
-            }
-            $this->assertEquals(html_entity_decode($order->getFieldData($col), ENT_QUOTES), $orderData['billing_address'][$item]);
+            $this->validateAddress($order, $orderData['shipping_address'], $aFieldMapper, 'del');
         }
 
-
+        $this->assertEquals($order->getFieldData('oxbillemail'), $orderData['billing_address']['email']);
         $this->assertEquals($expectedStatus, $orderData['status']);
         $this->assertEquals('ACCEPTED', $orderData['fraud_status']);
 
@@ -78,6 +72,27 @@ class AcceptanceKlarnaTest extends AcceptanceTestCase
             $this->assertEquals($orderAmount, $orderData['captured_amount']);
         }
         $this->assertEquals($orderAmount, $orderData['order_amount']);
+    }
+
+    protected function validateAddress($order,$orderData, $aFieldMapper, $type = 'bill')
+    {
+        foreach ($aFieldMapper as $col => $item) {
+            if(strpos($col,'countryid') != false)
+            {
+                $oCountry   = oxNew(Country::class);
+                $sCountryId = $oCountry->getIdByCode($orderData[$item]);
+
+                $this->assertEquals($sCountryId, $order->getFieldData($col));
+                continue;
+            }
+            if ($col == 'joinedAddress') {
+                $streetAddress = $order->getFieldData('ox'.$type.'street').' '.$order->getFieldData('ox'.$type.'streetnr');
+                $this->assertEquals($streetAddress, $orderData[$item]);
+                continue;
+            }
+            $this->assertEquals(html_entity_decode($order->getFieldData($col), ENT_QUOTES), $orderData[$item]);
+        }
+
     }
     /**
      * Returns klarna data by variable name
