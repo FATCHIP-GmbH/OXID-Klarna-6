@@ -24,10 +24,20 @@ class NavigationFrontEndPaypalTest extends AcceptanceKlarnaTest
         $this->clickAndWait("//form[@id='select-country-form']//button[@value='DE']");
         $this->assertTextPresent('Your chosen country');
 
-        //Fill order info
-        $this->fillKcoForm();
+        //login
+        $this->click("klarnaLoginWidget");
+        $this->type("//form[@name='login']//input[@name='lgn_usr']", "user@oxid-esales.com");
+        $this->type("//form[@name='login']//input[@name='lgn_pwd']", "12345");
+        $this->clickAndWait("//form[@name='login']//button");
 
+        $this->waitForFrameToLoad("klarna-checkout-iframe");
+        $this->selectFrame("klarna-checkout-iframe");
+        $this->type("//div[@id='klarna-checkout-customer-details']//input[@id='phone']","30306900");
+        $this->type("//div[@id='klarna-checkout-customer-details']//input[@id='date_of_birth']","01011980");
+        $this->clickAndWait("//div[@id='klarna-checkout-customer-details']//button[@id='button-primary']");
+        $this->delayLoad();
         $this->clickAndWait("//div[@id='shipping-selector-next']//*[text()='Example Set1: UPS 48 hours']");
+        $this->delayLoad();
         $this->clickAndWait("//div[@id='payment-selector-next']//*[text()='PayPal']");
         $this->click("//div[@id='buy-button-next']//button");
 
@@ -36,11 +46,11 @@ class NavigationFrontEndPaypalTest extends AcceptanceKlarnaTest
         $this->checkForFailedToOpenPayPalPageError();
         $this->payWithPaypal();
 
-        $this->waitForText("Please check all data on this overview before submitting your order!");
+        $this->waitForText("Please check all data on this overview before submitting your order!", 60);
         $this->assertTextPresent("Please check all data on this overview before submitting your order!");
         $this->clickAndWait("//form[@id='orderConfirmAgbBottom']//button");
 
-        $this->waitForPageToLoad();
+        $this->waitForText("Thank you", 120);
         $this->assertTextPresent("Thank you");
     }
 
@@ -61,17 +71,16 @@ class NavigationFrontEndPaypalTest extends AcceptanceKlarnaTest
      */
     protected function payWithPaypal()
     {
-        $this->waitForItemAppear("id=login_email", 60);
+        $this->waitForItemAppear("css=.loginRedirect", 60);
+        $this->clickAndWait("//div[@id='loginSection']//*[text()='Log In']");
+        $this->waitForItemAppear("id=email", 60);
         $this->delayLoad(2);
-        $this->type("login_email", $this->getKlarnaDataByName('sPaypalClientLogin'));
-        $this->type("login_password", $this->getKlarnaDataByName('sPaypalClientPsw'));
-        $this->delayLoad(3);
-        $this->clickAndWait("id=submitLogin");
+        $this->type("email", $this->getKlarnaDataByName('sPaypalClientLogin'));
+        $this->type("password", $this->getKlarnaDataByName('sPaypalClientPsw'));
+        $this->clickAndWait("id=btnLogin");
 
-        $this->waitForItemAppear("id=continue_abovefold");
+        $this->waitForItemAppear("id=confirmButtonTop", 60);
         $this->clickPayPalContinuePage();
-        //we should be redirected back to shop at this point
-        $this->_waitForAppear('isElementPresent', "id=breadCrumb", 10, true);
     }
 
     /**
@@ -81,10 +90,9 @@ class NavigationFrontEndPaypalTest extends AcceptanceKlarnaTest
      */
     private function clickPayPalContinuePage()
     {
-        $this->waitForItemAppear("//input[@id='continue_abovefold']");
         $this->delayLoad();
-        $this->waitForEditable("id=continue_abovefold");
-        $this->clickAndWait("id=continue_abovefold");
+        $this->waitForEditable("id=confirmButtonTop");
+        $this->click("id=confirmButtonTop");
     }
 
 }
