@@ -105,6 +105,7 @@ class NavigationFrontendKpTest extends AcceptanceKlarnaTest
         $this->waitForText("We will inform you immediately if an item is not deliverable.");
         $this->assertTextPresent("We will inform you immediately if an item is not deliverable.");
         $this->assertKlarnaData();
+        $this->stopMinkSession();
     }
 
     /**

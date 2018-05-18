@@ -868,7 +868,13 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
             return;
         }
+
         if ($paymentId === 'oxidpaypal') {
+            if($this->_oUser->getType() === KlarnaUser::LOGGED_IN){
+
+                return Registry::get(StandardDispatcher::class)->setExpressCheckout();//todo: check if other options possible. user not available.
+            }
+
             return Registry::get(ExpressCheckoutDispatcher::class)->setExpressCheckout();//todo: check if other options possible. user not available.
         }
     }

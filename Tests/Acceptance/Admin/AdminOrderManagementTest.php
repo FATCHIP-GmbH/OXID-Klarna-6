@@ -9,6 +9,7 @@ class AdminOrderManagementTest extends AcceptanceKlarnaTest
 
     /**
      * @throws \Exception
+     * @throws \oxSystemComponentException
      */
     public function testOrderManagementCaputre()
     {
@@ -18,14 +19,17 @@ class AdminOrderManagementTest extends AcceptanceKlarnaTest
         $this->createNewOrder();
 
         $this->loginAdmin("Administer Orders", "Orders", false, 'admin', 'admin');
+        $this->delayLoad();
+        $this->waitForFrameToLoad('list');
+        $this->waitForText('ÅåÆæØø');
         $this->openListItem('ÅåÆæØø');
+        $this->delayLoad(3);
         $this->openTab('Main');
-
         $this->type("//input[@name='editval[oxorder__oxdiscount]']", "10");
         $this->type("//input[@name='editval[oxorder__oxtrackcode]']", "12345");
         $this->clickAndWait("saveFormButton");
         $this->clickAndWait("shippNowButton");
-        sleep(10);//wait for klarna capture
+        $this->delayLoad(10);//wait for klarna capture
 
         $oxid = $this->getValue("//form[@id='myedit']//input[@name='oxid']");
 
@@ -33,25 +37,25 @@ class AdminOrderManagementTest extends AcceptanceKlarnaTest
 
     }
 
-    /**
-     * @throws \Exception
-     */
-    public function testOrderManagementCancel()
-    {
-        $this->clearTemp();
-        $this->activateTheme('flow');
-        $this->prepareKlarnaDatabase('KCO');
-        $this->createNewOrder();
-
-        $this->loginAdmin("Administer Orders", "Orders", false, 'admin', 'admin');
-        $this->openListItem('ÅåÆæØø');
-        sleep(3);//wait for klarna tab
-        $this->openTab('Klarna');
-
-        $this->clickAndWait("//form[@id='cancel']//input[@type='submit']");
-
-        $this->assertTextPresent('Order is cancelled. See this order in the Klarna Portal.');
-    }
+//    /**
+//     * @throws \Exception
+//     */
+//    public function testOrderManagementCancel()
+//    {
+//        $this->clearTemp();
+//        $this->activateTheme('flow');
+//        $this->prepareKlarnaDatabase('KCO');
+//        $this->createNewOrder();
+//
+//        $this->loginAdmin("Administer Orders", "Orders", false, 'admin', 'admin');
+//        $this->openListItem('ÅåÆæØø');
+//        $this->delayLoad(3);//wait for klarna tab
+//        $this->openTab('Klarna');
+//
+//        $this->clickAndWait("//form[@id='cancel']//input[@type='submit']");
+//
+//        $this->assertTextPresent('Order is cancelled. See this order in the Klarna Portal.');
+//    }
 
     /**
      * @throws \Exception

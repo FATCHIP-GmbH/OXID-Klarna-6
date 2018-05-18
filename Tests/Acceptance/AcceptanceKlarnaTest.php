@@ -24,7 +24,7 @@ class AcceptanceKlarnaTest extends AcceptanceTestCase
         $sql = "SELECT OXID, TCKLARNA_ORDERID from `oxorder` ORDER BY `oxorderdate` DESC LIMIT 1";
 
         if($oxid) {
-            $sql = "SELECT OXID, TCKLARNA_ORDERID from `oxorder` WHERE `OXID`='$oxid'";
+            $sql = "SELECT TCKLARNA_ORDERID from `oxorder` WHERE `OXID`='$oxid'";
             $klarnaId = DatabaseProvider::getDb()->getOne($sql);
         } else{
             $result = DatabaseProvider::getDb()->getRow($sql);
