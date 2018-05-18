@@ -50,7 +50,7 @@ class AcceptanceKlarnaTest extends AcceptanceTestCase
         ];
         $this->validateAddress($order, $orderData['billing_address'], $aFieldMapper);
 
-        if($order->getFieldData('oxbillstreet') != $order->getFieldData('oxdelstreet')) {
+        if(!empty($order->getFieldData('oxdelstreet')) && $order->getFieldData('oxbillstreet') != $order->getFieldData('oxdelstreet')) {
             $aFieldMapper = [
                 'oxdelfname' => 'given_name',
                 'oxdellname' => 'family_name',
