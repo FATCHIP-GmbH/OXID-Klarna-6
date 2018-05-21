@@ -20,6 +20,7 @@ class NavigationFrontendKpTest extends AcceptanceKlarnaTest
      */
     public function testFrontendKpOrder($title, $radio,$desc, $iframe, $country = null)
     {
+        $this->prepareKlarnaDatabase('KP');
         //Navigate untill step 3
         $this->navigateToPay($country);
 
@@ -104,7 +105,6 @@ class NavigationFrontendKpTest extends AcceptanceKlarnaTest
         $this->waitForItemAppear("thankyouPage", 60);
         $this->waitForText("We will inform you immediately if an item is not deliverable.");
         $this->assertTextPresent("We will inform you immediately if an item is not deliverable.");
-        $this->assertKlarnaData();
         $this->stopMinkSession();
     }
 
@@ -115,7 +115,6 @@ class NavigationFrontendKpTest extends AcceptanceKlarnaTest
      */
     public function klarnaKPMethodsProvider()
     {
-        $this->prepareKlarnaDatabase('KP');
 
         return [
             ['Pay Later', 'klarna_pay_later', 'Pay X days after delivery', 'klarna-pay-later-fullscreen'],
@@ -162,7 +161,6 @@ class NavigationFrontendKpTest extends AcceptanceKlarnaTest
         $this->waitForItemAppear("thankyouPage", 60);
         $this->waitForText("We will inform you immediately if an item is not deliverable.");
         $this->assertTextPresent("We will inform you immediately if an item is not deliverable.");
-        $this->assertKlarnaData();
     }
 
     protected function navigateToPay($country = null)

@@ -12,7 +12,7 @@ class NavigationFrontEndPaypalTest extends AcceptanceKlarnaTest
      * Test new order guest user
      * @throws \Exception
      */
-    public function testFrontendKcoOrderCreateAccountAndSubscribe()
+    public function testFrontendOrderPayPal()
     {
         $this->prepareKlarnaDatabase('KCO');
 

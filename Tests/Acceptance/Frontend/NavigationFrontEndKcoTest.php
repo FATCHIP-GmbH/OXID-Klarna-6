@@ -34,19 +34,19 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
 
         //diferent delivery address
         $this->click("//div[@id='klarna-checkout-shipping-address']//*[text()='Ship to a different address']");
+        $this->waitForElement("//div[@id='klarna-checkout-shipping-address']//input[@name='shipping_address.street_name']");
         $this->type("//div[@id='klarna-checkout-shipping-address']//input[@name='shipping_address.street_name']","Bodestraße");
         $this->type("//div[@id='klarna-checkout-shipping-address']//input[@name='shipping_address.street_number']","1");
         $this->type("//div[@id='klarna-checkout-shipping-address']//input[@name='shipping_address.postal_code']","10178");
         $this->type("//div[@id='klarna-checkout-shipping-address']//input[@name='shipping_address.city']","Berlin");
-        $this->clickAndWait("//div[@id='klarna-checkout-shipping-address']//button[@type='submit']");
+        $this->clickAndWait("css=.fieldset--shipping-address__continue-button");
 
         $this->clickAndWait("//div[@id='shipping-selector-next']//*[text()='Example Set1: UPS 48 hours']");
-        $this->click("css=.terms-consent__text");
-        $this->click("css=.additional-checkbox__text");
+        $this->click("id=terms_consent__box");
+        $this->click("id=additional_checkbox__box");
         $this->clickAndWait("//div[@id='buy-button-next']//button");
-        $this->waitForFrameToLoad('relative=top');
-        $this->selectFrame('relative=top');
-        $this->assertTextPresent("Thank you");
+        $this->delayLoad();
+        $this->waitForText("Thank you", false, 60);
 
         /** @var KlarnaUser $klarnaUser */
         $klarnaUser = oxNew(User::class);
@@ -64,41 +64,7 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
         $this->assertTrue(isset($klarnaUser->oxuser__oxpassword->value));
 
         $this->assertKlarnaData();
-
-    }
-
-    /**
-     * Test new order guest user
-     * @throws \Exception
-     */
-    public function testFrontendKcoOrderNachnahme()
-    {
-        $this->prepareKlarnaDatabase('KCO');
-
-        $this->openNewWindow($this->getTestConfig()->getShopUrl(), false);
-        $this->addToBasket('05848170643ab0deb9914566391c0c63');
-        $this->addToBasket('058de8224773a1d5fd54d523f0c823e0');
-        $this->clickAndWait("link=Go to Checkout");
-        $this->assertTextPresent('Please choose your shipping country');
-        $this->clickAndWait("//form[@id='select-country-form']//button[@value='DE']");
-        $this->assertTextPresent('Your chosen country');
-
-        //Fill order info
-        $this->fillKcoForm();
-
-        $this->clickAndWait("//div[@id='shipping-selector-next']//*[text()='Example Set1: UPS 48 hours']");
-        $this->clickAndWait("payment-selector-external_nachnahme__left");
-        $this->clickAndWait("//div[@id='buy-button-next']//button");
-        $this->waitForFrameToLoad("relative=top");
-        $this->waitForText("Please check all data on this overview before submitting your order!");
-        $this->assertTextPresent("Please check all data on this overview before submitting your order!");
-        $this->selectFrame("relative=top");
-        $this->clickAndWait("//form[@id='orderConfirmAgbBottom']//button");
-        $this->waitForItemAppear("thankyouPage", 60);
-        $this->waitForText("We will inform you immediately if an item is not deliverable.");
-        $this->assertTextPresent("We will inform you immediately if an item is not deliverable.");
-
-        $this->assertKlarnaData();
+        $this->stopMinkSession();
 
     }
 
@@ -110,7 +76,8 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
      */
     public function testFrontendKcoOrderLoginAndCountry($country)
     {
-        $this->clearTemp();
+        $this->prepareKlarnaDatabase('KCO');
+
         $this->openNewWindow($this->getTestConfig()->getShopUrl(), false);
         $this->addToBasket('05848170643ab0deb9914566391c0c63');
         $this->addToBasket('058de8224773a1d5fd54d523f0c823e0');
@@ -158,7 +125,8 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
             if($this->isElementPresent("//div[@id='customer-details-next']//input[@id='date_of_birth']")){
                 $this->type("//div[@id='customer-details-next']//input[@id='date_of_birth']","01011980");
             }
-            $this->clickAndWait("button-primary__loading-wrapper");
+            $this->delayLoad();
+            $this->clickAndWait("//div[@id='customer-details-next']//button[@id='button-primary']");
         }
         $this->delayLoad();
         $this->clickAndWait("//div[@id='shipping-selector-next']//*[text()='Example Set1: UPS 48 hours']");
@@ -192,7 +160,6 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
      */
     public function klarnaKCOMethodsProvider()
     {
-        $this->prepareKlarnaDatabase('KCO');
 
         return [
             ['BE'],
@@ -204,5 +171,37 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
 //            ['NL'],
             ['DK'],
         ];
+    }
+
+    /**
+     * Test new order guest user
+     * @throws \Exception
+     */
+    public function testFrontendKcoOrderNachnahme()
+    {
+        $this->prepareKlarnaDatabase('KCO');
+
+        $this->openNewWindow($this->getTestConfig()->getShopUrl(), false);
+        $this->addToBasket('05848170643ab0deb9914566391c0c63');
+        $this->addToBasket('058de8224773a1d5fd54d523f0c823e0');
+        $this->clickAndWait("link=Go to Checkout");
+        $this->assertTextPresent('Please choose your shipping country');
+        $this->clickAndWait("//form[@id='select-country-form']//button[@value='DE']");
+        $this->assertTextPresent('Your chosen country');
+
+        //Fill order info
+        $this->fillKcoForm();
+
+        $this->clickAndWait("//div[@id='shipping-selector-next']//*[text()='Example Set1: UPS 48 hours']");
+        $this->clickAndWait("payment-selector-external_nachnahme__left");
+        $this->click("//div[@id='buy-button-next']//button");
+        $this->selectFrame("relative=top");
+        $this->waitForText("Please check all data on this overview before submitting your order!");
+        $this->assertTextPresent("Please check all data on this overview before submitting your order!");
+        $this->clickAndWait("//form[@id='orderConfirmAgbBottom']//button");
+        $this->waitForItemAppear("thankyouPage", 60);
+        $this->waitForText("We will inform you immediately if an item is not deliverable.");
+        $this->assertTextPresent("We will inform you immediately if an item is not deliverable.");
+        $this->stopMinkSession();
     }
 }

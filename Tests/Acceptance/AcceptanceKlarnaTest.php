@@ -215,6 +215,9 @@ abstract class AcceptanceKlarnaTest extends AcceptanceTestCase
         $this->type("//div[@id='customer-details-next']//input[@id='city']","Hamburg");
         $this->type("//div[@id='customer-details-next']//input[@id='phone']","30306900");
         $this->type("//div[@id='customer-details-next']//input[@id='date_of_birth']","01011980");
-        $this->clickAndWait("//div[@id='customer-details-next']//button[@id='button-primary']");
+        $this->delayLoad();
+        if($this->isElementPresent("//div[@id='customer-details-next']//*[text()='Submit']")){
+            $this->clickAndWait("//div[@id='customer-details-next']//*[text()='Submit']");
+        }
     }
 }

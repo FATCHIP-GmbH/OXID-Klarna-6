@@ -49,6 +49,8 @@ class AdminOrderManagementTest extends AcceptanceKlarnaTest
         $this->createNewOrder();
 
         $this->loginAdmin("Administer Orders", "Orders", false, 'admin', 'admin');
+        $this->waitForFrameToLoad('list');
+        $this->waitForText('ÅåÆæØø');
         $this->openListItem('ÅåÆæØø');
         $this->delayLoad(3);//wait for klarna tab
         $this->openTab('Klarna');
@@ -91,11 +93,12 @@ class AdminOrderManagementTest extends AcceptanceKlarnaTest
         $this->type("//div[@id='customer-details-next']//input[@id='city']", "Hamburg");
         $this->type("//div[@id='customer-details-next']//input[@id='phone']", "30306900");
         $this->type("//div[@id='customer-details-next']//input[@id='date_of_birth']", "01011980");
-
-        $this->clickAndWait("//div[@id='customer-details-next']//button[@id='button-primary']");
-        $this->clickAndWait("//div[@id='terms-consent-next']//input[@type='checkbox']");
-        $this->clickAndWait("//div[@id='buy-button-next']//button");
-        $this->waitForFrameToLoad('relative=top');
+        $this->delayLoad();
+        if($this->isElementPresent("//div[@id='customer-details-next']//button[@id='button-primary']")){
+            $this->click("//div[@id='customer-details-next']//button[@id='button-primary']");
+        }
+        $this->clickAndWait("id=terms_consent__box");
+        $this->click("//div[@id='buy-button-next']//*[text()='Place Order']");
         $this->selectFrame('relative=top');
         $this->waitForText("Thank you", false, 60);
         $this->assertTextPresent("Thank you");
