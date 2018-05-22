@@ -34,6 +34,7 @@ class NavigationFrontEndPaypalTest extends AcceptanceKlarnaTest
         $this->selectFrame("klarna-checkout-iframe");
         $this->type("//div[@id='klarna-checkout-customer-details']//input[@id='phone']","30306900");
         $this->type("//div[@id='klarna-checkout-customer-details']//input[@id='date_of_birth']","01011980");
+        $this->delayLoad(2);
         $this->clickAndWait("//div[@id='klarna-checkout-customer-details']//button[@id='button-primary']");
         $this->delayLoad();
         $this->clickAndWait("//div[@id='shipping-selector-next']//*[text()='Example Set1: UPS 48 hours']");
