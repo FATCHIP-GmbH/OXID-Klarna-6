@@ -39,7 +39,7 @@ abstract class AcceptanceKlarnaTest extends AcceptanceTestCase
         try {
             $orderData = $klarnaClient->getOrder($klarnaId);
         } catch (KlarnaOrderNotFoundException $e){
-            //try a secound time if fails to find order on klarna system
+            //try a second time if fails to find order on klarna system
             $this->delayLoad(2);
             $orderData = $klarnaClient->getOrder($klarnaId);
         }
