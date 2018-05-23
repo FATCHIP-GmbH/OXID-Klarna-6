@@ -6,6 +6,7 @@ use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\TestingLibrary\AcceptanceTestCase;
+use TopConcepts\Klarna\Core\Exception\KlarnaOrderNotFoundException;
 use TopConcepts\Klarna\Core\KlarnaClientBase;
 use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
 use TopConcepts\Klarna\Core\KlarnaUtils;
@@ -35,7 +36,14 @@ abstract class AcceptanceKlarnaTest extends AcceptanceTestCase
 
         /** @var KlarnaOrderManagementClient|KlarnaClientBase $klarnaClient */
         $klarnaClient = KlarnaOrderManagementClient::getInstance();
-        $orderData = $klarnaClient->getOrder($klarnaId);
+        try {
+            $orderData = $klarnaClient->getOrder($klarnaId);
+        } catch (KlarnaOrderNotFoundException $e){
+            //try a secound time if fails to find order on klarna system
+            $this->delayLoad(2);
+            $orderData = $klarnaClient->getOrder($klarnaId);
+        }
+
 
         $order = oxNew(Order::class);
         $order->load($oxid);
