@@ -142,6 +142,11 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
             $this->selectFrame("klarna-checkout-iframe");
         }
 
+        if($this->isElementPresent("terms_consent__box"))
+        {
+            $this->click("id=terms_consent__box");
+        }
+
         $this->waitForElement("//div[@id='buy-button-next']//button");
         $this->clickAndWait("//div[@id='buy-button-next']//button");
         $this->waitForFrameToLoad('relative=top');
@@ -168,7 +173,7 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
             ['AT'],
             ['SE'],
             ['NO'],
-//            ['NL'],
+            ['NL'],
             ['DK'],
         ];
     }

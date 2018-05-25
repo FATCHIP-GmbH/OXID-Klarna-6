@@ -94,8 +94,8 @@ abstract class AcceptanceKlarnaTest extends AcceptanceTestCase
                 continue;
             }
             if ($col == 'joinedAddress') {
-                $streetAddress = $order->getFieldData('ox'.$type.'street').' '.$order->getFieldData('ox'.$type.'streetnr');
-                $this->assertEquals($streetAddress, $orderData[$item]);
+                $streetAddress = trim($order->getFieldData('ox'.$type.'street').' '.$order->getFieldData('ox'.$type.'streetnr'));
+                $this->assertEquals($streetAddress, trim($orderData[$item]));
                 continue;
             }
             $this->assertEquals(html_entity_decode($order->getFieldData($col), ENT_QUOTES), $orderData[$item]);
