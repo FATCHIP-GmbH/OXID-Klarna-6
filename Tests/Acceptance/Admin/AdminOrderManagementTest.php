@@ -33,7 +33,7 @@ class AdminOrderManagementTest extends AcceptanceKlarnaTest
 
         $oxid = $this->getValue("//form[@id='myedit']//input[@name='oxid']");
 
-        $this->assertKlarnaData($oxid, 'CAPTURED');
+        $this->assertKlarnaData($oxid, false, 'CAPTURED');
         $this->stopMinkSession();
 
     }
@@ -88,8 +88,7 @@ class AdminOrderManagementTest extends AcceptanceKlarnaTest
         $this->click("//option[@id='title__option__herr']");
         $this->type("//div[@id='customer-details-next']//input[@id='given_name']", "ÅåÆæØø");
         $this->type("//div[@id='customer-details-next']//input[@id='family_name']", "St.Jäöüm'es");
-        $this->type("//div[@id='customer-details-next']//input[@id='street_name']", "Karnapp");
-        $this->type("//div[@id='customer-details-next']//input[@id='street_number']", "25");
+        $this->type("//div[@id='customer-details-next']//input[@id='street_address']",'Karnapp 25');
         $this->type("//div[@id='customer-details-next']//input[@id='city']", "Hamburg");
         $this->type("//div[@id='customer-details-next']//input[@id='phone']", "30306900");
         $this->type("//div[@id='customer-details-next']//input[@id='date_of_birth']", "01011980");
@@ -97,7 +96,12 @@ class AdminOrderManagementTest extends AcceptanceKlarnaTest
         if($this->isElementPresent("//div[@id='customer-details-next']//button[@id='button-primary']")){
             $this->click("//div[@id='customer-details-next']//button[@id='button-primary']");
         }
-        $this->clickAndWait("id=terms_consent__box");
+
+        if($this->isElementPresent("terms_consent__box"))
+        {
+            $this->clickAndWait("id=terms_consent__box");
+        }
+        $this->delayLoad();
         $this->click("//div[@id='buy-button-next']//*[text()='Place Order']");
         $this->selectFrame('relative=top');
         $this->waitForText("Thank you", false, 60);

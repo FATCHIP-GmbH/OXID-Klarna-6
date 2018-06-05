@@ -240,11 +240,7 @@ abstract class AcceptanceKlarnaTest extends AcceptanceTestCase
         $this->click("//option[@id='title__option__herr']");
         $this->type("//div[@id='customer-details-next']//input[@id='given_name']",$this->getKlarnaDataByName('sKCOFormGivenName'));
         $this->type("//div[@id='customer-details-next']//input[@id='family_name']",$this->getKlarnaDataByName('sKCOFormFamilyName'));
-
         $this->type("//div[@id='customer-details-next']//input[@id='street_address']",$this->getKlarnaDataByName('sKCOFormStreetName').' '.$this->getKlarnaDataByName('sKCOFormStreetNumber'));
-
-//        $this->type("//div[@id='customer-details-next']//input[@id='street_name']",$this->getKlarnaDataByName('sKCOFormStreetName'));
-//        $this->type("//div[@id='customer-details-next']//input[@id='street_number']",$this->getKlarnaDataByName('sKCOFormStreetNumber'));
         $this->type("//div[@id='customer-details-next']//input[@id='city']",$this->getKlarnaDataByName('sKCOFormCity'));
         $this->type("//div[@id='customer-details-next']//input[@id='phone']",$this->getKlarnaDataByName('sKCOFormPhone'));
         $this->type("//div[@id='customer-details-next']//input[@id='date_of_birth']",$this->getKlarnaDataByName('sKCOFormDob'));
