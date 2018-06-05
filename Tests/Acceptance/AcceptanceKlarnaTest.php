@@ -16,11 +16,12 @@ abstract class AcceptanceKlarnaTest extends AcceptanceTestCase
 
     /**
      * @param $oxid
+     * @param bool $validateInput
      * @param string $expectedStatus
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      * @throws \oxSystemComponentException
      */
-    public function assertKlarnaData($oxid = null, $expectedStatus = "AUTHORIZED")
+    public function assertKlarnaData($oxid = null, $validateInput = false, $expectedStatus = "AUTHORIZED")
     {
         $sql = "SELECT OXID, TCKLARNA_ORDERID from `oxorder` ORDER BY `oxorderdate` DESC LIMIT 1";
 
@@ -80,6 +81,27 @@ abstract class AcceptanceKlarnaTest extends AcceptanceTestCase
             $this->assertEquals($orderAmount, $orderData['captured_amount']);
         }
         $this->assertEquals($orderAmount, $orderData['order_amount']);
+
+        //validate input date with db data
+        if($validateInput) {
+            $this->validateInputData($order);
+        }
+    }
+
+    /**
+     * @param $order
+     * @throws \Exception
+     */
+    protected function validateInputData(Order $order)
+    {
+        //validate input date with db data
+        $this->assertEquals($this->getKlarnaDataByName('sKlarnaKCOEmail'), $order->getFieldData('oxbillemail'));
+        $this->assertEquals($this->getKlarnaDataByName('sKCOFormPostCode'), $order->getFieldData('oxbillzip'));
+        $this->assertEquals($this->getKlarnaDataByName('sKCOFormGivenName'), $order->getFieldData('oxbillfname'));
+        $this->assertEquals($this->getKlarnaDataByName('sKCOFormFamilyName'), $order->getFieldData('oxbilllname'));
+        $this->assertEquals($this->getKlarnaDataByName('sKCOFormStreetName'), $order->getFieldData('oxbillstreet'));
+        $this->assertEquals($this->getKlarnaDataByName('sKCOFormStreetNumber'), $order->getFieldData('oxbillstreetnr'));
+        $this->assertEquals($this->getKlarnaDataByName('sKCOFormCity'), $order->getFieldData('oxbillcity'));
     }
 
     protected function validateAddress($order,$orderData, $aFieldMapper, $type = 'bill')
@@ -213,16 +235,19 @@ abstract class AcceptanceKlarnaTest extends AcceptanceTestCase
         $this->waitForFrameToLoad("klarna-checkout-iframe", 2000);
         $this->selectFrame('klarna-checkout-iframe');
         $this->type("//div[@id='customer-details-next']//input[@id='email']",$this->getKlarnaDataByName('sKlarnaKCOEmail'));
-        $this->type("//div[@id='customer-details-next']//input[@id='postal_code']",'21079');
+        $this->type("//div[@id='customer-details-next']//input[@id='postal_code']",$this->getKlarnaDataByName('sKCOFormPostCode'));
         $this->click("//select[@id='title']");
         $this->click("//option[@id='title__option__herr']");
-        $this->type("//div[@id='customer-details-next']//input[@id='given_name']","concepts");
-        $this->type("//div[@id='customer-details-next']//input[@id='family_name']","test");
-        $this->type("//div[@id='customer-details-next']//input[@id='street_name']","Karnapp");
-        $this->type("//div[@id='customer-details-next']//input[@id='street_number']","25");
-        $this->type("//div[@id='customer-details-next']//input[@id='city']","Hamburg");
-        $this->type("//div[@id='customer-details-next']//input[@id='phone']","30306900");
-        $this->type("//div[@id='customer-details-next']//input[@id='date_of_birth']","01011980");
+        $this->type("//div[@id='customer-details-next']//input[@id='given_name']",$this->getKlarnaDataByName('sKCOFormGivenName'));
+        $this->type("//div[@id='customer-details-next']//input[@id='family_name']",$this->getKlarnaDataByName('sKCOFormFamilyName'));
+
+        $this->type("//div[@id='customer-details-next']//input[@id='street_address']",$this->getKlarnaDataByName('sKCOFormStreetName').' '.$this->getKlarnaDataByName('sKCOFormStreetNumber'));
+
+//        $this->type("//div[@id='customer-details-next']//input[@id='street_name']",$this->getKlarnaDataByName('sKCOFormStreetName'));
+//        $this->type("//div[@id='customer-details-next']//input[@id='street_number']",$this->getKlarnaDataByName('sKCOFormStreetNumber'));
+        $this->type("//div[@id='customer-details-next']//input[@id='city']",$this->getKlarnaDataByName('sKCOFormCity'));
+        $this->type("//div[@id='customer-details-next']//input[@id='phone']",$this->getKlarnaDataByName('sKCOFormPhone'));
+        $this->type("//div[@id='customer-details-next']//input[@id='date_of_birth']",$this->getKlarnaDataByName('sKCOFormDob'));
         $this->delayLoad();
         if($this->isElementPresent("//div[@id='customer-details-next']//*[text()='Submit']")){
             $this->clickAndWait("//div[@id='customer-details-next']//*[text()='Submit']");

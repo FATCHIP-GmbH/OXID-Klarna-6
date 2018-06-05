@@ -34,6 +34,7 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
 
         //diferent delivery address
         $this->click("//div[@id='klarna-checkout-shipping-address']//*[text()='Ship to a different address']");
+        $this->delayLoad();
         $this->waitForElement("//div[@id='klarna-checkout-shipping-address']//input[@name='shipping_address.street_name']");
         $this->type("//div[@id='klarna-checkout-shipping-address']//input[@name='shipping_address.street_name']","Bodestraße");
         $this->type("//div[@id='klarna-checkout-shipping-address']//input[@name='shipping_address.street_number']","1");
@@ -42,10 +43,14 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
         $this->clickAndWait("css=.fieldset--shipping-address__continue-button");
 
         $this->clickAndWait("//div[@id='shipping-selector-next']//*[text()='Example Set1: UPS 48 hours']");
-        $this->click("id=terms_consent__box");
-        $this->click("id=additional_checkbox__box");
+        if($this->isElementPresent("terms_consent__box"))
+        {
+            $this->click("id=terms_consent__box");
+        }
+        $this->click("id=additional_checkbox_from_merchant__box");
         $this->clickAndWait("//div[@id='buy-button-next']//button");
         $this->delayLoad();
+        $this->waitForItemAppear("thankyouPage", 60);
         $this->waitForText("Thank you", false, 60);
 
         /** @var KlarnaUser $klarnaUser */
@@ -63,7 +68,7 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
         $this->assertTrue($exists);
         $this->assertTrue(isset($klarnaUser->oxuser__oxpassword->value));
 
-        $this->assertKlarnaData();
+        $this->assertKlarnaData(null, true);
         $this->stopMinkSession();
 
     }
@@ -96,12 +101,19 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
         $this->type("//form[@name='login']//input[@name='lgn_pwd']", "12345");
         $this->clickAndWait("//form[@name='login']//button");
 
+        $phone = "30306900";
+        $number = "";
         switch ($country)
         {
+            case "FI":
+                $number = "311280-999J";
+                break;
             case "DK":
+                $number = "171035-4509";
                 $phone = "41468007";
                 break;
             case "NO":
+                $number = "01018043587";
                 $phone = "48404583";
                 break;
             case "NL":
@@ -113,8 +125,9 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
             case "BE":
                 $phone = "0488836320";
                 break;
-            default:
-                $phone = "30306900";
+            case "SE":
+                $number = "880330-7019";
+                break;
         }
 
         $this->waitForFrameToLoad("klarna-checkout-iframe");
@@ -124,6 +137,9 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
             $this->type("//div[@id='customer-details-next']//input[@id='phone']",$phone);
             if($this->isElementPresent("//div[@id='customer-details-next']//input[@id='date_of_birth']")){
                 $this->type("//div[@id='customer-details-next']//input[@id='date_of_birth']","01011980");
+            }
+            if($this->isElementPresent("national_identification_number")){
+                $this->type("//div[@id='customer-details-next']//input[@id='national_identification_number']",$number);
             }
             $this->delayLoad();
             $this->clickAndWait("//div[@id='customer-details-next']//button[@id='button-primary']");
@@ -135,9 +151,9 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
         if($this->isElementPresent("pgw-iframe"))
         {
             $this->selectFrame('pgw-iframe');
-            $this->type("text-card_number", "4111111111111111");
-            $this->type("text-expiry_date", "0124");
-            $this->type("text-security_code", "111");
+            $this->type("cardNumber", "4111111111111111");
+            $this->type("securityCode", "111");
+            $this->type("expire", "01/24");
             $this->selectFrame("relative=top");
             $this->selectFrame("klarna-checkout-iframe");
         }
