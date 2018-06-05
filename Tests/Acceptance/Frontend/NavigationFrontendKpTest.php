@@ -64,7 +64,9 @@ class NavigationFrontendKpTest extends AcceptanceKlarnaTest
             } else {
                 $this->type("//div[@id='purchase-approval-date-of-birth__root']//input[@id='purchase-approval-date-of-birth']",$this->getKlarnaDataByName('sKlarnaBDate'));
                 $this->type("//div[@id='purchase-approval-phone-number__root']//input[@id='purchase-approval-phone-number']",$this->getKlarnaDataByName('sKlarnaPhoneNumber'));
-                $this->click("//div[@id='purchase-approval-accept-terms']//input[@type='checkbox']");
+                if($this->isElementPresent("purchase-approval-accept-terms")) {
+                    $this->click("//div[@id='purchase-approval-accept-terms']//input[@type='checkbox']");
+                }
             }
 
             $this->clickAndWait("//button[@id='purchase-approval-continue']");
@@ -150,7 +152,9 @@ class NavigationFrontendKpTest extends AcceptanceKlarnaTest
         $this->selectFrame('klarna-pay-now-fullscreen');
         $this->type("//div[@id='purchase-approval-date-of-birth__root']//input[@id='purchase-approval-date-of-birth']",$this->getKlarnaDataByName('sKlarnaBDate'));
         $this->type("//div[@id='purchase-approval-phone-number__root']//input[@id='purchase-approval-phone-number']",$this->getKlarnaDataByName('sKlarnaPhoneNumber'));
-        $this->click("//div[@id='purchase-approval-accept-terms']//input[@type='checkbox']");
+        if($this->isElementPresent("purchase-approval-accept-terms")) {
+            $this->click("//div[@id='purchase-approval-accept-terms']//input[@type='checkbox']");
+        }
         $this->clickAndWait("//button[@id='purchase-approval-continue']");
 
         $this->assertTextPresent("Konto bestätigen");
