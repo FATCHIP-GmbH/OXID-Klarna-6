@@ -34,7 +34,6 @@ class NavigationFrontEndAmazonTest extends AcceptanceKlarnaTest
         $this->waitForFrameToLoad("klarna-checkout-iframe");
         $this->selectFrame("klarna-checkout-iframe");
         $this->type("//div[@id='klarna-checkout-customer-details']//input[@id='phone']","30306900");
-        $this->type("//div[@id='klarna-checkout-customer-details']//input[@id='date_of_birth']","01011980");
         $this->delayLoad(2);
         $this->clickAndWait("//div[@id='customer-details-next']//button[@id='button-primary']");
         $this->delayLoad();
