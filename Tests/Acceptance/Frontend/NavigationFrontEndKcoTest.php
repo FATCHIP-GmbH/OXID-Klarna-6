@@ -34,19 +34,24 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
 
         //diferent delivery address
         $this->click("//div[@id='klarna-checkout-shipping-address']//*[text()='Ship to a different address']");
+        $this->delayLoad();
+        $this->waitForElement("//div[@id='klarna-checkout-shipping-address']//input[@name='shipping_address.street_name']");
         $this->type("//div[@id='klarna-checkout-shipping-address']//input[@name='shipping_address.street_name']","Bodestraße");
         $this->type("//div[@id='klarna-checkout-shipping-address']//input[@name='shipping_address.street_number']","1");
         $this->type("//div[@id='klarna-checkout-shipping-address']//input[@name='shipping_address.postal_code']","10178");
         $this->type("//div[@id='klarna-checkout-shipping-address']//input[@name='shipping_address.city']","Berlin");
-        $this->clickAndWait("//div[@id='klarna-checkout-shipping-address']//button[@type='submit']");
+        $this->clickAndWait("css=.fieldset--shipping-address__continue-button");
 
         $this->clickAndWait("//div[@id='shipping-selector-next']//*[text()='Example Set1: UPS 48 hours']");
-        $this->click("css=.terms-consent__text");
-        $this->click("css=.additional-checkbox__text");
+        if($this->isElementPresent("terms_consent__box"))
+        {
+            $this->click("id=terms_consent__box");
+        }
+        $this->click("id=additional_checkbox_from_merchant__box");
         $this->clickAndWait("//div[@id='buy-button-next']//button");
-        $this->waitForFrameToLoad('relative=top');
-        $this->selectFrame('relative=top');
-        $this->assertTextPresent("Thank you");
+        $this->delayLoad();
+        $this->waitForItemAppear("thankyouPage", 60);
+        $this->waitForText("Thank you", false, 60);
 
         /** @var KlarnaUser $klarnaUser */
         $klarnaUser = oxNew(User::class);
@@ -63,8 +68,130 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
         $this->assertTrue($exists);
         $this->assertTrue(isset($klarnaUser->oxuser__oxpassword->value));
 
-        $this->assertKlarnaData();
+        $this->assertKlarnaData(null, true);
+        $this->stopMinkSession();
 
+    }
+
+    /**
+     * @dataProvider klarnaKCOMethodsProvider
+     * @param $country
+     *
+     * @throws \Exception
+     */
+    public function testFrontendKcoOrderLoginAndCountry($country)
+    {
+        $this->prepareKlarnaDatabase('KCO');
+
+        $this->openNewWindow($this->getTestConfig()->getShopUrl(), false);
+        $this->addToBasket('05848170643ab0deb9914566391c0c63');
+        $this->addToBasket('058de8224773a1d5fd54d523f0c823e0');
+        $this->clickAndWait("link=Go to Checkout");
+        $this->assertTextPresent('Please choose your shipping country');
+        $this->clickAndWait("//form[@id='select-country-form']//button[@value='DE']");
+        $this->assertTextPresent('Your chosen country');
+
+        //login
+        $currency = KlarnaConsts::getCountry2CurrencyArray()[$country];
+        $this->switchCurrency($currency?$currency:'EUR');
+
+        $userLogin = "user_".strtolower($country);
+        $this->click("klarnaLoginWidget");
+        $this->type("//form[@name='login']//input[@name='lgn_usr']", $userLogin."@oxid-esales.com");
+        $this->type("//form[@name='login']//input[@name='lgn_pwd']", "12345");
+        $this->clickAndWait("//form[@name='login']//button");
+
+        $phone = "30306900";
+        $number = "";
+        switch ($country)
+        {
+            case "FI":
+                $number = "311280-999J";
+                break;
+            case "DK":
+                $number = "171035-4509";
+                $phone = "41468007";
+                break;
+            case "NO":
+                $number = "01018043587";
+                $phone = "48404583";
+                break;
+            case "NL":
+                $phone = "0642227516";
+                break;
+            case "GB":
+                $phone = "07907920647";
+                break;
+            case "BE":
+                $phone = "0488836320";
+                break;
+            case "SE":
+                $number = "880330-7019";
+                break;
+        }
+
+        $this->waitForFrameToLoad("klarna-checkout-iframe");
+        $this->selectFrame("klarna-checkout-iframe");
+
+        if($this->isElementPresent("button-primary__loading-wrapper")) {
+            $this->type("//div[@id='customer-details-next']//input[@id='phone']",$phone);
+            if($this->isElementPresent("//div[@id='customer-details-next']//input[@id='date_of_birth']")){
+                $this->type("//div[@id='customer-details-next']//input[@id='date_of_birth']","01011980");
+            }
+            if($this->isElementPresent("national_identification_number")){
+                $this->type("//div[@id='customer-details-next']//input[@id='national_identification_number']",$number);
+            }
+            $this->delayLoad();
+            $this->clickAndWait("//div[@id='customer-details-next']//button[@id='button-primary']");
+        }
+        $this->delayLoad();
+        $this->clickAndWait("//div[@id='shipping-selector-next']//*[text()='Example Set1: UPS 48 hours']");
+        $this->delayLoad();
+
+        if($this->isElementPresent("pgw-iframe"))
+        {
+            $this->selectFrame('pgw-iframe');
+            $this->type("cardNumber", "4111111111111111");
+            $this->type("securityCode", "111");
+            $this->type("expire", "01/24");
+            $this->selectFrame("relative=top");
+            $this->selectFrame("klarna-checkout-iframe");
+        }
+
+        if($this->isElementPresent("terms_consent__box"))
+        {
+            $this->click("id=terms_consent__box");
+        }
+
+        $this->waitForElement("//div[@id='buy-button-next']//button");
+        $this->clickAndWait("//div[@id='buy-button-next']//button");
+        $this->waitForFrameToLoad('relative=top');
+        $this->selectFrame('relative=top');
+        $this->delayLoad();
+        $this->waitForText("Thank you");
+        $this->assertTextPresent("Thank you");
+        $this->assertKlarnaData();
+        $this->stopMinkSession();//force browser restart to clean previous order address
+    }
+
+    /**
+     * @return array
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
+     */
+    public function klarnaKCOMethodsProvider()
+    {
+
+        return [
+            ['BE'],
+            ['GB'],
+            ['FI'],
+            ['AT'],
+            ['SE'],
+            ['NO'],
+            ['NL'],
+            ['DK'],
+        ];
     }
 
     /**
@@ -88,121 +215,14 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
 
         $this->clickAndWait("//div[@id='shipping-selector-next']//*[text()='Example Set1: UPS 48 hours']");
         $this->clickAndWait("payment-selector-external_nachnahme__left");
-        $this->clickAndWait("//div[@id='buy-button-next']//button");
-        $this->waitForFrameToLoad("relative=top");
+        $this->click("//div[@id='buy-button-next']//button");
+        $this->selectFrame("relative=top");
         $this->waitForText("Please check all data on this overview before submitting your order!");
         $this->assertTextPresent("Please check all data on this overview before submitting your order!");
-        $this->selectFrame("relative=top");
         $this->clickAndWait("//form[@id='orderConfirmAgbBottom']//button");
         $this->waitForItemAppear("thankyouPage", 60);
         $this->waitForText("We will inform you immediately if an item is not deliverable.");
         $this->assertTextPresent("We will inform you immediately if an item is not deliverable.");
-
-        $this->assertKlarnaData();
-
-    }
-
-    /**
-     * @dataProvider klarnaKCOMethodsProvider
-     * @param $country
-     *
-     * @throws \Exception
-     */
-    public function testFrontendKcoOrderLoginAndCountry($country)
-    {
-        $this->clearTemp();
-        $this->openNewWindow($this->getTestConfig()->getShopUrl(), false);
-        $this->addToBasket('05848170643ab0deb9914566391c0c63');
-        $this->addToBasket('058de8224773a1d5fd54d523f0c823e0');
-        $this->clickAndWait("link=Go to Checkout");
-        $this->assertTextPresent('Please choose your shipping country');
-        $this->clickAndWait("//form[@id='select-country-form']//button[@value='DE']");
-        $this->assertTextPresent('Your chosen country');
-
-        //login
-        $currency = KlarnaConsts::getCountry2CurrencyArray()[$country];
-        $this->switchCurrency($currency?$currency:'EUR');
-
-        $userLogin = "user_".strtolower($country);
-        $this->click("klarnaLoginWidget");
-        $this->type("//form[@name='login']//input[@name='lgn_usr']", $userLogin."@oxid-esales.com");
-        $this->type("//form[@name='login']//input[@name='lgn_pwd']", "12345");
-        $this->clickAndWait("//form[@name='login']//button");
-
-        switch ($country)
-        {
-            case "DK":
-                $phone = "41468007";
-                break;
-            case "NO":
-                $phone = "48404583";
-                break;
-            case "NL":
-                $phone = "0642227516";
-                break;
-            case "GB":
-                $phone = "07907920647";
-                break;
-            case "BE":
-                $phone = "0488836320";
-                break;
-            default:
-                $phone = "30306900";
-        }
-
-        $this->waitForFrameToLoad("klarna-checkout-iframe");
-        $this->selectFrame("klarna-checkout-iframe");
-
-        if($this->isElementPresent("button-primary__loading-wrapper")) {
-            $this->type("//div[@id='customer-details-next']//input[@id='phone']",$phone);
-            if($this->isElementPresent("//div[@id='customer-details-next']//input[@id='date_of_birth']")){
-                $this->type("//div[@id='customer-details-next']//input[@id='date_of_birth']","01011980");
-            }
-            $this->clickAndWait("button-primary__loading-wrapper");
-        }
-        $this->delayLoad();
-        $this->clickAndWait("//div[@id='shipping-selector-next']//*[text()='Example Set1: UPS 48 hours']");
-        $this->delayLoad();
-
-        if($this->isElementPresent("pgw-iframe"))
-        {
-            $this->selectFrame('pgw-iframe');
-            $this->type("text-card_number", "4111111111111111");
-            $this->type("text-expiry_date", "0124");
-            $this->type("text-security_code", "111");
-            $this->selectFrame("relative=top");
-            $this->selectFrame("klarna-checkout-iframe");
-        }
-
-        $this->waitForElement("//div[@id='buy-button-next']//button");
-        $this->clickAndWait("//div[@id='buy-button-next']//button");
-        $this->waitForFrameToLoad('relative=top');
-        $this->selectFrame('relative=top');
-        $this->delayLoad();
-        $this->waitForText("Thank you");
-        $this->assertTextPresent("Thank you");
-        $this->assertKlarnaData();
-        $this->stopMinkSession();//force browser restart to clean previous order address
-    }
-
-    /**
-     * @return array
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
-     */
-    public function klarnaKCOMethodsProvider()
-    {
-        $this->prepareKlarnaDatabase('KCO');
-
-        return [
-            ['BE'],
-            ['GB'],
-            ['FI'],
-            ['AT'],
-            ['SE'],
-            ['NO'],
-//            ['NL'],
-            ['DK'],
-        ];
+        $this->stopMinkSession();
     }
 }

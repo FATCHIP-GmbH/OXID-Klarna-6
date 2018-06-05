@@ -6,7 +6,7 @@ use TopConcepts\Klarna\Core\KlarnaConsts;
 use TopConcepts\Klarna\Tests\Acceptance\AcceptanceKlarnaTest;
 
 
-class NavigationFrontendTest extends AcceptanceKlarnaTest
+class NavigationFrontendKpTest extends AcceptanceKlarnaTest
 {
 
     /**
@@ -20,6 +20,7 @@ class NavigationFrontendTest extends AcceptanceKlarnaTest
      */
     public function testFrontendKpOrder($title, $radio,$desc, $iframe, $country = null)
     {
+        $this->prepareKlarnaDatabase('KP');
         //Navigate untill step 3
         $this->navigateToPay($country);
 
@@ -63,10 +64,12 @@ class NavigationFrontendTest extends AcceptanceKlarnaTest
             } else {
                 $this->type("//div[@id='purchase-approval-date-of-birth__root']//input[@id='purchase-approval-date-of-birth']",$this->getKlarnaDataByName('sKlarnaBDate'));
                 $this->type("//div[@id='purchase-approval-phone-number__root']//input[@id='purchase-approval-phone-number']",$this->getKlarnaDataByName('sKlarnaPhoneNumber'));
-                $this->click("//div[@id='purchase-approval-accept-terms']//input[@type='checkbox']");
+                if($this->isElementPresent("purchase-approval-accept-terms")) {
+                    $this->click("//div[@id='purchase-approval-accept-terms']//input[@type='checkbox']");
+                }
             }
 
-            $this->clickAndWait("//div[@id='purchase-approval-continue__loading-wrapper-wrapper']");
+            $this->clickAndWait("//button[@id='purchase-approval-continue']");
         }
 
         $this->selectFrame('relative=top');
@@ -105,6 +108,7 @@ class NavigationFrontendTest extends AcceptanceKlarnaTest
         $this->waitForText("We will inform you immediately if an item is not deliverable.");
         $this->assertTextPresent("We will inform you immediately if an item is not deliverable.");
         $this->assertKlarnaData();
+        $this->stopMinkSession();
     }
 
     /**
@@ -114,7 +118,6 @@ class NavigationFrontendTest extends AcceptanceKlarnaTest
      */
     public function klarnaKPMethodsProvider()
     {
-        $this->prepareKlarnaDatabase('KP');
 
         return [
             ['Pay Later', 'klarna_pay_later', 'Pay X days after delivery', 'klarna-pay-later-fullscreen'],
@@ -149,8 +152,11 @@ class NavigationFrontendTest extends AcceptanceKlarnaTest
         $this->selectFrame('klarna-pay-now-fullscreen');
         $this->type("//div[@id='purchase-approval-date-of-birth__root']//input[@id='purchase-approval-date-of-birth']",$this->getKlarnaDataByName('sKlarnaBDate'));
         $this->type("//div[@id='purchase-approval-phone-number__root']//input[@id='purchase-approval-phone-number']",$this->getKlarnaDataByName('sKlarnaPhoneNumber'));
-        $this->click("//div[@id='purchase-approval-accept-terms']//input[@type='checkbox']");
-        $this->clickAndWait("//div[@id='purchase-approval-continue__loading-wrapper-wrapper']");
+        if($this->isElementPresent("purchase-approval-accept-terms")) {
+            $this->click("//div[@id='purchase-approval-accept-terms']//input[@type='checkbox']");
+        }
+        $this->clickAndWait("//button[@id='purchase-approval-continue']");
+
         $this->assertTextPresent("Konto bestätigen");
         $this->click("//div[@id='direct-debit-mandate-review__bottom']//button");
         $this->assertTextPresent("Großartig!");

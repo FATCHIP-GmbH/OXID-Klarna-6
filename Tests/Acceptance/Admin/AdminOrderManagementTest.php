@@ -9,6 +9,7 @@ class AdminOrderManagementTest extends AcceptanceKlarnaTest
 
     /**
      * @throws \Exception
+     * @throws \oxSystemComponentException
      */
     public function testOrderManagementCaputre()
     {
@@ -18,18 +19,22 @@ class AdminOrderManagementTest extends AcceptanceKlarnaTest
         $this->createNewOrder();
 
         $this->loginAdmin("Administer Orders", "Orders", false, 'admin', 'admin');
+        $this->delayLoad();
+        $this->waitForFrameToLoad('list');
+        $this->waitForText('ÅåÆæØø');
         $this->openListItem('ÅåÆæØø');
+        $this->delayLoad(3);
         $this->openTab('Main');
-
         $this->type("//input[@name='editval[oxorder__oxdiscount]']", "10");
         $this->type("//input[@name='editval[oxorder__oxtrackcode]']", "12345");
         $this->clickAndWait("saveFormButton");
         $this->clickAndWait("shippNowButton");
-        sleep(10);//wait for klarna capture
+        $this->delayLoad(10);//wait for klarna capture
 
         $oxid = $this->getValue("//form[@id='myedit']//input[@name='oxid']");
 
-        $this->assertKlarnaData($oxid, 'CAPTURED');
+        $this->assertKlarnaData($oxid, false, 'CAPTURED');
+        $this->stopMinkSession();
 
     }
 
@@ -44,13 +49,16 @@ class AdminOrderManagementTest extends AcceptanceKlarnaTest
         $this->createNewOrder();
 
         $this->loginAdmin("Administer Orders", "Orders", false, 'admin', 'admin');
+        $this->waitForFrameToLoad('list');
+        $this->waitForText('ÅåÆæØø');
         $this->openListItem('ÅåÆæØø');
-        sleep(3);//wait for klarna tab
+        $this->delayLoad(3);//wait for klarna tab
         $this->openTab('Klarna');
 
         $this->clickAndWait("//form[@id='cancel']//input[@type='submit']");
 
         $this->assertTextPresent('Order is cancelled. See this order in the Klarna Portal.');
+        $this->stopMinkSession();
     }
 
     /**
@@ -80,17 +88,23 @@ class AdminOrderManagementTest extends AcceptanceKlarnaTest
         $this->click("//option[@id='title__option__herr']");
         $this->type("//div[@id='customer-details-next']//input[@id='given_name']", "ÅåÆæØø");
         $this->type("//div[@id='customer-details-next']//input[@id='family_name']", "St.Jäöüm'es");
-        $this->type("//div[@id='customer-details-next']//input[@id='street_name']", "Karnapp");
-        $this->type("//div[@id='customer-details-next']//input[@id='street_number']", "25");
+        $this->type("//div[@id='customer-details-next']//input[@id='street_address']",'Karnapp 25');
         $this->type("//div[@id='customer-details-next']//input[@id='city']", "Hamburg");
         $this->type("//div[@id='customer-details-next']//input[@id='phone']", "30306900");
         $this->type("//div[@id='customer-details-next']//input[@id='date_of_birth']", "01011980");
+        $this->delayLoad();
+        if($this->isElementPresent("//div[@id='customer-details-next']//button[@id='button-primary']")){
+            $this->click("//div[@id='customer-details-next']//button[@id='button-primary']");
+        }
 
-        $this->clickAndWait("//div[@id='customer-details-next']//button[@id='button-primary']");
-        $this->clickAndWait("//div[@id='terms-consent-next']//input[@type='checkbox']");
-        $this->clickAndWait("//div[@id='buy-button-next']//button");
-        $this->waitForFrameToLoad('relative=top');
+        if($this->isElementPresent("terms_consent__box"))
+        {
+            $this->clickAndWait("id=terms_consent__box");
+        }
+        $this->delayLoad();
+        $this->click("//div[@id='buy-button-next']//*[text()='Place Order']");
         $this->selectFrame('relative=top');
+        $this->waitForText("Thank you", false, 60);
         $this->assertTextPresent("Thank you");
     }
 

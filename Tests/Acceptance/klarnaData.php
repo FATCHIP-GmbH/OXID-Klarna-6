@@ -19,5 +19,15 @@ return [
     'sKlarnaAdminUser'      => '<Klarna AdminUser>',
     'sKlarnaAdminPsw'       => '<Klarna AdminPsw>',
     'sPaypalClientLogin'    => '<Klarna PaypalClientLogin>',
-    'sPaypalClientPsw'      => '<Klarna PaypalClientPsw>'
+    'sPaypalClientPsw'      => '<Klarna PaypalClientPsw>',
+    'sAmazonClientLogin'    => '<Klarna AmazonClientLogin>',
+    'sAmazonClientPsw'      => '<Klarna AmazonClientPsw>',
+    'sKCOFormPostCode'      => '<Klarna KCOFormPostCode>',
+    'sKCOFormGivenName'     => '<Klarna KCOFormGivenName>',
+    'sKCOFormFamilyName'    => '<Klarna KCOFormFamilyName>',
+    'sKCOFormStreetName'    => '<Klarna KCOFormStreetName>',
+    'sKCOFormStreetNumber'  => '<Klarna KCOFormStreetNumber>',
+    'sKCOFormCity'          => '<Klarna KCOFormCity>',
+    'sKCOFormPhone'         => '<Klarna KCOFormPhone>',
+    'sKCOFormDob'           => '<Klarna KCOFormDob>'
 ];

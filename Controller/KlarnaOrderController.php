@@ -726,29 +726,29 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
     /**
      * Sends update request to checkout API
-     * @return array order data
-     * @throws \TopConcepts\Klarna\Core\Exception\KlarnaConfigException
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      * @throws \oxSystemComponentException
-     * @internal param Basket $oBasket
-     * @internal param User $oUser
+     * @return array|bool order data
      */
     protected function updateKlarnaOrder()
     {
-        $oSession     = $this->getSession();
-        $oBasket      = $oSession->getBasket();
-        $oKlarnaOrder = new KlarnaOrder($oBasket, $this->_oUser);
-        $oClient      = $this->getKlarnaCheckoutClient();
-        $aOrderData   = $oKlarnaOrder->getOrderData();
+        if(!$this->_oUser){
+            $oSession     = $this->getSession();
+            $oBasket      = $oSession->getBasket();
+            $oKlarnaOrder = new KlarnaOrder($oBasket, $this->_oUser);
+            $oClient      = $this->getKlarnaCheckoutClient();
+            $aOrderData   = $oKlarnaOrder->getOrderData();
 
-        if ($this->forceReloadOnCountryChange && isset($this->_aOrderData['billing_address']) && isset($this->_aOrderData['shipping_address'])) {
-            $aOrderData['billing_address']  = $this->_aOrderData['billing_address'];
-            $aOrderData['shipping_address'] = $this->_aOrderData['shipping_address'];
+            if ($this->forceReloadOnCountryChange && isset($this->_aOrderData['billing_address']) && isset($this->_aOrderData['shipping_address'])) {
+                $aOrderData['billing_address']  = $this->_aOrderData['billing_address'];
+                $aOrderData['shipping_address'] = $this->_aOrderData['shipping_address'];
+            }
+
+            return $oClient->createOrUpdateOrder(
+                json_encode($aOrderData)
+            );
         }
 
-        return $oClient->createOrUpdateOrder(
-            json_encode($aOrderData)
-        );
+        return true;
     }
 
     /**
@@ -868,7 +868,13 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
             return;
         }
+
         if ($paymentId === 'oxidpaypal') {
+            if($this->_oUser->getType() === KlarnaUser::LOGGED_IN){
+
+                return Registry::get(StandardDispatcher::class)->setExpressCheckout();//todo: check if other options possible. user not available.
+            }
+
             return Registry::get(ExpressCheckoutDispatcher::class)->setExpressCheckout();//todo: check if other options possible. user not available.
         }
     }

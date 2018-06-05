@@ -6,14 +6,15 @@ namespace TopConcepts\Klarna\Tests\Acceptance\Frontend;
 
 use TopConcepts\Klarna\Tests\Acceptance\AcceptanceKlarnaTest;
 
-class NavigationFrontEndPaypalTest extends AcceptanceKlarnaTest
+class NavigationFrontEndAmazonTest extends AcceptanceKlarnaTest
 {
     /**
      * Test new order guest user
      * @throws \Exception
      */
-    public function testFrontendOrderPayPal()
+    public function testFrontendAmazon()
     {
+        $this->clearCache();
         $this->prepareKlarnaDatabase('KCO');
 
         $this->openNewWindow($this->getTestConfig()->getShopUrl(), false);
@@ -34,65 +35,32 @@ class NavigationFrontEndPaypalTest extends AcceptanceKlarnaTest
         $this->selectFrame("klarna-checkout-iframe");
         $this->type("//div[@id='klarna-checkout-customer-details']//input[@id='phone']","30306900");
         $this->delayLoad(2);
-        $this->clickAndWait("//div[@id='klarna-checkout-customer-details']//button[@id='button-primary']");
+        $this->clickAndWait("//div[@id='customer-details-next']//button[@id='button-primary']");
         $this->delayLoad();
         $this->clickAndWait("//div[@id='shipping-selector-next']//*[text()='Example Set1: UPS 48 hours']");
         $this->delayLoad();
-        $this->clickAndWait("//div[@id='payment-selector-next']//*[text()='PayPal']");
+        $this->clickAndWait("//div[@id='payment-selector-next']//*[text()='Amazon Payments']");
         $this->click("//div[@id='buy-button-next']//button");
 
-        // go to PayPal page
+        // pay with Amazon
         $this->selectFrame('relative=top');
-        $this->checkForFailedToOpenPayPalPageError();
-        $this->payWithPaypal();
-
+        $this->waitForElement("//div[@id='_amazonLoginButton']");
+        $this->clickAndWait("//div[@id='_amazonLoginButton']//img");
+        if(in_array('amazonloginpopup', $this->getAllWindowNames())){
+            $this->selectWindow("amazonloginpopup");
+            $this->type("ap_email", $this->getKlarnaDataByName('sAmazonClientLogin'));
+            $this->type("ap_password", $this->getKlarnaDataByName('sAmazonClientPsw'));
+            $this->click("//form[@id='ap_signin_form']//button");
+            $this->selectWindow(null);
+        }
+        $this->clickAndWait("//div[@id='amazonNextStep']//a[@id='userNextStepBottom']");
+        $this->clickAndWait("//form[@id='payment']//button[@id='paymentNextStepBottom']");
         $this->waitForText("Please check all data on this overview before submitting your order!", false, 60);
         $this->assertTextPresent("Please check all data on this overview before submitting your order!");
         $this->clickAndWait("//form[@id='orderConfirmAgbBottom']//button");
 
         $this->waitForText("Thank you", false, 120);
         $this->assertTextPresent("Thank you");
-    }
-
-
-    /**
-     * check if paypal loads
-     */
-    protected function checkForFailedToOpenPayPalPageError()
-    {
-        $this->assertTextNotPresent("Security header is not valid", "Did not succeed to open PayPal page.");
-        $this->assertTextNotPresent("ehlermeldung von PayPal", "Did not succeed to open PayPal page.");
-    }
-
-    /**
-     * PayPal sandbox.
-     *
-     * @throws \Exception
-     */
-    protected function payWithPaypal()
-    {
-        $this->waitForItemAppear("css=.loginRedirect", 60);
-        $this->clickAndWait("//div[@id='loginSection']//*[text()='Log In']");
-        $this->waitForItemAppear("id=email", 60);
-        $this->delayLoad(2);
-        $this->type("email", $this->getKlarnaDataByName('sPaypalClientLogin'));
-        $this->type("password", $this->getKlarnaDataByName('sPaypalClientPsw'));
-        $this->clickAndWait("id=btnLogin");
-
-        $this->waitForItemAppear("id=confirmButtonTop", 60);
-        $this->clickPayPalContinuePage();
-    }
-
-    /**
-     * Continue button is visible before PayPal does callback.
-     * Then it becomes invisible while PayPal does callback.
-     * Button appears when PayPal gets callback result.
-     */
-    private function clickPayPalContinuePage()
-    {
-        $this->delayLoad();
-        $this->waitForEditable("id=confirmButtonTop");
-        $this->click("id=confirmButtonTop");
     }
 
 }
