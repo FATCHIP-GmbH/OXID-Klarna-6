@@ -21,12 +21,12 @@ class AdminOrderManagementTest extends AcceptanceKlarnaTest
         $this->loginAdmin("Administer Orders", "Orders", false, 'admin', 'admin');
         $this->delayLoad();
         $this->waitForFrameToLoad('list');
-        $this->waitForText('ÅåÆæØø');
-        $this->openListItem('ÅåÆæØø');
+        $this->waitForText(AcceptanceKlarnaTest::NEW_ORDER_GIVEN_NAME);
+        $this->openListItem(AcceptanceKlarnaTest::NEW_ORDER_GIVEN_NAME);
         $this->delayLoad(3);
         $this->openTab('Main');
-        $this->type("//input[@name='editval[oxorder__oxdiscount]']", "10");
-        $this->type("//input[@name='editval[oxorder__oxtrackcode]']", "12345");
+        $this->type("//input[@name='editval[oxorder__oxdiscount]']", AcceptanceKlarnaTest::NEW_ORDER_DISCOUNT);
+        $this->type("//input[@name='editval[oxorder__oxtrackcode]']", AcceptanceKlarnaTest::NEW_ORDER_TRACK_CODE);
         $this->clickAndWait("saveFormButton");
         $this->clickAndWait("shippNowButton");
         $this->delayLoad(10);//wait for klarna capture
@@ -50,8 +50,8 @@ class AdminOrderManagementTest extends AcceptanceKlarnaTest
 
         $this->loginAdmin("Administer Orders", "Orders", false, 'admin', 'admin');
         $this->waitForFrameToLoad('list');
-        $this->waitForText('ÅåÆæØø');
-        $this->openListItem('ÅåÆæØø');
+        $this->waitForText(AcceptanceKlarnaTest::NEW_ORDER_GIVEN_NAME);
+        $this->openListItem(AcceptanceKlarnaTest::NEW_ORDER_GIVEN_NAME);
         $this->delayLoad(3);//wait for klarna tab
         $this->openTab('Klarna');
 
@@ -74,7 +74,7 @@ class AdminOrderManagementTest extends AcceptanceKlarnaTest
         $this->clickAndWait("//form[@id='select-country-form']//button[@value='DE']");
 
         $this->click("klarnaVouchersWidget");
-        $this->type("input_voucherNr", "percent_10");
+        $this->type("input_voucherNr", AcceptanceKlarnaTest::NEW_ORDER_VOUCHER_NR);
         $this->clickAndWait("submitVoucher");
 
         $this->waitForFrameToLoad("klarna-checkout-iframe", 2000);
@@ -83,15 +83,15 @@ class AdminOrderManagementTest extends AcceptanceKlarnaTest
             "//div[@id='customer-details-next']//input[@id='email']",
             $this->getKlarnaDataByName('sKlarnaKCOEmail')
         );
-        $this->type("//div[@id='customer-details-next']//input[@id='postal_code']", '21079');
+        $this->type("//div[@id='customer-details-next']//input[@id='postal_code']", AcceptanceKlarnaTest::NEW_ORDER_ZIP_CODE);
         $this->click("//select[@id='title']");
         $this->click("//option[@id='title__option__herr']");
-        $this->type("//div[@id='customer-details-next']//input[@id='given_name']", "ÅåÆæØø");
-        $this->type("//div[@id='customer-details-next']//input[@id='family_name']", "St.Jäöüm'es");
-        $this->type("//div[@id='customer-details-next']//input[@id='street_address']",'Karnapp 25');
-        $this->type("//div[@id='customer-details-next']//input[@id='city']", "Hamburg");
-        $this->type("//div[@id='customer-details-next']//input[@id='phone']", "30306900");
-        $this->type("//div[@id='customer-details-next']//input[@id='date_of_birth']", "01011980");
+        $this->type("//div[@id='customer-details-next']//input[@id='given_name']", AcceptanceKlarnaTest::NEW_ORDER_GIVEN_NAME);
+        $this->type("//div[@id='customer-details-next']//input[@id='family_name']", AcceptanceKlarnaTest::NEW_ORDER_FAMILY_NAME);
+        $this->type("//div[@id='customer-details-next']//input[@id='street_address']",AcceptanceKlarnaTest::NEW_ORDER_STREET_ADDRESS);
+        $this->type("//div[@id='customer-details-next']//input[@id='city']", AcceptanceKlarnaTest::NEW_ORDER_CITY);
+        $this->type("//div[@id='customer-details-next']//input[@id='phone']", AcceptanceKlarnaTest::NEW_ORDER_PHONE);
+        $this->type("//div[@id='customer-details-next']//input[@id='date_of_birth']", AcceptanceKlarnaTest::NEW_ORDER_DATE_OF_BIRTH);
         $this->delayLoad();
         if($this->isElementPresent("//div[@id='customer-details-next']//button[@id='button-primary']")){
             $this->click("//div[@id='customer-details-next']//button[@id='button-primary']");
