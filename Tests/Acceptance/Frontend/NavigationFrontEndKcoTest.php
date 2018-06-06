@@ -36,10 +36,10 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
         $this->click("//div[@id='klarna-checkout-shipping-address']//*[text()='Ship to a different address']");
         $this->delayLoad();
         $this->waitForElement("//div[@id='klarna-checkout-shipping-address']//input[@name='shipping_address.street_name']");
-        $this->type("//div[@id='klarna-checkout-shipping-address']//input[@name='shipping_address.street_name']","Bodestraße");
-        $this->type("//div[@id='klarna-checkout-shipping-address']//input[@name='shipping_address.street_number']","1");
-        $this->type("//div[@id='klarna-checkout-shipping-address']//input[@name='shipping_address.postal_code']","10178");
-        $this->type("//div[@id='klarna-checkout-shipping-address']//input[@name='shipping_address.city']","Berlin");
+        $this->type("//div[@id='klarna-checkout-shipping-address']//input[@name='shipping_address.street_name']",$this->getKlarnaDataByName('sKCOFormDelStreetName'));
+        $this->type("//div[@id='klarna-checkout-shipping-address']//input[@name='shipping_address.street_number']",$this->getKlarnaDataByName('sKCOFormDelStreetNumber'));
+        $this->type("//div[@id='klarna-checkout-shipping-address']//input[@name='shipping_address.postal_code']",$this->getKlarnaDataByName('sKCOFormDelPostCode'));
+        $this->type("//div[@id='klarna-checkout-shipping-address']//input[@name='shipping_address.city']",$this->getKlarnaDataByName('sKCOFormDelCity'));
         $this->clickAndWait("css=.fieldset--shipping-address__continue-button");
 
         $this->clickAndWait("//div[@id='shipping-selector-next']//*[text()='Example Set1: UPS 48 hours']");

@@ -13,6 +13,16 @@ use TopConcepts\Klarna\Core\KlarnaUtils;
 
 abstract class AcceptanceKlarnaTest extends AcceptanceTestCase
 {
+    const NEW_ORDER_GIVEN_NAME      = "ÅåÆæØø";
+    const NEW_ORDER_FAMILY_NAME     = "St.Jäöüm'es";
+    const NEW_ORDER_STREET_ADDRESS  = "Karnapp 25";
+    const NEW_ORDER_CITY            = "Hamburg";
+    const NEW_ORDER_PHONE           = "30306900";
+    const NEW_ORDER_DATE_OF_BIRTH   = "01011980";
+    const NEW_ORDER_DISCOUNT        = "10";
+    const NEW_ORDER_TRACK_CODE      = "12345";
+    const NEW_ORDER_VOUCHER_NR      = "percent_10";
+    const NEW_ORDER_ZIP_CODE        = "21079";
 
     /**
      * @param $oxid
@@ -20,6 +30,7 @@ abstract class AcceptanceKlarnaTest extends AcceptanceTestCase
      * @param string $expectedStatus
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      * @throws \oxSystemComponentException
+     * @throws \Exception
      */
     public function assertKlarnaData($oxid = null, $validateInput = false, $expectedStatus = "AUTHORIZED")
     {
@@ -42,7 +53,6 @@ abstract class AcceptanceKlarnaTest extends AcceptanceTestCase
         } catch (KlarnaOrderNotFoundException $e){
             //try a second time if fails to find order on klarna system
             $this->delayLoad(2);
-            $orderData = $klarnaClient->getOrder($klarnaId);
         }
 
 
@@ -70,6 +80,9 @@ abstract class AcceptanceKlarnaTest extends AcceptanceTestCase
             ];
 
             $this->validateAddress($order, $orderData['shipping_address'], $aFieldMapper, 'del');
+            if($validateInput) {
+                $this->validateInputData($order,'del');
+            }
         }
 
         $this->assertEquals($order->getFieldData('oxbillemail'), $orderData['billing_address']['email']);
@@ -89,19 +102,28 @@ abstract class AcceptanceKlarnaTest extends AcceptanceTestCase
     }
 
     /**
-     * @param $order
+     * @param Order $order
+     * @param string $type
      * @throws \Exception
      */
-    protected function validateInputData(Order $order)
+    protected function validateInputData(Order $order, $type = 'bill')
     {
         //validate input date with db data
         $this->assertEquals($this->getKlarnaDataByName('sKlarnaKCOEmail'), $order->getFieldData('oxbillemail'));
         $this->assertEquals($this->getKlarnaDataByName('sKCOFormPostCode'), $order->getFieldData('oxbillzip'));
-        $this->assertEquals($this->getKlarnaDataByName('sKCOFormGivenName'), $order->getFieldData('oxbillfname'));
-        $this->assertEquals($this->getKlarnaDataByName('sKCOFormFamilyName'), $order->getFieldData('oxbilllname'));
+        $this->assertEquals($this->getKlarnaDataByName('sKCOFormGivenName'), $order->getFieldData('ox'.$type.'fname'));
+        $this->assertEquals($this->getKlarnaDataByName('sKCOFormFamilyName'), $order->getFieldData('ox'.$type.'lname'));
         $this->assertEquals($this->getKlarnaDataByName('sKCOFormStreetName'), $order->getFieldData('oxbillstreet'));
         $this->assertEquals($this->getKlarnaDataByName('sKCOFormStreetNumber'), $order->getFieldData('oxbillstreetnr'));
         $this->assertEquals($this->getKlarnaDataByName('sKCOFormCity'), $order->getFieldData('oxbillcity'));
+
+        if($type == 'del')
+        {
+            $this->assertEquals($this->getKlarnaDataByName('sKCOFormDelPostCode'), $order->getFieldData('oxdelzip'));
+            $this->assertEquals($this->getKlarnaDataByName('sKCOFormDelStreetName'), $order->getFieldData('oxdelstreet'));
+            $this->assertEquals($this->getKlarnaDataByName('sKCOFormDelStreetNumber'), $order->getFieldData('oxdelstreetnr'));
+            $this->assertEquals($this->getKlarnaDataByName('sKCOFormDelCity'), $order->getFieldData('oxdelcity'));
+        }
     }
 
     protected function validateAddress($order,$orderData, $aFieldMapper, $type = 'bill')
