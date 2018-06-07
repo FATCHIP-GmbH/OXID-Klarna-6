@@ -56,8 +56,12 @@ class KlarnaInstallerTest extends ModuleUnitTestCase
             "ALTER TABLE oxpayments DROP `TCKLARNA_EXTERNALCHECKOUT`",
             "ALTER TABLE oxpayments DROP `TCKLARNA_PAYMENTIMAGEURL`",
             "ALTER TABLE oxpayments DROP `TCKLARNA_PAYMENTIMAGEURL_1`",
+            "ALTER TABLE oxpayments DROP `TCKLARNA_PAYMENTIMAGEURL_2`",
+            "ALTER TABLE oxpayments DROP `TCKLARNA_PAYMENTIMAGEURL_3`",
             "ALTER TABLE oxpayments DROP `TCKLARNA_CHECKOUTIMAGEURL`",
             "ALTER TABLE oxpayments DROP `TCKLARNA_CHECKOUTIMAGEURL_1`",
+            "ALTER TABLE oxpayments DROP `TCKLARNA_CHECKOUTIMAGEURL_2`",
+            "ALTER TABLE oxpayments DROP `TCKLARNA_CHECKOUTIMAGEURL_3`",
             "ALTER TABLE oxpayments DROP `TCKLARNA_PAYMENTOPTION`",
             "ALTER TABLE oxpayments DROP `TCKLARNA_EMDPURCHASEHISTORYFULL`",
 
@@ -164,8 +168,12 @@ class KlarnaInstallerTest extends ModuleUnitTestCase
         $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_EXTERNALCHECKOUT', 'oxpayments'));
         $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_PAYMENTIMAGEURL', 'oxpayments'));
         $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_PAYMENTIMAGEURL_1', 'oxpayments'));
+        $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_PAYMENTIMAGEURL_2', 'oxpayments'));
+        $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_PAYMENTIMAGEURL_3', 'oxpayments'));
         $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_CHECKOUTIMAGEURL', 'oxpayments'));
         $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_CHECKOUTIMAGEURL_1', 'oxpayments'));
+        $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_CHECKOUTIMAGEURL_2', 'oxpayments'));
+        $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_CHECKOUTIMAGEURL_3', 'oxpayments'));
         $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_PAYMENTOPTION', 'oxpayments'));
         $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_EMDPURCHASEHISTORYFULL', 'oxpayments'));
 
