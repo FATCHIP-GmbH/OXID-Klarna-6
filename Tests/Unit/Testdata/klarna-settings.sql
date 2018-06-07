@@ -113,11 +113,6 @@ Insert into oxobject2payment set oxid = '039e9f03b01ad423f8faff7ff548d342',oxpay
 
 update oxactions set oxid = 'klarna_teaser_1',oxshopid = '1',oxtype = '3',oxtitle = 'Klarna Teaser',oxlongdesc = '',oxactive = '1',oxactivefrom = '0000-00-00 00:00:00',oxactiveto = '0000-00-00 00:00:00',oxpic = 'de_klarna-banner.png',oxlink = '',oxsort = '0' where oxactions.oxid = 'klarna_teaser_1';
 
-
--- update oxpayments set tcklarna_paymenttypes = '',tcklarna_externalname = 'Nachnahme',tcklarna_externalpayment = '1',tcklarna_externalcheckout = '0',tcklarna_paymentimageurl = 'https://www.bronze-shop.com/media/unknown/42/19/72/bronze-shop_zahlung-nachname.svg',tcklarna_paymentoption = 'other',tcklarna_emdpurchasehistoryfull = '0',tcklarna_paymentimageurl_1 = 'tcklarna_emdpurchasehistoryfull' where oxpayments.oxid = 'oxidcashondel';
--- update oxpayments set tcklarna_paymenttypes = '',tcklarna_externalname = 'Vorkasse',tcklarna_externalpayment = '1',tcklarna_externalcheckout = '0',tcklarna_paymentimageurl = 'https://www.bronze-shop.com/media/unknown/d3/35/08/bronze-shop_zahlung-vorkasse.svg',tcklarna_paymentoption = 'other',tcklarna_emdpurchasehistoryfull = '0',tcklarna_paymentimageurl_1 = 'https://www.bronze-shop.com/media/unknown/d3/35/08/bronze-shop_zahlung-vorkasse.svg' where oxpayments.oxid = 'oxidpayadvance';
-
-
 update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaEmdCustomerAccountInfo' and oxshopid=1;
 update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaEmdPaymentHistoryFull' and oxshopid=1;
 update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaEmdPassThrough' and oxshopid=1;
