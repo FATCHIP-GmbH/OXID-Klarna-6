@@ -27,19 +27,26 @@ class NavigationFrontEndAmazonTest extends AcceptanceKlarnaTest
 
         //login
         $this->click("klarnaLoginWidget");
-        $this->type("//form[@name='login']//input[@name='lgn_usr']", "user@oxid-esales.com");
+        $this->type("//form[@name='login']//input[@name='lgn_usr']", "user_de@oxid-esales.com");
         $this->type("//form[@name='login']//input[@name='lgn_pwd']", "12345");
         $this->clickAndWait("//form[@name='login']//button");
 
         $this->waitForFrameToLoad("klarna-checkout-iframe");
         $this->selectFrame("klarna-checkout-iframe");
         $this->type("//div[@id='klarna-checkout-customer-details']//input[@id='phone']","30306900");
+        if($this->isElementPresent("//div[@id='customer-details-next']//input[@id='date_of_birth']")){
+            $this->type("//div[@id='customer-details-next']//input[@id='date_of_birth']","01011980");
+        }
         $this->delayLoad(2);
         $this->clickAndWait("//div[@id='customer-details-next']//button[@id='button-primary']");
         $this->delayLoad();
         $this->clickAndWait("//div[@id='shipping-selector-next']//*[text()='Example Set1: UPS 48 hours']");
         $this->delayLoad();
         $this->clickAndWait("//div[@id='payment-selector-next']//*[text()='Amazon Payments']");
+        if($this->isElementPresent("//div[@id='additional_merchant_terms_checkbox__box']"))
+        {
+            $this->clickAndWait("//div[@id='additional_merchant_terms_checkbox__box']");
+        }
         $this->click("//div[@id='buy-button-next']//button");
 
         // pay with Amazon

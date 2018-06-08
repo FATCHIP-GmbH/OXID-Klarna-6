@@ -1673,6 +1673,14 @@ INSERT IGNORE INTO `oxarticles` VALUES ('0584e8b766a4de2177f9ed11d1587f55', 1, '
 
 update oxuser set oxpassword = md5(concat('12345',unhex(oxpasssalt))), oxfname='Jörg', oxlname='Weiß' where oxusername = 'user@oxid-esales.com';
 
+DELETE FROM `oxuser` WHERE `OXID`='testUserDE';
+INSERT INTO `oxuser` (`OXID`, `OXACTIVE`, `OXRIGHTS`, `OXSHOPID`, `OXUSERNAME`, `OXPASSWORD`, `OXPASSSALT`, `OXUSTID`, `OXCOMPANY`, `OXFNAME`, `OXLNAME`,
+`OXSTREET`, `OXSTREETNR`, `OXADDINFO`, `OXCITY`, `OXCOUNTRYID`, `OXSTATEID`, `OXZIP`, `OXFON`, `OXFAX`, `OXSAL`, `OXBONI`, `OXCREATE`, `OXREGISTER`, `OXPRIVFON`,
+`OXMOBFON`, `OXBIRTHDATE`, `OXURL`, `OXUPDATEKEY`, `OXUPDATEEXP`, `OXPOINTS`, `OXTIMESTAMP`) VALUES ('testUserDE', 1, 'user', 1,
+'user_de@oxid-esales.com', 'a6fb5a064996bc08357c37d99adb70a916d8bbc295a02afe19fae7b0bb7f933b7d4c2bea2a8c77c86e2980184e328d2f156e0597a19d47791e3ba2dc3b4aff16',
+'2870103d88c4e8ed34a82fd9e2dfaaf2', '', '', 'Jörg', 'Weiß', 'Karnapp', '25', '', 'Hamburg', 'a7c40f631fc920687.20179984', '', '21079', '', '', 'MR', 1000,
+'2011-02-01 08:41:25', '2011-02-01 08:41:25', '', '', '0000-00-00', '', '', 0, 0, now());
+
 DELETE FROM `oxuser` WHERE `OXID`='testUserSE';
 INSERT INTO `oxuser` (`OXID`, `OXACTIVE`, `OXRIGHTS`, `OXSHOPID`, `OXUSERNAME`, `OXPASSWORD`, `OXPASSSALT`, `OXUSTID`, `OXCOMPANY`, `OXFNAME`, `OXLNAME`,
 `OXSTREET`, `OXSTREETNR`, `OXADDINFO`, `OXCITY`, `OXCOUNTRYID`, `OXSTATEID`, `OXZIP`, `OXFON`, `OXFAX`, `OXSAL`, `OXBONI`, `OXCREATE`, `OXREGISTER`, `OXPRIVFON`,
@@ -1702,7 +1710,7 @@ INSERT INTO `oxuser` (`OXID`, `OXACTIVE`, `OXRIGHTS`, `OXSHOPID`, `OXUSERNAME`, 
 `OXSTREET`, `OXSTREETNR`, `OXADDINFO`, `OXCITY`, `OXCOUNTRYID`, `OXSTATEID`, `OXZIP`, `OXFON`, `OXFAX`, `OXSAL`, `OXBONI`, `OXCREATE`, `OXREGISTER`, `OXPRIVFON`,
 `OXMOBFON`, `OXBIRTHDATE`, `OXURL`, `OXUPDATEKEY`, `OXUPDATEEXP`, `OXPOINTS`, `OXTIMESTAMP`) VALUES ('testUserAT', 1, 'user', 1,
 'user_at@oxid-esales.com', 'a6fb5a064996bc08357c37d99adb70a916d8bbc295a02afe19fae7b0bb7f933b7d4c2bea2a8c77c86e2980184e328d2f156e0597a19d47791e3ba2dc3b4aff16',
-'2870103d88c4e8ed34a82fd9e2dfaaf2', '', '', 'Jörg', 'Weiß', 'Am Brunnen', '1', '', 'Fuschl am See', 'a7c40f6320aeb2ec2.72885259', '', '5330', '', '', 'MR', 1000,
+'2870103d88c4e8ed34a82fd9e2dfaaf2', '', '', 'Jörg', 'Wß', 'Am Brunnen', '1', '', 'Fuschl am See', 'a7c40f6320aeb2ec2.72885259', '', '5330', '', '', 'MR', 1000,
 '2011-02-01 08:41:25', '2011-02-01 08:41:25', '', '', '0000-00-00', '', '', 0, 0, now());
 
 DELETE FROM `oxuser` WHERE `OXID`='testUserNL';

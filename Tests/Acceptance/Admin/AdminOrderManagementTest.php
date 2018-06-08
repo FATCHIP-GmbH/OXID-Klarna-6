@@ -96,11 +96,16 @@ class AdminOrderManagementTest extends AcceptanceKlarnaTest
         if($this->isElementPresent("//div[@id='customer-details-next']//button[@id='button-primary']")){
             $this->click("//div[@id='customer-details-next']//button[@id='button-primary']");
         }
-
+        $this->delayLoad();
         if($this->isElementPresent("terms_consent__box"))
         {
             $this->clickAndWait("id=terms_consent__box");
         }
+        if($this->isElementPresent("//div[@id='additional_merchant_terms_checkbox__box']"))
+        {
+            $this->clickAndWait("//div[@id='additional_merchant_terms_checkbox__box']");
+        }
+
         $this->delayLoad();
         $this->click("//div[@id='buy-button-next']//*[text()='Place Order']");
         $this->selectFrame('relative=top');

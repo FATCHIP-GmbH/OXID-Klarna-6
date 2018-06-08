@@ -47,6 +47,10 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
         {
             $this->click("id=terms_consent__box");
         }
+        if($this->isElementPresent("//div[@id='additional_merchant_terms_checkbox__box']"))
+        {
+            $this->clickAndWait("//div[@id='additional_merchant_terms_checkbox__box']");
+        }
         $this->click("id=additional_checkbox_from_merchant__box");
         $this->clickAndWait("//div[@id='buy-button-next']//button");
         $this->delayLoad();
@@ -106,10 +110,10 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
         switch ($country)
         {
             case "FI":
-                $number = "311280-999J";
+                $number = "311280999J";
                 break;
             case "DK":
-                $number = "171035-4509";
+                $number = "1710354509";
                 $phone = "41468007";
                 break;
             case "NO":
@@ -126,7 +130,7 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
                 $phone = "0488836320";
                 break;
             case "SE":
-                $number = "880330-7019";
+                $number = "8803307019";
                 break;
         }
 
@@ -143,6 +147,12 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
             }
             $this->delayLoad();
             $this->clickAndWait("//div[@id='customer-details-next']//button[@id='button-primary']");
+
+            //check if button is still display (continue anyway button) and click
+            if($this->isElementPresent("//div[@id='customer-details-next']//button[@id='button-primary']"))
+            {
+                $this->clickAndWait("//div[@id='customer-details-next']//button[@id='button-primary']");
+            }
         }
         $this->delayLoad();
         $this->clickAndWait("//div[@id='shipping-selector-next']//*[text()='Example Set1: UPS 48 hours']");
@@ -151,9 +161,9 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
         if($this->isElementPresent("pgw-iframe"))
         {
             $this->selectFrame('pgw-iframe');
-            $this->type("cardNumber", "4111111111111111");
-            $this->type("securityCode", "111");
-            $this->type("expire", "01/24");
+            $this->type("text-card_number", "4111111111111111");
+            $this->type("text-security_code", "111");
+            $this->type("text-expiry_date", "01/24");
             $this->selectFrame("relative=top");
             $this->selectFrame("klarna-checkout-iframe");
         }
@@ -161,6 +171,10 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
         if($this->isElementPresent("terms_consent__box"))
         {
             $this->click("id=terms_consent__box");
+        }
+        if($this->isElementPresent("//div[@id='additional_merchant_terms_checkbox__box']"))
+        {
+            $this->clickAndWait("//div[@id='additional_merchant_terms_checkbox__box']");
         }
 
         $this->waitForElement("//div[@id='buy-button-next']//button");
@@ -215,6 +229,10 @@ class NavigationFrontEndKcoTest extends AcceptanceKlarnaTest
 
         $this->clickAndWait("//div[@id='shipping-selector-next']//*[text()='Example Set1: UPS 48 hours']");
         $this->clickAndWait("payment-selector-external_nachnahme__left");
+        if($this->isElementPresent("//div[@id='additional_merchant_terms_checkbox__box']"))
+        {
+            $this->clickAndWait("//div[@id='additional_merchant_terms_checkbox__box']");
+        }
         $this->click("//div[@id='buy-button-next']//button");
         $this->selectFrame("relative=top");
         $this->waitForText("Please check all data on this overview before submitting your order!");
