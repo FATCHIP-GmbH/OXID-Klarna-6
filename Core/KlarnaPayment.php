@@ -132,7 +132,7 @@ class KlarnaPayment extends BaseModel
         }
 
         $sCountryISO = $oUser->resolveCountry();
-        $sLocale     = KlarnaConsts::getLocale(false, true);
+        $sLocale     = KlarnaConsts::getLocale(false);
         $currencyISO = $oBasket->getBasketCurrency()->name;
         if ($oUser->getKlarnaPaymentCurrency() !== $currencyISO) {
             $this->currencyToCountryMatch = false;
@@ -143,7 +143,6 @@ class KlarnaPayment extends BaseModel
         $this->_aOrderData = array(
             "purchase_country"  => $sCountryISO,
             "purchase_currency" => $currencyISO,
-            "locale"            => $sLocale, //'de-DE',
             "merchant_urls"     => array(
                 "confirmation" => Registry::getConfig()->getSslShopUrl() . "?cl=order&oxdownloadableproductsagreement=1&fnc=execute&stoken=" . $sToken,
             ),
@@ -151,6 +150,7 @@ class KlarnaPayment extends BaseModel
 
         $this->_aUserData   = $oUser->getKlarnaPaymentData();
         $this->_aOrderLines = $oBasket->getKlarnaOrderLines();
+        $this->_aOrderLines['locale'] = $sLocale;
         $this->_aOrderData  = array_merge($this->_aOrderData, $this->_aOrderLines);
         $this->addOptions();
 

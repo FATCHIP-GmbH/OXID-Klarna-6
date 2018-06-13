@@ -203,6 +203,8 @@ class KlarnaOrders extends AdminDetailsController
         if ($result) {
             $oOrder->cancelOrder();
         }
+
+        return $result;
     }
 
     /**

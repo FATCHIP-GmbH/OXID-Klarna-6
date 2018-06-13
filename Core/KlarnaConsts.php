@@ -166,10 +166,9 @@ class KlarnaConsts
 
     /**
      * @param bool $isAdmin
-     * @param bool $byCountry
      * @return mixed
      */
-    public static function getLocale($isAdmin = false, $byCountry = false)
+    public static function getLocale($isAdmin = false)
     {
         $oLang = Registry::getLang();
 
@@ -190,17 +189,16 @@ class KlarnaConsts
             'at' => 'de-AT',
             'us' => 'en-US'
         ];
-        if ($byCountry) {
-            $sCountryISO = Registry::getSession()->getVariable('sCountryISO');
 
-            $result = array_filter($defaultLocales, function ($value) use ($sCountryISO) {
-                return strpos($value, $sCountryISO) !== false;
-            });
+        $sCountryISO = Registry::getSession()->getVariable('sCountryISO');
 
-            return $result ? reset($result) : 'en-GB';
+        $locale = $lang.'-'.$sCountryISO;
+        if(!$lang || !$sCountryISO)
+        {
+            $locale = isset($defaultLocales[$lang]) ? $defaultLocales[$lang] : 'en-GB';
         }
 
-        return isset($defaultLocales[$lang]) ? $defaultLocales[$lang] : 'en-GB';
+        return $locale;
     }
 
     /**
