@@ -25,7 +25,7 @@ In the shop's main folder ( the one with composer.json file) run this command:
 
 or add the following line within the "require" section to your composer.json file:
 
-  "topconcepts/klarna": "v4.0.0"
+  "topconcepts/oxid-klarna-6": "v4.0.0"
 
 and run 
 
