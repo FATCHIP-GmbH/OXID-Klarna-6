@@ -21,8 +21,16 @@ OXID eShop Plugin to integrate Klarna to OXID eShop Version 6.0.X
 
 In the shop's main folder ( the one with composer.json file) run this command:
 
-  composer require topconcepts/klarna:master-dev
+  composer require topconcepts/klarna:v4.0.0
 
+or add the following line within the "require" section to your composer.json file:
+
+  "topconcepts/klarna": "v4.0.0"
+
+and run 
+
+  composer update
+  
 
 ## Documentation ##
 
