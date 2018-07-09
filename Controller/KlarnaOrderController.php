@@ -83,6 +83,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     /**
      *
      * @return string
+     * @throws StandardException
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      */
     public function init()
@@ -731,9 +732,12 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      */
     protected function updateKlarnaOrder()
     {
-        if(!$this->_oUser){
+        if($this->_oUser){
             $oSession     = $this->getSession();
+            /** @var Basket|\TopConcepts\Klarna\Model\KlarnaBasket $oBasket */
             $oBasket      = $oSession->getBasket();
+            $oBasket->klarnaValidateVouchers();
+
             $oKlarnaOrder = new KlarnaOrder($oBasket, $this->_oUser);
             $oClient      = $this->getKlarnaCheckoutClient();
             $aOrderData   = $oKlarnaOrder->getOrderData();
@@ -969,6 +973,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     /**
      * @param $paymentId
      * @return bool
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     protected function isActivePayment($paymentId)
     {
@@ -980,7 +985,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
     /**
      * @return null|string
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      */
     public function render()
     {

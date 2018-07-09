@@ -160,11 +160,12 @@ var KlarnaApi;
              * @param response json response
              */
             updateWidget: function (response) {
-
                 var data = JSON.parse(response);
                 this.updateErrors(data.error);
                 this.$content.find('.voucherData').html(data.vouchers);
                 KlarnaApi.resume();
+                this.updateInProgress = false;
+
             },
 
             onInit: function () {
@@ -172,6 +173,7 @@ var KlarnaApi;
                 this.$content = this.$form.closest('.drop-content');
                 this.$submitButton.click(this.submitVoucher.bind(this));
                 this.$content.on('click', '.couponData a', this.removeVoucher.bind(this));
+                this.updateInProgress = false;
             }
         }
     );
@@ -212,11 +214,9 @@ var KlarnaApi;
                     window.location.href = response.data.url;
                 }
 
-                if (response.action === 'updateSession') {
-                    console.log('updating vouchers...');
-                    setTimeout(function () {
-                        $.get('?cl=KlarnaAjax&fnc=updateVouchers', vouchersWidget.updateWidget.bind(vouchersWidget));
-                    }, 500);
+                if(!vouchersWidget.updateInProgress){
+                    vouchersWidget.updateInProgress = true;
+                    $.get('?cl=KlarnaAjax&fnc=updateVouchers', vouchersWidget.updateWidget.bind(vouchersWidget));
                 }
             });
         };

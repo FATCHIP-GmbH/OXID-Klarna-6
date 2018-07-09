@@ -598,4 +598,12 @@ class KlarnaBasket extends KlarnaBasket_parent
         $sql = "INSERT IGNORE INTO tcklarna_anon_lookup(tcklarna_artnum, oxartid) values(?,?)";
         $db->execute($sql, array($anonArtNum, $artOxid));
     }
+
+    /**
+     * Check if vouchers are still valid. Usually used in the ajax requests
+     */
+    public function klarnaValidateVouchers()
+    {
+        $this->_calcVoucherDiscount();
+    }
 }
