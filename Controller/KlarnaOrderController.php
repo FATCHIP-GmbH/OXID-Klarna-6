@@ -758,6 +758,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     /**
      * Initialize oxUser object and get order data from Klarna
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     protected function _initUser()
     {

@@ -69,6 +69,7 @@ class KlarnaOrderValidator extends Base
 
     /**
      * @return bool
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function validateOrder()
     {
@@ -104,6 +105,7 @@ class KlarnaOrderValidator extends Base
      *
      * @param array $aItems
      * @return void
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     protected function _validateItemsBuyable($aItems)
     {
@@ -121,6 +123,7 @@ class KlarnaOrderValidator extends Base
      * Check if provided products with requested amount are buyable
      *
      * @param $mergedProducts
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     protected function _validateOxidProductsBuyable($mergedProducts)
     {

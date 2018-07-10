@@ -163,7 +163,6 @@ var KlarnaApi;
                 var data = JSON.parse(response);
                 this.updateErrors(data.error);
                 this.$content.find('.voucherData').html(data.vouchers);
-                KlarnaApi.resume();
                 this.updateInProgress = false;
 
             },
@@ -208,7 +207,7 @@ var KlarnaApi;
                     }
                 }
             }).success(function (response) {
-                console.log(response);
+                //console.log(response);
                 if (response.status === 'redirect') {
                     localStorage.setItem('skipKlarnaEvents', '1');  // will skip ajax events on iframe render
                     window.location.href = response.data.url;
@@ -238,8 +237,6 @@ var KlarnaApi;
                 // console.log("Event:" + arguments.callee.name, eventData);
                 eventData.action = arguments.callee.name;
                 // Shows modal after iframe is loaded and there is no user data injected
-                console.log(eventData);
-                console.log(getCookie('blockCountryModal'));
                 if (eventData['postal_code'] === "" && getCookie('blockCountryModal') != 1) {
                     if (showModal) {
                         $('#myModal').modal('show');
@@ -254,10 +251,6 @@ var KlarnaApi;
                 country = eventData.country;
 
             }
-
-            // 'customer': function customer(eventData){
-            //     console.log("Event:" + arguments.callee.name, eventData);
-            // }
         });
     });
 })();
