@@ -530,7 +530,10 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
         $mock = $this->createStub(
             KlarnaOrderController::class,
-            ['getJsonRequest' => ['action' => 'shipping_address_change']]
+            [
+                'getJsonRequest' => ['action' => 'shipping_address_change'],
+                'updateKlarnaOrder' => true
+              ]
         );
 
         $this->setProtectedClassProperty($mock, '_aOrderData', $orderData);
