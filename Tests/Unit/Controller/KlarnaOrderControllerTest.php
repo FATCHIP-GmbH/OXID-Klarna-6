@@ -20,6 +20,7 @@ use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\ViewConfig;
 use OxidEsales\PayPalModule\Controller\ExpressCheckoutDispatcher;
 use TopConcepts\Klarna\Controller\KlarnaOrderController;
+use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
 use TopConcepts\Klarna\Core\KlarnaConsts;
 use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
@@ -528,10 +529,9 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
             ['tcklarna_getType' => 2, 'save' => true, 'clearDeliveryAddress' => true, 'updateDeliveryAddress' => true]
         );
 
-        $mock = $this->createStub(
-            KlarnaOrderController::class,
-            ['getJsonRequest' => ['action' => 'shipping_address_change']]
-        );
+        $mock = $this->getMock(KlarnaOrderController::class, ['getJsonRequest', 'updateKlarnaOrder']);
+        $mock->expects($this->any())->method('getJsonRequest')->willReturn(['action' => 'shipping_address_change']);
+        $mock->expects($this->any())->method('updateKlarnaOrder')->willThrowException(new KlarnaWrongCredentialsException());
 
         $this->setProtectedClassProperty($mock, '_aOrderData', $orderData);
         $this->setProtectedClassProperty($mock, '_oUser', $user);
@@ -548,6 +548,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         ];
 
         $this->assertEquals($expected, json_decode(\oxUtilsHelper::$response, true));
+        $this->assertLoggedException(KlarnaWrongCredentialsException::class, 'KLARNA_UNAUTHORIZED_REQUEST');
     }
 
     public function testUpdateKlarnaAjaxShippingOptionChange()

@@ -12,6 +12,7 @@ use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Request;
 use OxidEsales\Eshop\Core\UtilsView;
 use TopConcepts\Klarna\Controller\KlarnaExpressController;
+use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
 use TopConcepts\Klarna\Core\Exception\KlarnaBasketTooLargeException;
 use TopConcepts\Klarna\Core\Exception\KlarnaConfigException;
@@ -390,13 +391,13 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
 
 
         $keController = $this->getMock(KlarnaExpressController::class, ['getKlarnaClient', 'getConfig']);
-        $keController->expects($this->any())->method('getKlarnaClient')->will($this->throwException(new StandardException()));
+        $keController->expects($this->any())->method('getKlarnaClient')->will($this->throwException(new KlarnaWrongCredentialsException()));
         $keController->expects($this->any())->method('getConfig')->will($this->returnValue($oConfig));
 
         $keController->init();
         $keController->render();
-
         $this->assertEquals('tcklarna_checkout.tpl', $result);
+        $this->assertLoggedException(KlarnaWrongCredentialsException::class, 'KLARNA_UNAUTHORIZED_REQUEST');
     }
 
     /**

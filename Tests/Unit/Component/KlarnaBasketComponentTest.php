@@ -97,6 +97,7 @@ class KlarnaBasketComponentTest extends ModuleUnitTestCase
 
         $cmpBasket->changebasket('abc', 11, 'sel', 'persparam', 'override');
 
+        $this->assertLoggedException(StandardException::class, 'Test');
         $this->assertEquals(null, $this->getSessionParam('klarna_checkout_order_id'));
     }
 
@@ -140,6 +141,7 @@ class KlarnaBasketComponentTest extends ModuleUnitTestCase
 
         $cmpBasket->tobasket();
 
+        $this->assertLoggedException(StandardException::class, 'Test');
         $this->assertEquals(null, $this->getSessionParam('klarna_checkout_order_id'));
     }
 

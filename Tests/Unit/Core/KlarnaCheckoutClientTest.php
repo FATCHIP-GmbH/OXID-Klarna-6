@@ -35,6 +35,7 @@ class KlarnaCheckoutClientTest extends ModuleUnitTestCase
         $exceptionMock->expects($this->at(0))->method('postOrder')->will($this->throwException(new KlarnaClientException('Test')));
 
         $result = $exceptionMock->createOrUpdateOrder(['dummy' => 'data']);
+        $this->assertLoggedException(KlarnaClientException::class, 'Test');
         $this->assertEmpty($result);
 
     }
