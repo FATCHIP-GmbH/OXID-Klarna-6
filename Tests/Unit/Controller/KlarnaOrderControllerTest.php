@@ -53,51 +53,54 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
     /**
      * @dataProvider externalPaymentDataProvider
      * @param $paymentId
+     * @param $moduleId
      */
-    public function testKlarnaExternalPayment($paymentId)
+    public function testKlarnaExternalPayment($paymentId, $moduleId)
     {
-        $payment = $this->createStub(Payment::class, ['load' => true]);
-        $payment->oxpayments__oxactive = new Field(true);
-        UtilsObject::setClassInstance(Payment::class, $payment);
+        if($paymentId == 'test' || Registry::get(ViewConfig::class)->isModuleActive($moduleId)) {
+            $payment = $this->createStub(Payment::class, ['load' => true]);
+            $payment->oxpayments__oxactive = new Field(true);
+            UtilsObject::setClassInstance(Payment::class, $payment);
 
-        $this->setSessionParam('klarna_checkout_order_id', '1');
-        $this->setRequestParameter('payment_id', $paymentId);
+            $this->setSessionParam('klarna_checkout_order_id', '1');
+            $this->setRequestParameter('payment_id', $paymentId);
 
-        $oBasket = $this->createStub(KlarnaBasket::class, ['onUpdate' => true]);
+            $oBasket = $this->createStub(KlarnaBasket::class, ['onUpdate' => true]);
 
-        $user = $this->createStub(KlarnaUser::class, ['isCreatable' => true, 'save' => true, 'onOrderExecute' => true]);
-        $this->getSession()->setBasket($oBasket);
+            $user = $this->createStub(KlarnaUser::class, ['isCreatable' => true, 'save' => true, 'onOrderExecute' => true]);
+            $this->getSession()->setBasket($oBasket);
 
-        $mock = $this->createStub(
-            KlarnaOrderController::class,
-            [
-                'klarnaExternalCheckout' => true,
-                '_createUser' => true,
-            ]
-        );
-
-        $this->setProtectedClassProperty($mock, 'isExternalCheckout', true);
-        $this->setProtectedClassProperty($mock, '_oUser', $user);
-        $this->setProtectedClassProperty(
-            $mock,
-            '_aOrderData',
-            ['selected_shipping_option' => ['id' => 'shippingOption']]
-        );
-
-        $result = $mock->klarnaExternalPayment();
-
-        if ($paymentId == 'bestitamazon') {
-            $this->assertEquals(
-                Registry::getConfig()->getShopSecureHomeUrl()."cl=KlarnaEpmDispatcher&fnc=amazonLogin",
-                \oxUtilsHelper::$sRedirectUrl
+            $mock = $this->createStub(
+                KlarnaOrderController::class,
+                [
+                    'klarnaExternalCheckout' => true,
+                    '_createUser' => true,
+                ]
             );
-        } elseif ($paymentId == 'oxidpaypal') {
-            $this->assertEquals('basket', $result);
-        } else {
-            $this->assertEquals(null, $result);
-        }
 
-        $this->assertEquals($paymentId, $this->getProtectedClassProperty($oBasket, '_sPaymentId'));
+            $this->setProtectedClassProperty($mock, 'isExternalCheckout', true);
+            $this->setProtectedClassProperty($mock, '_oUser', $user);
+            $this->setProtectedClassProperty(
+                $mock,
+                '_aOrderData',
+                ['selected_shipping_option' => ['id' => 'shippingOption']]
+            );
+
+            $result = $mock->klarnaExternalPayment();
+
+            if ($paymentId == 'bestitamazon') {
+                $this->assertEquals(
+                    Registry::getConfig()->getShopSecureHomeUrl()."cl=KlarnaEpmDispatcher&fnc=amazonLogin",
+                    \oxUtilsHelper::$sRedirectUrl
+                );
+            } elseif ($paymentId == 'oxidpaypal') {
+                $this->assertEquals('basket', $result);
+            } else {
+                $this->assertEquals(null, $result);
+            }
+
+            $this->assertEquals($paymentId, $this->getProtectedClassProperty($oBasket, '_sPaymentId'));
+        }
 
     }
 
@@ -105,9 +108,9 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
     {
 
         return [
-            ['test'],
-            ['bestitamazon'],
-            ['oxidpaypal'],
+            ['test', null],
+            ['bestitamazon', 'bestitamazonpay4oxid'],
+            ['oxidpaypal', 'oepaypal'],
         ];
     }
 
