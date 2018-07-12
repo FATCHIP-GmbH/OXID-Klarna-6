@@ -37,9 +37,9 @@ class KlarnaThankYouControllerTest extends ModuleUnitTestCase
 
         $oBasketItem = oxNew(BasketItem::class);
         $oBasket = $this->getMock(\OxidEsales\Eshop\Application\Model\Basket::class, array('getContents', 'getProductsCount', 'getOrderId'));
-        $oBasket->expects($this->exactly(3))->method('getContents')->will($this->returnValue(array($oBasketItem)));
-        $oBasket->expects($this->exactly(3))->method('getProductsCount')->will($this->returnValue(1));
-        $oBasket->expects($this->exactly(3))->method('getOrderId')->will($this->returnValue(1));
+        $oBasket->expects($this->any())->method('getContents')->will($this->returnValue(array($oBasketItem)));
+        $oBasket->expects($this->any())->method('getProductsCount')->will($this->returnValue(1));
+        $oBasket->expects($this->any())->method('getOrderId')->will($this->returnValue(1));
         $this->setProtectedClassProperty($oBasketItem, '_sProductId', '_testArt');
 
         $thankYouController = oxNew(ThankYouController::class);
@@ -48,6 +48,7 @@ class KlarnaThankYouControllerTest extends ModuleUnitTestCase
         // check client
         // base code will log KlarnaWrongCredentialsException in this case, because getOrder will be called on not configured client
         $thankYouController->render();
+        $this->assertLoggedException(KlarnaWrongCredentialsException::class, '');
         $this->assertInstanceOf(KlarnaCheckoutClient::class, $this->getProtectedClassProperty($thankYouController, 'client'));
 
         // check success

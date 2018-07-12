@@ -10,6 +10,7 @@ use TopConcepts\Klarna\Controller\Admin\KlarnaOrderOverview;
 use TopConcepts\Klarna\Core\Exception\KlarnaOrderNotFoundException;
 use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
+use OxidEsales\Eshop\Core\UtilsObject;
 
 class KlarnaOrderOverviewTest extends ModuleUnitTestCase
 {
@@ -30,7 +31,7 @@ class KlarnaOrderOverviewTest extends ModuleUnitTestCase
         $order->oxorder__oxpaymenttype = new Field('klarna_checkout', Field::T_RAW);
         $order->oxorder__tcklarna_merchantid = new Field('smid', Field::T_RAW);
         $order->oxorder_oxbillcountryid = new Field('a7c40f631fc920687.20179984', Field::T_RAW);
-        \oxTestModules::addModuleObject(Order::class, $order);
+        UtilsObject::setClassInstance(Order::class, $order);
 
         return $order;
     }
@@ -254,7 +255,7 @@ class KlarnaOrderOverviewTest extends ModuleUnitTestCase
         if ($withOrder) {
             $order = $this->setOrder();
             $order->oxorder__oxsenddate = new Field('-', Field::T_RAW);
-            \oxTestModules::addModuleObject(Order::class, $order);
+            UtilsObject::setClassInstance(Order::class, $order);
         }
 
         $result = $controller->isCaptureInSync($klarnaOrderData);

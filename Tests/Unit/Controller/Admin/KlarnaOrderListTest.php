@@ -9,6 +9,7 @@ use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
 use TopConcepts\Klarna\Controller\Admin\KlarnaOrderList;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
+use OxidEsales\Eshop\Core\UtilsObject;
 
 class KlarnaOrderListTest extends ModuleUnitTestCase
 {
@@ -31,7 +32,7 @@ class KlarnaOrderListTest extends ModuleUnitTestCase
         }
         $order->oxorder_oxbillcountryid = new Field('a7c40f631fc920687.20179984', Field::T_RAW);
         $order->oxorder__tcklarna_orderid = new Field('1', Field::T_RAW);
-        \oxTestModules::addModuleObject(Order::class, $order);
+        UtilsObject::setClassInstance(Order::class, $order);
 
         return $order;
     }

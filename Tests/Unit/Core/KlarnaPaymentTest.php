@@ -11,10 +11,10 @@ namespace TopConcepts\Klarna\Tests\Unit\Core;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Field;
-use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\UtilsView;
 use TopConcepts\Klarna\Core\KlarnaPayment;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
+use OxidEsales\Eshop\Core\UtilsObject;
 
 class KlarnaPaymentTest extends ModuleUnitTestCase
 {

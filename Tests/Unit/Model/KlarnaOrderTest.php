@@ -9,15 +9,13 @@
 namespace TopConcepts\Klarna\Testes\Unit\Models;
 
 use OxidEsales\Eshop\Application\Model\Order;
+use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Application\Model\User;
-use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
-use OxidEsales\TestingLibrary\UnitTestCase;
+use OxidEsales\Eshop\Core\UtilsObject;
 use ReflectionClass;
 use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
 use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
-use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
-use TopConcepts\Klarna\Model\KlarnaOrder;
 use TopConcepts\Klarna\Model\KlarnaPayment;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
@@ -131,6 +129,16 @@ class KlarnaOrderTest extends ModuleUnitTestCase
      */
     public function testValidateOrder($paymentId, $expectedResult)
     {
+        $paymentModel = $this->getMockBuilder(Payment::class)
+            ->setMethods(['isValidPayment'])
+            ->getMock();
+
+        $paymentModel
+            ->method('isValidPayment')
+            ->willReturn(true);
+
+        UtilsObject::setClassInstance(Payment::class, $paymentModel);
+
         /** @var \OxidEsales\Eshop\Application\Model\Basket $oBasket */
         $oBasket = $this->prepareBasketWithProduct();
         $oUser = oxNew(User::class);

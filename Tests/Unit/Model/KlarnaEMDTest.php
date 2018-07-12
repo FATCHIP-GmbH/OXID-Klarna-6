@@ -8,6 +8,7 @@ use TopConcepts\Klarna\Model\EmdPayload\KlarnaCustomerAccountInfo;
 use TopConcepts\Klarna\Model\EmdPayload\KlarnaPaymentHistoryFull;
 use TopConcepts\Klarna\Model\KlarnaEMD;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
+use OxidEsales\Eshop\Core\UtilsObject;
 
 class KlarnaEMDTest extends ModuleUnitTestCase
 {
@@ -43,8 +44,8 @@ class KlarnaEMDTest extends ModuleUnitTestCase
                      ],
                 ],
         ]);
-        \oxTestModules::addModuleObject(KlarnaCustomerAccountInfo::class, $oMockCustomerInfo);
-        \oxTestModules::addModuleObject(KlarnaPaymentHistoryFull::class, $oMockPaymentHistory);
+        UtilsObject::setClassInstance(KlarnaCustomerAccountInfo::class, $oMockCustomerInfo);
+        UtilsObject::setClassInstance(KlarnaPaymentHistoryFull::class, $oMockPaymentHistory);
 
         $result = $klarnaEMD->getAttachments($oUser);
 

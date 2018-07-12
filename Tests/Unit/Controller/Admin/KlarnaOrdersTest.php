@@ -15,6 +15,7 @@ use TopConcepts\Klarna\Core\Exception\KlarnaOrderNotFoundException;
 use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
 use TopConcepts\Klarna\Model\KlarnaOrder;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
+use OxidEsales\Eshop\Core\UtilsObject;
 
 class KlarnaOrdersTest extends ModuleUnitTestCase
 {
@@ -38,7 +39,7 @@ class KlarnaOrdersTest extends ModuleUnitTestCase
         $order->oxorder__oxpaymenttype       = new Field('klarna_checkout', Field::T_RAW);
         $order->oxorder__tcklarna_merchantid = new Field('smid', Field::T_RAW);
         $order->oxorder_oxbillcountryid      = new Field('a7c40f631fc920687.20179984', Field::T_RAW);
-        \oxTestModules::addModuleObject(Order::class, $order);
+        UtilsObject::setClassInstance(Order::class, $order);
 
         return $order;
     }

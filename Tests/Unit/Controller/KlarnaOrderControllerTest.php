@@ -12,7 +12,6 @@ use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Controller\BaseController;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\DisplayError;
-use OxidEsales\Eshop\Core\Email;
 use OxidEsales\Eshop\Core\Exception\ExceptionToDisplay;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
@@ -20,6 +19,7 @@ use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\ViewConfig;
 use OxidEsales\PayPalModule\Controller\ExpressCheckoutDispatcher;
 use TopConcepts\Klarna\Controller\KlarnaOrderController;
+use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
 use TopConcepts\Klarna\Core\KlarnaConsts;
 use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
@@ -29,6 +29,7 @@ use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Model\KlarnaBasket;
 use TopConcepts\Klarna\Model\KlarnaUser;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
+use OxidEsales\Eshop\Core\UtilsObject;
 
 class KlarnaOrderControllerTest extends ModuleUnitTestCase
 {
@@ -52,51 +53,54 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
     /**
      * @dataProvider externalPaymentDataProvider
      * @param $paymentId
+     * @param $moduleId
      */
-    public function testKlarnaExternalPayment($paymentId)
+    public function testKlarnaExternalPayment($paymentId, $moduleId)
     {
-        $payment = $this->createStub(Payment::class, ['load' => true]);
-        $payment->oxpayments__oxactive = new Field(true);
-        \oxTestModules::addModuleObject(Payment::class, $payment);
+        if($paymentId == 'test' || Registry::get(ViewConfig::class)->isModuleActive($moduleId)) {
+            $payment = $this->createStub(Payment::class, ['load' => true]);
+            $payment->oxpayments__oxactive = new Field(true);
+            UtilsObject::setClassInstance(Payment::class, $payment);
 
-        $this->setSessionParam('klarna_checkout_order_id', '1');
-        $this->setRequestParameter('payment_id', $paymentId);
+            $this->setSessionParam('klarna_checkout_order_id', '1');
+            $this->setRequestParameter('payment_id', $paymentId);
 
-        $oBasket = $this->createStub(KlarnaBasket::class, ['onUpdate' => true]);
+            $oBasket = $this->createStub(KlarnaBasket::class, ['onUpdate' => true]);
 
-        $user = $this->createStub(KlarnaUser::class, ['isCreatable' => true, 'save' => true, 'onOrderExecute' => true]);
-        $this->getSession()->setBasket($oBasket);
+            $user = $this->createStub(KlarnaUser::class, ['isCreatable' => true, 'save' => true, 'onOrderExecute' => true]);
+            $this->getSession()->setBasket($oBasket);
 
-        $mock = $this->createStub(
-            KlarnaOrderController::class,
-            [
-                'klarnaExternalCheckout' => true,
-                '_createUser' => true,
-            ]
-        );
-
-        $this->setProtectedClassProperty($mock, 'isExternalCheckout', true);
-        $this->setProtectedClassProperty($mock, '_oUser', $user);
-        $this->setProtectedClassProperty(
-            $mock,
-            '_aOrderData',
-            ['selected_shipping_option' => ['id' => 'shippingOption']]
-        );
-
-        $result = $mock->klarnaExternalPayment();
-
-        if ($paymentId == 'bestitamazon') {
-            $this->assertEquals(
-                Registry::getConfig()->getShopSecureHomeUrl()."cl=KlarnaEpmDispatcher&fnc=amazonLogin",
-                \oxUtilsHelper::$sRedirectUrl
+            $mock = $this->createStub(
+                KlarnaOrderController::class,
+                [
+                    'klarnaExternalCheckout' => true,
+                    '_createUser' => true,
+                ]
             );
-        } elseif ($paymentId == 'oxidpaypal') {
-            $this->assertEquals('basket', $result);
-        } else {
-            $this->assertEquals(null, $result);
-        }
 
-        $this->assertEquals($paymentId, $this->getProtectedClassProperty($oBasket, '_sPaymentId'));
+            $this->setProtectedClassProperty($mock, 'isExternalCheckout', true);
+            $this->setProtectedClassProperty($mock, '_oUser', $user);
+            $this->setProtectedClassProperty(
+                $mock,
+                '_aOrderData',
+                ['selected_shipping_option' => ['id' => 'shippingOption']]
+            );
+
+            $result = $mock->klarnaExternalPayment();
+
+            if ($paymentId == 'bestitamazon') {
+                $this->assertEquals(
+                    Registry::getConfig()->getShopSecureHomeUrl()."cl=KlarnaEpmDispatcher&fnc=amazonLogin",
+                    \oxUtilsHelper::$sRedirectUrl
+                );
+            } elseif ($paymentId == 'oxidpaypal') {
+                $this->assertEquals('basket', $result);
+            } else {
+                $this->assertEquals(null, $result);
+            }
+
+            $this->assertEquals($paymentId, $this->getProtectedClassProperty($oBasket, '_sPaymentId'));
+        }
 
     }
 
@@ -104,16 +108,16 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
     {
 
         return [
-            ['test'],
-            ['bestitamazon'],
-            ['oxidpaypal'],
+            ['test', null],
+            ['bestitamazon', 'bestitamazonpay4oxid'],
+            ['oxidpaypal', 'oepaypal'],
         ];
     }
 
     public function testExecute()
     {
         $order = $this->createStub(Order::class, ['finalizeOrder' => 1]);
-        \oxTestModules::addModuleObject(Order::class, $order);
+        UtilsObject::setClassInstance(Order::class, $order);
         $user = $this->createStub(KlarnaUser::class, ['getType' => 0, 'save' => true, 'onOrderExecute' => true]);
         $oBasket = $this->createStub(
             KlarnaBasket::class,
@@ -148,7 +152,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $oBasket = $this->createStub(KlarnaBasket::class, ['calculateBasket' => true]);
         $order = $this->getMock(Order::class, ['finalizeOrder']);
         $order->expects($this->any())->method('finalizeOrder')->willThrowException(new StandardException('test'));
-        \oxTestModules::addModuleObject(Order::class, $order);
+        UtilsObject::setClassInstance(Order::class, $order);
 
         $mock = $this->getMock(KlarnaOrderController::class, []);
         $class = new \ReflectionClass(KlarnaOrderController::class);
@@ -338,7 +342,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $this->assertEquals(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=order', \oxUtilsHelper::$sRedirectUrl);
 
         $oKlarnaPayment = $this->createStub(KlarnaPayment::class, ['validateOrder' => true, 'isError' => false]);
-        \oxTestModules::addModuleObject(KlarnaPayment::class, $oKlarnaPayment);
+        UtilsObject::setClassInstance(KlarnaPayment::class, $oKlarnaPayment);
 
         $client = $this->createStub(KlarnaPaymentsClient::class, ['createNewOrder' => ['order_id' => 'orderId', 'redirect_url' => 'testUrl']]);
         $paymentClient = $this->createStub(KlarnaPaymentsClient::class, ['initOrder' => $client]);
@@ -352,7 +356,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $this->assertEquals('testUrl', \oxUtilsHelper::$sRedirectUrl);
 
         $oKlarnaPayment = $this->createStub(KlarnaPayment::class, ['validateOrder' => true, 'isError' => true, 'displayErrors' => true]);
-        \oxTestModules::addModuleObject(KlarnaPayment::class, $oKlarnaPayment);
+        UtilsObject::setClassInstance(KlarnaPayment::class, $oKlarnaPayment);
 
         $mock->kpBeforeExecute();
 
@@ -528,13 +532,9 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
             ['tcklarna_getType' => 2, 'save' => true, 'clearDeliveryAddress' => true, 'updateDeliveryAddress' => true]
         );
 
-        $mock = $this->createStub(
-            KlarnaOrderController::class,
-            [
-                'getJsonRequest' => ['action' => 'shipping_address_change'],
-                'updateKlarnaOrder' => true
-              ]
-        );
+        $mock = $this->getMock(KlarnaOrderController::class, ['getJsonRequest', 'updateKlarnaOrder']);
+        $mock->expects($this->any())->method('getJsonRequest')->willReturn(['action' => 'shipping_address_change']);
+        $mock->expects($this->any())->method('updateKlarnaOrder')->willThrowException(new KlarnaWrongCredentialsException());
 
         $this->setProtectedClassProperty($mock, '_aOrderData', $orderData);
         $this->setProtectedClassProperty($mock, '_oUser', $user);
@@ -551,6 +551,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         ];
 
         $this->assertEquals($expected, json_decode(\oxUtilsHelper::$response, true));
+        $this->assertLoggedException(KlarnaWrongCredentialsException::class, 'KLARNA_UNAUTHORIZED_REQUEST');
     }
 
     public function testUpdateKlarnaAjaxShippingOptionChange()
@@ -600,7 +601,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
     {
         $oCountry = $this->createStub(Country::class, ['buildSelectString' => true, 'assignRecord' => true]);
         $oCountry->oxcountry__oxisoalpha2 = new Field('test');
-        \oxTestModules::addModuleObject(Country::class, $oCountry);
+        UtilsObject::setClassInstance(Country::class, $oCountry);
 
         $mock = $this->getMock(
             KlarnaOrderController::class,
@@ -655,7 +656,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
             ['isSessionValid' => false, 'validateClientToken' => true, 'isAuthorized' => true]
         );
         $oPayment->paymentChanged = true;
-        \oxTestModules::addModuleObject(KlarnaPayment::class, $oPayment);
+        UtilsObject::setClassInstance(KlarnaPayment::class, $oPayment);
 
         $mock = $this->createStub(
             KlarnaOrderController::class,
@@ -703,7 +704,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
             KlarnaPayment::class,
             ['isSessionValid' => false, 'validateClientToken' => false, 'isAuthorized' => true]
         );
-        \oxTestModules::addModuleObject(KlarnaPayment::class, $oPayment);
+        UtilsObject::setClassInstance(KlarnaPayment::class, $oPayment);
 
         $mock = $this->createStub(
             KlarnaOrderController::class,
@@ -729,7 +730,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
             KlarnaPayment::class,
             ['isSessionValid' => false, 'validateClientToken' => true, 'isAuthorized' => false]
         );
-        \oxTestModules::addModuleObject(KlarnaPayment::class, $oPayment);
+        UtilsObject::setClassInstance(KlarnaPayment::class, $oPayment);
 
         $mock = $this->createStub(
             KlarnaOrderController::class,
@@ -772,7 +773,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
                 'requiresFinalization' => true,
             ]
         );
-        \oxTestModules::addModuleObject(KlarnaPayment::class, $oPayment);
+        UtilsObject::setClassInstance(KlarnaPayment::class, $oPayment);
 
         $mock = $this->createStub(
             KlarnaOrderController::class,
@@ -817,7 +818,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
             KlarnaPayment::class,
             ['isSessionValid' => false, 'validateClientToken' => false]
         );
-        \oxTestModules::addModuleObject(KlarnaPayment::class, $oPayment);
+        UtilsObject::setClassInstance(KlarnaPayment::class, $oPayment);
 
         $mock = $this->createStub(
             KlarnaOrderController::class,
@@ -843,7 +844,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
             KlarnaPayment::class,
             ['isSessionValid' => false, 'validateClientToken' => true]
         );
-        \oxTestModules::addModuleObject(KlarnaPayment::class, $oPayment);
+        UtilsObject::setClassInstance(KlarnaPayment::class, $oPayment);
 
         $mock = $this->createStub(
             KlarnaOrderController::class,

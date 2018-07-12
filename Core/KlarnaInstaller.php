@@ -29,6 +29,8 @@ use OxidEsales\Eshop\Core\Database\Adapter\Doctrine\Database;
 use OxidEsales\DoctrineMigrationWrapper\MigrationsBuilder;
 use OxidEsales\Facts\Config\ConfigFile;
 use OxidEsales\Facts\Facts;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use TopConcepts\Klarna\Model\KlarnaPayment;
 
 class KlarnaInstaller extends ShopConfiguration
@@ -267,7 +269,11 @@ class KlarnaInstaller extends ShopConfiguration
     protected function performMigrations()
     {
         try {
+            $output = new ConsoleOutput();
+            $output->setVerbosity(ConsoleOutputInterface::VERBOSITY_QUIET);
+
             $migrations = $this->getModuleMigrations();
+            $migrations->setOutput($output);
             $migrations->execute('migrations:migrate');
         } catch (\Exception $e) {
             Registry::getUtilsView()->addErrorToDisplay($e->getMessage() . $e->getCode());

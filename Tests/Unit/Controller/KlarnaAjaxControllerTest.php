@@ -7,6 +7,7 @@ use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\UtilsObject;
 use OxidEsales\Eshop\Core\ViewConfig;
 use OxidEsales\Eshop\Application\Model\User;
 use TopConcepts\Klarna\Controller\KlarnaAjaxController;
@@ -57,7 +58,7 @@ class KlarnaAjaxControllerTest extends ModuleUnitTestCase
         $ajaxController->render();
 
         $oOrder = $this->createStub(Order::class, []);
-        \oxTestModules::addModuleObject(Order::class, $oOrder);
+        UtilsObject::setClassInstance(Order::class, $oOrder);
         $user = $this->createStub(KlarnaUser::class, ['getKlarnaData' => []]);
 
         $client = $this->createStub(KlarnaCheckoutClient::class, ['createOrUpdateOrder' => []]);

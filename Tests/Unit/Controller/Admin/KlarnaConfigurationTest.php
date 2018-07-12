@@ -10,6 +10,7 @@ use TopConcepts\Klarna\Controller\Admin\KlarnaConfiguration;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Model\KlarnaCountryList;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
+use OxidEsales\Eshop\Core\UtilsObject;
 
 class KlarnaConfigurationTest extends ModuleUnitTestCase
 {
@@ -18,7 +19,7 @@ class KlarnaConfigurationTest extends ModuleUnitTestCase
     {
         $payment = $this->createStub(Payment::class, ['getKPMethods' => 'methods', 'load' => null]);
         $payment->oxpayments__oxactive = new Field(2, Field::T_RAW);
-        \oxTestModules::addModuleObject(Payment::class, $payment);
+        UtilsObject::setClassInstance(Payment::class, $payment);
         $this->setConfigParam('sSSLShopURL', null);
         $this->setModuleConfVar('sKlarnaActiveMode', 'KCO');
         $controller = new KlarnaConfiguration();
@@ -121,7 +122,7 @@ class KlarnaConfigurationTest extends ModuleUnitTestCase
         $controller = new KlarnaConfiguration();
         $country = $this->createStub(Country::class, []);
         $country->oxcountry__oxisoalpha2 = new Field('invalid', Field::T_RAW);
-        \oxTestModules::addModuleObject(Country::class, $country);
+        UtilsObject::setClassInstance(Country::class, $country);
 
         $result = $controller->$method();
         $this->assertFalse($result);

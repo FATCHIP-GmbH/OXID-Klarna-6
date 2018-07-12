@@ -34,6 +34,7 @@ class KlarnaAcknowledgeControllerTest extends ModuleUnitTestCase
         $controller = $this->createStub(KlarnaAcknowledgeController::class, ['loadOrderByKlarnaId' => $order, 'getKlarnaClient' => $client]);
         $result = $controller->init();
 
+        $this->assertLoggedException(StandardException::class, '');
         $this->assertNull($result);
     }
 }
