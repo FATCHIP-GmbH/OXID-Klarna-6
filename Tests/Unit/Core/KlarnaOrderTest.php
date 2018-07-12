@@ -18,6 +18,7 @@ use TopConcepts\Klarna\Core\Exception\KlarnaConfigException;
 use TopConcepts\Klarna\Model\KlarnaEMD;
 use TopConcepts\Klarna\Model\KlarnaUser;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
+use OxidEsales\Eshop\Core\UtilsObject;
 
 class KlarnaOrderTest extends ModuleUnitTestCase
 {
@@ -47,7 +48,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
             'oxidpaypal'      => $payment,
         ];
         $oPaymentList = $this->createStub(PaymentList::class, ['getPaymentList' => $paymentList]);
-        \oxTestModules::addModuleObject(PaymentList::class, $oPaymentList);
+        UtilsObject::setClassInstance(PaymentList::class, $oPaymentList);
 
         $user = $this->createStub(
             User::class,
@@ -300,7 +301,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $methodReflection->setAccessible(true);
 
         $oMockKlarnaEMD = $this->createStub(KlarnaEMD::class, ['getAttachments' => ['test']]);
-        \oxTestModules::addModuleObject(KlarnaEMD::class, $oMockKlarnaEMD);
+        UtilsObject::setClassInstance(KlarnaEMD::class, $oMockKlarnaEMD);
         $order = $this->createStub(KlarnaOrder::class, ['__construct' => null]);
 
         $user = $this->createStub(User::class, ['isFake' => false]);

@@ -13,6 +13,7 @@ use OxidEsales\Eshop\Application\Model\Article;
 use OxidEsales\Eshop\Core\Field;
 use TopConcepts\Klarna\Core\KlarnaOrderValidator;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
+use OxidEsales\Eshop\Core\UtilsObject;
 
 class KlarnaOrderValidatorTest extends ModuleUnitTestCase
 {
@@ -114,7 +115,7 @@ class KlarnaOrderValidatorTest extends ModuleUnitTestCase
         $oArticle->expects($this->any())->method('checkForStock')->willReturn($articleErrors['checkForStock']);
         $oArticle->expects($this->any())->method('isLoaded')->willReturn($articleErrors['isLoaded']);
         $oArticle->expects($this->any())->method('isBuyable')->willReturn($articleErrors['isBuyable']);
-        \oxTestModules::addModuleObject(Article::class, $oArticle);
+        UtilsObject::setClassInstance(Article::class, $oArticle);
 
         $oOrderValidator = new KlarnaOrderValidator($orderData);
         $result = $oOrderValidator->validateOrder();

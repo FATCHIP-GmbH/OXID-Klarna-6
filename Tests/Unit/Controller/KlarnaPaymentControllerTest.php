@@ -3,7 +3,6 @@
 namespace TopConcepts\Klarna\Tests\Unit\Controller;
 
 
-use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\DeliverySetList;
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Application\Model\User;
@@ -12,10 +11,10 @@ use OxidEsales\Eshop\Application\Controller\PaymentController;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Request;
 use ReflectionClass;
-use ReflectionObject;
 use TopConcepts\Klarna\Core\KlarnaPaymentsClient;
 use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
+use OxidEsales\Eshop\Core\UtilsObject;
 
 class KlarnaPaymentControllerTest extends ModuleUnitTestCase
 {
@@ -462,7 +461,7 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
         $this->setProtectedClassProperty($oPaymentController, 'oRequest', Registry::get(Request::class));
         $oPayment = $this->getMock(Payment::class, ['isValidPayment']);
         $oPayment->expects($this->any())->method('isValidPayment')->willReturn(true);
-        \oxTestModules::addModuleObject(Payment::class, $oPayment);
+        UtilsObject::setClassInstance(Payment::class, $oPayment);
 
         $this->assertEquals($result, $oPaymentController->validatePayment());
         $this->assertEquals($sAuthToken, $this->getSessionParam('sAuthToken'));
@@ -484,7 +483,7 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
         $oPaymentController->expects($this->any())->method('getUser')->willReturn($oUser);$this->setProtectedClassProperty($oPaymentController, 'oRequest', Registry::get(Request::class));
         $oPayment = $this->getMock(Payment::class, ['isValidPayment']);
         $oPayment->expects($this->any())->method('isValidPayment')->willReturn(true);
-        \oxTestModules::addModuleObject(Payment::class, $oPayment);
+        UtilsObject::setClassInstance(Payment::class, $oPayment);
 
         $this->assertEquals("order", $oPaymentController->validatePayment());
         $this->setModuleMode('KP');

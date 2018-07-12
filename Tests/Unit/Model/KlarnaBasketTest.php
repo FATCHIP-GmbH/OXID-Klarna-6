@@ -14,10 +14,9 @@ use OxidEsales\Eshop\Application\Model\DeliveryList;
 use OxidEsales\Eshop\Application\Model\DeliverySet;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Price;
-use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\ShopIdCalculator;
+use OxidEsales\Eshop\Core\UtilsObject;
 use ReflectionClass;
-use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Core\Exception\KlarnaBasketTooLargeException;
 use TopConcepts\Klarna\Model\KlarnaBasket;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
@@ -73,7 +72,7 @@ class KlarnaBasketTest extends ModuleUnitTestCase
         $oPrice->setPrice(100.00);
         $oDelivery->setDeliveryPrice($oPrice);
         $oDeliveryList = $this->createStub(DeliveryList::class, ['getDeliveryList' => [$oDelivery]]);
-        \oxTestModules::addModuleObject(DeliveryList::class, $oDeliveryList);
+        UtilsObject::setClassInstance(DeliveryList::class, $oDeliveryList);
 
         $result = $oBasket->tcklarna_calculateDeliveryCost();
         $this->assertTrue($result instanceof Price);
@@ -212,7 +211,7 @@ class KlarnaBasketTest extends ModuleUnitTestCase
 
         $oOrder                      = $this->getMock(Order::class, ['load']);
         $oOrder->oxorder__oxdiscount = new Field(100, Field::T_RAW);
-        \oxTestModules::addModuleObject(Order::class, $oOrder);
+        UtilsObject::setClassInstance(Order::class, $oOrder);
 
 
         $orderLines = $this->getOrderLinesData(0);

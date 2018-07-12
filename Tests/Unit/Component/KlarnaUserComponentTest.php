@@ -9,6 +9,7 @@ use OxidEsales\Eshop\Core\ViewConfig;
 use ReflectionClass;
 use TopConcepts\Klarna\Component\KlarnaUserComponent;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
+use OxidEsales\Eshop\Core\UtilsObject;
 
 /**
  * Class KlarnaUserComponentTest
@@ -95,7 +96,7 @@ class KlarnaUserComponentTest extends ModuleUnitTestCase
         $oViewConfig = $this->getMock(ViewConfig::class, ['isKlarnaCheckoutEnabled']);
         $oViewConfig->expects($this->any())
             ->method('isKlarnaCheckoutEnabled')->willReturn($isKlarnaCheckoutEnabled);
-        \oxTestModules::addModuleObject(ViewConfig::class, $oViewConfig);
+        UtilsObject::setClassInstance(ViewConfig::class, $oViewConfig);
 
         $baseController = $this->getMock(BaseController::class, ['getDynUrlParams']);
         $userComponent  = $this->getMock(UserComponent::class, ['klarnaRedirect', 'getParent']);

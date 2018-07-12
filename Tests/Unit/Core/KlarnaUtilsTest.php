@@ -9,6 +9,7 @@ use OxidEsales\Eshop\Application\Model\CountryList;
 use OxidEsales\Eshop\Core\Price;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
+use OxidEsales\Eshop\Core\UtilsObject;
 
 class KlarnaUtilsTest extends ModuleUnitTestCase
 {
@@ -74,12 +75,12 @@ class KlarnaUtilsTest extends ModuleUnitTestCase
     public function testIsNonKlarnaCountryActive()
     {
         $list = $this->createStub(CountryList::class, ['loadActiveNonKlarnaCheckoutCountries' => [null]]);
-        \oxTestModules::addModuleObject(CountryList::class, $list);
+        UtilsObject::setClassInstance(CountryList::class, $list);
         $result = KlarnaUtils::isNonKlarnaCountryActive();
         $this->assertFalse($result);
 
         $this->setProtectedClassProperty($list, '_aArray', ['test1', 'test2']);
-        \oxTestModules::addModuleObject(CountryList::class, $list);
+        UtilsObject::setClassInstance(CountryList::class, $list);
         $result = KlarnaUtils::isNonKlarnaCountryActive();
         $this->assertTrue($result);
 
@@ -106,7 +107,7 @@ class KlarnaUtilsTest extends ModuleUnitTestCase
     {
         $list = $this->createStub(CountryList::class, ['loadActiveKlarnaCheckoutCountries' => [null]]);
         $this->setProtectedClassProperty($list, '_aArray', []);
-        \oxTestModules::addModuleObject(CountryList::class, $list);
+        UtilsObject::setClassInstance(CountryList::class, $list);
         $result = KlarnaUtils::isCountryActiveInKlarnaCheckout('invalid');
         $this->assertFalse($result);
     }

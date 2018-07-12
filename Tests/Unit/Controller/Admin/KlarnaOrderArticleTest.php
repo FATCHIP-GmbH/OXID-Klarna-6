@@ -11,6 +11,7 @@ use TopConcepts\Klarna\Controller\Admin\KlarnaOrderArticle;
 use TopConcepts\Klarna\Core\Exception\KlarnaOrderNotFoundException;
 use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
+use OxidEsales\Eshop\Core\UtilsObject;
 
 class KlarnaOrderArticleTest extends ModuleUnitTestCase
 {
@@ -29,7 +30,7 @@ class KlarnaOrderArticleTest extends ModuleUnitTestCase
         $order->oxorder__oxpaymenttype = new Field('klarna_checkout', Field::T_RAW);
         $order->oxorder__tcklarna_merchantid = new Field('smid', Field::T_RAW);
         $order->oxorder_oxbillcountryid = new Field('a7c40f631fc920687.20179984', Field::T_RAW);
-        \oxTestModules::addModuleObject(Order::class, $order);
+        UtilsObject::setClassInstance(Order::class, $order);
 
         return $order;
     }
@@ -220,7 +221,7 @@ class KlarnaOrderArticleTest extends ModuleUnitTestCase
         if ($withOrder) {
             $order = $this->setOrder();
             $order->oxorder__oxsenddate = new Field('-', Field::T_RAW);
-            \oxTestModules::addModuleObject(Order::class, $order);
+            UtilsObject::setClassInstance(Order::class, $order);
         }
 
         $result = $controller->isCaptureInSync($klarnaOrderData);
@@ -254,7 +255,7 @@ class KlarnaOrderArticleTest extends ModuleUnitTestCase
         $article = $this->getMock(OrderArticle::class, ['load']);
         $article->expects($this->any())->method('load')->willReturn(true);
         $article->oxorderarticles__oxstorno = new Field(1, Field::T_RAW);
-        \oxTestModules::addModuleObject(OrderArticle::class, $article);
+        UtilsObject::setClassInstance(OrderArticle::class, $article);
 
         $order = $this->setOrder();
         $order->oxorder__tcklarna_sync = new Field(1, Field::T_RAW);

@@ -5,6 +5,7 @@ namespace TopConcepts\Klarna\Tests\Unit\Controller\Admin;
 use OxidEsales\Eshop\Core\Module\Module;
 use TopConcepts\Klarna\Controller\Admin\KlarnaStart;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
+use OxidEsales\Eshop\Core\UtilsObject;
 
 class KlarnaStartTest extends ModuleUnitTestCase
 {
@@ -28,7 +29,7 @@ class KlarnaStartTest extends ModuleUnitTestCase
             ->method('getInfo')
             ->will($this->returnValue('1'));
 
-        \oxTestModules::addModuleObject(Module::class, $module);
+        UtilsObject::setClassInstance(Module::class, $module);
         $start = oxNew(KlarnaStart::class);
         $result = $start->getKlarnaModuleInfo();
 
