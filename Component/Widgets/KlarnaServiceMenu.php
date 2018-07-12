@@ -23,8 +23,12 @@ namespace TopConcepts\Klarna\Component\Widgets;
  */
 class KlarnaServiceMenu extends KlarnaServiceMenu_parent
 {
-    /**
-     * @var string
-     */
-    protected $_sThisTemplate = 'tcklarna_servicemenu.tpl';
+    public function init()
+    {
+        $oActTopView = $this->getConfig()->getTopActiveView();
+        if($oActTopView->getClassName() === 'klarnaexpress'){
+            unset($this->_aComponentNames['oxcmp_user']);
+        }
+        return parent::init();
+    }
 }
