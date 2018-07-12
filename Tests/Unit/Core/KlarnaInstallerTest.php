@@ -118,7 +118,6 @@ class KlarnaInstallerTest extends ModuleUnitTestCase
 
         $db                = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
         $dbMetaDataHandler = oxNew(DbMetaDataHandler::class);
-        $db->execute('DELETE FROM oxmigrations_ce WHERE version = ?', ['Klarna400']);
         KlarnaInstaller::onActivate();
 
         //test payment methods
@@ -206,23 +205,6 @@ class KlarnaInstallerTest extends ModuleUnitTestCase
             $this->assertEquals('0', $row['oxactive']);
             $payments->fetchRow();
         }
-    }
-
-    public function testPerformMigrations()
-    {
-        $mock = $this->getMock(KlarnaInstaller::class, ['getModuleMigrations']);
-        $mock->expects($this->any())->method('getModuleMigrations')->willThrowException(new \Exception('test', 404));
-
-        $class  = new \ReflectionClass(KlarnaInstaller::class);
-        $method = $class->getMethod('performMigrations');
-        $method->setAccessible(true);
-
-        $method->invoke($mock);
-
-        $result = unserialize($this->getSessionParam('Errors')['default'][0]);
-        $this->assertInstanceOf(DisplayError::class,$result);
-        $this->assertEquals('test404', $result->getOxMessage());
-
     }
 
 }
