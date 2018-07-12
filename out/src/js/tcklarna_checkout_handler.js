@@ -33,10 +33,10 @@ var KlarnaApi;
         var ca = decodedCookie.split(';');
         for (var i = 0; i < ca.length; i++) {
             var c = ca[i];
-            while (c.charAt(0) == ' ') {
+            while (c.charAt(0) === ' ') {
                 c = c.substring(1);
             }
-            if (c.indexOf(name) == 0) {
+            if (c.indexOf(name) === 0) {
                 return c.substring(name.length, c.length);
             }
         }
@@ -234,10 +234,10 @@ var KlarnaApi;
             },
 
             'change': function change(eventData) {
-                // console.log("Event:" + arguments.callee.name, eventData);
+                console.log("Event:" + arguments.callee.name, eventData, showModal, getCookie('blockCountryModal'));
                 eventData.action = arguments.callee.name;
                 // Shows modal after iframe is loaded and there is no user data injected
-                if (eventData['postal_code'] === "" && getCookie('blockCountryModal') != 1) {
+                if (getCookie('blockCountryModal') !== '1') {
                     if (showModal) {
                         $('#myModal').modal('show');
                         document.cookie = "blockCountryModal=1"
