@@ -279,7 +279,7 @@ class KlarnaInstaller extends ShopConfiguration
                   PRIMARY KEY (`OXID`),
                   KEY `TCKLARNA_DATE` (`TCKLARNA_DATE`)
                 )
-                  ENGINE = MyISAM
+                  ENGINE = InnoDB
                   DEFAULT CHARSET = utf8;
                   
 
@@ -290,7 +290,7 @@ class KlarnaInstaller extends ShopConfiguration
                   `KLRECEIVED` DATETIME NOT NULL,
                   PRIMARY KEY (`OXID`)
                 )
-                  ENGINE = MyISAM
+                  ENGINE = InnoDB
                   COMMENT ='List of all Klarna acknowledge requests'
                   DEFAULT CHARSET = utf8;
                   
@@ -300,7 +300,7 @@ class KlarnaInstaller extends ShopConfiguration
                   `OXARTID`  VARCHAR(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
                   PRIMARY KEY (`TCKLARNA_ARTNUM`)
                 )
-                  ENGINE = MyISAM
+                  ENGINE = InnoDB
                   COMMENT ='Mapping of annonymous article numbers to their oxids'
                   DEFAULT CHARSET = utf8;";
 
