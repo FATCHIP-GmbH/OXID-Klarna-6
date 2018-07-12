@@ -28,7 +28,6 @@ use TopConcepts\Klarna\Controller\KlarnaPaymentController;
 use TopConcepts\Klarna\Controller\KlarnaThankYouController;
 use TopConcepts\Klarna\Controller\KlarnaValidationController;
 use TopConcepts\Klarna\Controller\KlarnaViewConfig;
-use TopConcepts\Klarna\Core\KlarnaEmail;
 use TopConcepts\Klarna\Model\KlarnaAddress;
 use TopConcepts\Klarna\Model\KlarnaArticle;
 use TopConcepts\Klarna\Model\KlarnaBasket;
