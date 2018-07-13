@@ -55,11 +55,17 @@ class KlarnaAjaxController extends FrontendController
 
     /**
      * @return string|void
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
+     * @throws StandardException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
+     * @throws \oxSystemComponentException
      */
     public function init()
     {
+        if (!KlarnaUtils::is_ajax()){
+            $this->jsonResponse(__METHOD__, 'Invalid request');
+        }
+
         $oSession = Registry::getSession();
         $oBasket  = $oSession->getBasket();
 
@@ -72,6 +78,10 @@ class KlarnaAjaxController extends FrontendController
                     // create new order. restart session.
                     return $this->jsonResponse(__FUNCTION__, 'restart needed', $data = null);
                 }
+            }
+
+            if ($this->_aOrderData['status'] === 'checkout_complete'){
+                $this->jsonResponse('ajax', 'read_only');
             }
 
             $this->_initUser();
@@ -154,10 +164,11 @@ class KlarnaAjaxController extends FrontendController
      */
     protected function updateUserObject()
     {
-        if ($this->_aOrderData['billing_address'] !== $this->_aOrderData['shipping_address'])
+        if ($this->_aOrderData['billing_address'] !== $this->_aOrderData['shipping_address']) {
             $this->_oUser->updateDeliveryAddress(KlarnaFormatter::klarnaToOxidAddress($this->_aOrderData, 'shipping_address'));
-        else
+        } else {
             $this->_oUser->clearDeliveryAddress();
+        }
 
         $this->_oUser->assign(KlarnaFormatter::klarnaToOxidAddress($this->_aOrderData, 'billing_address'));
         if (isset($this->_aOrderData['customer']['date_of_birth'])) {

@@ -21,6 +21,7 @@ namespace TopConcepts\Klarna\Controller;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\PayPalModule\Controller\ExpressCheckoutDispatcher;
 use OxidEsales\PayPalModule\Controller\StandardDispatcher;
+use TopConcepts\Klarna\Core\Exception\KlarnaOrderReadOnlyException;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
 use TopConcepts\Klarna\Core\KlarnaClientBase;
 use TopConcepts\Klarna\Core\KlarnaConsts;
@@ -125,6 +126,9 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                         $oEx->debugOut();
                     }
 
+                    if ($this->_aOrderData['status'] === 'checkout_complete'){
+                        $this->jsonResponse('ajax', 'read_only');
+                    }
                 }
                 $this->_initUser();
                 $this->updateUserObject();
@@ -798,24 +802,22 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      */
     protected function updateUserObject()
     {
-        if ($this->_oUser) {
-            if ($this->_aOrderData['billing_address'] !== $this->_aOrderData['shipping_address']) {
-                $this->_oUser->updateDeliveryAddress(KlarnaFormatter::klarnaToOxidAddress($this->_aOrderData, 'shipping_address'));
-            } else {
-                $this->_oUser->clearDeliveryAddress();
-            }
+        if ($this->_aOrderData['billing_address'] !== $this->_aOrderData['shipping_address']) {
+            $this->_oUser->updateDeliveryAddress(KlarnaFormatter::klarnaToOxidAddress($this->_aOrderData, 'shipping_address'));
+        } else {
+            $this->_oUser->clearDeliveryAddress();
+        }
 
-            $this->_oUser->assign(KlarnaFormatter::klarnaToOxidAddress($this->_aOrderData, 'billing_address'));
+        $this->_oUser->assign(KlarnaFormatter::klarnaToOxidAddress($this->_aOrderData, 'billing_address'));
 
-            if (isset($this->_aOrderData['customer']['date_of_birth'])) {
-                $this->_oUser->oxuser__oxbirthdate = new Field($this->_aOrderData['customer']['date_of_birth']);
-            }
+        if (isset($this->_aOrderData['customer']['date_of_birth'])) {
+            $this->_oUser->oxuser__oxbirthdate = new Field($this->_aOrderData['customer']['date_of_birth']);
+        }
 
-            if ($this->_oUser->isWritable()) {
-                $this->_oUser->save();
-            } else {
-                $this->getSession()->setVariable('oFakeKlarnaUser', $this->_oUser);
-            }
+        if ($this->_oUser->isWritable()) {
+            $this->_oUser->save();
+        } else {
+            $this->getSession()->setVariable('oFakeKlarnaUser', $this->_oUser);
         }
     }
 

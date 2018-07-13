@@ -26,7 +26,7 @@ class KlarnaServiceMenu extends KlarnaServiceMenu_parent
     public function init()
     {
         $oActTopView = $this->getConfig()->getTopActiveView();
-        if($oActTopView->getClassName() === 'klarnaexpress'){
+        if($oActTopView->getClassName() === 'klarnaexpress' && $oActTopView->isKlarnaFakeUser()){
             unset($this->_aComponentNames['oxcmp_user']);
         }
         return parent::init();

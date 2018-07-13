@@ -598,4 +598,14 @@ class KlarnaExpressController extends FrontendController
             $oUtils->redirect($sUrl, false, 302);
         }
     }
+
+    /**
+     * Checks if user is fake - not registered
+     * Used in the ServiceMenu Controller
+     *
+     */
+    public function isKlarnaFakeUser()
+    {
+        return $this->_oUser->isFake();
+    }
 }
