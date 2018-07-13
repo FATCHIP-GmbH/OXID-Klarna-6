@@ -256,19 +256,19 @@ abstract class AcceptanceKlarnaTest extends AcceptanceTestCase
     {
         $this->waitForFrameToLoad("klarna-checkout-iframe", 2000);
         $this->selectFrame('klarna-checkout-iframe');
-        $this->type("//div[@id='customer-details-next']//input[@id='email']",$this->getKlarnaDataByName('sKlarnaKCOEmail'));
-        $this->type("//div[@id='customer-details-next']//input[@id='postal_code']",$this->getKlarnaDataByName('sKCOFormPostCode'));
+        $this->type("//div[@id='klarna-checkout-customer-details']//input[@id='email']",$this->getKlarnaDataByName('sKlarnaKCOEmail'));
+        $this->type("//div[@id='klarna-checkout-customer-details']//input[@id='postal_code']",$this->getKlarnaDataByName('sKCOFormPostCode'));
         $this->click("//select[@id='title']");
         $this->click("//option[@id='title__option__herr']");
-        $this->type("//div[@id='customer-details-next']//input[@id='given_name']",$this->getKlarnaDataByName('sKCOFormGivenName'));
-        $this->type("//div[@id='customer-details-next']//input[@id='family_name']",$this->getKlarnaDataByName('sKCOFormFamilyName'));
-        $this->type("//div[@id='customer-details-next']//input[@id='street_address']",$this->getKlarnaDataByName('sKCOFormStreetName').' '.$this->getKlarnaDataByName('sKCOFormStreetNumber'));
-        $this->type("//div[@id='customer-details-next']//input[@id='city']",$this->getKlarnaDataByName('sKCOFormCity'));
-        $this->type("//div[@id='customer-details-next']//input[@id='phone']",$this->getKlarnaDataByName('sKCOFormPhone'));
-        $this->type("//div[@id='customer-details-next']//input[@id='date_of_birth']",$this->getKlarnaDataByName('sKCOFormDob'));
+        $this->type("//div[@id='klarna-checkout-customer-details']//input[@id='given_name']",$this->getKlarnaDataByName('sKCOFormGivenName'));
+        $this->type("//div[@id='klarna-checkout-customer-details']//input[@id='family_name']",$this->getKlarnaDataByName('sKCOFormFamilyName'));
+        $this->type("//div[@id='klarna-checkout-customer-details']//input[@id='street_address']",$this->getKlarnaDataByName('sKCOFormStreetName').' '.$this->getKlarnaDataByName('sKCOFormStreetNumber'));
+        $this->type("//div[@id='klarna-checkout-customer-details']//input[@id='city']",$this->getKlarnaDataByName('sKCOFormCity'));
+        $this->type("//div[@id='klarna-checkout-customer-details']//input[@id='phone']",$this->getKlarnaDataByName('sKCOFormPhone'));
+        $this->type("//div[@id='klarna-checkout-customer-details']//input[@id='date_of_birth']",$this->getKlarnaDataByName('sKCOFormDob'));
         $this->delayLoad();
-        if($this->isElementPresent("//div[@id='customer-details-next']//*[text()='Submit']")){
-            $this->clickAndWait("//div[@id='customer-details-next']//*[text()='Submit']");
+        if($this->isElementPresent("//div[@id='klarna-checkout-customer-details']//*[text()='Submit']")){
+            $this->clickAndWait("//div[@id='klarna-checkout-customer-details']//*[text()='Submit']");
         }
     }
 }
