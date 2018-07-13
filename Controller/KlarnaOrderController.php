@@ -21,7 +21,6 @@ namespace TopConcepts\Klarna\Controller;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\PayPalModule\Controller\ExpressCheckoutDispatcher;
 use OxidEsales\PayPalModule\Controller\StandardDispatcher;
-use TopConcepts\Klarna\Core\Exception\KlarnaOrderReadOnlyException;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
 use TopConcepts\Klarna\Core\KlarnaClientBase;
 use TopConcepts\Klarna\Core\KlarnaConsts;
