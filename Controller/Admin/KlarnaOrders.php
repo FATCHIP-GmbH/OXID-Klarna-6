@@ -204,7 +204,7 @@ class KlarnaOrders extends AdminDetailsController
             $oOrder->cancelOrder();
         }
 
-        return $result;
+        $this->getSession()->setVariable($oOrder->getId().'orderCancel', $result);
     }
 
     /**

@@ -125,7 +125,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                         $oEx->debugOut();
                     }
 
-                    if ($this->_aOrderData['status'] === 'checkout_complete'){
+                    if (KlarnaUtils::is_ajax() && $this->_aOrderData['status'] === 'checkout_complete'){
                         $this->jsonResponse('ajax', 'read_only');
                     }
                 }
@@ -168,18 +168,10 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         $oKlarnaLog->save();
     }
 
+
     protected function getKlarnaAllowedExternalPayments()
     {
-        $result = array();
-        $db     = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
-        $sql    = 'SELECT oxid FROM oxpayments WHERE OXACTIVE=1 AND TCKLARNA_EXTERNALPAYMENT=1';
-        /** @var ResultSet $oRs */
-        $oRs = $db->select($sql);
-        foreach ($oRs->getIterator() as $payment) {
-            $result[] = $payment['oxid'];
-        }
-
-        return $result;
+        return KlarnaPayment::getKlarnaAllowedExternalPayments();
     }
 
     protected function isKlarnaExternalPaymentMethod($paymentId, $sCountryISO)

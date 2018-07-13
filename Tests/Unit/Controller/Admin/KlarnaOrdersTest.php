@@ -281,6 +281,7 @@ class KlarnaOrdersTest extends ModuleUnitTestCase
     {
         $cancelKlarnaOrder = $data['cancelKlarnaOrder'];
         $oOrder            = $this->getMock(KlarnaOrder::class, [
+                'getId',
                 'isLoaded',
                 'isKlarnaOrder',
                 'getFieldData',
@@ -289,6 +290,7 @@ class KlarnaOrdersTest extends ModuleUnitTestCase
             ]
         );
         $methods           = [
+            'getId'         => 'test',
             'isLoaded'      => $data['isLoaded'],
             'isKlarnaOrder' => $data['isKlarnaOrder'],
             'getFieldData'  => $data['getFieldData'],
@@ -308,7 +310,8 @@ class KlarnaOrdersTest extends ModuleUnitTestCase
             'resetCache'    => true,
         ]);
 
-        $result = $controller->cancelOrder();
+        $controller->cancelOrder();
+        $result = $this->getSession()->getVariable($oOrder->getId().'orderCancel');
         $this->assertEquals($expectedResult, $result);
     }
 

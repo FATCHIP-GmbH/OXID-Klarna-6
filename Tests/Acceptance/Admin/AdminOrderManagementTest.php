@@ -17,7 +17,7 @@ class AdminOrderManagementTest extends AcceptanceKlarnaTest
         $this->activateTheme('flow');
         $this->prepareKlarnaDatabase('KCO');
         $this->createNewOrder();
-
+        $this->delayLoad(3);
         $this->loginAdmin("Administer Orders", "Orders", false, 'admin', 'admin');
         $this->delayLoad();
         $this->waitForFrameToLoad('list');
@@ -47,7 +47,7 @@ class AdminOrderManagementTest extends AcceptanceKlarnaTest
         $this->activateTheme('flow');
         $this->prepareKlarnaDatabase('KCO');
         $this->createNewOrder();
-
+        $this->delayLoad(3);
         $this->loginAdmin("Administer Orders", "Orders", false, 'admin', 'admin');
         $this->waitForFrameToLoad('list');
         $this->waitForText(AcceptanceKlarnaTest::NEW_ORDER_GIVEN_NAME);
@@ -80,21 +80,21 @@ class AdminOrderManagementTest extends AcceptanceKlarnaTest
         $this->waitForFrameToLoad("klarna-checkout-iframe", 2000);
         $this->selectFrame('klarna-checkout-iframe');
         $this->type(
-            "//div[@id='customer-details-next']//input[@id='email']",
+            "//div[@id='klarna-checkout-customer-details']//input[@id='email']",
             $this->getKlarnaDataByName('sKlarnaKCOEmail')
         );
-        $this->type("//div[@id='customer-details-next']//input[@id='postal_code']", AcceptanceKlarnaTest::NEW_ORDER_ZIP_CODE);
+        $this->type("//div[@id='klarna-checkout-customer-details']//input[@id='postal_code']", AcceptanceKlarnaTest::NEW_ORDER_ZIP_CODE);
         $this->click("//select[@id='title']");
         $this->click("//option[@id='title__option__herr']");
-        $this->type("//div[@id='customer-details-next']//input[@id='given_name']", AcceptanceKlarnaTest::NEW_ORDER_GIVEN_NAME);
-        $this->type("//div[@id='customer-details-next']//input[@id='family_name']", AcceptanceKlarnaTest::NEW_ORDER_FAMILY_NAME);
-        $this->type("//div[@id='customer-details-next']//input[@id='street_address']",AcceptanceKlarnaTest::NEW_ORDER_STREET_ADDRESS);
-        $this->type("//div[@id='customer-details-next']//input[@id='city']", AcceptanceKlarnaTest::NEW_ORDER_CITY);
-        $this->type("//div[@id='customer-details-next']//input[@id='phone']", AcceptanceKlarnaTest::NEW_ORDER_PHONE);
-        $this->type("//div[@id='customer-details-next']//input[@id='date_of_birth']", AcceptanceKlarnaTest::NEW_ORDER_DATE_OF_BIRTH);
+        $this->type("//div[@id='klarna-checkout-customer-details']//input[@id='given_name']", AcceptanceKlarnaTest::NEW_ORDER_GIVEN_NAME);
+        $this->type("//div[@id='klarna-checkout-customer-details']//input[@id='family_name']", AcceptanceKlarnaTest::NEW_ORDER_FAMILY_NAME);
+        $this->type("//div[@id='klarna-checkout-customer-details']//input[@id='street_address']",AcceptanceKlarnaTest::NEW_ORDER_STREET_ADDRESS);
+        $this->type("//div[@id='klarna-checkout-customer-details']//input[@id='city']", AcceptanceKlarnaTest::NEW_ORDER_CITY);
+        $this->type("//div[@id='klarna-checkout-customer-details']//input[@id='phone']", AcceptanceKlarnaTest::NEW_ORDER_PHONE);
+        $this->type("//div[@id='klarna-checkout-customer-details']//input[@id='date_of_birth']", AcceptanceKlarnaTest::NEW_ORDER_DATE_OF_BIRTH);
         $this->delayLoad();
-        if($this->isElementPresent("//div[@id='customer-details-next']//button[@id='button-primary']")){
-            $this->click("//div[@id='customer-details-next']//button[@id='button-primary']");
+        if($this->isElementPresent("//div[@id='klarna-checkout-customer-details']//button[@id='button-primary']")){
+            $this->click("//div[@id='klarna-checkout-customer-details']//button[@id='button-primary']");
         }
         $this->delayLoad();
         if($this->isElementPresent("terms_consent__box"))
@@ -104,6 +104,10 @@ class AdminOrderManagementTest extends AcceptanceKlarnaTest
         if($this->isElementPresent("//div[@id='additional_merchant_terms_checkbox__box']"))
         {
             $this->clickAndWait("//div[@id='additional_merchant_terms_checkbox__box']");
+        }
+        if($this->isElementPresent("//div[@id='additional_checkbox_from_merchant__box']"))
+        {
+            $this->click("id=additional_checkbox_from_merchant__box");
         }
 
         $this->delayLoad();

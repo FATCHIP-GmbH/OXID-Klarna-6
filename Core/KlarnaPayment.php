@@ -18,6 +18,8 @@
 namespace TopConcepts\Klarna\Core;
 
 
+use OxidEsales\Eshop\Core\DatabaseProvider;
+use OxidEsales\EshopCommunity\Core\Database\Adapter\Doctrine\ResultSet;
 use TopConcepts\Klarna\Model\KlarnaUser;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Payment;
@@ -540,5 +542,24 @@ class KlarnaPayment extends BaseModel
         $checkSums                = $this->fetchCheckSums();
         $checkSums[$propertyName] = $value;
         Registry::getSession()->setVariable('kpCheckSums', $checkSums);
+    }
+
+    /**
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
+     * @return array
+     */
+    public static function getKlarnaAllowedExternalPayments()
+    {
+        $result = array();
+        $db     = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
+        $sql    = 'SELECT oxid FROM oxpayments WHERE OXACTIVE=1 AND TCKLARNA_EXTERNALPAYMENT=1';
+        /** @var ResultSet $oRs */
+        $oRs = $db->select($sql);
+        foreach ($oRs->getIterator() as $payment) {
+            $result[] = $payment['oxid'];
+        }
+
+        return $result;
     }
 }

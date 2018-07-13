@@ -1,3 +1,5 @@
+UPDATE `oxcountry` SET `OXACTIVE`='1' WHERE  `oxisoalpha2` in ('US', 'DE', 'AT', 'CH', 'GB', 'BE', 'FI','SE', 'NO', 'NL','DK');
+
 TRUNCATE `oxdelivery`;
 INSERT INTO `oxdelivery` (`OXID`,`OXSHOPID`,`OXACTIVE`,`OXACTIVEFROM`,`OXACTIVETO`,`OXTITLE`,`OXTITLE_1`,`OXTITLE_2`,`OXTITLE_3`,`OXADDSUMTYPE`,`OXADDSUM`,`OXDELTYPE`,`OXPARAM`,`OXPARAMEND`,`OXFIXED`,`OXSORT`,`OXFINALIZE`,`OXTIMESTAMP`) VALUES
 ('1b842e73470578914.54719298', 1, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'Versandkosten für Standard: 3,90 Euro innerhalb Deutschland', 'Shipping costs for Standard: $3.90 for domestic shipping', '', '', 'abs', 3.9, 'p', 0, 79.99, 0, 2000, 1, '2018-04-30 16:04:57'),
