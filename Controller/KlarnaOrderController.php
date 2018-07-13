@@ -728,25 +728,25 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      */
     protected function updateKlarnaOrder()
     {
-//        if($this->_oUser){
-////            $oSession     = $this->getSession();
-////            /** @var Basket|\TopConcepts\Klarna\Model\KlarnaBasket $oBasket */
-////            $oBasket      = $oSession->getBasket();
-////            $oBasket->klarnaValidateVouchers();
-////
-////            $oKlarnaOrder = new KlarnaOrder($oBasket, $this->_oUser);
-////            $oClient      = $this->getKlarnaCheckoutClient();
-////            $aOrderData   = $oKlarnaOrder->getOrderData();
-////
-////            if ($this->forceReloadOnCountryChange && isset($this->_aOrderData['billing_address']) && isset($this->_aOrderData['shipping_address'])) {
-////                $aOrderData['billing_address']  = $this->_aOrderData['billing_address'];
-////                $aOrderData['shipping_address'] = $this->_aOrderData['shipping_address'];
-////            }
-////
-////            return $oClient->createOrUpdateOrder(
-////                json_encode($aOrderData)
-////            );
-////        }
+        if($this->_oUser){
+            $oSession     = $this->getSession();
+            /** @var Basket|\TopConcepts\Klarna\Model\KlarnaBasket $oBasket */
+            $oBasket      = $oSession->getBasket();
+            $oBasket->klarnaValidateVouchers();
+
+            $oKlarnaOrder = new KlarnaOrder($oBasket, $this->_oUser);
+            $oClient      = $this->getKlarnaCheckoutClient();
+            $aOrderData   = $oKlarnaOrder->getOrderData();
+
+            if ($this->forceReloadOnCountryChange && isset($this->_aOrderData['billing_address']) && isset($this->_aOrderData['shipping_address'])) {
+                $aOrderData['billing_address']  = $this->_aOrderData['billing_address'];
+                $aOrderData['shipping_address'] = $this->_aOrderData['shipping_address'];
+            }
+
+            return $oClient->createOrUpdateOrder(
+                json_encode($aOrderData)
+            );
+        }
 
         return true;
     }
