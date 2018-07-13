@@ -20,6 +20,7 @@ namespace TopConcepts\Klarna\Controller;
 
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
 use TopConcepts\Klarna\Core\KlarnaConsts;
+use TopConcepts\Klarna\Core\KlarnaFormatter;
 use TopConcepts\Klarna\Core\KlarnaOrder;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Core\Exception\KlarnaBasketTooLargeException;
@@ -273,26 +274,7 @@ class KlarnaExpressController extends FrontendController
             return false;
         }
 
-        $db      = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
-        $sql     = 'SELECT oxid, oxfname, oxlname, oxstreet, oxstreetnr, oxzip, oxcity FROM oxaddress WHERE oxuserid=?';
-        $results = $db->getAll($sql, array($this->_oUser->getId()));
-
-        if (!is_array($results) || empty($results)) {
-            return false;
-        }
-
-        $formattedResults = array();
-        foreach ($results as $data) {
-            $formattedResults[$data['oxid']] =
-                $data['oxfname'] . ' ' .
-                $data['oxlname'] . ', ' .
-                $data['oxstreet'] . ' ' .
-                $data['oxstreetnr'] . ', ' .
-                $data['oxzip'] . ' ' .
-                $data['oxcity'];
-        }
-
-        return $formattedResults;
+        return KlarnaFormatter::getFormattedUserAddresses($this->_oUser);
     }
 
     /**

@@ -23,11 +23,9 @@ use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use OxidEsales\Eshop\Application\Controller\FrontendController;
 use OxidEsales\Eshop\Application\Model\Order;
-use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Request;
-use OxidEsales\Eshop\Core\UtilsObject;
 
 /**
  * Controller for Klarna Checkout Acknowledge push request
@@ -79,11 +77,7 @@ class KlarnaAcknowledgeController extends FrontendController
      */
     protected function loadOrderByKlarnaId($orderId)
     {
-        $oOrder = oxNew(Order::class);
-        $oxid   = DatabaseProvider::getDb()->getOne('SELECT oxid from oxorder where tcklarna_orderid=?', array($orderId));
-        $oOrder->load($oxid);
-
-        return $oOrder;
+        return KlarnaUtils::loadOrderByKlarnaId($orderId);
     }
 
 
@@ -95,11 +89,7 @@ class KlarnaAcknowledgeController extends FrontendController
      */
     protected function registerKlarnaAckRequest($orderId)
     {
-        $sql = 'INSERT INTO `tcklarna_ack` (`oxid`, `klreceived`, `tcklarna_orderid`) VALUES (?,?,?)';
-        DatabaseProvider::getDb()->Execute(
-            $sql,
-            array(UtilsObject::getInstance()->generateUID(), date('Y-m-d H:i:s'), $orderId)
-        );
+        KlarnaUtils::registerKlarnaAckRequest($orderId);
     }
 
     /**
@@ -111,8 +101,6 @@ class KlarnaAcknowledgeController extends FrontendController
      */
     protected function getKlarnaAckCount($orderId)
     {
-        $sql = 'SELECT COUNT(*) FROM `tcklarna_ack` WHERE `tcklarna_orderid` = ?';
-
-        return DatabaseProvider::getDb()->getOne($sql, array($orderId));
+        return KlarnaUtils::getKlarnaAckCount($orderId);
     }
 }

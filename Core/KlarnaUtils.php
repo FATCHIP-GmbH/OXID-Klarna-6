@@ -19,7 +19,9 @@ namespace TopConcepts\Klarna\Core;
 
 
 use OxidEsales\Eshop\Application\Model\BasketItem;
+use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\Field;
+use OxidEsales\Eshop\Core\UtilsObject;
 use TopConcepts\Klarna\Model\KlarnaCountryList;
 use TopConcepts\Klarna\Model\KlarnaUser;
 use OxidEsales\Eshop\Application\Model\Category;
@@ -363,5 +365,35 @@ class KlarnaUtils
         $sql = 'SELECT oxisoalpha2 FROM oxcountry WHERE oxisoalpha3 = ?';
 
         return DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC)->getOne($sql, [$iso3]);
+    }
+
+    /**
+     * @param $orderId
+     * @return Order
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     */
+    public static function loadOrderByKlarnaId($orderId)
+    {
+        $oOrder = oxNew(Order::class);
+        $oxid   = DatabaseProvider::getDb()->getOne('SELECT oxid from oxorder where tcklarna_orderid=?', array($orderId));
+        $oOrder->load($oxid);
+
+        return $oOrder;
+    }
+
+    public static function registerKlarnaAckRequest($orderId)
+    {
+        $sql = 'INSERT INTO `tcklarna_ack` (`oxid`, `klreceived`, `tcklarna_orderid`) VALUES (?,?,?)';
+        DatabaseProvider::getDb()->Execute(
+            $sql,
+            array(UtilsObject::getInstance()->generateUID(), date('Y-m-d H:i:s'), $orderId)
+        );
+    }
+
+    public static function getKlarnaAckCount($orderId)
+    {
+        $sql = 'SELECT COUNT(*) FROM `tcklarna_ack` WHERE `tcklarna_orderid` = ?';
+
+        return DatabaseProvider::getDb()->getOne($sql, array($orderId));
     }
 }

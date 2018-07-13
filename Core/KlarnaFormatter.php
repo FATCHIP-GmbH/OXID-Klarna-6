@@ -22,6 +22,7 @@ use OxidEsales\Eshop\Application\Model\Address;
 use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Base;
+use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Model\KlarnaUser;
@@ -231,4 +232,30 @@ class KlarnaFormatter extends Base
         return false;
         //@codeCoverageIgnoreEnd
     }
+
+
+    public static function getFormattedUserAddresses($_oUser)
+    {
+        $db      = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
+        $sql     = 'SELECT oxid, oxfname, oxlname, oxstreet, oxstreetnr, oxzip, oxcity FROM oxaddress WHERE oxuserid=?';
+        $results = $db->getAll($sql, array($_oUser->getId()));
+
+        if (!is_array($results) || empty($results)) {
+            return false;
+        }
+
+        $formattedResults = array();
+        foreach ($results as $data) {
+            $formattedResults[$data['oxid']] =
+                $data['oxfname'] . ' ' .
+                $data['oxlname'] . ', ' .
+                $data['oxstreet'] . ' ' .
+                $data['oxstreetnr'] . ', ' .
+                $data['oxzip'] . ' ' .
+                $data['oxcity'];
+        }
+
+        return $formattedResults;
+    }
+
 }
