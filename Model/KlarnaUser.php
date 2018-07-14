@@ -498,7 +498,7 @@ class KlarnaUser extends KlarnaUser_parent
      */
     public function login($sUser, $sPassword, $blCookie = false)
     {
-        parent::login($sUser, $sPassword, $blCookie);
+        $result = parent::login($sUser, $sPassword, $blCookie);
 
         if (KlarnaUtils::getKlarnaModuleMode() == KlarnaConsts::MODULE_MODE_KCO) {
             Registry::getSession()->setVariable(
@@ -508,6 +508,8 @@ class KlarnaUser extends KlarnaUser_parent
             Registry::getSession()->deleteVariable('klarna_checkout_user_email');
             $this->_type = self::LOGGED_IN;
         }
+
+        return $result;
     }
 
     /**

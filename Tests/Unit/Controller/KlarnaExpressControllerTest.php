@@ -10,6 +10,7 @@ use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Request;
+use OxidEsales\Eshop\Core\UtilsObject;
 use OxidEsales\Eshop\Core\UtilsView;
 use TopConcepts\Klarna\Controller\KlarnaExpressController;
 use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
@@ -386,12 +387,18 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
 
         $keController->init();
         $result = $keController->render();
+        $this->assertLoggedException(KlarnaWrongCredentialsException::class, 'KLARNA_UNAUTHORIZED_REQUEST');
 
         $this->assertEquals('tcklarna_checkout.tpl', $result);
 
 
-        $keController = $this->getMock(KlarnaExpressController::class, ['getKlarnaClient', 'getConfig']);
-        $keController->expects($this->any())->method('getKlarnaClient')->will($this->throwException(new KlarnaWrongCredentialsException()));
+        $keController = $this->getMock(KlarnaExpressController::class, ['getConfig']);
+        $credException = $this->createStub(KlarnaWrongCredentialsException::class, ['debugOut' => null]);
+
+        $checkoutClient = $this->getMock(KlarnaCheckoutClient::class, ['createOrUpdateOrder']);
+        $checkoutClient->expects($this->any())->method('createOrUpdateOrder')->will($this->throwException($credException));
+
+        $keController->expects($this->any())->method('getKlarnaClient')->will($this->returnValue($checkoutClient));
         $keController->expects($this->any())->method('getConfig')->will($this->returnValue($oConfig));
 
         $keController->init();

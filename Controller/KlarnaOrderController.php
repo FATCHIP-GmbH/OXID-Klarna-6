@@ -125,7 +125,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                         $oEx->debugOut();
                     }
 
-                    if (KlarnaUtils::is_ajax() && $this->_aOrderData['status'] === 'checkout_complete'){
+                    if (KlarnaUtils::is_ajax() && $this->_aOrderData['status'] === 'checkout_complete') {
                         $this->jsonResponse('ajax', 'read_only');
                     }
                 }
@@ -236,14 +236,17 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     public function execute()
     {
         $oBasket = Registry::getSession()->getBasket();
+        Registry::getSession()->setVariable('sDelAddrMD5', $this->getDeliveryAddressMD5());
+
         if (KlarnaUtils::isKlarnaCheckoutEnabled()) {
             if ($oBasket->getPaymentId() == 'klarna_checkout') {
                 $this->kcoBeforeExecute();
-                $this->kcoExecute($oBasket);
+                $iSuccess = $this->kcoExecute($oBasket);
+
+                return $this->_getNextStep($iSuccess);
             }
         }
 
-        Registry::getSession()->setVariable('sDelAddrMD5', $this->getDeliveryAddressMD5());
         $result = parent::execute();
 
         return $result;
@@ -452,8 +455,10 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
             Registry::getSession()->setVariable('paymentid', 'klarna_checkout');
 
-            Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . "cl=thankyou", false);
+//            Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . "cl=thankyou", false);
         }
+
+        return $iSuccess;
     }
 
 
@@ -727,10 +732,10 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      */
     protected function updateKlarnaOrder()
     {
-        if($this->_oUser){
-            $oSession     = $this->getSession();
+        if ($this->_oUser) {
+            $oSession = $this->getSession();
             /** @var Basket|\TopConcepts\Klarna\Model\KlarnaBasket $oBasket */
-            $oBasket      = $oSession->getBasket();
+            $oBasket = $oSession->getBasket();
             $oBasket->klarnaValidateVouchers();
 
             $oKlarnaOrder = new KlarnaOrder($oBasket, $this->_oUser);
@@ -868,7 +873,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         }
 
         if ($paymentId === 'oxidpaypal') {
-            if($this->_oUser->getType() === KlarnaUser::LOGGED_IN){
+            if ($this->_oUser->getType() === KlarnaUser::LOGGED_IN) {
 
                 return Registry::get(StandardDispatcher::class)->setExpressCheckout();//todo: check if other options possible. user not available.
             }

@@ -47,40 +47,9 @@ class KlarnaOrder extends KlarnaOrder_parent
      */
     public function validateOrder($oBasket, $oUser)
     {
-        if ($oBasket->getPaymentId() == 'klarna_checkout') {
-            return $this->_klarnaValidate($oBasket);
-        } else {
-            $_POST['sDeliveryAddressMD5'] = Registry::getSession()->getVariable('sDelAddrMD5');
+        $_POST['sDeliveryAddressMD5'] = Registry::getSession()->getVariable('sDelAddrMD5');
 
-            return parent::validateOrder($oBasket, $oUser);
-        }
-    }
-
-    /**
-     * Validate Klarna Checkout order information
-     * @param $oBasket
-     * @return int
-     */
-    protected function _klarnaValidate($oBasket)
-    {
-        // validating stock
-        $iValidState = $this->validateStock($oBasket);
-        if (!$iValidState) {
-            // validating delivery
-            $iValidState = $this->validateDelivery($oBasket);
-        }
-
-        if (!$iValidState) {
-            // validating payment
-            $iValidState = $this->validatePayment($oBasket);
-        }
-
-        if (!$iValidState) {
-            // validating minimum price
-            $iValidState = $this->validateBasket($oBasket);
-        }
-
-        return $iValidState;
+        return parent::validateOrder($oBasket, $oUser);
     }
 
     /**
@@ -112,7 +81,7 @@ class KlarnaOrder extends KlarnaOrder_parent
 
                 try {
                     $sCountryISO = KlarnaUtils::getCountryISO($this->getFieldData('oxbillcountryid'));
-                    if(!$client){
+                    if (!$client) {
                         $client = KlarnaOrderManagementClient::getInstance($sCountryISO); // @codeCoverageIgnore
                     }
                     $client->sendOxidOrderNr($this->oxorder__oxordernr->value, $klarna_id);
@@ -192,7 +161,7 @@ class KlarnaOrder extends KlarnaOrder_parent
     {
         $orderId = $orderId ?: $this->getFieldData('tcklarna_orderid');
 
-        if(!$client) {
+        if (!$client) {
             $client = KlarnaOrderManagementClient::getInstance($sCountryISO); // @codeCoverageIgnore
         }
 
@@ -207,7 +176,7 @@ class KlarnaOrder extends KlarnaOrder_parent
      */
     public function updateKlarnaOrder($data, $orderId, $sCountryISO = null, KlarnaOrderManagementClient $client = null)
     {
-        if(!$client){
+        if (!$client) {
             $client = KlarnaOrderManagementClient::getInstance($sCountryISO); // @codeCoverageIgnore
         }
 
@@ -237,7 +206,7 @@ class KlarnaOrder extends KlarnaOrder_parent
         if ($trackcode = $this->getFieldData('oxtrackcode')) {
             $data['shipping_info'] = array(array('tracking_number' => $trackcode));
         }
-        if(!$client){
+        if (!$client) {
             $client = KlarnaOrderManagementClient::getInstance($sCountryISO); // @codeCoverageIgnore
         }
 

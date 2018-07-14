@@ -11,6 +11,7 @@ namespace TopConcepts\Klarna\Testes\Unit\Models;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Application\Model\User;
+use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\UtilsObject;
 use ReflectionClass;
@@ -28,7 +29,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
             [KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID, true],
             [KlarnaPayment::KLARNA_PAYMENT_PAY_LATER_ID, true],
             [KlarnaPayment::KLARNA_PAYMENT_PAY_NOW, true],
-            [KlarnaPayment::KLARNA_PAYMENT_CHECKOUT_ID, false]
+            [KlarnaPayment::KLARNA_PAYMENT_CHECKOUT_ID, false],
         ];
     }
 
@@ -40,7 +41,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
      */
     public function testIsKP($paymentId, $expectedResult)
     {
-        $oOrder = oxNew(Order::class);
+        $oOrder                         = oxNew(Order::class);
         $oOrder->oxorder__oxpaymenttype = new Field($paymentId, Field::T_RAW);
 
         $result = $oOrder->isKP();
@@ -50,49 +51,50 @@ class KlarnaOrderTest extends ModuleUnitTestCase
 
     public function getNewOrderLinesAndTotalsDataProvider()
     {
-        $homeUrl = $this->getConfigParam('sShopURL');
+        $homeUrl    = $this->getConfigParam('sShopURL');
         $orderLines = [
-            'order_lines' => [
+            'order_lines'      => [
                 [
-                    'type' => 'physical',
-                    'reference' => '2103',
-                    'quantity' => 1,
-                    'unit_price' => 32900,
-                    'tax_rate' => 1900,
-                    'total_amount' => 32900,
-                    'total_tax_amount' => 5253,
-                    'quantity_unit' => 'pcs',
-                    'name' => 'Wakeboard LIQUID FORCE GROOVE 2010',
-                    'product_url' => $homeUrl . 'index.php',
-                    'image_url' => $homeUrl . 'out/pictures/generated/product/1/540_340_75/lf_groove_2010_1.jpg',
+                    'type'                => 'physical',
+                    'reference'           => '2103',
+                    'quantity'            => 1,
+                    'unit_price'          => 32900,
+                    'tax_rate'            => 1900,
+                    'total_amount'        => 32900,
+                    'total_tax_amount'    => 5253,
+                    'quantity_unit'       => 'pcs',
+                    'name'                => 'Wakeboard LIQUID FORCE GROOVE 2010',
+                    'product_url'         => $homeUrl . 'index.php',
+                    'image_url'           => $homeUrl . 'out/pictures/generated/product/1/540_340_75/lf_groove_2010_1.jpg',
                     'product_identifiers' => [
-                        'category_path' => '',
+                        'category_path'            => '',
                         'global_trade_item_number' => '',
                         'manufacturer_part_number' => '',
-                        'brand' => ''
+                        'brand'                    => '',
 
 
-                    ]
+                    ],
                 ],
                 [
-                    'type' => 'shipping_fee',
-                    'reference' => 'oxidstandard',
-                    'name' => 'Standard',
-                    'quantity' => 1,
-                    'total_amount' => 0,
+                    'type'                  => 'shipping_fee',
+                    'reference'             => 'oxidstandard',
+                    'name'                  => 'Standard',
+                    'quantity'              => 1,
+                    'total_amount'          => 0,
                     'total_discount_amount' => 0,
-                    'total_tax_amount' => 0,
-                    'unit_price' => 0,
-                    'tax_rate' => 1900
-                ]
+                    'total_tax_amount'      => 0,
+                    'unit_price'            => 0,
+                    'tax_rate'              => 1900,
+                ],
 
             ],
-            'order_amount' => 32900,
-            'order_tax_amount' => 5253
+            'order_amount'     => 32900,
+            'order_tax_amount' => 5253,
         ];
+
         return [
             [0, true, $orderLines],
-            [0, false, $orderLines]
+            [0, false, $orderLines],
         ];
     }
 
@@ -104,7 +106,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
      */
     public function testGetNewOrderLinesAndTotals($iLang, $isCapture, $expectedResult)
     {
-        $id = $this->prepareKlarnaOrder();
+        $id     = $this->prepareKlarnaOrder();
         $oOrder = oxNew(Order::class);
         $oOrder->load($id);
         $result = $oOrder->getNewOrderLinesAndTotals($iLang, $isCapture);
@@ -113,12 +115,11 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $this->removeKlarnaOrder($id);
     }
 
-
     public function validateOrderDataProvider()
     {
         return [
             ['klarna_checkout', null],
-            ['invalid_payment', 5]
+            ['invalid_payment', 5],
         ];
     }
 
@@ -139,16 +140,16 @@ class KlarnaOrderTest extends ModuleUnitTestCase
 
         UtilsObject::setClassInstance(Payment::class, $paymentModel);
 
+        $this->setSessionParam('sDelAddrMD5','d41d8cd98f00b204e9800998ecf8427e');
+
         /** @var \OxidEsales\Eshop\Application\Model\Basket $oBasket */
         $oBasket = $this->prepareBasketWithProduct();
-        $oUser = oxNew(User::class);
+        $oUser   = oxNew(User::class);
         $oBasket->setPayment($paymentId);
-
-        $order = oxNew(Order::class);
+        $order = $this->createStub(Order::class, ['validateDeliveryAddress' => null]);
         $result = $order->validateOrder($oBasket, $oUser);
 
         $this->assertEquals($expectedResult, $result);
-
     }
 
     public function isKlarnaOrderDataProvider()
@@ -170,7 +171,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
      */
     public function testIsKlarnaOrder($type, $expectedResult)
     {
-        $order = oxNew(Order::class);
+        $order                         = oxNew(Order::class);
         $order->oxorder__oxpaymenttype = new Field($type, Field::T_RAW);
 
         $result = $order->isKlarnaOrder();
@@ -184,16 +185,16 @@ class KlarnaOrderTest extends ModuleUnitTestCase
      */
     public function testIsKlarna($type, $notUsed, $expectedResult)
     {
-        $order = oxNew(Order::class);
+        $order                         = oxNew(Order::class);
         $order->oxorder__oxpaymenttype = new Field($type, Field::T_RAW);
-        $result = $order->isKlarna();
+        $result                        = $order->isKlarna();
         $this->assertEquals($expectedResult, $result);
     }
 
     public function errorDataProvider()
     {
         return [
-            [403], [422], [401], [404]
+            [403], [422], [401], [404],
         ];
     }
 
@@ -202,7 +203,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         return [
             ['type1', false],
             ['klarna_checkout', true],
-            ['klarna_pay_later', false]
+            ['klarna_pay_later', false],
         ];
     }
 
@@ -213,7 +214,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
      */
     public function testIsKCO($type, $expectedResult)
     {
-        $order = oxNew(Order::class);
+        $order                         = oxNew(Order::class);
         $order->oxorder__oxpaymenttype = new Field($type, Field::T_RAW);
 
         $result = $order->isKCO();
@@ -222,11 +223,11 @@ class KlarnaOrderTest extends ModuleUnitTestCase
 
     public function testCancelKlarnaOrder()
     {
-        $id = 'zzz';
+        $id       = 'zzz';
         $response = ['response'];
 
         $client = $this->createStub(KlarnaOrderManagementClient::class, ['cancelOrder' => $response]);
-        $order = oxNew(Order::class);
+        $order  = oxNew(Order::class);
         $result = $order->cancelKlarnaOrder($id, null, $client);
         $this->assertEquals($response, $result);
     }
@@ -234,13 +235,13 @@ class KlarnaOrderTest extends ModuleUnitTestCase
 
     public function testUpdateKlarnaOrder()
     {
-        $id = 'zzz';
-        $data = ['update' => 'data'];
+        $id       = 'zzz';
+        $data     = ['update' => 'data'];
         $response = ['response'];
 
         $client = $this->createStub(KlarnaOrderManagementClient::class, ['updateOrderLines' => $response]);
 
-        $order = oxNew(Order::class);
+        $order  = oxNew(Order::class);
         $result = $order->updateKlarnaOrder($data, $id, null, $client);
         $this->assertNull($result);
 
@@ -250,7 +251,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $client = $this->getMock(KlarnaOrderManagementClient::class, ['updateOrderLines']);
         $client->expects($this->once())->method('updateOrderLines')->willThrowException(new KlarnaClientException("Test"));
 
-        $order = oxNew(Order::class);
+        $order  = oxNew(Order::class);
         $result = $order->updateKlarnaOrder($data, $id, null, $client);
 
         $this->assertEquals(0, $order->oxorder__tcklarna_sync->value);
@@ -260,14 +261,14 @@ class KlarnaOrderTest extends ModuleUnitTestCase
 
     public function testCaptureKlarnaOrder()
     {
-        $id = 'zzz';
-        $data = ['update' => 'data'];
+        $id       = 'zzz';
+        $data     = ['update' => 'data'];
         $response = ['response'];
 
         $client = $this->createStub(KlarnaOrderManagementClient::class, ['captureOrder' => $response]);
         $client->expects($this->once())->method('captureOrder')->willReturn($response);
 
-        $order = oxNew(Order::class);
+        $order  = oxNew(Order::class);
         $result = $order->captureKlarnaOrder($data, $id, null, $client);
         $this->assertEquals($response, $result);
 
@@ -276,24 +277,25 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $client->expects($this->once())
             ->method('captureOrder')
             ->with($this->callback(
-                function($data){
+                function ($data) {
                     return isset($data['shipping_info']) && $data['shipping_info'] === [['tracking_number' => 'trackcode']];
                 })
             )
             ->willReturn($response);
 
         $order->oxorder__oxtrackcode = new Field('trackcode', Field::T_RAW);
-        $result = $order->captureKlarnaOrder($data, $id, null, $client);
+        $result                      = $order->captureKlarnaOrder($data, $id, null, $client);
         $this->assertEquals($response, $result);
     }
+
     /**
      * @throws \ReflectionException
      */
     public function test_setNumber()
     {
-        $id = $this->prepareKlarnaOrder();
-        $order = $this->getMock(Order::class, ['isKlarna', 'isKP', 'isKCO']);
-        $class =  new ReflectionClass(get_class($order));
+        $id     = $this->prepareKlarnaOrder();
+        $order  = $this->getMock(Order::class, ['isKlarna', 'isKP', 'isKCO']);
+        $class  = new ReflectionClass(get_class($order));
         $method = $class->getMethod('_setNumber');
         $method->setAccessible(true);
 
@@ -306,7 +308,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $this->setSessionParam('klarna_last_KP_order_id', 'klarnaId');
 
         $response = ['response'];
-        $client = $this->createStub(KlarnaOrderManagementClient::class, ['sendOxidOrderNr' => $response]);
+        $client   = $this->createStub(KlarnaOrderManagementClient::class, ['sendOxidOrderNr' => $response]);
         $client->expects($this->once())
             ->method('sendOxidOrderNr')
             ->willReturn($response);
@@ -318,15 +320,13 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $this->assertEquals('klarnaId', $order->oxorder__tcklarna_orderid->value);
 
 
-
-
         // exception
         $order->oxorder__tcklarna_orderid = new Field('', Field::T_RAW);
         $order->expects($this->any())->method('isKCO')->willReturn(true);
         $this->setSessionParam('klarna_checkout_order_id', 'klarnaId');
 
         $response = ['response'];
-        $e = $this->getMock(KlarnaClientException::class, ['debugOut']);
+        $e        = $this->getMock(KlarnaClientException::class, ['debugOut']);
         $e->expects($this->once())->method('debugOut');
         $client = $this->createStub(KlarnaOrderManagementClient::class, ['sendOxidOrderNr' => $response]);
         $client->expects($this->once())
@@ -347,10 +347,10 @@ class KlarnaOrderTest extends ModuleUnitTestCase
     {
 
 //        $order = $this->getMock(Order::class, ['getOrderArticles']);
-        $order = oxNew(Order::class);
+        $order   = oxNew(Order::class);
         $oBasket = $this->prepareBasketWithProduct();
 
-        $class =  new ReflectionClass(get_class($order));
+        $class  = new ReflectionClass(get_class($order));
         $method = $class->getMethod('_setOrderArticles');
         $method->setAccessible(true);
 
@@ -358,8 +358,8 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $result = $method->invokeArgs($order, [$oBasket->getContents()]);
         $this->assertNull($result);
 
-        $oList = $order->getOrderArticles();
-        $aList = $this->getProtectedClassProperty($oList, '_aArray');
+        $oList    = $order->getOrderArticles();
+        $aList    = $this->getProtectedClassProperty($oList, '_aArray');
         $oArticle = reset($aList); // get first element
 
         $this->assertNotEmpty($oArticle->getFieldData('oxorderarticles__tcklarna_title'));
@@ -369,8 +369,8 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $result = $method->invokeArgs($order, [$oBasket->getContents()]);
         $this->assertNull($result);
 
-        $oList = $order->getOrderArticles();
-        $aList = $this->getProtectedClassProperty($oList, '_aArray');
+        $oList    = $order->getOrderArticles();
+        $aList    = $this->getProtectedClassProperty($oList, '_aArray');
         $oArticle = reset($aList); // get first element
 
         $this->assertNull($oArticle->getFieldData('oxorderarticles__tcklarna_title'));
@@ -383,7 +383,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
 
         return [
             [true],
-            [null]
+            [null],
         ];
     }
 }
