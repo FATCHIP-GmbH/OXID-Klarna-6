@@ -11,12 +11,22 @@ $serviceCaller->setParameter('importSql', '@' . $klarnaTestDirectory . 'Unit/Tes
 
 
 /** Add object to shop mapping for EE */
-if ($testConfig->getShopEdition() == 'EE'){
+if ($testConfig->getShopEdition() === 'EE'){
+
     $db = DatabaseProvider::getDb();
-    $sql = "REPLACE INTO `oxarticles2shop` SET `oxmapobjectid` = ?, `oxshopid` = ?";
-    $db->execute($sql, array(1, 1));
-    $db->execute($sql, array(2, 1));
-    $db->execute($sql, array(3, 1));
+    $shopId = 1;
+    $mapIds = [
+        'oxarticles' => [1, 2, 3],
+        'oxcategories' => [1],
+        'oxdiscount' => [1]
+    ];
+
+    foreach($mapIds as $tableName => $mapIds){
+        $sql = "REPLACE INTO `{$tableName}2shop` SET `oxmapobjectid` = ?, `oxshopid` = ?";
+        foreach($mapIds as $mapId){
+            $db->execute($sql, array($mapId, $shopId));
+        }
+    }
 }
 
 $serviceCaller->callService('ShopPreparation', 1);
