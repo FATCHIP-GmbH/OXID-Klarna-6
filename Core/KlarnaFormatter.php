@@ -174,7 +174,7 @@ class KlarnaFormatter extends Base
             $sTable   = 'oxaddress__';
             $oxObject = self::completeUserData($oxObject);
         } else
-            throw new \TypeError('Argument must be instance of User|Address.');
+            throw new \Exception('Argument must be instance of User|Address.');
 
         return $sTable;
     }
