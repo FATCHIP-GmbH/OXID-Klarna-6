@@ -384,7 +384,11 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     protected function _createUser()
     {
         $aBillingAddress  = KlarnaFormatter::klarnaToOxidAddress($this->_aOrderData, 'billing_address');
-        $aDeliveryAddress = KlarnaFormatter::klarnaToOxidAddress($this->_aOrderData, 'shipping_address');
+
+        $aDeliveryAddress = null;
+        if($this->_aOrderData['billing_address'] !== $this->_aOrderData['shipping_address']){
+            $aDeliveryAddress = KlarnaFormatter::klarnaToOxidAddress($this->_aOrderData, 'shipping_address');
+        }
 
         $this->_oUser->oxuser__oxusername = new Field($this->_aOrderData['billing_address']['email'], Field::T_RAW);
         $this->_oUser->oxuser__oxactive   = new Field(1, Field::T_RAW);
@@ -411,7 +415,9 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
         $this->setUser($this->_oUser);
 
-        $this->_oUser->updateDeliveryAddress(KlarnaFormatter::klarnaToOxidAddress($this->_aOrderData, 'shipping_address'));
+        if($aDeliveryAddress){
+            $this->_oUser->updateDeliveryAddress($aDeliveryAddress);
+        }
 
         return true;
     }
