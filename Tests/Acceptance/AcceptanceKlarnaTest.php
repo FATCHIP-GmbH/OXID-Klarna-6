@@ -251,13 +251,13 @@ abstract class AcceptanceKlarnaTest extends AcceptanceTestCase
             $db = DatabaseProvider::getDb();
             $shopId = 1;
             $mapIds = [
+                'oxarticles' => [1118, 1119],
                 'oxdelivery' => range(1, 5),
                 'oxdeliveryset' => range(1, 3),
                 'oxvoucherseries' => [1],
             ];
 
             foreach($mapIds as $tableName => $mapIds){
-                $db->execute("TRUNCATE `$tableName`");
                 $sql = "REPLACE INTO `{$tableName}2shop` SET `oxmapobjectid` = ?, `oxshopid` = ?";
                 foreach($mapIds as $mapId){
                     $db->execute($sql, array($mapId, $shopId));
