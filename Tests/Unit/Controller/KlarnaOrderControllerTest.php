@@ -41,7 +41,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
     public function testKlarnaExternalPaymentError()
     {
-        $mock = $this->createStub(KlarnaOrderController::class, ['init' => true]);
+        $mock = $this->createStub(OrderController::class, ['init' => true]);
         $mock->klarnaExternalPayment();
         $result = unserialize($this->getSessionParam('Errors')['default'][0]);
 

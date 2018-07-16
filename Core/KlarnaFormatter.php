@@ -104,7 +104,7 @@ class KlarnaFormatter extends Base
     /**
      * @param $oxObject KlarnaUser|User|Address
      * @return array
-     * @throws \TypeError
+     * @throws \Exception
      */
     public static function oxidToKlarnaAddress($oxObject)
     {
@@ -165,6 +165,7 @@ class KlarnaFormatter extends Base
     /**
      * @param $oxObject
      * @return string
+     * @throws \Exception
      */
     protected static function validateInstance(&$oxObject)
     {
@@ -173,8 +174,9 @@ class KlarnaFormatter extends Base
         } else if ($oxObject instanceof Address) {
             $sTable   = 'oxaddress__';
             $oxObject = self::completeUserData($oxObject);
-        } else
+        } else{
             throw new \Exception('Argument must be instance of User|Address.');
+        }
 
         return $sTable;
     }

@@ -2,10 +2,10 @@
 
 namespace TopConcepts\Klarna\Tests\Unit\Core;
 
+use OxidEsales\Eshop\Application\Model\Address;
+use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Field;
 use TopConcepts\Klarna\Core\KlarnaFormatter;
-use TopConcepts\Klarna\Model\KlarnaAddress;
-use TopConcepts\Klarna\Model\KlarnaUser;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaFormatterTest extends ModuleUnitTestCase
@@ -16,11 +16,12 @@ class KlarnaFormatterTest extends ModuleUnitTestCase
      * @param $object
      * @param $expectedResult
      * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
+     * @throws \Exception
      */
     public function testOxidToKlarnaAddress($object, $expectedResult)
     {
         if ($object == null) {
-            $this->setExpectedException(\TypeError::class, $expectedResult);
+            $this->setExpectedException(\Exception::class, $expectedResult);
             KlarnaFormatter::oxidToKlarnaAddress('invalid');
         } else {
             $result = KlarnaFormatter::oxidToKlarnaAddress($object);
@@ -31,9 +32,9 @@ class KlarnaFormatterTest extends ModuleUnitTestCase
 
     public function oxidtoklarnaDataprovider()
     {
-        $addressMock = $this->createStub(KlarnaAddress::class, []);
+        $addressMock = $this->createStub(Address::class, []);
 
-        $userMock = $this->getMock(KlarnaUser::class, ['getFieldData']);
+        $userMock = $this->getMock(User::class, ['getFieldData']);
         $userMock->oxuser__oxcountryid = new Field('a7c40f632a0804ab5.18804076', Field::T_RAW);
         $userMock->oxuser__oxstreet = new Field('street', Field::T_RAW);
         $userMock->oxuser__oxstreetnr = new Field('streetnr', Field::T_RAW);

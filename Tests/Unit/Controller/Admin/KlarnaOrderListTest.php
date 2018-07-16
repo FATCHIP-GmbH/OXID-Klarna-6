@@ -3,11 +3,11 @@
 namespace TopConcepts\Klarna\Tests\Unit\Controller\Admin;
 
 
+use OxidEsales\Eshop\Application\Controller\Admin\OrderList;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\Exception\ExceptionToDisplay;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
-use TopConcepts\Klarna\Controller\Admin\KlarnaOrderList;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 use OxidEsales\Eshop\Core\UtilsObject;
 
@@ -45,7 +45,7 @@ class KlarnaOrderListTest extends ModuleUnitTestCase
     {
         $order = $this->setOrder();
 
-        $controller = $this->createStub(KlarnaOrderList::class, ['getEditObjectId' => 'test', 'cancelOrder' => true, 'resetContentCache' => true, 'init' => true]);
+        $controller = $this->createStub(OrderList::class, ['getEditObjectId' => 'test', 'cancelOrder' => true, 'resetContentCache' => true, 'init' => true]);
 
         $this->assertFalse($order->oxorder__tcklarna_sync);
         $controller->$method();
