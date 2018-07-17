@@ -3,6 +3,7 @@
 namespace TopConcepts\Klarna\Controller\Admin;
 
 
+use OxidEsales\Eshop\Core\Module\ModuleList;
 use TopConcepts\Klarna\Core\KlarnaConsts;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use OxidEsales\Eshop\Application\Controller\Admin\ShopConfiguration;
@@ -268,8 +269,14 @@ class KlarnaBaseConfig extends ShopConfiguration
     public function getManualDownloadLink()
     {
         $langTag = Registry::getLang()->getLanguageAbbr($this->getViewDataElement('adminlang'));
+        $versionList = oxNew(ModuleList::class)->getModuleConfigParametersByKey(ModuleList::MODULE_KEY_VERSIONS);
+        $version = '4.0.0';
+        if(key_exists('tcklarna', $versionList))
+        {
+            $version = $versionList['tcklarna'];
+        }
 
-        return sprintf(KlarnaConsts::KLARNA_MANUAL_DOWNLOAD_LINK, $langTag);
+        return sprintf(KlarnaConsts::KLARNA_MANUAL_DOWNLOAD_LINK, $langTag, $version);
     }
 
     public function getLangs()
