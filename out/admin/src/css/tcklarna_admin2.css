@@ -331,19 +331,24 @@ a:focus {
 .klarna-logo {
     margin: 40px 0 0 0;
     background: url(//cdn.klarna.com/1.0/shared/image/generic/logo/en_gb/basic/logo_black.png);
-    width: 361px;
-    height: 80px;
+    width: 229px;
+    height: 51px;
     background-size: cover;
+    float: right;
 }
 
 .w5 {
-    width: 42%;
+    width: 40%;
     display: inline-block;
 }
 
 .w7 {
-    width: 58%;
+    width: 81%;
     display: inline-block;
+}
+
+.w7>h1{
+    font-size: 133%;
 }
 
 .no-padding {
