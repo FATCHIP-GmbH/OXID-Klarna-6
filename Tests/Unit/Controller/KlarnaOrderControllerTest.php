@@ -16,6 +16,7 @@ use OxidEsales\Eshop\Core\Exception\ExceptionToDisplay;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Session;
 use OxidEsales\Eshop\Core\ViewConfig;
 use OxidEsales\PayPalModule\Controller\ExpressCheckoutDispatcher;
 use TopConcepts\Klarna\Controller\KlarnaOrderController;
