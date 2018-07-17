@@ -524,14 +524,13 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $orderData = [
             'billing_address' => ['street_address' => 'testBilling'],
             'shipping_address' => ['street_address' => 'testShipping'],
-            'customer' => ['date_of_birth' => 'test'],
         ];
 
         $user = $this->createStub(
             KlarnaUser::class,
             ['tcklarna_getType' => 2, 'save' => true, 'clearDeliveryAddress' => true, 'updateDeliveryAddress' => true]
         );
-
+        // test client exception
         $mock = $this->getMock(KlarnaOrderController::class, ['getJsonRequest', 'updateKlarnaOrder']);
         $mock->expects($this->any())->method('getJsonRequest')->willReturn(['action' => 'shipping_address_change']);
         $mock->expects($this->any())->method('updateKlarnaOrder')->willThrowException(new KlarnaWrongCredentialsException());
@@ -542,16 +541,69 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
         $mock->updateKlarnaAjax();
 
-        $this->assertEquals('test', $user->oxuser__oxbirthdate);
-
         $expected = [
             "action" => "shipping_address_change",
-            "status" => "changed",
+            "status" => null,
             "data" => null,
         ];
 
         $this->assertEquals($expected, json_decode(\oxUtilsHelper::$response, true));
         $this->assertLoggedException(KlarnaWrongCredentialsException::class, 'KLARNA_UNAUTHORIZED_REQUEST');
+
+        // test success
+        $mock = $this->getMock(KlarnaOrderController::class, ['getJsonRequest', 'updateKlarnaOrder']);
+        $mock->expects($this->any())->method('getJsonRequest')->willReturn(['action' => 'shipping_address_change']);
+        $mock->expects($this->any())->method('updateKlarnaOrder')->willReturn(null);
+        $this->setProtectedClassProperty($mock, '_aOrderData', $orderData);
+        $this->setProtectedClassProperty($mock, '_oUser', $user);
+        $this->setProtectedClassProperty($mock, 'forceReloadOnCountryChange', true);
+
+        $mock->updateKlarnaAjax();
+
+        $expected = [
+            "action" => "shipping_address_change",
+            "status" => 'changed',
+            "data" => null,
+        ];
+
+        $this->assertEquals($expected, json_decode(\oxUtilsHelper::$response, true));
+
+
+        $mock = $this->getMock(KlarnaOrderController::class, ['getJsonRequest', 'updateKlarnaOrder']);
+        $mock->expects($this->any())->method('getJsonRequest')->willReturn(['action' => 'shipping_address_change']);
+        $mock->expects($this->any())->method('updateKlarnaOrder')->willReturn(null);
+        $this->setProtectedClassProperty($mock, '_aOrderData', $orderData);
+        $this->setProtectedClassProperty($mock, '_oUser', $user);
+        $this->setProtectedClassProperty($mock, 'forceReloadOnCountryChange', true);
+
+        $oBasketMock = $this->getMock(Basket::class, ['getVouchers', 'klarnaValidateVouchers']);
+        $oBasketMock->expects( $this->any())->method( 'getVouchers' )->will($this->returnValue(['voucher1']));
+        $this->getSession()->setBasket($oBasketMock);
+
+        // test voucher widget update
+        $mock->updateKlarnaAjax();
+
+        $expected = [
+            "action" => "shipping_address_change",
+            "status" => 'changed',
+            "data" => null,
+        ];
+        $this->assertEquals($expected, json_decode(\oxUtilsHelper::$response, true));
+
+        $oBasketMock = $this->getMock(Basket::class, ['getVouchers', 'klarnaValidateVouchers']);
+        $oBasketMock->expects( $this->at(0) )->method( 'getVouchers' )->will($this->returnValue(['voucher1']));
+        $oBasketMock->expects( $this->at(2) )->method( 'getVouchers' )->will($this->returnValue([]));
+        $this->getSession()->setBasket($oBasketMock);
+        $mock->updateKlarnaAjax();
+
+        $expected = [
+            "action" => "shipping_address_change",
+            "status" => 'update_voucher_widget',
+            "data" => null,
+        ];
+
+        $this->assertEquals($expected, json_decode(\oxUtilsHelper::$response, true));
+
     }
 
     public function testUpdateKlarnaAjaxShippingOptionChange()
