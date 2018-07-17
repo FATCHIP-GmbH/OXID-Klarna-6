@@ -720,21 +720,31 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      */
     protected function shipping_address_change()
     {
-        $this->updateUserObject();
+        $status = null;
         try {
+            $oSession = Registry::getSession();
+            $oBasket  = $oSession->getBasket();
+            if($vouchersCount = count($oBasket->getVouchers())){
+                $oBasket->klarnaValidateVouchers();
+                // update widget if there was some invalid vouchers
+                if($vouchersCount !== count($oBasket->getVouchers())){
+                    $status = 'update_voucher_widget';
+                }
+            }
             $this->updateKlarnaOrder();
+            $status = isset($status) ? $status : 'changed';
         } catch (StandardException $e) {
             $e->debugOut();
         }
 
-        return $this->jsonResponse(__FUNCTION__, 'changed');
+        return $this->jsonResponse(__FUNCTION__, $status);
 
     }
 
     /**
      * Sends update request to checkout API
-     * @throws \oxSystemComponentException
      * @return array|bool order data
+     * @throws \oxSystemComponentException
      */
     protected function updateKlarnaOrder()
     {
@@ -742,8 +752,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             $oSession = $this->getSession();
             /** @var Basket|\TopConcepts\Klarna\Model\KlarnaBasket $oBasket */
             $oBasket = $oSession->getBasket();
-            $oBasket->klarnaValidateVouchers();
-
             $oKlarnaOrder = new KlarnaOrder($oBasket, $this->_oUser);
             $oClient      = $this->getKlarnaCheckoutClient();
             $aOrderData   = $oKlarnaOrder->getOrderData();
@@ -954,7 +962,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      * @param $data
      * @return string
      */
-    private function jsonResponse($action, $status, $data = null)
+    private function jsonResponse($action, $status = null, $data = null)
     {
         return Registry::getUtils()->showMessageAndExit(json_encode(array(
             'action' => $action,

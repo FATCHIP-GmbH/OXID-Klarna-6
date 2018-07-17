@@ -163,7 +163,6 @@ var KlarnaApi;
                 var data = JSON.parse(response);
                 this.updateErrors(data.error);
                 this.$content.find('.voucherData').html(data.vouchers);
-                this.updateInProgress = false;
 
             },
 
@@ -172,7 +171,6 @@ var KlarnaApi;
                 this.$content = this.$form.closest('.drop-content');
                 this.$submitButton.click(this.submitVoucher.bind(this));
                 this.$content.on('click', '.couponData a', this.removeVoucher.bind(this));
-                this.updateInProgress = false;
             }
         }
     );
@@ -185,9 +183,16 @@ var KlarnaApi;
         KlarnaApi = api;
 
         /** vars track changes of this values during the 'change' event */
-        var country;
+        var country, eventsInProgress = [];
 
         var klarnaSendXHR = function (data, suspendMode) {
+
+            if(eventsInProgress.indexOf(data.action) > -1){
+                console.warn('ACTION ' + data.action + ' already in progress.');
+                return;
+            }
+            eventsInProgress = eventsInProgress.concat(data.action);
+
             suspendMode = typeof suspendMode !== 'undefined' ? suspendMode : true;
             if (suspendMode)
                 api.suspend();
@@ -198,12 +203,11 @@ var KlarnaApi;
                 url: '?cl=order&fnc=updateKlarnaAjax',
                 data: JSON.stringify(data),
                 statusCode: {
-                    404: function () {
-                        klarnaSendXHR(data);
-                    },
                     200: function () {
-                        if (suspendMode)
+                        eventsInProgress.remove(data.action);
+                        if (suspendMode){
                             api.resume();
+                        }
                     }
                 }
             }).success(function (response) {
@@ -212,8 +216,7 @@ var KlarnaApi;
                     window.location.href = response.data.url;
                 }
 
-                if(!vouchersWidget.updateInProgress){
-                    vouchersWidget.updateInProgress = true;
+                if(response.status === 'update_voucher_widget'){
                     $.get('?cl=KlarnaAjax&fnc=updateVouchers', vouchersWidget.updateWidget.bind(vouchersWidget));
                 }
             });
@@ -233,7 +236,6 @@ var KlarnaApi;
             },
 
             'change': function change(eventData) {
-                console.log("Event:" + arguments.callee.name, eventData, showModal, getCookie('blockCountryModal'));
                 eventData.action = arguments.callee.name;
                 // Shows modal after iframe is loaded and there is no user data injected
                 if (getCookie('blockCountryModal') !== '1') {
@@ -253,4 +255,3 @@ var KlarnaApi;
         });
     });
 })();
-

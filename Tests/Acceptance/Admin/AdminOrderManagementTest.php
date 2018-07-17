@@ -103,6 +103,7 @@ class AdminOrderManagementTest extends AcceptanceKlarnaTest
         }
         if($this->isElementPresent("//div[@id='additional_merchant_terms_checkbox__box']"))
         {
+            $this->delayLoad(3); // wait for checkbox to be reloaded
             $this->clickAndWait("//div[@id='additional_merchant_terms_checkbox__box']");
         }
         if($this->isElementPresent("//div[@id='additional_checkbox_from_merchant__box']"))
