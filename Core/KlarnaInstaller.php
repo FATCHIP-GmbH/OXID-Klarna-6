@@ -418,7 +418,7 @@ class KlarnaInstaller extends ShopConfiguration
         $sTitle           = 'Klarna Teaser';
         $sLink            = '';
         $sFileName        = 'klarna-banner.png';
-        $actionsMediaPath = Registry::getConfig()->getConfigParam('sShopDir') . 'out/pictures/promo/';
+        $actionsMediaPath = Registry::getConfig()->getConfigParam('sShopDir') . '/out/pictures/promo/';
 
         $oActionKlarnaTeaser = oxNew(Actions::class);
         $oActionKlarnaTeaser->setShopId($shopId);
@@ -438,7 +438,7 @@ class KlarnaInstaller extends ShopConfiguration
             $oActionKlarnaTeaser->{'oxactions__oxlink' . $sTag}  = new Field($sLink, Field::T_RAW);
             $oActionKlarnaTeaser->{'oxactions__oxpic' . $sTag}   = new Field($langFileName, Field::T_RAW);
 
-            $filePath = self::$instance->modulePath . 'out/src/img/' . $langFileName;
+            $filePath = self::$instance->modulePath . '/out/src/img/' . $langFileName;
             if (file_exists($filePath)) {
                 copy($filePath, $actionsMediaPath . $langFileName);
             }
