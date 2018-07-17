@@ -38,7 +38,7 @@ $aLang = array(
     'TCKLARNA_NO_OPTIONS_MODE'   => 'In diesem Modus gibt es keine Einstellungen.',
     'TCKLARNA_CHANGES_SAVED'     => 'Alle Einstellungen wurden gesichert.',
 
-    'TCKLARNA_CONTACT_OPTIONS'              => 'Kontaktmöglichkeiten',
+    'TCKLARNA_CONTACT_OPTIONS'              => 'Händlersupport',
     'TCKLARNA_PHONE'                        => 'Telefon',
     'TCKLARNA_EMAIL'                        => 'Email',
     'TCKLARNA_BUSINESS_HOURS'               => 'Geschäftszeiten',
@@ -69,8 +69,8 @@ $aLang = array(
 
     'TCKLARNA_CHECKOUT_DESC'     => 'Die Komplettlösung enthält alle wichtigen Zahlarten (Rechnung, Ratenkauf, Sofortüberweisung, Lastschrift, Mastercard und VISA-Card) und wird durch Klarna gehostet. Ihre Kunden müssen beim Bezahlen lediglich E-Mail-Adresse und Postleitzahl eingeben und können ihre bevorzugte Zahlart wählen. Alles mit nur einer Integration.',
     'TCKLARNA_PAYMENTS_DESC'     => 'Mit Klarna können Endkunden auf drei Arten bezahlen: Sofortüberweisung, später oder in Raten. Das ermöglicht Endkunden, Ware erst zu probieren und nur das zu bezahlen, was sie behalten möchten, Produkte im Shop zu finanzieren oder sofort zu bezahlen. Rechnung, Ratenkauf, Sofortüberweisung oder Lastschrift können Sie mit einer Integration aktivieren und sind dank der iFrame Lösung von Klarna rechtlich und inhaltlich immer auf dem aktuellen Stand.',
-    'TCKLARNA_EASY_AND_SECURE_SHOPPING' => 'Einfach und sicher online einkaufen',
-    'TCKLARNA_WELCOME_TO_CONFIGURATION' => 'Herzlich willkommen in den Konfigurations-Einstellungen des Klarna Checkout Moduls für den OXID eShop! Hier finden Sie Kontaktmöglichkeiten zu Klarna sowie das zum Modul zugehörige Benutzerhandbuch zum Download. Wählen Sie links in der Leiste die Klarna Unter-Menüpunkte, um die Modul-Einrichtung abzuschließen.',
+    'TCKLARNA_EASY_AND_SECURE_SHOPPING' => 'Die beliebtesten Zahlarten. Smooth, abgesichert und einfach zu integrieren.',
+    'TCKLARNA_WELCOME_TO_CONFIGURATION' => 'Herzlich willkommen in den Konfigurations-Einstellungen von Klarna Checkout und Klarna Payments. Hier finden Sie alles, was zur Aktivierung benötigt wird. Wählen Sie links in der Leiste die Klarna Unter-Menüpunkte, um die Modul-Einrichtung abzuschließen.',
 
     'TCKLARNA_CREATE_USER_ACCOUNT'               => 'Kundenkonto im OXID eShop anlegen',
     'TCKLARNA_SUBSCRIBE_TO_NEWSLETTER'           => 'Newsletter-Anmeldung',
@@ -289,5 +289,5 @@ oder wenden Sie sich an den Klarna Integration Support.',
     'TCKLARNA_ANONYMIZED_PRODUCT_TOOLTIP'   => 'Geben Sie hier die Zeichenfolge ein, die anstatt des tatsächlichen Produkttitels an Klarna gesendet werden soll.',
     'TCKLARNA_NO_REQUESTS_WILL_BE_SENT'     => 'Ihre Änderungen an dieser Bestellung werden nicht an Klarna übertragen.',
     'TCKLARNA_USER_GUIDE'                   => 'Benutzerhandbuch',
-
+    'TCKLARNA_ONBOARDING_FLOW_BUTTON'       => 'Zugangsdaten beantragen',
 );

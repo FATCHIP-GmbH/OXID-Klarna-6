@@ -8,6 +8,9 @@
         <div class="w7">
             <h1>[{oxmultilang ident="TCKLARNA_EASY_AND_SECURE_SHOPPING"}]</h1>
             <p>[{oxmultilang ident="TCKLARNA_WELCOME_TO_CONFIGURATION"}]</p>
+            <a href="https://www.klarna.com/de/verkaeufer/oxid/" target="_blank">
+                <button class="btn-save">[{oxmultilang ident="TCKLARNA_ONBOARDING_FLOW_BUTTON"}]</button>
+            </a>
         </div>
         <div class="w5">
             <div class="klarna-logo">

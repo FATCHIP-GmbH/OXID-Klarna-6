@@ -39,7 +39,7 @@ $aLang = array(
     'TCKLARNA_CHANGES_SAVED'         => 'All changes have been saved.',
     'TCKLARNA_EMPTY_FIELDS_WARRNING' => 'Leaving url fields empty may lead to module malfunction.',
 
-    'TCKLARNA_CONTACT_OPTIONS'              => 'Contact options',
+    'TCKLARNA_CONTACT_OPTIONS'              => 'Merchant support',
     'TCKLARNA_PHONE'                        => 'Phone',
     'TCKLARNA_EMAIL'                        => 'Email',
     'TCKLARNA_BUSINESS_HOURS'               => 'Business hours',
@@ -73,8 +73,8 @@ $aLang = array(
 
     'TCKLARNA_PAYMENTS_DESC' => 'Klarna offers three payment solutions. Pay now, Pay later and Slice it. This allows your consumers to try before they buy, finance purchases in your store, or make use of other payment options made available by Klarna.',
 
-    'TCKLARNA_EASY_AND_SECURE_SHOPPING' => 'Easy and secure online shopping',
-    'TCKLARNA_WELCOME_TO_CONFIGURATION' => 'Welcome to the configuration settings page of the Klarna Checkout extension for OXID! Here you can find contact details to Klarna and the download link for the PDF documentation. Please choose from the left menu the Klarna sub-menu options to complete the setup for this extension.',
+    'TCKLARNA_EASY_AND_SECURE_SHOPPING' => 'Preferred payment methods with Klarna. Smoooth, guaranteed and easy to integrate.',
+    'TCKLARNA_WELCOME_TO_CONFIGURATION' => 'Welcome to the configuration settings page of Klarna Checkout and Klarna Payments. Here you can find everything you need to get started. Please choose from the left menu the Klarna sub-menu options to complete the setup for this extension.',
 
     'TCKLARNA_CREATE_USER_ACCOUNT'               => 'Create Customer Account',
     'TCKLARNA_SUBSCRIBE_TO_NEWSLETTER'           => 'Subscribe to Newsletter',
@@ -291,4 +291,5 @@ For a detailed description of the different settings please see the tool-tip fun
     'TCKLARNA_NO_REQUESTS_WILL_BE_SENT'     => 'Changes to this order will not be transmitted to Klarna.',
     'TCKLARNA_ANONYMIZED_PRODUCT_TOOLTIP'   => 'Please enter the string which should be transmitted to Klarna instead of the real product title.',
     'TCKLARNA_USER_GUIDE'                   => 'User Guide',
+    'TCKLARNA_ONBOARDING_FLOW_BUTTON'       => 'Register and get credentials',
 );
