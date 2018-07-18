@@ -118,7 +118,7 @@ class KlarnaOrder extends BaseModel
 
         if ($this->isValidationEnabled()) {
             $this->_aOrderData["merchant_urls"]["validation"] =
-                $sSSLShopURL . "?cl=KlarnaValidate&s=$sessionId&klarna_order_id={checkout.order.id}";
+                $sSSLShopURL . "?cl=KlarnaValidate&s=$sessionId";
         }
 
         if (!empty($cancellationTerms)) {
