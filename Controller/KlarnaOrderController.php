@@ -123,6 +123,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                         $this->_aOrderData = $oClient->getOrder();
                     } catch (KlarnaClientException $oEx) {
                         $oEx->debugOut();
+
                     }
 
                     if (KlarnaUtils::is_ajax() && $this->_aOrderData['status'] === 'checkout_complete') {
@@ -229,22 +230,53 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     }
 
     /**
+     * Runs security checks. Returns true if all passes
+     * @return bool
+     */
+    protected function klarnaCheckoutSecurityCheck()
+    {
+        /** @var Request $oRequest */
+        $oRequest = Registry::get(Request::class);
+        $requestedKlarnaId = $oRequest->getRequestParameter('klarna_order_id');
+        $sessionKlarnaId = Registry::getSession()->getVariable('klarna_checkout_order_id');
+
+        // compare klarna ids - request to session
+        if(empty($requestedKlarnaId) || $requestedKlarnaId !== $sessionKlarnaId){
+            return false;
+        }
+        // make sure if klarna order was validated
+        if (!$this->_aOrderData || $this->_aOrderData['status'] !== 'checkout_complete') {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Klarna confirmation callback. Calls only parent execute (standard oxid order creation) if not klarna_checkout
-     * @return
+     * @return string
      * @throws StandardException
      */
     public function execute()
     {
+        // Are we in the KCO context
         $oBasket = Registry::getSession()->getBasket();
-        Registry::getSession()->setVariable('sDelAddrMD5', $this->getDeliveryAddressMD5());
+        if ($this->isKlarnaCheckoutOrder($oBasket)) {
 
-        if (KlarnaUtils::isKlarnaCheckoutEnabled()) {
-            if ($oBasket->getPaymentId() == 'klarna_checkout') {
-                $this->kcoBeforeExecute();
-                $iSuccess = $this->kcoExecute($oBasket);
-
-                return $this->_getNextStep($iSuccess);
+            if (!$this->klarnaCheckoutSecurityCheck()) {
+                return 'KlarnaExpress';
             }
+
+            /**
+             * sDelAddrMD5 value is up to date with klarna user data (we updated user object in the init method)
+             *  It is required later to validate user data before order creation
+             */
+            Registry::getSession()->setVariable('sDelAddrMD5', $this->getDeliveryAddressMD5());
+
+            $this->kcoBeforeExecute();
+            $iSuccess = $this->kcoExecute($oBasket);
+
+            return $this->_getNextStep($iSuccess);
         }
 
         $result = parent::execute();
