@@ -80,13 +80,13 @@
             var $loginForm = $('form[name=login]');
             if ($loginForm.length > 0) {
                 $noticeBox.clone()
-                    .appendTo($loginForm.find('div.checkbox'));
+                    .appendTo($loginForm.find('div.checkbox').last());
             }
 
             var $registerForm = $('form[name=order]');
             if ($registerForm.length && $registerForm.find('input[name=cl][value=register]').length) {
                 $noticeBox.clone()
-                    .appendTo($registerForm.find('div.checkbox'));
+                    .appendTo($registerForm.find('span.help-block').last());
             }
 
             $('a.klarna-notification').click(function (e) {
