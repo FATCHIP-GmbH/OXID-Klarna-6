@@ -353,15 +353,17 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
     public function getLawNotificationsLinkKcoDataProvider()
     {
         return [
-            ['DE', 'fakeMID_someSuffix', 'https://cdn.klarna.com/1.0/shared/content/legal/terms/fakeMID/de_de/checkout'],
-            ['AT', 'F4k3MID_someSuffix', 'https://cdn.klarna.com/1.0/shared/content/legal/terms/F4k3MID/de_at/checkout'],
+            ['DE', 'fakeMID_someSuffix', 'https://cdn.klarna.com/1.0/shared/content/legal/terms/fakeMID/de/checkout'],
+            ['AT', 'F4k3MID_someSuffix', 'https://cdn.klarna.com/1.0/shared/content/legal/terms/F4k3MID/de/checkout'],
         ];
     }
 
     /**
      * @dataProvider getLawNotificationsLinkKcoDataProvider
      * @param $iso
+     * @param $mid
      * @param $expectedResult
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function testGetLawNotificationsLinkKco($iso, $mid, $expectedResult)
     {

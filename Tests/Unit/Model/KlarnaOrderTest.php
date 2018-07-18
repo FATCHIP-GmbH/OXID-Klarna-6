@@ -18,6 +18,7 @@ use ReflectionClass;
 use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
 use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Model\KlarnaPayment;
+use TopConcepts\Klarna\Models\KlarnaOrder;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaOrderTest extends ModuleUnitTestCase
@@ -238,10 +239,13 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $id       = 'zzz';
         $data     = ['update' => 'data'];
         $response = ['response'];
+        $uniqueId_1 = 'uid_1';
+        $uniqueId_2 = 'uid_2';
 
         $client = $this->createStub(KlarnaOrderManagementClient::class, ['updateOrderLines' => $response]);
 
         $order  = oxNew(Order::class);
+        $order->oxorder__tcklarna_orderid = new Field($uniqueId_1);
         $result = $order->updateKlarnaOrder($data, $id, null, $client);
         $this->assertNull($result);
 
@@ -252,6 +256,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $client->expects($this->once())->method('updateOrderLines')->willThrowException(new KlarnaClientException("Test"));
 
         $order  = oxNew(Order::class);
+        $order->oxorder__tcklarna_orderid = new Field($uniqueId_2);
         $result = $order->updateKlarnaOrder($data, $id, null, $client);
 
         $this->assertEquals(0, $order->oxorder__tcklarna_sync->value);

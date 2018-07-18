@@ -101,7 +101,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
                 'confirmation'       => "https://testurl?cl=order&fnc=execute&klarna_order_id={checkout.order.id}",
                 'push'               => "https://testurl?cl=KlarnaAcknowledge&klarna_order_id={checkout.order.id}",
                 'cancellation_terms' => "https://testurl",
-                'validation'         => 'https://testurl?cl=KlarnaValidate&s=&klarna_order_id={checkout.order.id}',
+                'validation'         => 'https://testurl?cl=KlarnaValidate&s=',
             ],
             'test'                     => "test",
             'order_lines'              =>

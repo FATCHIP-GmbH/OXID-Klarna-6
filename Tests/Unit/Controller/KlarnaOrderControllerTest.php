@@ -119,7 +119,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
     {
         $order = $this->createStub(Order::class, ['finalizeOrder' => 1]);
         UtilsObject::setClassInstance(Order::class, $order);
-        $user = $this->createStub(KlarnaUser::class, ['getType' => 0, 'save' => true, 'onOrderExecute' => true]);
+        $user = $this->createStub(User::class, ['getType' => 0, 'save' => true, 'onOrderExecute' => true]);
         $oBasket = $this->createStub(
             KlarnaBasket::class,
             ['getPaymentId' => 'klarna_checkout', 'calculateBasket' => true]
@@ -127,7 +127,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $this->getSession()->setBasket($oBasket);
         $mock = $this->createStub(
             KlarnaOrderController::class,
-            ['kcoBeforeExecute' => true, 'getDeliveryAddressMD5' => 'address']
+            ['kcoBeforeExecute' => true, 'getDeliveryAddressMD5' => 'address', 'klarnaCheckoutSecurityCheck' => true]
         );
         $this->setProtectedClassProperty($mock, '_oUser', $user);
         $this->setProtectedClassProperty(
@@ -135,7 +135,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
             '_aOrderData',
             ['merchant_requested' => ['additional_checkbox' => true]]
         );
-        $this->setModuleConfVar('iKlarnaActiveCheckbox', 1);
+
         $mock->execute();
         $addressResult = $this->getSessionParam('sDelAddrMD5');
         $this->assertEquals('address', $addressResult);
