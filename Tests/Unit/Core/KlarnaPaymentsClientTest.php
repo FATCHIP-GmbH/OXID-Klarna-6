@@ -2,6 +2,7 @@
 
 namespace TopConcepts\Klarna\Tests\Unit\Core;
 
+use TopConcepts\Klarna\Core\Exception\KlarnaOrderNotFoundException;
 use TopConcepts\Klarna\Core\KlarnaPayment;
 use TopConcepts\Klarna\Core\KlarnaPaymentsClient;
 use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
@@ -168,11 +169,12 @@ class KlarnaPaymentsClientTest extends ModuleUnitTestCase
 
         $exceptionTestBody = ['test2' => 'test2'];
         $exceptionMock->expects($this->any())->method('post')->willReturn($this->getPostResponse($exceptionTestBody));
-        $exceptionMock->expects($this->any())->method('updateSession')->willThrowException(new KlarnaClientException('Test'));
+        $exceptionMock->expects($this->any())->method('updateSession')->willThrowException(new KlarnaOrderNotFoundException());
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'xmlhttprequest';
         putenv("HTTP_X_REQUESTED_WITH=xmlhttprequest");
         $result = $exceptionMock->createOrUpdateSession();
 
+        //$this->assertLoggedException(KlarnaOrderNotFoundException::class, 'KLARNA_ORDER_NOT_FOUND');
         $this->assertEquals($this->getSession()->getVariable('klarna_session_data'), $exceptionTestBody);
         $this->assertEquals($result, $exceptionTestBody);
     }

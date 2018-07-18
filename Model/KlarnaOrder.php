@@ -277,6 +277,4 @@ class KlarnaOrder extends KlarnaOrder_parent
 
         return $this->isAnonymous = KlarnaUtils::getShopConfVar('blKlarnaEnableAnonymization');
     }
-
-
 }

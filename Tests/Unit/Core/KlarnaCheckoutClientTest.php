@@ -2,9 +2,9 @@
 
 namespace TopConcepts\Klarna\Tests\Unit\Core;
 
+use TopConcepts\Klarna\Core\Exception\KlarnaOrderNotFoundException;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
 use TopConcepts\Klarna\Core\KlarnaOrder;
-use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaCheckoutClientTest extends ModuleUnitTestCase
@@ -32,10 +32,10 @@ class KlarnaCheckoutClientTest extends ModuleUnitTestCase
         $this->assertEquals($order, $result);
 
         $exceptionMock = $this->getMock(KlarnaCheckoutClient::class, ['postOrder']);
-        $exceptionMock->expects($this->at(0))->method('postOrder')->will($this->throwException(new KlarnaClientException('Test')));
+        $exceptionMock->expects($this->at(0))->method('postOrder')->will($this->throwException(new KlarnaOrderNotFoundException()));
 
         $result = $exceptionMock->createOrUpdateOrder(['dummy' => 'data']);
-        $this->assertLoggedException(KlarnaClientException::class, 'Test');
+        $this->assertLoggedException(KlarnaOrderNotFoundException::class, 'KLARNA_ORDER_NOT_FOUND');
         $this->assertEmpty($result);
 
     }

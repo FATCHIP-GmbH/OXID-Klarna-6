@@ -259,6 +259,12 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      */
     public function execute()
     {
+        /**
+         * sDelAddrMD5 value is up to date with klarna user data (we updated user object in the init method)
+         *  It is required later to validate user data before order creation
+         */
+        Registry::getSession()->setVariable('sDelAddrMD5', $this->getDeliveryAddressMD5());
+
         // Are we in the KCO context
         $oBasket = Registry::getSession()->getBasket();
         if ($this->isKlarnaCheckoutOrder($oBasket)) {
@@ -266,12 +272,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             if (!$this->klarnaCheckoutSecurityCheck()) {
                 return 'KlarnaExpress';
             }
-
-            /**
-             * sDelAddrMD5 value is up to date with klarna user data (we updated user object in the init method)
-             *  It is required later to validate user data before order creation
-             */
-            Registry::getSession()->setVariable('sDelAddrMD5', $this->getDeliveryAddressMD5());
 
             $this->kcoBeforeExecute();
             $iSuccess = $this->kcoExecute($oBasket);
@@ -459,9 +459,17 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      *
      *
      * @param Basket $oBasket
+     * @return
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     protected function kcoExecute(Basket $oBasket)
     {
+        // reload blocker
+        if (!Registry::getSession()->getVariable('sess_challenge')) {
+            $sGetChallenge = Registry::getUtilsObject()->generateUID();
+            Registry::getSession()->setVariable('sess_challenge', $sGetChallenge);
+        }
+
         $oBasket->calculateBasket(true);
 
         $oOrder = oxNew(Order::class);
