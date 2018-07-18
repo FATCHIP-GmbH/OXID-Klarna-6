@@ -401,7 +401,7 @@ class KlarnaOrder extends BaseModel
     {
         $langTag = strtoupper(Registry::getLang()->getLanguageAbbr());
 
-        return KlarnaUtils::getShopConfVar('tcklarna_sKlarnaShippingDetails_' . $langTag);
+        return KlarnaUtils::getShopConfVar('sKlarnaShippingDetails_' . $langTag);
     }
 
     /**

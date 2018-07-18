@@ -44,7 +44,7 @@
             <tr>
                 <td class="conf-label-2">[{ oxmultilang ident="TCKLARNA_SHIPPING_DETAILS" }]</td>
                 <td class="lang-input">
-                    [{assign var="confVarName" value="tcklarna_sKlarnaShippingDetails_"|cat:$lang_tag}]
+                    [{assign var="confVarName" value="sKlarnaShippingDetails_"|cat:$lang_tag}]
                     <div class="input">
                         <input type="text" class="m-lang"
                                name="confstrs[sKlarnaShippingDetails_[{$lang_tag}]]"

@@ -253,11 +253,17 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
     public function getLawNotificationsLinkKco()
     {
         $sCountryISO = Registry::getSession()->getVariable('sCountryISO');
+
+        if(!$sCountryISO)
+        {
+            $sCountryISO = KlarnaUtils::getShopConfVar('sKlarnaDefaultCountry');
+        }
+
         $mid         = KlarnaUtils::getAPICredentials($sCountryISO);
         preg_match('/^(?P<mid>(.)+)(\_)/', $mid['mid'], $matches);
 
         return sprintf(KlarnaConsts::KLARNA_PREFILL_NOTIF_URL,
-            $matches['mid'], $this->getActLanguageAbbr(), strtolower($sCountryISO)
+            $matches['mid'], $this->getActLanguageAbbr()
         );
     }
 
