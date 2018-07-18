@@ -320,7 +320,7 @@ class KlarnaInstaller extends ShopConfiguration
             'oxorder'         => array(
                 'TCKLARNA_MERCHANTID' => 'ADD COLUMN `TCKLARNA_MERCHANTID` VARCHAR(128)  DEFAULT \'\' NOT NULL',
                 'TCKLARNA_SERVERMODE' => 'ADD COLUMN `TCKLARNA_SERVERMODE` VARCHAR(16) NOT NULL DEFAULT \'\'',
-                'TCKLARNA_ORDERID'    => 'ADD COLUMN `TCKLARNA_ORDERID` VARCHAR(128)  DEFAULT \'\' NOT NULL',
+                'TCKLARNA_ORDERID'    => 'ADD COLUMN `TCKLARNA_ORDERID` VARCHAR(128) DEFAULT \'\' NOT NULL UNIQUE',
                 'TCKLARNA_SYNC'       => 'ADD COLUMN `TCKLARNA_SYNC` TINYINT UNSIGNED NOT NULL DEFAULT \'1\'',
             ),
             'oxorderarticles' => array(
@@ -357,6 +357,7 @@ class KlarnaInstaller extends ShopConfiguration
             ),
         );
 
+        // ADD COLUMNS
         foreach ($aStructure as $sTableName => $aColumns) {
 
             $query = "ALTER TABLE `$sTableName` ";
@@ -373,6 +374,11 @@ class KlarnaInstaller extends ShopConfiguration
             }
 
             $this->db->execute($query);
+        }
+
+        // make sure oxorder.TCKLARNA_ORDERID has unique key
+        if(!$this->dbColumnHasUniqueKey('oxorder', 'TCKLARNA_ORDERID')){
+            $this->db->execute("ALTER TABLE `oxorder` ADD UNIQUE INDEX `{$sColumnName}_UNIQUE` (`$sColumnName` ASC)");
         }
     }
 
@@ -392,6 +398,12 @@ class KlarnaInstaller extends ShopConfiguration
                   AND COLUMN_NAME = '$sColumnName'
                   ";
 
+        return count($this->db->select($query)->fetchAll()) > 0;
+    }
+
+    protected function dbColumnHasUniqueKey($sTableName, $sColumnName)
+    {
+        $query = "SHOW INDEXES FROM `$sTableName` WHERE Column_name = '$sColumnName' AND NOT Non_unique";
         return count($this->db->select($query)->fetchAll()) > 0;
     }
 
