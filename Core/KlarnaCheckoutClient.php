@@ -67,13 +67,14 @@ class KlarnaCheckoutClient extends KlarnaClientBase
         try {
             // update existing order
             return $this->postOrder($requestBody, $this->getOrderId());
-        } catch (KlarnaClientException $oEx) {
+        } catch (KlarnaOrderNotFoundException  $oEx) {
             /**
              * Try again with a new session ( no order id )
              */
             $oEx->debugOut();
             return $this->postOrder($requestBody);
         }
+        return;
     }
 
     /**

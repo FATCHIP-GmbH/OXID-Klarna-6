@@ -69,7 +69,7 @@ class KlarnaPaymentsClient extends KlarnaClientBase
                 // update existing order
                 $this->aSessionData = $this->updateSession($requestBody);
                 $this->_oKlarnaOrder->saveCheckSums($splittedUpdateData);
-            } catch (KlarnaClientException $e) {
+            } catch (KlarnaOrderNotFoundException $e) {
                 // klarna order expired - create new order
                 KlarnaPayment::cleanUpSession();
                 list($requestBody, $splittedUpdateData) = $this->formatOrderData();
