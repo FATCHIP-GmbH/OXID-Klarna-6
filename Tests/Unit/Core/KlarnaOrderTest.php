@@ -91,6 +91,9 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         //call constructor
         $order->__construct($basket, $user);
 
+        $sGetChallenge = Registry::getSession()->getSessionChallengeToken();
+        $this->setRequestParameter('stoken', $sGetChallenge);
+
         $expected = [
             'purchase_country'         => "DE",
             'purchase_currency'        => "test",
@@ -98,7 +101,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
             'merchant_urls'            => [
                 'terms'              => "https://testurl",
                 'checkout'           => "https://testurl?cl=KlarnaExpress",
-                'confirmation'       => "https://testurl?cl=order&fnc=execute&klarna_order_id={checkout.order.id}",
+                'confirmation'       => "https://testurl?cl=order&fnc=execute&klarna_order_id={checkout.order.id}&stoken=$sGetChallenge",
                 'push'               => "https://testurl?cl=KlarnaAcknowledge&klarna_order_id={checkout.order.id}",
                 'cancellation_terms' => "https://testurl",
                 'validation'         => 'https://testurl?cl=KlarnaValidate&s=',

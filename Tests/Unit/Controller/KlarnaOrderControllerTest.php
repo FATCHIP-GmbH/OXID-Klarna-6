@@ -117,6 +117,9 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
     public function testExecute()
     {
+        $sGetChallenge = Registry::getSession()->getSessionChallengeToken();
+        $this->setRequestParameter('stoken', $sGetChallenge);
+
         $order = $this->createStub(Order::class, ['finalizeOrder' => 1]);
         UtilsObject::setClassInstance(Order::class, $order);
         $user = $this->createStub(User::class, ['getType' => 0, 'save' => true, 'onOrderExecute' => true]);
@@ -126,8 +129,12 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         );
         $this->getSession()->setBasket($oBasket);
         $mock = $this->createStub(
-            KlarnaOrderController::class,
-            ['kcoBeforeExecute' => true, 'getDeliveryAddressMD5' => 'address', 'klarnaCheckoutSecurityCheck' => true]
+            KlarnaOrderController::class, [
+                'kcoBeforeExecute' => true,
+                'getDeliveryAddressMD5' => 'address',
+                'klarnaCheckoutSecurityCheck' => true,
+                'getUser' => $user
+            ]
         );
         $this->setProtectedClassProperty($mock, '_oUser', $user);
         $this->setProtectedClassProperty(

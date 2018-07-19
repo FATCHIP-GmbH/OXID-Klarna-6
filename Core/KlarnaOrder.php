@@ -98,6 +98,10 @@ class KlarnaOrder extends BaseModel
             return false;
         }
 
+        // reload blocker
+
+        $sGetChallenge = Registry::getSession()->getSessionChallengeToken();
+
         $sessionId         = Registry::getSession()->getId();
         $this->_aOrderData = array(
             "purchase_country"  => $sCountryISO,
@@ -109,7 +113,7 @@ class KlarnaOrder extends BaseModel
                 "checkout"     =>
                     $sSSLShopURL . "?cl=KlarnaExpress",
                 "confirmation" =>
-                    $sSSLShopURL . "?cl=order&fnc=execute&klarna_order_id={checkout.order.id}",
+                    $sSSLShopURL . "?cl=order&fnc=execute&klarna_order_id={checkout.order.id}&stoken=$sGetChallenge",
                 "push"         =>
                     $sSSLShopURL . "?cl=KlarnaAcknowledge&klarna_order_id={checkout.order.id}",
 
