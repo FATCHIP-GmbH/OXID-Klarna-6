@@ -17,6 +17,7 @@ use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
 use TopConcepts\Klarna\Core\Exception\KlarnaBasketTooLargeException;
 use TopConcepts\Klarna\Core\Exception\KlarnaConfigException;
+use TopConcepts\Klarna\Model\KlarnaUser;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 /**
@@ -242,6 +243,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
     {
         $ssl_url  = $this->getConfig()->getSSLShopURL();
         $oUser    = oxNew(User::class);
+        $oUser->setType(KlarnaUser::LOGGED_IN);
         $email    = 'info@topconcepts.de';
         $apiCreds = [];
 
@@ -269,7 +271,12 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
         $oConfig = $this->getMock(Config::class, ['getCurrentShopURL']);
         $oConfig->expects($this->once())->method('getCurrentShopURL')->willReturn($currentUrl);
 
-        $kcoController = $this->getMock($this->getProxyClassName(KlarnaExpressController::class), ['getConfig', 'getUser']);
+        $methodReflection = new \ReflectionProperty(KlarnaExpressController::class, 'blShowPopup');
+        $methodReflection->setAccessible(true);
+
+        $kcoController = $this->getMock(KlarnaExpressController::class, ['getConfig', 'getUser', 'rebuildFakeUser']);
+        $kcoController->expects($this->any())
+            ->method('rebuildFakeUser')->willReturn(true);
         $kcoController->expects($this->atLeastOnce())
             ->method('getConfig')->willReturn($oConfig);
         $kcoController->expects($this->any())
@@ -287,9 +294,9 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
         $this->assertTrue($oException instanceof KlarnaConfigException);
 
         if ($kcoController->getUser() && $email) {
-            $this->assertEquals($email, $this->User->oxuser__oxemail->rawValue, "User email mismatch.");
+            $this->assertEquals($email, $kcoController->getUser()->oxuser__oxemail->rawValue, "User email mismatch.");
         }
-        $this->assertEquals($expectedShowPopUp, $kcoController->getNonPublicVar('blShowPopup'), "Show popup mismatch.");
+        $this->assertEquals($expectedShowPopUp, $methodReflection->getValue($kcoController), "Show popup mismatch.");
     }
 
     public function testRenderBlockIframeRender()
@@ -375,6 +382,9 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
 
     }
 
+    /**
+     * @throws StandardException
+     */
     public function testRenderKlarnaClient()
     {
         $this->setRequestParameter('sslredirect', 'forced');
@@ -383,28 +393,26 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
         $oConfig = $this->getMock(Config::class, ['getCurrentShopURL']);
         $oConfig->expects($this->any())->method('getCurrentShopURL')->willReturn($url);
 
-        $keController = $this->createStub(KlarnaExpressController::class, ['getConfig' => $oConfig]);
+        $keController = $this->createStub(KlarnaExpressController::class, ['getConfig' => $oConfig, 'rebuildFakeUser' => true]);
 
         $keController->init();
         $result = $keController->render();
-        //$this->assertLoggedException(KlarnaWrongCredentialsException::class, 'KLARNA_UNAUTHORIZED_REQUEST');
+        $this->assertLoggedException(KlarnaWrongCredentialsException::class, 'KLARNA_UNAUTHORIZED_REQUEST');
 
         $this->assertEquals('tcklarna_checkout.tpl', $result);
 
-
-        $keController = $this->getMock(KlarnaExpressController::class, ['getConfig']);
-        $credException = $this->createStub(KlarnaWrongCredentialsException::class, ['debugOut' => null]);
+        $keController = $this->getMock(KlarnaExpressController::class, ['getConfig', 'rebuildFakeUser']);
 
         $checkoutClient = $this->getMock(KlarnaCheckoutClient::class, ['createOrUpdateOrder']);
-        $checkoutClient->expects($this->any())->method('createOrUpdateOrder')->will($this->throwException($credException));
 
         $keController->expects($this->any())->method('getKlarnaClient')->will($this->returnValue($checkoutClient));
         $keController->expects($this->any())->method('getConfig')->will($this->returnValue($oConfig));
+        $keController->expects($this->any())->method('rebuildFakeUser')->will($this->returnValue(true));
 
         $keController->init();
         $keController->render();
         $this->assertEquals('tcklarna_checkout.tpl', $result);
-        //$this->assertLoggedException(KlarnaWrongCredentialsException::class, 'KLARNA_UNAUTHORIZED_REQUEST');
+        $this->assertLoggedException(KlarnaWrongCredentialsException::class, 'KLARNA_UNAUTHORIZED_REQUEST');
     }
 
     /**

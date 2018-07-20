@@ -119,13 +119,18 @@ class KlarnaExpressController extends FrontendController
     }
 
     /**
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
+     * @throws \oxSystemComponentException
      * @return string
      */
     public function render()
     {
-        $result   = parent::render();
         $oSession = $this->getSession();
-        $oBasket  = $oSession->getBasket();
+        $oBasket = $oSession->getBasket();
+        $this->rebuildFakeUser($oBasket);
+
+        $result = parent::render();
 
         /**
          * Reload page with ssl if not secure already.
@@ -136,7 +141,10 @@ class KlarnaExpressController extends FrontendController
          * Check if we have a logged in user.
          * If not create a fake one.
          */
-        $this->_oUser = $this->resolveUser();
+        if(!$this->_oUser){
+            $this->_oUser = $this->resolveUser();
+        }
+
         $oBasket->setBasketUser($this->_oUser);
 
         $this->blShowPopup = $this->showCountryPopup();
@@ -546,7 +554,7 @@ class KlarnaExpressController extends FrontendController
         $oSession = $this->getSession();
 
         /** @var KlarnaUser|User $oUser */
-        if ($oUser = $this->getUser()) {
+        if ($oUser = $this->getUser() && !empty($oUser->oxuser__oxpassword->value)) {
             $oUser->checkUserType();
         } else if ($oSession->hasVariable('oFakeKlarnaUser')) {
             $oUser = $oSession->getVariable('oFakeKlarnaUser');
@@ -589,5 +597,33 @@ class KlarnaExpressController extends FrontendController
     public function isKlarnaFakeUser()
     {
         return $this->_oUser->isFake();
+    }
+
+    /**
+     * @param $oBasket
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     */
+    protected function rebuildFakeUser($oBasket)
+    {
+        /** @var KlarnaUser|User $user */
+        $user = $this->getUser();
+
+        if ($user && empty($user->oxuser__oxpassword->value)) {
+            $oClient = KlarnaCheckoutClient::getInstance();
+            $_aOrderData = $oClient->getOrder();
+
+            $user->logout();
+            $this->getSession()->setBasket($oBasket);
+
+            if ($_aOrderData && isset($_aOrderData['billing_address']['email'])) {
+                $user->loadByEmail($_aOrderData['billing_address']['email']);
+                $this->_oUser = $user;
+                $this->getSession()->setVariable('klarna_checkout_order_id', $_aOrderData['order_id']);
+                $this->getSession()->setVariable(
+                    'klarna_checkout_user_email',
+                    $_aOrderData['billing_address']['email']
+                );
+            }
+        }
     }
 }

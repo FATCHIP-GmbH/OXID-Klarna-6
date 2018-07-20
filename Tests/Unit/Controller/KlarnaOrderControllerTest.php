@@ -129,7 +129,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         );
         $this->getSession()->setBasket($oBasket);
         $mock = $this->createStub(
-            KlarnaOrderController::class, [
+            OrderController::class, [
                 'kcoBeforeExecute' => true,
                 'getDeliveryAddressMD5' => 'address',
                 'klarnaCheckoutSecurityCheck' => true,

@@ -145,6 +145,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
 
         /** @var \OxidEsales\Eshop\Application\Model\Basket $oBasket */
         $oBasket = $this->prepareBasketWithProduct();
+        $this->getSession()->setBasket($oBasket);
         $oUser   = oxNew(User::class);
         $oBasket->setPayment($paymentId);
         $order = $this->createStub(Order::class, ['validateDeliveryAddress' => null]);
