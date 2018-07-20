@@ -17,19 +17,14 @@
 
 namespace TopConcepts\Klarna\Model;
 
-
-use TopConcepts\Klarna\Core\KlarnaClientBase;
 use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
-use TopConcepts\Klarna\Core\Exception\KlarnaOrderNotFoundException;
-use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\User;
-use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
-use OxidEsales\Eshop\Core\Session;
+use TopConcepts\Klarna\Model\KlarnaPayment as KlarnaPaymentModel;
 
 class KlarnaOrder extends KlarnaOrder_parent
 {
@@ -47,7 +42,12 @@ class KlarnaOrder extends KlarnaOrder_parent
      */
     public function validateOrder($oBasket, $oUser)
     {
-        $_POST['sDeliveryAddressMD5'] = Registry::getSession()->getVariable('sDelAddrMD5');
+        $oBasket = Registry::getSession()->getBasket();
+        $paymentId = $oBasket->getPaymentId();
+
+        if(KlarnaPaymentModel::isKlarnaPayment($paymentId)) {
+            $_POST['sDeliveryAddressMD5'] = Registry::getSession()->getVariable('sDelAddrMD5');
+        }
 
         return parent::validateOrder($oBasket, $oUser);
     }
