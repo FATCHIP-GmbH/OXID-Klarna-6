@@ -267,8 +267,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
              * sDelAddrMD5 value is up to date with klarna user data (we updated user object in the init method)
              *  It is required later to validate user data before order creation
              */
-
-            if($this->getUser()){
+            if($this->_oUser){
                 Registry::getSession()->setVariable('sDelAddrMD5', $this->getDeliveryAddressMD5());
             }
 
@@ -1160,5 +1159,22 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         }
 
         return $newCountry != $oldCountry ? $newCountry : false;
+    }
+
+    public function getDeliveryAddressMD5()
+    {
+        // bill address
+        $oUser = $this->getUser()?$this->getUser():$this->_oUser;
+        $sDelAddress = $oUser->getEncodedDeliveryAddress();
+
+        // delivery address
+        if (\OxidEsales\Eshop\Core\Registry::getSession()->getVariable('deladrid')) {
+            $oDelAdress = oxNew(\OxidEsales\Eshop\Application\Model\Address::class);
+            $oDelAdress->load(\OxidEsales\Eshop\Core\Registry::getSession()->getVariable('deladrid'));
+
+            $sDelAddress .= $oDelAdress->getEncodedDeliveryAddress();
+        }
+
+        return $sDelAddress;
     }
 }

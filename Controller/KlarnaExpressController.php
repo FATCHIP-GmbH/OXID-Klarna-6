@@ -536,7 +536,9 @@ class KlarnaExpressController extends FrontendController
         $oSession = $this->getSession();
         
         /** @var KlarnaUser|User $oUser */
-        if ($oUser = $this->getUser() && !empty($oUser->oxuser__oxpassword->value)) {
+        $oUser = $this->getUser();
+
+        if ($oUser && !empty($oUser->oxuser__oxpassword->value)) {
             $oUser->checkUserType();
         } else if ($oSession->hasVariable('oFakeKlarnaUser')) {
             $oUser = $oSession->getVariable('oFakeKlarnaUser');
