@@ -18,7 +18,7 @@
 namespace TopConcepts\Klarna\Controller;
 
 
-use OxidEsales\Eshop\Core\DatabaseProvider;
+use OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface;
 use OxidEsales\PayPalModule\Controller\ExpressCheckoutDispatcher;
 use OxidEsales\PayPalModule\Controller\StandardDispatcher;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
@@ -39,7 +39,6 @@ use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Application\Model\User;
-use OxidEsales\Eshop\Core\Email;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
@@ -873,7 +872,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             try {
                 $this->_oUser->save();
             } catch (\Exception $e){
-                if($e->getCode() == 1062 && $this->_oUser->getType() == KlarnaUser::LOGGED_IN){
+                if($e->getCode() == DatabaseInterface::DUPLICATE_KEY_ERROR_CODE && $this->_oUser->getType() == KlarnaUser::LOGGED_IN){
                     $this->_oUser->logout();
                 }
             }
