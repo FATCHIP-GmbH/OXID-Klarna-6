@@ -204,13 +204,13 @@ var KlarnaApi;
                 data: JSON.stringify(data),
                 statusCode: {
                     200: function () {
-                        eventsInProgress.remove(data.action);
                         if (suspendMode){
                             api.resume();
                         }
                     }
                 }
             }).success(function (response) {
+                eventsInProgress.remove(data.action);
                 if (response.status === 'redirect') {
                     localStorage.setItem('skipKlarnaEvents', '1');  // will skip ajax events on iframe render
                     window.location.href = response.data.url;
