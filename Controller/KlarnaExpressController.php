@@ -23,13 +23,13 @@ use TopConcepts\Klarna\Core\KlarnaConsts;
 use TopConcepts\Klarna\Core\KlarnaFormatter;
 use TopConcepts\Klarna\Core\KlarnaOrder;
 use TopConcepts\Klarna\Core\KlarnaUtils;
+use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Core\Exception\KlarnaBasketTooLargeException;
 use TopConcepts\Klarna\Core\Exception\KlarnaConfigException;
 use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
 use TopConcepts\Klarna\Model\KlarnaUser;
 
 use OxidEsales\Eshop\Application\Model\CountryList;
-use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Application\Controller\FrontendController;
 use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\User;
@@ -92,7 +92,6 @@ class KlarnaExpressController extends FrontendController
          */
         if (KlarnaUtils::getShopConfVar('sKlarnaActiveMode') !== 'KCO') {
             $oUtils->redirect(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=order', false, 302);
-
             return;
         }
 
@@ -107,8 +106,7 @@ class KlarnaExpressController extends FrontendController
          * Returning from legacy checkout for guest user.
          * Request parameter reset_klarna_country is checked and $this->blockIframeRender is set.
          */
-        if ($this->_oRequest->getRequestEscapedParameter('reset_klarna_country') == 1
-        ) {
+        if ($this->_oRequest->getRequestEscapedParameter('reset_klarna_country') == 1) {
             $this->blockIframeRender = true;
         }
 
@@ -324,14 +322,6 @@ class KlarnaExpressController extends FrontendController
         return $result;
     }
 
-//    /**
-//     * @return bool
-//     */
-//    public function isUserLoggedIn()
-//    {
-//        return $this->_oUser->getType() === KlarnaUser::LOGGED_IN;
-//    }
-
     /**
      * @return array
      */
@@ -359,16 +349,6 @@ class KlarnaExpressController extends FrontendController
         return $list;
     }
 
-//    /**
-//     *
-//     */
-//    public function cleanUpSession()
-//    {
-//        $oSession = Registry::getSession();
-//        $oSession->deleteVariable('sCountryISO');
-//        $oSession->deleteVariable('klarna_checkout_order_id');
-//        $oSession->deleteVariable('klarna_checkout_user_email');
-//    }
 
     /**
      * @param $sCountryISO
@@ -393,6 +373,8 @@ class KlarnaExpressController extends FrontendController
         Registry::getSession()->setVariable('blshowshipaddress', 1);
         Registry::getSession()->deleteVariable('klarna_checkout_order_id');
     }
+
+
 
     /**
      *
@@ -507,7 +489,7 @@ class KlarnaExpressController extends FrontendController
         /**
          * Logged in user with a non KCO country attempting to render the klarna checkout.
          */
-        if ($this->getUser() /*&& $this->getUser()->getUserCountryISO2()*/ && !KlarnaUtils::isCountryActiveInKlarnaCheckout($this->getUser()->getUserCountryISO2())) {
+        if ($this->getUser() && !KlarnaUtils::isCountryActiveInKlarnaCheckout($this->getUser()->getUserCountryISO2())) {
             /**
              * User is coming back from legacy oxid checkout wanting to change the country to one of KCO ones
              * or user is trying to access the klarna checkout for the first time and has to be redirected to
@@ -552,7 +534,7 @@ class KlarnaExpressController extends FrontendController
     protected function resolveUser()
     {
         $oSession = $this->getSession();
-
+        
         /** @var KlarnaUser|User $oUser */
         if ($oUser = $this->getUser() && !empty($oUser->oxuser__oxpassword->value)) {
             $oUser->checkUserType();
@@ -610,9 +592,14 @@ class KlarnaExpressController extends FrontendController
 
         if ($user && empty($user->oxuser__oxpassword->value)) {
             $oClient = KlarnaCheckoutClient::getInstance();
-            $_aOrderData = $oClient->getOrder();
+            try{
+                $_aOrderData = $oClient->getOrder();
+            } catch (KlarnaClientException $e){
+                $user->logout();
+                return;
+            }
 
-            $user->logout();
+
             $this->getSession()->setBasket($oBasket);
 
             if ($_aOrderData && isset($_aOrderData['billing_address']['email'])) {

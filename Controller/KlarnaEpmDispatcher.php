@@ -26,15 +26,7 @@ use OxidEsales\Eshop\Application\Controller\FrontendController;
  */
 class KlarnaEpmDispatcher extends FrontendController
 {
-//
-//    /**
-//     * @codeCoverageIgnore
-//     */
-//    public function init()
-//    {
-//        parent::init();
-//    }
-
+    protected $_sThisTemplate = 'tcklarna_amazon_login.tpl';
 
     /**
      * @throws \oxFileException
@@ -42,7 +34,6 @@ class KlarnaEpmDispatcher extends FrontendController
      */
     public function amazonLogin()
     {
-        $this->_sThisTemplate = 'tcklarna_amazon_login.tpl';
         $oViewConf = $this->getViewConfig();
 
         /** @var AmazonViewConfig $oViewConf */
@@ -50,14 +41,4 @@ class KlarnaEpmDispatcher extends FrontendController
         $this->addTplParam('sAmazonSellerId', $oViewConf->getAmazonConfigValue('sAmazonSellerId'));
         $this->addTplParam('sModuleUrl', $oViewConf->getModuleUrl('bestitamazonpay4oxid'));
     }
-
-    /**
-     * @return null|string
-     */
-    public function render(){
-        parent::render();
-
-        return $this->_sThisTemplate;
-    }
-
 }
