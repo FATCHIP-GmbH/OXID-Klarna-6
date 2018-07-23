@@ -848,12 +848,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             Field::T_RAW
         );
 
-        if ($this->_oUser->isWritable()) {
-            $this->_oUser->save();
-        } else {
-            $oSession->setVariable('oFakeKlarnaUser', $this->_oUser);
-        }
-
         $oBasket = Registry::getSession()->getBasket();
         $oBasket->setBasketUser($this->_oUser);
     }
@@ -876,7 +870,13 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         }
 
         if ($this->_oUser->isWritable()) {
-            $this->_oUser->save();
+            try {
+                $this->_oUser->save();
+            } catch (\Exception $e){
+                if($e->getCode() == 1062 && $this->_oUser->getType() == KlarnaUser::LOGGED_IN){
+                    $this->_oUser->logout();
+                }
+            }
         } else {
             $this->getSession()->setVariable('oFakeKlarnaUser', $this->_oUser);
         }
