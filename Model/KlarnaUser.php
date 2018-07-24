@@ -63,6 +63,7 @@ class KlarnaUser extends KlarnaUser_parent
             $this->preFillAddress($result);
         }
 
+
         if ($sCountryISO = Registry::get(Request::class)->getRequestEscapedParameter('selected-country')) {
             if (Registry::getSession()->hasVariable('invadr')) {
                 Registry::getSession()->deleteVariable('invadr');
@@ -258,6 +259,10 @@ class KlarnaUser extends KlarnaUser_parent
         } else {
             $this->_type = self::NOT_EXISTING;
             $this->setFakeUserId();
+        }
+
+        if(empty($this->oxuser__oxrights->value)){
+            $this->oxuser__oxrights = new Field('user');
         }
 
         return $this;
