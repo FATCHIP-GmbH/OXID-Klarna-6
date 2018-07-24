@@ -266,7 +266,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
              * sDelAddrMD5 value is up to date with klarna user data (we updated user object in the init method)
              *  It is required later to validate user data before order creation
              */
-            if($this->_oUser){
+            if($this->_oUser || $this->getUser()){
                 Registry::getSession()->setVariable('sDelAddrMD5', $this->getDeliveryAddressMD5());
             }
 
