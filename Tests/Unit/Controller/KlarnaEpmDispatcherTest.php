@@ -25,16 +25,4 @@ class KlarnaEpmDispatcherTest extends ModuleUnitTestCase
         $this->assertEquals($expected, $result);
 
     }
-
-    public function testRender()
-    {
-        $epmDispatcher = $this->createStub(KlarnaEpmDispatcher::class, ['init' => null]);
-        $result = $epmDispatcher->render();
-        $this->assertNull($result);
-
-        $this->setProtectedClassProperty($epmDispatcher, '_sThisTemplate', 'templatetest');
-        $result = $epmDispatcher->render();
-        $this->assertEquals($result, 'templatetest');
-
-    }
 }
