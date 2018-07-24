@@ -488,7 +488,7 @@ class KlarnaUser extends KlarnaUser_parent
     public function logout()
     {
         $result = parent::logout();
-        if ($result) {
+        if ($result && !$this->isAdmin()) {
             KlarnaUtils::fullyResetKlarnaSession();
         }
 
