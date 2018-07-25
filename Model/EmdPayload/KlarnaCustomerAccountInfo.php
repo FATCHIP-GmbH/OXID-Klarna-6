@@ -88,12 +88,11 @@ class KlarnaCustomerAccountInfo
             "account_registration_date" => $registration->format(KlarnaEMD::EMD_FORMAT),
         );
 
-        // if OXID version >= 4.7.0
-        if (version_compare(ShopVersion::getVersion(), '4.7.0') >= 0) {
-            $modification = new \DateTime($user->oxuser__oxtimestamp->value);
-            $modification->setTimezone(new \DateTimeZone('Europe/London'));
-            $customerInfo["account_last_modified"] = $modification->format(KlarnaEMD::EMD_FORMAT);
-        }
+
+        $modification = new \DateTime($user->oxuser__oxtimestamp->value);
+        $modification->setTimezone(new \DateTimeZone('Europe/London'));
+        $customerInfo["account_last_modified"] = $modification->format(KlarnaEMD::EMD_FORMAT);
+
 
         $customerInfo = array($customerInfo);
 

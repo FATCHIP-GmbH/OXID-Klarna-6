@@ -157,6 +157,7 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
     /**
      * @param bool $blShipping
      * @return mixed
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function getCountryList($blShipping = false)
     {

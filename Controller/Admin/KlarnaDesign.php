@@ -37,7 +37,7 @@ class KlarnaDesign extends KlarnaBaseConfig
         $this->setEditObjectId($sShopOXID);
 
         if (KlarnaUtils::is_ajax()) {
-            $output = $output = $this->getMultiLangData();
+            $output = $this->getMultiLangData();
 
             return Registry::getUtils()->showMessageAndExit(json_encode($output));
         }

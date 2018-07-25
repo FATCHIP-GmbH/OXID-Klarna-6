@@ -227,6 +227,7 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
      */
     public function validatepayment()
     {
+
         if (!$sControllerName = parent::validatepayment())
             return null;
 

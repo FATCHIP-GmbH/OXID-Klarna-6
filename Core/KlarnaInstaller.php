@@ -396,6 +396,7 @@ class KlarnaInstaller extends ShopConfiguration
         return count($this->db->select($query)->fetchAll()) > 0;
     }
 
+
     /**
      * Performs full view update
      */

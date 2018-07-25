@@ -88,6 +88,7 @@ class KlarnaPayment extends BaseModel
     /** @var User|KlarnaUser */
     protected $oUser;
 
+
     /** @var bool false if session time expired */
     protected $sessionValid;
 

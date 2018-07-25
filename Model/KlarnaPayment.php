@@ -147,9 +147,6 @@ class KlarnaPayment extends KlarnaPayment_parent
         return $kpMethods;
     }
 
-    /**
-     *
-     */
     public function setActiveKPMethods()
     {
         $aKPmethods = Registry::get(Request::class)->getRequestEscapedParameter('kpMethods');
@@ -174,6 +171,7 @@ class KlarnaPayment extends KlarnaPayment_parent
         if ($sessionData = $oSession->getVariable('klarna_session_data')) {
             $methodData = array_search($klName, array_column($sessionData['payment_method_categories'], 'identifier'));
             if ($methodData !== null) {
+
                 return $sessionData['payment_method_categories'][$methodData]['asset_urls'][$variant];
             }
         }

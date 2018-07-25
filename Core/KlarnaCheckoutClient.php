@@ -164,17 +164,4 @@ class KlarnaCheckoutClient extends KlarnaClientBase
 
         return false;
     }
-
-//    /**
-//     * @return string|bool
-//     */
-//    public function getLoadedPurchaseCountry()
-//    {
-//        if (isset($this->aOrder)) {
-//
-//            return Registry::getSession()->getVariable('sCountryISO');
-//        }
-//
-//        return false;
-//    }
 }

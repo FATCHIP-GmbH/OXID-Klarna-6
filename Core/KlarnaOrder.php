@@ -98,10 +98,7 @@ class KlarnaOrder extends BaseModel
             return false;
         }
 
-        // reload blocker
-
         $sGetChallenge = Registry::getSession()->getSessionChallengeToken();
-
         $sessionId         = Registry::getSession()->getId();
         $this->_aOrderData = array(
             "purchase_country"  => $sCountryISO,
@@ -376,10 +373,6 @@ class KlarnaOrder extends BaseModel
         $options['shipping_details']                  =
             $this->getShippingDetailsMsg();
 
-//        $sCountryISO = strtoupper(Registry::getSession()->getVariable('sCountryISO'));
-//        if ($sCountryISO == 'GB') {
-//            $options['title_mandatory'] = $this->isSalutationMandatory();
-//        }
 
         /*** add design settings ***/
         if (!$designSettings = KlarnaUtils::getShopConfVar('aKlarnaDesign')) {
@@ -466,14 +459,6 @@ class KlarnaOrder extends BaseModel
     {
         return KlarnaUtils::getShopConfVar('blKlarnaAllowSeparateDeliveryAddress');
     }
-
-//    /**
-//     * @return mixed
-//     */
-//    protected function isSalutationMandatory()
-//    {
-//        return KlarnaUtils::getShopConfVar('tcklarna_blKlarnaSalutationMandatory');
-//    }
 
     /**
      * Check if user already has an account and if he's subscribed to the newsletter
