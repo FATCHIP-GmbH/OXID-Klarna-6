@@ -310,6 +310,8 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         if (!$termsValid = $this->_validateTermsAndConditions()) {
             Registry::get(UtilsView::class)->addErrorToDisplay('TCKLARNA_PLEASE_AGREE_TO_TERMS');
             Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=order', false, 302);
+
+            return;
         }
 
         if ($sAuthToken = Registry::get(Request::class)->getRequestEscapedParameter('sAuthToken')) {
@@ -330,6 +332,8 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
             if (!$valid || !$created) {
                 Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=order', false, 302);
+
+                return;
             }
 
             Registry::getSession()->setVariable('klarna_last_KP_order_id', $created['order_id']);
@@ -901,6 +905,8 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         if (!$orderId || !$paymentId || !$this->isActivePayment($paymentId)) {
             Registry::get(UtilsView::class)->addErrorToDisplay('KLARNA_WENT_WRONG_TRY_AGAIN', false, true);
             Registry::getUtils()->redirect($this->selfUrl, true, 302);
+
+            return;
         }
 
         $oBasket = $oSession->getBasket();
@@ -924,6 +930,8 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
         if ($paymentId === 'bestitamazon') {
             Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . "cl=KlarnaEpmDispatcher&fnc=amazonLogin", false);
+
+            return;
         }
 
         if ($paymentId === 'oxidpaypal') {
@@ -1046,6 +1054,8 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             Registry::getUtils()->redirect(
                 Registry::getConfig()->getShopSecureHomeUrl() . "cl=basket", false
             );
+
+            return;
         }
 
         $template = parent::render();
