@@ -397,13 +397,14 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
 
         $keController->init();
         $result = $keController->render();
-        $this->assertLoggedException(KlarnaWrongCredentialsException::class, 'KLARNA_UNAUTHORIZED_REQUEST');
 
         $this->assertEquals('tcklarna_checkout.tpl', $result);
 
         $keController = $this->getMock(KlarnaExpressController::class, ['getConfig', 'rebuildFakeUser']);
 
         $checkoutClient = $this->getMock(KlarnaCheckoutClient::class, ['createOrUpdateOrder']);
+        $checkoutClient->expects($this->any())->method('createOrUpdateOrder')
+            ->will($this->throwException(new KlarnaWrongCredentialsException()));
 
         $keController->expects($this->any())->method('getKlarnaClient')->will($this->returnValue($checkoutClient));
         $keController->expects($this->any())->method('getConfig')->will($this->returnValue($oConfig));
@@ -412,7 +413,6 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
         $keController->init();
         $keController->render();
         $this->assertEquals('tcklarna_checkout.tpl', $result);
-        $this->assertLoggedException(KlarnaWrongCredentialsException::class, 'KLARNA_UNAUTHORIZED_REQUEST');
     }
 
     /**
