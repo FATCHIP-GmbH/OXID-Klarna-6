@@ -306,7 +306,7 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
     public function testGetKlarnaFooterContent($mode, $klFooterType, $klFooterValue, $expectedResult)
     {
         $this->getConfig()->saveShopConfVar(null, 'sKlarnaFooterDisplay', $klFooterType, $this->getShopId(), 'tcklarna');
-        $this->getConfig()->saveShopConfVar(null, 'sKlFooterValue', $klFooterValue, $this->getShopId(), 'tcklarna');
+        $this->getConfig()->saveShopConfVar(null, 'sKlarnaFooterValue', $klFooterValue, $this->getShopId(), 'tcklarna');
         $this->setModuleMode($mode);
 
         $oViewConfig = oxNew(ViewConfig::class);

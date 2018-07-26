@@ -42,7 +42,6 @@ class KlarnaOrder extends KlarnaOrder_parent
      */
     public function validateOrder($oBasket, $oUser)
     {
-        $oBasket = Registry::getSession()->getBasket();
         $paymentId = $oBasket->getPaymentId();
 
         if(KlarnaPaymentModel::isKlarnaPayment($paymentId)) {
