@@ -79,19 +79,19 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
         if ($klFooter) {
 
             if ($klFooter === self::TCKLARNA_FOOTER_DISPLAY_PAYMENT_METHODS && KlarnaUtils::isKlarnaCheckoutEnabled()) {
-                $sLocale = strtolower(KlarnaConsts::getLocale());
+                $sLocale = strtolower(KlarnaConsts::getLocale(true));
             } else if ($klFooter === self::TCKLARNA_FOOTER_DISPLAY_LOGO)
                 $sLocale = '';
             else
                 return false;
 
-            $url  = sprintf(KlarnaConsts::getFooterImgUrls(KlarnaUtils::getShopConfVar('sKlFooterValue')), $sLocale);
+            $url  = sprintf(KlarnaConsts::getFooterImgUrls(KlarnaUtils::getShopConfVar('sKlarnaFooterValue')), $sLocale);
             $from = '/' . preg_quote('-', '/') . '/';
             $url  = preg_replace($from, '_', $url, 1);
 
             return array(
                 'url'   => $url,
-                'class' => KlarnaUtils::getShopConfVar('sKlFooterValue'),
+                'class' => KlarnaUtils::getShopConfVar('sKlarnaFooterValue'),
             );
         }
 
