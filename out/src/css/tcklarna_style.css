@@ -1,0 +1,224 @@
+.row.kco-style {
+    /*padding: 10px 14px 0 14px;*/
+}
+
+.klarna-outside-forms {
+    max-width: 640px;
+    margin: 0 auto;
+    -webkit-font-smoothing: antialiased;
+    font-size: 15px;
+    font-family: Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    text-rendering: geometricPrecision;
+}
+
+.klarna-outside-forms .glyphicon-menu-down {
+    font-size: 10px;
+}
+
+.klarna-outside-forms .glyphicon-user,
+.klarna-outside-forms .glyphicon-star,
+.klarna-outside-forms .glyphicon-book {
+    margin: 2px 7px 0 2px;
+}
+
+.drop-container {
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.klarna-label {
+    border-bottom: solid #cbcbcb 1px;
+    padding: 0 0 10px 0;
+}
+
+.drop-container.active {
+    background-color: #eaeaea;
+}
+
+.drop-content {
+    display: none;
+    padding: 10px;
+    background-color: #eaeaea;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    z-index: 200;
+
+    position: absolute;
+    margin-left: -10px;
+    width: calc(100% - 2px);
+}
+
+.drop-content.fixed {
+    position: absolute;
+    width: calc(200% - 4px);
+}
+
+.drop-content .btn.btn-primary,
+.drop-content .btn-group {
+    width: 100%;
+}
+
+.drop-content .btn.btn-default.dropdown-toggle {
+    width: 10%;
+}
+
+.drop-content .dropdown-menu {
+    width: 90%;
+}
+
+.drop-content .checkbox label {
+    -webkit-font-smoothing: antialiased;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.klarna-law-notice {
+    padding-top: 10px;
+    font-size: 13px;
+    font-weight: 900;
+    color: #999999;
+}
+
+.drop-container {
+    margin: 0 -14px 0 -14px;
+}
+
+.drop-content .dropdown-menu li {
+    cursor: pointer;
+}
+
+.klarna-formatted-address {
+    -webkit-font-smoothing: antialiased;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 0 10px 0 10px;
+}
+
+.klarna-modal.modal {
+    text-align: center;
+    padding: 0 !important;
+}
+
+.klarna-modal.modal:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -4px; /* Adjusts for spacing */
+}
+
+.klarna-modal.modal .modal-dialog {
+    display: inline-block;
+    text-align: center;
+}
+
+.klarna-modal .modal-header {
+    border-bottom: none;
+}
+
+.modal-dialog button {
+    margin: 0 12px 0 12px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+.modal-dialog button.close {
+    position: absolute;
+    right: 0;
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    filter: alpha(opacity=20);
+    opacity: .2;
+    background-color: #fff;
+    padding: 0;
+    margin: 0 20px 0 20px;
+}
+#resetCountry {
+    font-weight: normal;
+    margin-left: 12px;
+}
+#resetCountry a {
+    text-decoration: none;
+    line-height: initial;
+    margin-left: 0;
+}
+#resetCountry a:hover {color: #456e96
+}
+
+.modal-dialog button.close:hover {opacity: .7;}
+
+
+.country-name {
+    padding-left: 3px;
+}
+
+div.klarna-flag {
+    width: 26px;
+    height: 20px;
+    background-size: cover;
+}
+
+.klarna-flag.se {
+    background-image: url('../../admin/src/img/klarna-flag-se.png');
+}
+
+.klarna-flag.gb {
+    background-image: url('../../admin/src/img/klarna-flag-gb.png');
+}
+
+.klarna-flag.de {
+    background-image: url('../../admin/src/img/klarna-flag-de.png');
+}
+
+.klarna-flag.nl {
+    background-image: url('../../admin/src/img/larna-flag-nl.png');
+}
+
+.klarna-flag.at {
+    background-image: url('../../admin/src/img/klarna-flag-at.png');
+}
+
+.klarna-flag.no {
+    background-image: url('../../admin/src/img/klarna-flag-no.png');
+}
+
+.klarna-flag.fi {
+    background-image: url('../../admin/src/img/klarna-flag-fi.png');
+}
+
+.klarna-flag.dk {
+    background-image: url('../../admin/src/img/klarna-flag-dk.png');
+}
+
+.klarna-flag.ch {
+    background-image: url('../../admin/src/img/klarna-flag-ch.png');
+}
+
+
+.other-countries-select {
+    width: 40%;
+    margin: 30px 0 0 30px;
+    display: inline-block;
+}
+
+.country-not-on-the-list {
+    width: 40%;
+    margin: 30px 30px 0 0;
+    display: inline-block;
+}
+
+.country-not-on-the-list a {
+    color: dodgerblue;
+    text-decoration: underline;
+    float: right;
+}
+
+.kco-placeholder {
+    height: 500px;
+}

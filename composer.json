@@ -1,0 +1,26 @@
+{
+  "name": "topconcepts/oxid-klarna-6",
+  "description": "Klarna module for OXID eShop version 6.0.X",
+  "type": "oxideshop-module",
+  "extra": {
+    "oxideshop": {
+      "blacklist-filter": [
+        "documentation/**/*.*"
+      ],
+      "target-directory": "tc/tcklarna"
+    }
+  },
+  "require": {
+    "php": ">=5.6",
+    "rmccue/requests": ">=1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "*",
+    "phpunit/phpunit-selenium": ">=1.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "TopConcepts\\Klarna\\": "./"
+    }
+  }
+}
