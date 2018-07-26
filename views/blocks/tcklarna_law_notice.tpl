@@ -80,7 +80,7 @@
             var $loginForm = $('form[name=login]');
             if ($loginForm.length > 0) {
                 $noticeBox.clone()
-                    .appendTo($loginForm.find('div.checkbox').last());
+                    .appendTo($loginForm.find('div.checkbox:last'));
             }
 
             var $registerForm = $('form[name=order]');
