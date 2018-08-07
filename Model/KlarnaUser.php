@@ -109,9 +109,13 @@ class KlarnaUser extends KlarnaUser_parent
     }
 
     /**
+     * Applicable in KP mode
+     * @param bool $isB2BAvailable
      * @return array
+     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
-    public function getKlarnaPaymentData()
+    public function getKlarnaPaymentData($isB2BAvailable = false)
     {
         $customer = array(
             'date_of_birth' => null,
@@ -134,6 +138,10 @@ class KlarnaUser extends KlarnaUser_parent
             'customer'         => $customer,
             'attachment'       => $this->getAttachmentsData(),
         );
+
+        if($isB2BAvailable && !empty($billingAddress['organization_name'])){
+            $aUserData['customer']['type'] = 'organization';
+        }
 
         return $aUserData;
     }

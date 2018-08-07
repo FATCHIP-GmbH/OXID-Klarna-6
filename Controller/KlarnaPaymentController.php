@@ -137,7 +137,6 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
             }
 
             $this->oKlarnaPayment = new KlarnaPayment($oBasket, $oUser);
-
             if (!$this->oKlarnaPayment->isSessionValid()) {
                 KlarnaPayment::cleanUpSession();
             }

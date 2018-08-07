@@ -67,6 +67,7 @@ $aLang = array(
     'TCKLARNA_KP_INVALID_TOKEN'            => 'Invalid authorization token. Please try again.',
     'TCKLARNA_KP_ORDER_DATA_CHANGED'       => 'Order data have been changed. Please try again.',
     'KP_NOT_AVAILABLE_FOR_COMPANIES' => 'Payment with this Klarna payment method is currently not available for companies.',
+    'KP_AVAILABLE_FOR_COMPANIES_ONLY' => 'Payment with this Klarna payment method is currently available only for companies.',
     'TCKLARNA_KP_NOT_KLARNA_CORE_COUNTRY'  => 'Configuration error: No Klarna payment methods available for this country.',
 
     'TCKLARNA_PLEASE_AGREE_TO_TERMS'            => 'Please agree to Terms and Conditions and Right to Withdrawal for a downloadable item.',
