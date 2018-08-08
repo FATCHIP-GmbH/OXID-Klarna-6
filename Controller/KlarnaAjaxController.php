@@ -63,7 +63,7 @@ class KlarnaAjaxController extends FrontendController
     public function init()
     {
         if (!KlarnaUtils::is_ajax()){
-            $this->jsonResponse(__METHOD__, 'Invalid request');
+           return $this->jsonResponse(__FUNCTION__, 'Invalid request');
         }
 
         $oSession = Registry::getSession();
@@ -81,14 +81,14 @@ class KlarnaAjaxController extends FrontendController
             }
 
             if ($this->_aOrderData['status'] === 'checkout_complete'){
-                $this->jsonResponse('ajax', 'read_only');
+                return $this->jsonResponse('ajax', 'read_only');
             }
 
             $this->_initUser();
             $this->updateUserObject();
 
         } else {
-            Registry::getUtils()->showMessageAndExit('Invalid payment ID');
+            return Registry::getUtils()->showMessageAndExit('Invalid payment ID');
         }
 
         parent::init();
