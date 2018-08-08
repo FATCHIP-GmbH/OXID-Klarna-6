@@ -54,7 +54,7 @@ class KlarnaAjaxController extends FrontendController
     protected $_aErrors;
 
     /**
-     * @return string|void
+     * @return void Return is only used in PHPUnit context
      * @throws StandardException
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
