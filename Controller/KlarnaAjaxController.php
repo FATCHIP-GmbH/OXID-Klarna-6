@@ -137,8 +137,7 @@ class KlarnaAjaxController extends FrontendController
             } else {
                 $this->_oUser->setType(KlarnaUser::NOT_REGISTERED);
             }
-        } else if ($oSession->hasVariable('oFakeKlarnaUser')) {
-            $this->_oUser = $oSession->getVariable('oFakeKlarnaUser');
+
         } else {
             $this->_oUser = KlarnaUtils::getFakeUser($this->_aOrderData['billing_address']['email']);
         }
@@ -151,8 +150,6 @@ class KlarnaAjaxController extends FrontendController
         );
         if ($this->_oUser->isWritable()) {
             $this->_oUser->save();
-        } else {
-            $oSession->setVariable('oFakeKlarnaUser', $this->_oUser);
         }
 
         $oBasket = Registry::getSession()->getBasket();
@@ -176,8 +173,6 @@ class KlarnaAjaxController extends FrontendController
         }
         if ($this->_oUser->isWritable()) {
             $this->_oUser->save();
-        }else {
-            $this->getSession()->setVariable('oFakeKlarnaUser', $this->_oUser);
         }
     }
 
