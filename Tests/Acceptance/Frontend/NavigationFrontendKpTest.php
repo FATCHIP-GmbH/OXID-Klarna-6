@@ -10,12 +10,43 @@ class NavigationFrontendKpTest extends AcceptanceKlarnaTest
 {
 
     /**
+     * @throws \Exception
+     */
+    public function testB2BOrder()
+    {
+        $this->prepareKlarnaDatabase('KP', 'B2BOTH');
+
+        //Navigate untill step 3
+        $this->navigateToPay('DE', true);
+        $this->click("//input[@value='klarna_pay_later']");
+
+        $this->assertTextPresent('Pay X days after delivery');
+        $this->selectFrame("klarna-pay-later-main");
+        $this->assertTextPresent('Get your order before you pay');
+        $this->selectFrame('relative=top');
+        $this->clickAndWait("css=.nextStep");
+        $this->selectFrame('klarna-pay-later-fullscreen');
+        $this->click("//button[@id='organizationalData-dataCollection__entityType__root']");
+        $this->click("//button[@id='organizationalData-entityType__limited_company']");
+        $this->type("//input[@id='organizationalData-dataCollection__organizationNumber']", 'HRB12345');
+        $this->type("//input[@id='organizationalData-dataCollection__vatId']", 'DE999999999');
+        $this->click("//button[@id='organizationalData-dataCollection__submit']");
+        $this->waitForElement("//form[@id='orderConfirmAgbBottom']//button");
+        $this->selectFrame('relative=top');
+        $this->clickAndWait("//form[@id='orderConfirmAgbBottom']//button");
+        $this->waitForItemAppear("thankyouPage", 60);
+        $this->waitForText("We will inform you immediately if an item is not deliverable.");
+        $this->assertTextPresent("We will inform you immediately if an item is not deliverable.");
+        $this->assertKlarnaData();
+    }
+
+    /**
      * @param $title
      * @param $radio
      * @param $desc
      * @param $iframe
      * @param null $country
-     * @throws \Exception
+     * @throws \oxSystemComponentException
      * @dataProvider klarnaKPMethodsProvider
      */
     public function testFrontendKpOrder($title, $radio,$desc, $iframe, $country = null)
@@ -148,7 +179,7 @@ class NavigationFrontendKpTest extends AcceptanceKlarnaTest
         $this->click("payment-selector-direct_debit");
         $this->selectFrame('relative=top');
         $this->click("css=.nextStep");
-        $this->waitForFrameToLoad('klarna-pay-now-fullscreen', 2000);
+        //$this->waitForFrameToLoad('klarna-pay-now-fullscreen', 2000);
         $this->selectFrame('klarna-pay-now-fullscreen');
         $this->type("//div[@id='purchase-approval-date-of-birth__root']//input[@id='purchase-approval-date-of-birth']",$this->getKlarnaDataByName('sKlarnaBDate'));
         $this->type("//div[@id='purchase-approval-phone-number__root']//input[@id='purchase-approval-phone-number']",$this->getKlarnaDataByName('sKlarnaPhoneNumber'));
@@ -169,7 +200,7 @@ class NavigationFrontendKpTest extends AcceptanceKlarnaTest
         $this->assertKlarnaData();
     }
 
-    protected function navigateToPay($country = null)
+    protected function navigateToPay($country = null, $isB2B = false)
     {
         $userLogin = "user";
 
@@ -182,6 +213,10 @@ class NavigationFrontendKpTest extends AcceptanceKlarnaTest
         if ($country) {
            $this->switchCurrency(KlarnaConsts::getCountry2CurrencyArray()[$country]);
            $userLogin = "user_".strtolower($country);
+
+           if($isB2B){
+               $userLogin .= "_b2b";
+           }
         }
 
         //login//step1
