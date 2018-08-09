@@ -131,4 +131,28 @@ class KlarnaFormatterTest extends ModuleUnitTestCase
         ];
 
     }
+
+    /**
+     * @dataProvider addressFormatterDataProvider
+     * @param $userId
+     * @param $expectedResult
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
+     */
+    public function testGetFormattedUserAddresses($userId, $expectedResult)
+    {
+
+        $oUser = oxNew(User::class);
+        $oUser->load($userId);
+        $result = KlarnaFormatter::getFormattedUserAddresses($oUser);
+
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    public function addressFormatterDataProvider()
+    {
+        return[
+            ['92ebae5067055431aeaaa6f75bd9a131', ['41b545c65fe99ca2898614e563a7108a' => 'Gregory Dabrowski, Karnapp 25, 21079 Hamburg']],
+            ['c95a1d97acaebd371851727d1173dcd0', false]
+        ];
+    }
 }
