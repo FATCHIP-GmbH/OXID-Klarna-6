@@ -66,7 +66,8 @@ $aLang = array(
     'TCKLARNA_KP_MATCH_ERROR'              => 'In order to being able to use Klarna payments, both person and country in billing and shipping address must match.',
     'TCKLARNA_KP_INVALID_TOKEN'            => 'Invalid authorization token. Please try again.',
     'TCKLARNA_KP_ORDER_DATA_CHANGED'       => 'Order data have been changed. Please try again.',
-    'KP_NOT_AVAILABLE_FOR_COMPANIES' => 'Payment with this Klarna payment method is currently not available for companies.',
+    'KP_NOT_AVAILABLE_FOR_COMPANIES'  => 'Payment with this Klarna payment method is currently not available for companies.',
+    'KP_AVAILABLE_FOR_PRIVATE_ONLY'   => 'This Klarna payment method is only available for private orders.',
     'KP_AVAILABLE_FOR_COMPANIES_ONLY' => 'Payment with this Klarna payment method is currently available only for companies.',
     'TCKLARNA_KP_NOT_KLARNA_CORE_COUNTRY'  => 'Configuration error: No Klarna payment methods available for this country.',
 

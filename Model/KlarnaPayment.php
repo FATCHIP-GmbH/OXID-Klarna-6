@@ -176,7 +176,7 @@ class KlarnaPayment extends KlarnaPayment_parent
             }
         }
         $from   = '/' . preg_quote('-', '/') . '/';
-        $locale = preg_replace($from, '_', strtolower(KlarnaConsts::getLocale()), 1);
+        $locale = preg_replace($from, '_', strtolower(KlarnaConsts::getLocale(true)), 1);
 
         //temp fix for payment name mismatch slice_it -> pay_over_time
         if ($klName === 'pay_over_time') {

@@ -26,6 +26,13 @@ window.klarnaAsyncCallback = function () {
         $form.find('input[name=fnc]').val('kpBeforeExecute');
     }
 
+    function replaceContentWithMessage($container){
+        $container.find('input.kp-radio').get(0).hasError = true;
+        $container.find('.kp-method').replaceWith(
+            $('.tcklarna-message:first').clone()
+        );
+    }
+
     function loadWidget(id) {
         $('.loading').show(400);
         $kpRadio.counter++;
@@ -40,7 +47,11 @@ window.klarnaAsyncCallback = function () {
                         var $outter = $('#' + id).closest('.kp-outer')
                         var $radio = $outter.find('input.kp-radio');
 
-                        $outter.hide();
+                        if (tcKlarnaIsB2B && id !== 'pay_later'){
+                            replaceContentWithMessage($outter);
+                        } else {
+                            $outter.hide();
+                        }
                         $radio.get(0).checked = false;
                         if ($kpRadio.active === $radio.get(0)) {
                             $kpRadio.active.checked = false;
@@ -190,10 +201,10 @@ window.klarnaAsyncCallback = function () {
 
     (function initKlarnaPayment() {
 
-        if(clientToken){
+        if(tcKlarnaClientToken){
             try {
                 Klarna.Payments.init({
-                    client_token: clientToken
+                    client_token: tcKlarnaClientToken
                 });
 
             } catch (e) {
@@ -208,7 +219,7 @@ window.klarnaAsyncCallback = function () {
                 this.$klarnaDiv = $(this).closest('dl').find('.kp-method');
                 this.hasError = this.$klarnaDiv.hasClass('alert');
 
-                if (!this.hasError && clientToken) {
+                if (!this.hasError && tcKlarnaClientToken) {
                     loadWidget(this.paymentMethod);
                 }
                 if (this.checked) {
@@ -221,13 +232,12 @@ window.klarnaAsyncCallback = function () {
         // click
         if ($form.attr('id') === 'payment') {
             $kpRadio.click(function () {
-
-                if (!this.hasError && clientToken) {
+                if (!this.hasError && tcKlarnaClientToken) {
                     // now we can update user data
                     klarnaSendXHR({
                         action: 'addUserData',
                         paymentId: this.value,
-                        client_token: clientToken
+                        client_token: tcKlarnaClientToken
                     });
                 }
 
@@ -269,8 +279,14 @@ window.klarnaAsyncCallback = function () {
                     klarnaSendXHR({
                         action: 'checkOrderStatus',
                         paymentId: $kpRadio.active.value,
-                        client_token: clientToken
+                        client_token: tcKlarnaClientToken
                     });
+                } else {
+                    // $($kpRadio.active).closest('.kp-outer')
+                    //     .find('.kp-method')
+                    //     .hide(600);
+                    // $kpRadio.active.checked = false;
+                    // delete $kpRadio.active;
                 }
 
             } else if ($form.attr('id') === 'orderConfirmAgbBottom') {
@@ -283,7 +299,7 @@ window.klarnaAsyncCallback = function () {
 
                 klarnaSendXHR({
                     action: 'checkOrderStatus',
-                    client_token: clientToken
+                    client_token: tcKlarnaClientToken
                 });
 
             } else {

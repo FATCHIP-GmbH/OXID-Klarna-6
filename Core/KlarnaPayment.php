@@ -206,6 +206,7 @@ class KlarnaPayment extends BaseModel
 
     public function isB2B()
     {
+
         return $this->b2bAllowed && !empty($this->_aUserData['billing_address']['organization_name']);
     }
 
@@ -405,7 +406,7 @@ class KlarnaPayment extends BaseModel
             }
         }
         if ($this->_aUserData['billing_address']['organization_name'] && !$this->b2bAllowed) {       // oxid fieldName invadr[oxuser__oxcompany]
-            $this->addErrorMessage('KP_NOT_AVAILABLE_FOR_COMPANIES');
+            $this->addErrorMessage('KP_AVAILABLE_FOR_PRIVATE_ONLY');
         }
 
         if (empty($this->_aUserData['billing_address']['organization_name']) && !$this->b2cAllowed) {       // oxid fieldName invadr[oxuser__oxcompany]
