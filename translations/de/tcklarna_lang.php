@@ -67,7 +67,7 @@ $aLang = array(
     'TCKLARNA_KP_NOT_KLARNA_CORE_COUNTRY'        => 'Konfigurationsfehler: In diesem Land sind keine Klarna Zahlungsarten  verfügbar.',
 
     'KP_NOT_AVAILABLE_FOR_COMPANIES'      => 'Bezahlen mit dieser Klarna Zahlungsmethode steht derzeit für Bestellungen von Firmen nicht zur Verfügung.',
-    'KP_AVAILABLE_FOR_COMPANIES_ONLY'      => 'Bezahlen mit dieser Klarna Zahlungsmethode steht derzeit für Bestellungen von Firmen nicht zur Verfügung.',
+    'KP_AVAILABLE_FOR_COMPANIES_ONLY'      => 'Bezahlen mit dieser Klarna Zahlungsmethode steht derzeit nur für Bestellungen von Firmen zur Verfügung.',
     'TCKLARNA_PLEASE_AGREE_TO_TERMS'            => 'Bitte stimmen Sie den AGB und den Widerrufsbedingungen für digitale Inhalte zu.',
     'TCKLARNA_ERROR_NOT_ENOUGH_IN_STOCK'        => 'Nicht ausreichender Lagerbestand des Produkts %s.',
     'TCKLARNA_ERROR_NO_SHIPPING_METHODS_SET_UP' => 'Derzeit ist keine Versandart für dieses Land definiert: %s',
