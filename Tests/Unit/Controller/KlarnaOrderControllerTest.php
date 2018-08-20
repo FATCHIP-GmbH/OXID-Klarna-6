@@ -12,6 +12,7 @@ use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Controller\BaseController;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\DisplayError;
+use OxidEsales\Eshop\Core\Email;
 use OxidEsales\Eshop\Core\Exception\ExceptionToDisplay;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
@@ -151,6 +152,48 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
     }
 
+    public function executeFailsDataProvider()
+    {
+        $sGetChallenge = Registry::getSession()->getSessionChallengeToken();
+        $statusComplete = ['status' => 'checkout_complete'];
+        $statusIncomplete = ['status' => 'checkout_incomplete'];
+
+        return[
+            [$sGetChallenge, 'id', 'id', $statusComplete, 'thankyou'], // success
+            [$sGetChallenge, 'id', 'id', $statusIncomplete, 'KlarnaExpress'], // incomplete status
+            [$sGetChallenge, 'id', 'newId', $statusComplete, 'KlarnaExpress'], // klarna id mismatch
+            [$sGetChallenge, null, null, $statusComplete, 'KlarnaExpress'], // no klarna id
+            [null, 'id', 'id', $statusComplete, false] // no/invalid session challenge token
+        ];
+    }
+
+    /**
+     * @dataProvider executeFailsDataProvider
+     * @param $sGetChallenge
+     * @param $requestId
+     * @param $sessionId
+     * @param $statusData
+     * @param $expectedResult
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
+     */
+    public function testExecuteFails($sGetChallenge, $requestId, $sessionId, $statusData, $expectedResult)
+    {
+        $this->setRequestParameter('stoken', $sGetChallenge);
+
+        $this->setSessionParam('klarna_checkout_order_id', $sessionId);
+        $this->setRequestParameter('klarna_order_id', $requestId);
+
+        $oBasket = $this->createStub(KlarnaBasket::class, ['getPaymentId' => 'klarna_checkout']);
+        $this->getSession()->setBasket($oBasket);
+
+        $controller = $this->getMock(OrderController::class, ['kcoBeforeExecute', 'kcoExecute']);
+        $this->setProtectedClassProperty($controller, '_aOrderData', $statusData);
+        $result = $controller->execute();
+
+        $this->assertEquals($expectedResult, $result);
+
+    }
+
     /**
      * @throws \ReflectionException
      */
@@ -167,14 +210,29 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $method = $class->getMethod('kcoExecute');
         $method->setAccessible(true);
 
-        $this->assertEquals(1, $this->getSessionParam('klarna_checkout_order_id'));
         $method->invokeArgs($mock, [$oBasket]);
+        $this->assertEquals(null, $this->getSessionParam('klarna_checkout_order_id'));
         $this->assertNull($this->getSessionParam('klarna_checkout_order_id'));
         $result = unserialize($this->getSessionParam('Errors')['default'][0]);
         $this->assertInstanceOf(ExceptionToDisplay::class, $result);
 
         $result = $result->getOxMessage();
         $this->assertEquals('test', $result);
+
+
+        $order = $this->createStub(Order::class, ['finalizeOrder' => 1]);
+        $oUser = $this->getMock(User::class, ['getType', 'save', 'onOrderExecute']);
+        $oUser->expects($this->any())->method('getType')->willReturn(KlarnaUser::NOT_REGISTERED);
+        $oUser->expects($this->once())->method('save');
+        $oUser->expects($this->once())->method('onOrderExecute');
+        $oEmail = $this->getMock(Email::class, ['sendForgotPwdEmail']);
+        $oEmail->expects($this->once())->method('sendForgotPwdEmail');
+        UtilsObject::setClassInstance(Order::class, $order);
+        UtilsObject::setClassInstance(Email::class, $oEmail);
+        $mock = $this->createStub(KlarnaOrderController::class, ['isRegisterNewUserNeeded' => true]);
+        $this->setProtectedClassProperty($mock, '_oUser', $oUser);
+        $mock->kcoExecute($oBasket);
+
     }
 
     /**
@@ -381,6 +439,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
             ['KP', 'payId', null, null, false, $kcoExternalPayments],
             ['KCO', 'klarna_checkout', 'DE', null, $userClassName, $kcoExternalPayments],
             ['KCO', 'klarna_checkout', 'AT', null, $userClassName, $kcoExternalPayments],
+            ['KCO', 'klarna_checkout', 'AT', null, $userClassName, $kcoExternalPayments],
             ['KCO', 'klarna_checkout', 'DE', 1, false, $kcoExternalPayments],
             ['KCO', 'klarna_checkout', 'AF', null, $userClassName, $kcoExternalPayments],
             ['KCO', 'bestitamazon', 'DE', null, false, $kcoExternalPayments],
@@ -452,6 +511,38 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $oOrderController = $this->getMock(OrderController::class, ['getKlarnaCheckoutClient']);
         $oOrderController->expects($this->once())->method('getKlarnaCheckoutClient')->willReturn($client);
         $oOrderController->init();
+
+        // we will also test ignore ajax when checkout completed
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'xmlhttprequest';
+        putenv("HTTP_X_REQUESTED_WITH=xmlhttprequest");
+
+        $orderData = ['status' => 'checkout_complete'];
+        $client = $this->getMock(KlarnaCheckoutClient::class, ['getOrder']);
+        $client->expects($this->once())->method('getOrder')->willReturn($orderData);
+
+        $oOrderController = $this->getMock(OrderController::class, ['getKlarnaCheckoutClient']);
+        $oOrderController->expects($this->once())->method('getKlarnaCheckoutClient')->willReturn($client);
+        $oOrderController->init();
+        $this->assertEquals('{"action":"ajax","status":"read_only","data":null}', \oxUtilsHelper::$response);
+    }
+
+    public function testInit_countryChanged()
+    {
+        $this->setSessionParam('sCountryISO', 'DE');
+        $newCountry = 'AT';
+
+        $oBasket = oxNew(Basket::class);
+        $oBasket->setPayment('klarna_checkout');
+        Registry::getSession()->setBasket($oBasket);
+        $oOrderController = $this->getMock(OrderController::class, ['isCountryChanged']);
+        $oOrderController->expects($this->once())->method('isCountryChanged')->willReturn($newCountry);
+        $oOrderController->init();
+
+        $this->assertEquals($newCountry, $this->getSessionParam('sCountryISO'));
+        $orderData = $this->getProtectedClassProperty($oOrderController, '_aOrderData');
+        $this->assertEquals($newCountry, $orderData['billing_address']['country']);
+        $this->assertEquals($newCountry, $orderData['shipping_address']['country']);
+
     }
 
     public function klarnaExternalCheckoutDP()
@@ -691,6 +782,49 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $this->assertEquals($expected, json_decode(\oxUtilsHelper::$response, true));
         $this->assertTrue($this->getProtectedClassProperty($mock, 'forceReloadOnCountryChange'));
         $this->assertEquals('test', $this->getSessionParam('sCountryISO'));
+    }
+
+    public function updateKlarnaOrderDataProvider()
+    {
+        $oUser = oxNew(User::class);
+        $aOrderData = [
+            'billing_address' => 'testValue_1',
+            'shipping_address' => 'testValue_2'
+        ];
+
+        return [
+            [$oUser, 1, $aOrderData],
+            [$oUser, 1, []],
+            [null, 0, $aOrderData],
+        ];
+    }
+
+    /**
+     * @dataProvider updateKlarnaOrderDataProvider
+     * @param $oUser
+     * @param $updatedCallsCount
+     * @param $aOrderData
+     */
+    public function testUpdateKlarnaOrder($oUser, $updatedCallsCount, $aOrderData)
+    {
+        // tested by calling updateKlarnaAjax
+        $oClient = $this->getMock(KlarnaCheckoutClient::class, ['createOrUpdateOrder']);
+        $oClient->expects($this->exactly($updatedCallsCount))->method('createOrUpdateOrder')->with(
+            $this->callback(function($subject) use($aOrderData){
+                if(empty($aOrderData)) {
+                    return true;
+                }
+                return strpos($subject, 'testValue_1') !== false && strpos($subject, 'testValue_2') !== false;
+            })
+        );
+        $mock = $this->getMock(KlarnaOrderController::class, ['getJsonRequest', 'getKlarnaCheckoutClient']);
+        $mock->expects($this->any())->method('getJsonRequest')->willReturn(['action' => 'change', 'country' => 'country']);
+        $mock->expects($this->exactly($updatedCallsCount))->method('getKlarnaCheckoutClient')->willReturn($oClient);
+        $this->setProtectedClassProperty($mock, '_oUser', $oUser);
+        $this->setProtectedClassProperty($mock, '_aOrderData', $aOrderData);
+        $mock->updateKlarnaAjax();
+
+        $this->assertEquals('{"action":"updateSession","status":"redirect","data":{"url":null}}', \oxUtilsHelper::$response);
     }
 
     public function testUpdateKlarnaAjaxCheckOrderStatus()
@@ -1019,6 +1153,22 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
             [KlarnaUser::LOGGED_IN, true],
             [KlarnaUser::NOT_REGISTERED, false],
         ];
+    }
 
+    public function testGetDeliveryAddressMD5()
+    {
+        $userEncodedAddress = 'test';
+        $deliveryEncodedAddress = '0be02ac66a490e0183d722ed8e5d128a';
+        $oUser = $this->createStub(User::class, ['getEncodedDeliveryAddress' => $userEncodedAddress]);
+        $this->setSessionParam('deladrid', '41b545c65fe99ca2898614e563a7108a');
+
+        $controllerMock = $this->createStub(KlarnaOrderController::class, ['getUser' => $oUser]);
+        $result = $controllerMock->getDeliveryAddressMD5();
+        $this->assertEquals($userEncodedAddress . $deliveryEncodedAddress, $result);
+
+        $this->setSessionParam('deladrid', null);
+        $controllerMock = $this->createStub(KlarnaOrderController::class, ['getUser' => $oUser]);
+        $result = $controllerMock->getDeliveryAddressMD5();
+        $this->assertEquals($userEncodedAddress, $result);
     }
 }

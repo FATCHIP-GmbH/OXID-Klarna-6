@@ -54,7 +54,7 @@ class KlarnaAjaxController extends FrontendController
     protected $_aErrors;
 
     /**
-     * @return string|void
+     * @return void Return is only used in PHPUnit context
      * @throws StandardException
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
@@ -63,7 +63,7 @@ class KlarnaAjaxController extends FrontendController
     public function init()
     {
         if (!KlarnaUtils::is_ajax()){
-            $this->jsonResponse(__METHOD__, 'Invalid request');
+           return $this->jsonResponse(__FUNCTION__, 'Invalid request');
         }
 
         $oSession = Registry::getSession();
@@ -81,14 +81,14 @@ class KlarnaAjaxController extends FrontendController
             }
 
             if ($this->_aOrderData['status'] === 'checkout_complete'){
-                $this->jsonResponse('ajax', 'read_only');
+                return $this->jsonResponse('ajax', 'read_only');
             }
 
             $this->_initUser();
             $this->updateUserObject();
 
         } else {
-            Registry::getUtils()->showMessageAndExit('Invalid payment ID');
+            return Registry::getUtils()->showMessageAndExit('Invalid payment ID');
         }
 
         parent::init();
@@ -137,8 +137,7 @@ class KlarnaAjaxController extends FrontendController
             } else {
                 $this->_oUser->setType(KlarnaUser::NOT_REGISTERED);
             }
-        } else if ($oSession->hasVariable('oFakeKlarnaUser')) {
-            $this->_oUser = $oSession->getVariable('oFakeKlarnaUser');
+
         } else {
             $this->_oUser = KlarnaUtils::getFakeUser($this->_aOrderData['billing_address']['email']);
         }
@@ -151,8 +150,6 @@ class KlarnaAjaxController extends FrontendController
         );
         if ($this->_oUser->isWritable()) {
             $this->_oUser->save();
-        } else {
-            $oSession->setVariable('oFakeKlarnaUser', $this->_oUser);
         }
 
         $oBasket = Registry::getSession()->getBasket();
@@ -176,8 +173,6 @@ class KlarnaAjaxController extends FrontendController
         }
         if ($this->_oUser->isWritable()) {
             $this->_oUser->save();
-        }else {
-            $this->getSession()->setVariable('oFakeKlarnaUser', $this->_oUser);
         }
     }
 

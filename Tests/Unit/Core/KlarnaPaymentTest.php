@@ -530,41 +530,58 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
         $oUser->oxuser__oxlname = new Field('Dabrowski', Field::T_RAW);
         $oUser->oxuser__oxfname = new Field('Gregory', Field::T_RAW);
         $oKlarnaOrder = new  KlarnaPayment($oBasket, $oUser, []);
-        $errors = $this->getProtectedClassProperty($oKlarnaOrder, 'errors');
+        $errors = $oKlarnaOrder->getError();
         $this->assertEmpty($errors);
 
-        // company name present
+        // invalid B2B
+        $this->setModuleConfVar('sKlarnaB2Option', 'B2B');
+        $oUser->oxuser__oxcompany = new Field('', Field::T_RAW);
+        $oKlarnaOrder = new  KlarnaPayment($oBasket, $oUser, []);
+        $errors = $oKlarnaOrder->getError();
+        $this->assertEquals(1, count($errors));
+        $this->assertEquals('Payment with this Klarna payment method is currently available only for companies.', $errors[0]);
+
+        // valid b2b
+        $this->setModuleConfVar('sKlarnaB2Option', 'B2BOTH');
         $oUser->oxuser__oxcompany = new Field('FakeCompany', Field::T_RAW);
         $oKlarnaOrder = new  KlarnaPayment($oBasket, $oUser, []);
-        $errors = $this->getProtectedClassProperty($oKlarnaOrder, 'errors');
-        $this->assertNotEmpty($errors);
-        $companyNameError = 'Payment with this Klarna payment method is currently not available for companies.';
-        $this->assertEquals($companyNameError, $errors[0]);
-
-        // different country
-        $this->setSessionParam('sCountryISO', null);
-        $oUser->oxuser__oxcountryid = new Field('a7c40f6320aeb2ec2.72885259', Field::T_RAW);
-        $oKlarnaOrder = new  KlarnaPayment($oBasket, $oUser, []);
-        $errors = $this->getProtectedClassProperty($oKlarnaOrder, 'errors');
-        $this->assertNotEmpty($errors);
-        $this->assertEquals($expectedError, $errors[0]);
+        $errors = $oKlarnaOrder->getError();
+        $this->assertEmpty($errors);
 
         // different family_name
-        $this->setSessionParam('sCountryISO', null);
         $oUser->oxuser__oxcountryid = new Field('a7c40f631fc920687.20179984', Field::T_RAW);
         $oUser->oxuser__oxlname = new Field('notDabrowski', Field::T_RAW);
         $oKlarnaOrder = new  KlarnaPayment($oBasket, $oUser, []);
-        $errors = $this->getProtectedClassProperty($oKlarnaOrder, 'errors');
-        $this->assertNotEmpty($errors);
+        $errors = $oKlarnaOrder->getError();
+        $this->assertEquals(1, count($errors));
         $this->assertEquals($expectedError, $errors[0]);
 
         // different given name
         $oUser->oxuser__oxlname = new Field('Dabrowski', Field::T_RAW);
         $oUser->oxuser__oxfname = new Field('notGregory', Field::T_RAW);
         $oKlarnaOrder = new  KlarnaPayment($oBasket, $oUser, []);
-        $errors = $this->getProtectedClassProperty($oKlarnaOrder, 'errors');
+        $errors = $oKlarnaOrder->getError();
         $this->assertNotEmpty($errors);
         $this->assertEquals($expectedError, $errors[0]);
+
+        // different country
+        $oUser->oxuser__oxcountryid = new Field('a7c40f6320aeb2ec2.72885259', Field::T_RAW);
+
+        $oKlarnaOrder = new  KlarnaPayment($oBasket, $oUser, []);
+        $errors = $oKlarnaOrder->getError();
+        $this->assertNotEmpty($errors);
+        $this->assertEquals($expectedError, $errors[0]);
+        //$this->assertEquals(1, count($errors));
+
+        // company name present and not B2B country
+        $this->setSessionParam('sCountryISO', 'AT');
+        $oUser->oxuser__oxcompany = new Field('FakeCompany', Field::T_RAW);
+        $oKlarnaOrder = new  KlarnaPayment($oBasket, $oUser, []);
+        $errors = $oKlarnaOrder->getError();
+
+        $this->assertEquals(2, count($errors));
+        $companyNameError = 'Payment with this Klarna payment method is currently not available for companies.';
+        $this->assertEquals($companyNameError, $errors[1]);
     }
 
 

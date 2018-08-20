@@ -282,7 +282,7 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
     public function testRender_error()
     {
         $oUser                      = oxNew(User::class);
-        $oUser->oxuser__oxcountryid = new Field(self::COUNTRIES['DE'], Field::T_RAW);
+        $oUser->oxuser__oxcountryid = new Field(self::COUNTRIES['AT'], Field::T_RAW);
         $oUser->oxuser__oxcompany   = new Field('Company Name should lead to error', Field::T_RAW);
         $this->setSessionParam('sCountryISO', 'DE');
         $this->setSessionParam('klarna_session_data', ['empty']);
@@ -298,7 +298,6 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
         $this->assertEquals("page/checkout/payment.tpl", $tpl);
         $viewData = $oPaymentController->getViewData();
         $this->assertArrayHasKey('kpError', $viewData);
-
     }
 
 

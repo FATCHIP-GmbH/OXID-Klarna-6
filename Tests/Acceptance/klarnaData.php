@@ -29,6 +29,7 @@ return [
     'sKCOFormStreetNumber'    => '<Klarna KCOFormStreetNumber>',
     'sKCOFormCity'            => '<Klarna KCOFormCity>',
     'sKCOFormPhone'           => '<Klarna KCOFormPhone>',
+    'sKCOFormDob'             => '<Klarna KCOFormDob>',
     'sKCOFormDelPostCode'     => '<Klarna KCOFormDelPostCode>',
     'sKCOFormDelStreetName'   => '<Klarna KCOFormDelStreetName>',
     'sKCOFormDelStreetNumber' => '<Klarna KCOFormDelStreetNumber>',

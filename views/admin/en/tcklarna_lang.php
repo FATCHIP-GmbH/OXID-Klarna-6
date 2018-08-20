@@ -292,4 +292,10 @@ For a detailed description of the different settings please see the tool-tip fun
     'TCKLARNA_ANONYMIZED_PRODUCT_TOOLTIP'   => 'Please enter the string which should be transmitted to Klarna instead of the real product title.',
     'TCKLARNA_USER_GUIDE'                   => 'User Guide',
     'TCKLARNA_ONBOARDING_FLOW_BUTTON'       => 'Register and get credentials',
+
+    'TCKLARNA_CUSTOMER_TYPE' => 'Allowed customer types',
+    'TCKLARNA_CUSTOMER_TYPE_TOOLTIP' => 'Here you can define whether the shop should accept only B2C transactions (default setting), only B2B transactions or both B2C and B2B transactions.',
+    'TCKLARNA_B2C' => 'B2C customers only',
+    'TCKLARNA_B2B' => 'B2B customers only',
+    'TCKLARNA_B2BOTH' => 'Both B2C and B2B customers',
 );
