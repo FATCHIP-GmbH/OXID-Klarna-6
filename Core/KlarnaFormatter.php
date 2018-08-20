@@ -45,7 +45,7 @@ class KlarnaFormatter extends Base
         'oxmobfon'      => 'phone',
         'oxcountryid'   => 'country',
         'oxsal'         => 'title',
-        'oxcompany'     => 'street_address2',
+        'oxcompany'     => 'organization_name',
         'oxbirthdate'   => 'date_of_birth',
     );
 

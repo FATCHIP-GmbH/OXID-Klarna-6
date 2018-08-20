@@ -211,7 +211,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     }
 
     /**
-     *
+     * @codeCoverageIgnore
      * @return KlarnaCheckoutClient|KlarnaClientBase
      */
     protected function getKlarnaCheckoutClient()
@@ -289,9 +289,9 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
         }
 
-        $result = parent::execute();
+        $result = parent::execute();  // @codeCoverageIgnore
 
-        return $result;
+        return $result; // @codeCoverageIgnore
     }
 
     /**
@@ -803,18 +803,15 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             $oKlarnaOrder = new KlarnaOrder($oBasket, $this->_oUser);
             $oClient      = $this->getKlarnaCheckoutClient();
             $aOrderData   = $oKlarnaOrder->getOrderData();
-
             if ($this->forceReloadOnCountryChange && isset($this->_aOrderData['billing_address']) && isset($this->_aOrderData['shipping_address'])) {
                 $aOrderData['billing_address']  = $this->_aOrderData['billing_address'];
                 $aOrderData['shipping_address'] = $this->_aOrderData['shipping_address'];
             }
 
-            return $oClient->createOrUpdateOrder(
+            $oClient->createOrUpdateOrder(
                 json_encode($aOrderData)
             );
         }
-
-        return true;
     }
 
     /**

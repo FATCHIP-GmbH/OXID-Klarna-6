@@ -49,6 +49,7 @@ class KlarnaGeneral extends KlarnaBaseConfig
             array_diff_key($this->_aKlarnaCountries, $this->_aKlarnaCountryCreds) ?: false
         );
         $this->addTplParam('activeCountries', KlarnaUtils::getKlarnaGlobalActiveShopCountries($this->getViewDataElement('adminlang')));
+        $this->addTplParam('b2options', array('B2C', 'B2B', 'B2BOTH'));
 
         return $this->_sThisTemplate;
     }

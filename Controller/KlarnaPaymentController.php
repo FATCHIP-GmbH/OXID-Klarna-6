@@ -137,7 +137,6 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
             }
 
             $this->oKlarnaPayment = new KlarnaPayment($oBasket, $oUser);
-
             if (!$this->oKlarnaPayment->isSessionValid()) {
                 KlarnaPayment::cleanUpSession();
             }
@@ -149,7 +148,9 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
                         ->createOrUpdateSession();
 
                     $sessionData = $oSession->getVariable('klarna_session_data');
+                    $tcKlarnaIsB2B =  $this->oKlarnaPayment->isB2B() ? 'true' : 'false';
                     $this->addTplParam("client_token", $sessionData['client_token']);
+                    $this->addTplParam("tcKlarnaIsB2B", $tcKlarnaIsB2B);
 
                     // update KP options, remove unavailable klarna payments
                     $this->removeUnavailableKP($sessionData);
@@ -162,6 +163,7 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
             } else {
                 // show only first
                 $this->addTplParam("kpError", $errors[0]);
+                $this->addTplParam("tcKlarnaIsB2B", 'false');
             }
 
             $from   = '/' . preg_quote('-', '/') . '/';

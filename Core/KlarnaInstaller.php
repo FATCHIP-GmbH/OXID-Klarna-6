@@ -151,6 +151,7 @@ class KlarnaInstaller extends ShopConfiguration
                 // Multilang Data
                 'sKlarnaAnonymizedProductTitle_EN' => 'Product name',
                 'sKlarnaAnonymizedProductTitle_DE' => 'Produktname',
+                'sKlarnaB2Option' => 'B2C',
             ),
             'arr'    => array(),
 //            'aarr'   => array(

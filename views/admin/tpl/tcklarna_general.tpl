@@ -367,6 +367,32 @@
                         </td>
                     </tr>
                     <tr>
+                        <td>[{oxmultilang ident="TCKLARNA_CUSTOMER_TYPE"}]</td>
+                        <td>
+                            <div class="input">
+                                <div class="selector" id="b2optionSelector">
+                                    <div class="selector__menu">
+                                        <ul class="selector__choices">
+                                            [{foreach from=$b2options item=name}]
+                                                <li class="selector__item[{if $confstrs.sKlarnaB2Option == $name}]--selected[{/if}]">
+                                                    <a href="#" data-value="[{$name}]">
+                                                        [{oxmultilang ident="TCKLARNA_"|cat:$name}]
+                                                    </a>
+                                                </li>
+                                            [{/foreach}]
+                                        </ul>
+                                        <input type="hidden" name="confstrs[sKlarnaB2Option]" value="[{ $confstrs.sKlarnaB2Option }]">
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="kl-tooltip" title="[{oxmultilang ident="TCKLARNA_CUSTOMER_TYPE_TOOLTIP"}]">
+                                <i class="fa fa-question fa-lg" aria-hidden="true"></i>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
                         <td colspan="3">
                             <div class="messagebox info">[{"TCKLARNA_CHANGES_SAVED"|oxmultilangassign}]</div>
                         </td>

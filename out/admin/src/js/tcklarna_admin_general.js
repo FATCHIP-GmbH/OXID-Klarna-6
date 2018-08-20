@@ -191,9 +191,13 @@ var modeSelector = new Selector2({
         id: 'modeSelector',
         fromOptions: false
     }),
+    b2optionSelector = new Selector2({
+        id: 'b2optionSelector',
+        fromOptions: false
+    }),
     accSelector = new CountrySpecificCredentialsSelector({
         id: 'accSelector',
         fromOptions: false,
-        options: tcklarna_countriesList                   // needed to add new choice on row remove
+        options: tcklarna_countriesList
     }),
     accComponent = new FormRows(accSelector);

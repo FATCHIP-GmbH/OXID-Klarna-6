@@ -91,6 +91,24 @@ class KlarnaConsts
      * @codeCoverageIgnore
      * @return array
      */
+    public static function getKlarnaKCOB2BCountries()
+    {
+        return array('SE', 'NO', 'FI');
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return array
+     */
+    public static function getKlarnaKPB2BCountries()
+    {
+        return array('SE', 'NO', 'FI', 'DK', 'DE');
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return array
+     */
     public static function getCountry2CurrencyArray()
     {
         return array(

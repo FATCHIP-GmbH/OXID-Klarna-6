@@ -600,6 +600,7 @@ class KlarnaBasket extends KlarnaBasket_parent
     }
 
     /**
+     * @codeCoverageIgnore
      * Check if vouchers are still valid. Usually used in the ajax requests
      */
     public function klarnaValidateVouchers()

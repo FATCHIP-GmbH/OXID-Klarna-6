@@ -179,11 +179,11 @@ abstract class AcceptanceKlarnaTest extends AcceptanceTestCase
 
     /**
      * @param $type
+     * @param null|string $setB2BOption values list ['B2C', 'B2B', 'B2BOTH']
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
-     * @throws \Exception
      */
-    public function prepareKlarnaDatabase($type)
+    public function prepareKlarnaDatabase($type, $setB2BOption = null)
     {
         $klarnaKey = $this->getKlarnaDataByName('sKlarnaEncodeKey');
 
@@ -215,6 +215,12 @@ abstract class AcceptanceKlarnaTest extends AcceptanceTestCase
 
         if($type == 'KCO') {
             $sql = "UPDATE oxuser SET oxbirthdate='1980-01-01', oxfon='02079460125' WHERE oxusername = 'user_gb@oxid-esales.com'";
+            DatabaseProvider::getDb()->execute($sql);
+        }
+
+        if($setB2BOption){
+            $encode = "ENCODE('$setB2BOption', '$klarnaKey')";
+            $sql = "INSERT INTO `oxconfig` VALUES ('f7309beb088c3437462abb18c893c755', 1, 'tcklarna', 'sKlarnaB2Option', 'str', {$encode}, 'now()')";
             DatabaseProvider::getDb()->execute($sql);
         }
 

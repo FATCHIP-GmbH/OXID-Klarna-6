@@ -88,6 +88,11 @@ class KlarnaPayment extends BaseModel
     /** @var User|KlarnaUser */
     protected $oUser;
 
+    /** @var boolean KP allowed for b2b clients */
+    protected $b2bAllowed;
+
+    /** @var boolean KP allowed for b2c clients */
+    protected $b2cAllowed;
 
     /** @var bool false if session time expired */
     protected $sessionValid;
@@ -135,6 +140,7 @@ class KlarnaPayment extends BaseModel
         }
 
         $sCountryISO = $oUser->resolveCountry();
+        $this->resolveB2Options($sCountryISO);
         $sLocale     = KlarnaConsts::getLocale(false);
         $currencyISO = $oBasket->getBasketCurrency()->name;
         if ($oUser->getKlarnaPaymentCurrency() !== $currencyISO) {
@@ -151,11 +157,16 @@ class KlarnaPayment extends BaseModel
             ),
         );
 
-        $this->_aUserData   = $oUser->getKlarnaPaymentData();
+        $this->_aUserData   = $oUser->getKlarnaPaymentData($this->b2bAllowed);
         $this->_aOrderLines = $oBasket->getKlarnaOrderLines();
         $this->_aOrderLines['locale'] = $sLocale;
         $this->_aOrderData  = array_merge($this->_aOrderData, $this->_aOrderLines);
         $this->addOptions();
+
+        if($this->isB2B()) {
+            $this->_aOrderData['customer']['type'] = 'organization';
+            $this->_aOrderData['options']['allowed_customer_types'] = array( 'organization', 'person');
+        }
 
         $this->checksumCheck();
 
@@ -168,6 +179,35 @@ class KlarnaPayment extends BaseModel
         $this->validateKlarnaUserData();
 
         parent::__construct();
+    }
+
+    /**
+     * @param $sCountryISO
+     */
+    protected function resolveB2Options($sCountryISO)
+    {
+        $this->b2bAllowed = false;
+        $this->b2cAllowed = true;
+        $activeB2Option = KlarnaUtils::getShopConfVar('sKlarnaB2Option');
+
+        if(in_array($activeB2Option, array('B2B', 'B2BOTH'))){
+            $this->b2bAllowed = in_array($sCountryISO, KlarnaConsts::getKlarnaKPB2BCountries());
+        }
+
+        if($activeB2Option === 'B2B'){
+            $this->b2cAllowed = false;
+        }
+    }
+
+    public function isB2BAllowed()
+    {
+        return $this->b2bAllowed;
+    }
+
+    public function isB2B()
+    {
+
+        return $this->b2bAllowed && !empty($this->_aUserData['billing_address']['organization_name']);
     }
 
     /**
@@ -365,9 +405,12 @@ class KlarnaPayment extends BaseModel
                 break;
             }
         }
+        if ($this->_aUserData['billing_address']['organization_name'] && !$this->b2bAllowed) {       // oxid fieldName invadr[oxuser__oxcompany]
+            $this->addErrorMessage('KP_AVAILABLE_FOR_PRIVATE_ONLY');
+        }
 
-        if ($this->_aUserData['billing_address']['street_address2']) {       // oxid fieldName invadr[oxuser__oxcompany]
-            $this->addErrorMessage('KP_NOT_AVAILABLE_FOR_COMPANIES');
+        if (empty($this->_aUserData['billing_address']['organization_name']) && !$this->b2cAllowed) {       // oxid fieldName invadr[oxuser__oxcompany]
+            $this->addErrorMessage('KP_AVAILABLE_FOR_COMPANIES_ONLY');
         }
     }
 

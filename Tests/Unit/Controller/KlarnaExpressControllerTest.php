@@ -13,6 +13,7 @@ use OxidEsales\Eshop\Core\Request;
 use OxidEsales\Eshop\Core\UtilsObject;
 use OxidEsales\Eshop\Core\UtilsView;
 use TopConcepts\Klarna\Controller\KlarnaExpressController;
+use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
 use TopConcepts\Klarna\Core\Exception\KlarnaBasketTooLargeException;
@@ -501,7 +502,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
             'hasVariable' => true,
             'getVariable' => $mockUser]);
 
-        $controller = $controller = $this->createStub(KlarnaExpressController::class, [
+        $controller = $this->createStub(KlarnaExpressController::class, [
             'getUser'    => null,
             'getSession' => $session,
         ]);
@@ -511,10 +512,42 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
         $this->assertEquals($mockUser, $result);
     }
 
-//    /**
-//     *
-//     */
-//    public function testNonKCOCountrySetAsDefault(){
-//
-//    }
+    /**
+     *
+     */
+    public function testRebuildFakeUser()
+    {
+        $orderId = 'testId';
+        $email = 'test@mail.com';
+        $oUser = $this->createStub(User::class, []);
+        $oUser->oxuser__oxpassword = new Field('');
+        $oBasket = new \stdClass();
+        $aOrderData = [
+            'order_id' => $orderId,
+            'billing_address' => ['email' => $email]
+        ];
+        $oClient = $this->createStub(KlarnaCheckoutClient::class, ['getOrder' => $aOrderData]);
+        $controller = $this->createStub(KlarnaExpressController::class, ['getUser' => $oUser, 'getKlarnaCheckoutClient' => $oClient]);
+
+        $controller->rebuildFakeUser($oBasket);
+
+        // assert we rebuild user context
+        $this->assertEquals($orderId, $this->getSessionParam('klarna_checkout_order_id'));
+        $this->assertEquals($email, $this->getSessionParam('klarna_checkout_user_email'));
+        $this->assertEquals($oBasket, $this->getSession()->getBasket());
+        $this->getSession()->setBasket(null); // clean up
+
+        // exception
+        $oClient = $this->getMock(KlarnaCheckoutClient::class, ['getOrder']);
+        $oClient->expects($this->once())->method('getOrder')->willThrowException(new KlarnaClientException('Test'));
+        $oUser = $this->getMock(User::class, ['logout']);
+        $oUser->expects($this->once())->method('logout');
+        $oUser->oxuser__oxpassword = new Field('');
+
+        $controller = $this->createStub(KlarnaExpressController::class, ['getUser' => $oUser, 'getKlarnaCheckoutClient' => $oClient]);
+        $controller->rebuildFakeUser($oBasket);
+
+        // assert that method was terminated in the cache block and we did not assign stdClass to session basket
+        $this->assertNotInstanceOf('stdClass', $this->getSession()->getBasket());
+    }
 }

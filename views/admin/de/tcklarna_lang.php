@@ -290,4 +290,10 @@ oder wenden Sie sich an den Klarna Integration Support.',
     'TCKLARNA_NO_REQUESTS_WILL_BE_SENT'     => 'Ihre Änderungen an dieser Bestellung werden nicht an Klarna übertragen.',
     'TCKLARNA_USER_GUIDE'                   => 'Benutzerhandbuch',
     'TCKLARNA_ONBOARDING_FLOW_BUTTON'       => 'Zugangsdaten beantragen',
+
+    'TCKLARNA_CUSTOMER_TYPE' => 'Unterstützte Kundenarten',
+    'TCKLARNA_CUSTOMER_TYPE_TOOLTIP' => 'Hier können Sie einstellen, ob der Shop ausschließlich B2C Transaktionen (Standard-Einstellung). nur B2B Transaktionen oder sowohl B2C als auch B2B Transaktionen akzeptieren soll.',
+    'TCKLARNA_B2C' => 'Nur B2C Kunden',
+    'TCKLARNA_B2B' => 'Nur B2B Kunden',
+    'TCKLARNA_B2BOTH' => 'Sowohl B2C als auch B2B Kunden',
 );

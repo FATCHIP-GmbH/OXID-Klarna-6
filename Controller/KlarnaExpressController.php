@@ -574,6 +574,7 @@ class KlarnaExpressController extends FrontendController
     }
 
     /**
+     * * @codeCoverageIgnore
      * Checks if user is fake - not registered
      * Used in the ServiceMenu Controller
      *
@@ -593,9 +594,8 @@ class KlarnaExpressController extends FrontendController
         $user = $this->getUser();
 
         if ($user && empty($user->oxuser__oxpassword->value)) {
-            $oClient = KlarnaCheckoutClient::getInstance();
             try{
-                $_aOrderData = $oClient->getOrder();
+                $_aOrderData = $this->getKlarnaCheckoutClient()->getOrder();
             } catch (KlarnaClientException $e){
                 $user->logout();
                 return;
@@ -614,5 +614,15 @@ class KlarnaExpressController extends FrontendController
                 );
             }
         }
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return KlarnaCheckoutClient|KlarnaClientBase
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
+     */
+    protected function getKlarnaCheckoutClient()
+    {
+        return KlarnaCheckoutClient::getInstance();
     }
 }
