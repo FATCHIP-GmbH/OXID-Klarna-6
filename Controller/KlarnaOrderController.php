@@ -159,8 +159,8 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             'tcklarna_logs__tcklarna_url'         => $url,
             'tcklarna_logs__tcklarna_orderid'     => $order_id,
             'tcklarna_logs__tcklarna_requestraw'  => $requestBody .
-                                                     " \nERRORS:" . var_export($errors, true) .
-                                                     " \nHeader Location:" . $redirectUrl,
+                " \nERRORS:" . var_export($errors, true) .
+                " \nHeader Location:" . $redirectUrl,
             'tcklarna_logs__tcklarna_responseraw' => $response,
             'tcklarna_logs__tcklarna_date'        => date("Y-m-d H:i:s"),
         );
@@ -494,7 +494,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         if ($iSuccess === 1) {
             if (
                 ($this->_oUser->getType() === KlarnaUser::NOT_REGISTERED ||
-                 $this->_oUser->getType() === KlarnaUser::NOT_EXISTING) &&
+                    $this->_oUser->getType() === KlarnaUser::NOT_EXISTING) &&
                 $this->isRegisterNewUserNeeded()
             ) {
                 $this->_oUser->save();
@@ -865,6 +865,10 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
         if ($this->_oUser->isWritable()) {
             try {
+                if($this->_oUser->getType() == KlarnaUser::NOT_EXISTING
+                    && count($this->_oUser->getUserGroups()) == 0){
+                    $this->_oUser->addToGroup('oxidnewcustomer');
+                }
                 $this->_oUser->save();
             } catch (\Exception $e){
                 if($e->getCode() == DatabaseInterface::DUPLICATE_KEY_ERROR_CODE && $this->_oUser->getType() == KlarnaUser::LOGGED_IN){
