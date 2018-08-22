@@ -938,6 +938,8 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . "cl=KlarnaEpmDispatcher&fnc=amazonLogin", false);
 
             return;
+        } else {
+            Registry::getConfig()->setConfigParam('blAmazonLoginActive', false);
         }
 
         if ($paymentId === 'oxidpaypal') {
