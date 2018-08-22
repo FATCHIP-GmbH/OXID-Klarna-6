@@ -214,6 +214,11 @@ class KlarnaConsts
         if($default || !$lang || !$sCountryISO)
         {
             $locale = isset($defaultLocales[$lang]) ? $defaultLocales[$lang] : 'en-GB';
+
+            if($sCountryISO){
+                $locale = isset($defaultLocales[strtolower($sCountryISO)]) ? $defaultLocales[strtolower($sCountryISO)] : 'en-GB';
+            }
+
         }
 
         return $locale;
