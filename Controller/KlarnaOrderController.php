@@ -87,6 +87,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      */
     public function init()
     {
+
         parent::init();
 
         if (KlarnaUtils::isKlarnaCheckoutEnabled()) {
@@ -287,6 +288,11 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                 return $this->_getNextStep($iSuccess);
             }
 
+        }
+
+        // if user is not logged in set the user
+        if(!$this->getUser() && isset($this->_oUser)){
+            $this->setUser($this->_oUser);
         }
 
         $result = parent::execute();  // @codeCoverageIgnore
@@ -924,7 +930,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         if ($this->_oUser->isCreatable()) {
             $this->_createUser();
         }
-
         // make sure we have the right shipping option
         $oBasket->setShipping($this->_aOrderData['selected_shipping_option']['id']);
         $oBasket->onUpdate();
@@ -942,6 +947,11 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             }
 
             return Registry::get(ExpressCheckoutDispatcher::class)->setExpressCheckout();//todo: check if other options possible. user not available.
+        }
+
+        // if user is not logged in set the user to render order
+        if(!$this->getUser() && isset($this->_oUser)){
+            $this->setUser($this->_oUser);
         }
     }
 
