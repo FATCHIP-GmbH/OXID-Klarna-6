@@ -580,7 +580,7 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
         $errors = $oKlarnaOrder->getError();
 
         $this->assertEquals(2, count($errors));
-        $companyNameError = 'Payment with this Klarna payment method is currently not available for companies.';
+        $companyNameError = 'This Klarna payment method is only available for private orders.';
         $this->assertEquals($companyNameError, $errors[1]);
     }
 
