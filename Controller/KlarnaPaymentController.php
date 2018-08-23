@@ -18,6 +18,8 @@
 namespace TopConcepts\Klarna\Controller;
 
 
+use OxidEsales\Eshop\Core\UtilsView;
+use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
 use TopConcepts\Klarna\Core\KlarnaPaymentsClient;
 use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Model\KlarnaPayment as KlarnaPaymentModel;
@@ -155,6 +157,14 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
                     // update KP options, remove unavailable klarna payments
                     $this->removeUnavailableKP($sessionData);
 
+                } catch (KlarnaWrongCredentialsException $oEx) {
+                    $this->removeUnavailableKP();
+                    KlarnaUtils::fullyResetKlarnaSession();
+                    Registry::get(UtilsView::class)->addErrorToDisplay(
+                    Registry::getLang()->translateString('KLARNA_UNAUTHORIZED_REQUEST', null, true));
+
+                    return $sTplName;
+
                 } catch (KlarnaClientException $e) {
                     $e->debugOut();
 
@@ -272,10 +282,10 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
      *
      * @param $sessionData array create session response
      */
-    protected function removeUnavailableKP($sessionData)
+    protected function removeUnavailableKP($sessionData = false)
     {
         $klarnaIds = array();
-        if ($sessionData['payment_method_categories']) {
+        if ($sessionData && $sessionData['payment_method_categories']) {
             $klarnaIds = array_map(function ($element) {
                 return $element['identifier'];
             },
