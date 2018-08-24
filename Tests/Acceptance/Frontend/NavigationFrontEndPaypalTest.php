@@ -17,6 +17,7 @@ class NavigationFrontEndPaypalTest extends AcceptanceKlarnaTest
         $this->prepareKlarnaDatabase('KCO');
 
         $this->openNewWindow($this->getTestConfig()->getShopUrl(), false);
+        $this->getMinkSession()->setCookie('pp_standard_dispatcher', true);
         $this->addToBasket('05848170643ab0deb9914566391c0c63');
         $this->addToBasket('058de8224773a1d5fd54d523f0c823e0');
         $this->clickAndWait("link=Go to Checkout");
