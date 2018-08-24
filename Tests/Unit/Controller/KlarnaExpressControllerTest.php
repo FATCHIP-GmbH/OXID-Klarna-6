@@ -166,10 +166,10 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
         $nonKCOUrl                  = $this->getConfig()->getSSLShopURL() . 'index.php?cl=user&non_kco_global_country=AF';
 
         return [
-            ['AT', null, null, $baseUrl],
-            ['AT', $oUser, null, $baseUrl],
-            ['DE', $oUser, null, $baseUrl],
-            ['AF', $oUser, 'fake-value', $nonKCOUrl],
+            ['AT', null, $baseUrl],
+            ['AT', $oUser, $baseUrl],
+            ['DE', $oUser, $baseUrl],
+            ['AF', $oUser, $nonKCOUrl],
         ];
     }
 
@@ -179,7 +179,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
      * @param $oUser
      * @param $expectedKlarnaSessionId
      */
-    public function testInit_popupSelection($selectedCountry, $oUser, $expectedKlarnaSessionId, $redirectUrl)
+    public function testInit_popupSelection($selectedCountry, $oUser, $redirectUrl)
     {
         $this->setSessionParam('klarna_checkout_order_id', 'fake-value');
         $this->setRequestParameter('selected-country', $selectedCountry);
@@ -200,7 +200,6 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
             $this->assertEquals($selectedCountry, $oCountry->oxcountry__oxisoalpha2);
         }
 
-        $this->assertEquals($expectedKlarnaSessionId, $this->getSessionParam('klarna_checkout_order_id'));
         $this->assertEquals($redirectUrl, \oxUtilsHelper::$sRedirectUrl);
     }
 

@@ -349,6 +349,24 @@ class KlarnaExpressController extends FrontendController
         return $list;
     }
 
+    /**
+     *
+     */
+    public function getNonKlarnaCountries()
+    {
+        $list = oxNew(CountryList::class);
+        $list->loadActiveCountries();
+
+        foreach ($list->getArray() as $id => $country)
+        {
+            if(array_key_exists($id,KlarnaUtils::getAllActiveKCOGlobalCountryList()->getArray())){
+                unset($list[$id]);
+            }
+        }
+
+        return $list;
+    }
+
 
     /**
      * @param $sCountryISO
@@ -417,10 +435,8 @@ class KlarnaExpressController extends FrontendController
      */
     protected function handleCountryChangeFromPopup()
     {
-        $oSession = Registry::getSession();
         $oUtils   = Registry::getUtils();
         if (KlarnaUtils::isCountryActiveInKlarnaCheckout($this->selectedCountryISO)) {
-            $oSession->deleteVariable('klarna_checkout_order_id');  // force new session every country change
             $sUrl = Registry::getConfig()->getShopSecureHomeUrl() . 'cl=KlarnaExpress';
             $oUtils->redirect($sUrl, false, 302);
             /**

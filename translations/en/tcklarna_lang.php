@@ -49,6 +49,7 @@ $aLang = array(
     'TCKLARNA_PHONE_NUMBER_MANDATORY'            => 'Phone number mandatory',
     'TCKLARNA_DATE_OF_BIRTH_MANDATORY'           => 'Date of birth mandatory',
     'TCKLARNA_CHOOSE_YOUR_SHIPPING_COUNTRY'      => 'Please choose your shipping country:',
+    'TCKLARNA_CHOOSE_YOUR_NOT_SUPPORTED_COUNTRY' => 'Your country is not supported?',
     'TCKLARNA_MORE_COUNTRIES'                    => 'More countries',
     'TCKLARNA_MY_COUNTRY_IS_NOT_LISTED'          => 'My country is not listed',
     'TCKLARNA_OTHER_COUNTRY'                     => 'Other country',

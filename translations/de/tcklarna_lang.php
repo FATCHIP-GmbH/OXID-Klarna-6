@@ -49,6 +49,7 @@ $aLang = array(
     'TCKLARNA_PHONE_NUMBER_MANDATORY'            => 'Telefonnummer ist Pflichtfeld im Klarna Checkout',
     'TCKLARNA_DATE_OF_BIRTH_MANDATORY'           => 'Geburtsdatum als Pflichtfeld',
     'TCKLARNA_CHOOSE_YOUR_SHIPPING_COUNTRY'      => 'Bitte wählen Sie Ihr Lieferland:',
+    'TCKLARNA_CHOOSE_YOUR_NOT_SUPPORTED_COUNTRY' => 'Ist Ihr Land nicht dabei?',
     'TCKLARNA_MORE_COUNTRIES'                    => 'Weitere Lieferländer',
     'TCKLARNA_MY_COUNTRY_IS_NOT_LISTED'          => 'Mein Land ist nicht in der Liste',
     'TCKLARNA_OTHER_COUNTRY'                     => 'Andere Länder',

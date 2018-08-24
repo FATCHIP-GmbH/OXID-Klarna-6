@@ -115,7 +115,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                             'email'   => Registry::getSession()->getVariable('klarna_checkout_user_email'),
                         ],
                     ];
-                    KlarnaUtils::fullyResetKlarnaSession();
                     Registry::getSession()->setVariable('sCountryISO', $newCountry);
                 } else {
                     $oClient = $this->getKlarnaCheckoutClient();
@@ -721,8 +720,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             $sSql     = $oCountry->buildSelectString(array('oxisoalpha3' => $aPost['country']));
             $oCountry->assignRecord($sSql);
 
-            // force new session for the new country
-            $this->resetKlarnaCheckoutSession();
             Registry::getSession()->setVariable('sCountryISO', $oCountry->oxcountry__oxisoalpha2->value);
             $this->forceReloadOnCountryChange = true;
 
