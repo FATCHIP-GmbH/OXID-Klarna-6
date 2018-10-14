@@ -124,8 +124,13 @@ class KlarnaPayment extends BaseModel
      */
     public function __construct(Basket $oBasket, User $oUser, $aPost = array())
     {
+        $oConfig          = Registry::getConfig();
+        $shopUrlParam     = method_exists($oConfig, 'mustAddShopIdToRequest')
+            && $oConfig->mustAddShopIdToRequest()
+                ? '&shp=' . $oConfig->getShopId()
+                : '';
         $controllerName   = $this->isAuthorized() ? 'order' : 'payment';
-        $this->refreshUrl = Registry::getConfig()->getSslShopUrl() . "?cl=$controllerName";
+        $this->refreshUrl = Registry::getConfig()->getSslShopUrl() . "?cl=$controllerName" . $shopUrlParam;
 
         $this->aUpdateData            = array();
         $this->oUser                  = $oUser;
@@ -153,19 +158,19 @@ class KlarnaPayment extends BaseModel
             "purchase_country"  => $sCountryISO,
             "purchase_currency" => $currencyISO,
             "merchant_urls"     => array(
-                "confirmation" => Registry::getConfig()->getSslShopUrl() . "?cl=order&oxdownloadableproductsagreement=1&fnc=execute&stoken=" . $sToken,
+                "confirmation" => Registry::getConfig()->getSslShopUrl() . "?cl=order&oxdownloadableproductsagreement=1&fnc=execute&stoken=" . $sToken . $shopUrlParam,
             ),
         );
 
-        $this->_aUserData   = $oUser->getKlarnaPaymentData($this->b2bAllowed);
-        $this->_aOrderLines = $oBasket->getKlarnaOrderLines();
+        $this->_aUserData             = $oUser->getKlarnaPaymentData($this->b2bAllowed);
+        $this->_aOrderLines           = $oBasket->getKlarnaOrderLines();
         $this->_aOrderLines['locale'] = $sLocale;
-        $this->_aOrderData  = array_merge($this->_aOrderData, $this->_aOrderLines);
+        $this->_aOrderData            = array_merge($this->_aOrderData, $this->_aOrderLines);
         $this->addOptions();
 
-        if($this->isB2B()) {
-            $this->_aOrderData['customer']['type'] = 'organization';
-            $this->_aOrderData['options']['allowed_customer_types'] = array( 'organization', 'person');
+        if ($this->isB2B()) {
+            $this->_aOrderData['customer']['type']                  = 'organization';
+            $this->_aOrderData['options']['allowed_customer_types'] = array('organization', 'person');
         }
 
         $this->checksumCheck();

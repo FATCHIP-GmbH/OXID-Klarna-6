@@ -200,7 +200,7 @@ class KlarnaExpressController extends FrontendController
             KlarnaUtils::fullyResetKlarnaSession();
             Registry::get(UtilsView::class)->addErrorToDisplay(
                 Registry::getLang()->translateString('KLARNA_UNAUTHORIZED_REQUEST', null, true));
-            Registry::getUtils()->redirect(Registry::getConfig()->getShopHomeURL() . 'cl=start', true, 301);
+            Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeURL() . 'cl=start', true, 301);
 
             return $this->_sThisTemplate;
         } catch (StandardException $oEx) {
@@ -556,18 +556,10 @@ class KlarnaExpressController extends FrontendController
 
         if ($oUser && !empty($oUser->oxuser__oxpassword->value)) {
             $oUser->checkUserType();
-        } else if ($oSession->hasVariable('oFakeKlarnaUser')) {
-            $oUser = $oSession->getVariable('oFakeKlarnaUser');
         } else {
             $email = $oSession->getVariable('klarna_checkout_user_email');
             /** @var KlarnaUser|User $oUser */
             $oUser = KlarnaUtils::getFakeUser($email);
-        }
-
-        if ($oUser->isWritable()) {
-            $oUser->save();
-        } else {
-            $oSession->setVariable('oFakeKlarnaUser', $oUser);
         }
 
         return $oUser;

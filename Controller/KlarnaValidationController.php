@@ -61,7 +61,7 @@ class KlarnaValidationController extends FrontendController
             Registry::getUtils()->showMessageAndExit('');
         } else {
             $sid            = Registry::get(Request::class)->getRequestEscapedParameter('s');
-            $redirectUrl    = Registry::getConfig()->getSslShopUrl() . "index.php?cl=basket&force_sid=$sid&klarnaInvalid=1&";
+            $redirectUrl    = Registry::getConfig()->getShopSecureHomeURL() . "cl=basket&force_sid=$sid&klarnaInvalid=1&";
             $redirectUrl    .= http_build_query($validator->getResultErrors());
             $responseStatus = 303;
 

@@ -80,10 +80,13 @@ class KlarnaOrder extends BaseModel
     public function __construct(Basket $oBasket, User $oUser)
     {
         parent::__construct();
-
-        $this->_oUser = $oUser;
-
-        $sSSLShopURL       = Registry::getConfig()->getSslShopUrl();
+        $this->_oUser      = $oUser;
+        $oConfig           = Registry::getConfig();
+        $urlShopParam      = method_exists($oConfig, 'mustAddShopIdToRequest')
+                             && $oConfig->mustAddShopIdToRequest()
+                                ? '&shp=' . $oConfig->getShopId()
+                                : '';
+        $sSSLShopURL       = $oConfig->getSslShopUrl();
         $sCountryISO       = $this->_oUser->resolveCountry();
         $currencyName      = $oBasket->getBasketCurrency()->name;
         $sLocale           = $this->_oUser->resolveLocale($sCountryISO);
@@ -108,11 +111,11 @@ class KlarnaOrder extends BaseModel
                 "terms"        =>
                     $terms,
                 "checkout"     =>
-                    $sSSLShopURL . "?cl=KlarnaExpress",
+                    $sSSLShopURL . "?cl=KlarnaExpress$urlShopParam",
                 "confirmation" =>
-                    $sSSLShopURL . "?cl=order&fnc=execute&klarna_order_id={checkout.order.id}&stoken=$sGetChallenge",
+                    $sSSLShopURL . "?cl=order$urlShopParam&fnc=execute&klarna_order_id={checkout.order.id}&stoken=$sGetChallenge",
                 "push"         =>
-                    $sSSLShopURL . "?cl=KlarnaAcknowledge&klarna_order_id={checkout.order.id}",
+                    $sSSLShopURL . "?cl=KlarnaAcknowledge$urlShopParam&klarna_order_id={checkout.order.id}",
 
             ),
         );
@@ -320,19 +323,25 @@ class KlarnaOrder extends BaseModel
         $paymentList = $oPayList->getPaymentList($oBasket->getShippingId(), $dBasketPrice, $oUser);
 
         foreach ($paymentList as $paymentId => $oPayment) {
+            $oConfig = Registry::getConfig();
             $oPayment->calculate($oBasket);
             $aCountryISO = $this->getKlarnaCountryListByPayment($oPayment, $this->getKlarnaCountryList());
             $oPrice      = $oPayment->getPrice();
+
+            $requestParams = method_exists($oConfig, 'mustAddShopIdToRequest')
+                             && $oConfig->mustAddShopIdToRequest()
+                                ? '&shp=' . $oConfig->getShopId()
+                                : '';
             if ($oPayment->oxpayments__tcklarna_externalpayment->value) {
 
-                $requestParams = '';
                 if ($paymentId === 'oxidpaypal') {
-                    $requestParams = '&displayCartInPayPal=1';
+                    $requestParams .= '&displayCartInPayPal=1';
                 }
+
 
                 $externalPaymentMethods[] = array(
                     'name'         => $oPayment->oxpayments__tcklarna_externalname->value,
-                    'redirect_url' => Registry::getConfig()->getSslShopUrl() .
+                    'redirect_url' => $oConfig->getSslShopUrl() .
                                       'index.php?cl=order&fnc=klarnaExternalPayment&payment_id=' . $paymentId . $requestParams,
                     'image_url'    => $this->resolveImageUrl($oPayment),
                     'fee'          => KlarnaUtils::parseFloatAsInt($oPrice->getBruttoPrice() * 100),
@@ -342,10 +351,10 @@ class KlarnaOrder extends BaseModel
             }
 
             if ($oPayment->oxpayments__tcklarna_externalcheckout->value) {
-                $requestParams             = '&externalCheckout=1';
+                $requestParams             .= '&externalCheckout=1';
                 $externalCheckoutMethods[] = array(
                     'name'         => $oPayment->oxpayments__tcklarna_externalname->value,
-                    'redirect_url' => Registry::getConfig()->getSslShopUrl() .
+                    'redirect_url' => $oConfig->getSslShopUrl() .
                                       'index.php?cl=order&fnc=klarnaExternalPayment&payment_id=' . $paymentId . $requestParams,
                     'image_url'    => $this->resolveImageUrl($oPayment, true),
                     'fee'          => KlarnaUtils::parseFloatAsInt($oPrice->getBruttoPrice() * 100),

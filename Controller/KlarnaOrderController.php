@@ -91,9 +91,15 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         parent::init();
 
         if (KlarnaUtils::isKlarnaCheckoutEnabled()) {
+
+            $oConfig = Registry::getConfig();
+            $shopParam = method_exists($oConfig, 'mustAddShopIdToRequest')
+                         && $oConfig->mustAddShopIdToRequest()
+                ? '&shp=' . $oConfig->getShopId()
+                : '';
             $this->oRequest = Registry::get(Request::class);
             $oBasket        = Registry::getSession()->getBasket();
-            $this->selfUrl  = Registry::getConfig()->getShopSecureHomeUrl() . 'cl=KlarnaExpress';
+            $this->selfUrl  = $oConfig->getShopSecureHomeUrl() . 'cl=KlarnaExpress';
 
             if ($this->oRequest->getRequestEscapedParameter('externalCheckout') == 1) {
                 Registry::getSession()->setVariable('externalCheckout', true);
@@ -102,9 +108,10 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
             if ($this->isKlarnaCheckoutOrder($oBasket)) {
                 if ($newCountry = $this->isCountryChanged()) {
+
                     $this->_aOrderData = [
                         'merchant_urls'    => [
-                            'checkout' => Registry::getConfig()->getSslShopUrl() . "?cl=KlarnaExpress",
+                            'checkout' => $oConfig->getSslShopUrl() . "?cl=KlarnaExpress" . $shopParam,
                         ],
                         'billing_address'  => [
                             'country' => $newCountry,
@@ -159,8 +166,8 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             'tcklarna_logs__tcklarna_url'         => $url,
             'tcklarna_logs__tcklarna_orderid'     => $order_id,
             'tcklarna_logs__tcklarna_requestraw'  => $requestBody .
-                " \nERRORS:" . var_export($errors, true) .
-                " \nHeader Location:" . $redirectUrl,
+                                                     " \nERRORS:" . var_export($errors, true) .
+                                                     " \nHeader Location:" . $redirectUrl,
             'tcklarna_logs__tcklarna_responseraw' => $response,
             'tcklarna_logs__tcklarna_date'        => date("Y-m-d H:i:s"),
         );
@@ -499,7 +506,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         if ($iSuccess === 1) {
             if (
                 ($this->_oUser->getType() === KlarnaUser::NOT_REGISTERED ||
-                    $this->_oUser->getType() === KlarnaUser::NOT_EXISTING) &&
+                 $this->_oUser->getType() === KlarnaUser::NOT_EXISTING) &&
                 $this->isRegisterNewUserNeeded()
             ) {
                 $this->_oUser->save();
@@ -824,19 +831,15 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      */
     protected function _initUser()
     {
-        $oSession = $this->getSession();
-
         if ($this->_oUser = $this->getUser()) {
+            $this->_oUser->setType(KlarnaUser::NOT_REGISTERED);
             if ($this->getViewConfig()->isUserLoggedIn()) {
                 $this->_oUser->setType(KlarnaUser::LOGGED_IN);
-            } else {
-                $this->_oUser->setType(KlarnaUser::NOT_REGISTERED);
             }
-        } else if ($oSession->hasVariable('oFakeKlarnaUser')) {
-            $this->_oUser = $oSession->getVariable('oFakeKlarnaUser');
         } else {
             $this->_oUser = KlarnaUtils::getFakeUser($this->_aOrderData['billing_address']['email']);
         }
+
         $oCountry                          = oxNew(Country::class);
         $this->_oUser->oxuser__oxcountryid = new Field(
             $oCountry->getIdByCode(
@@ -869,7 +872,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         if ($this->_oUser->isWritable()) {
             try {
                 if($this->_oUser->getType() == KlarnaUser::NOT_EXISTING
-                    && count($this->_oUser->getUserGroups()) == 0){
+                && count($this->_oUser->getUserGroups()) == 0){
                     $this->_oUser->addToGroup('oxidnewcustomer');
                 }
                 $this->_oUser->save();
@@ -878,8 +881,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                     $this->_oUser->logout();
                 }
             }
-        } else {
-            $this->getSession()->setVariable('oFakeKlarnaUser', $this->_oUser);
         }
     }
 

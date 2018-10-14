@@ -26,6 +26,16 @@ window.klarnaAsyncCallback = function () {
         $form.find('input[name=fnc]').val('kpBeforeExecute');
     }
 
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
     function replaceContentWithMessage($container){
         $container.find('input.kp-radio').get(0).hasError = true;
         $container.find('.kp-method').replaceWith(
@@ -150,15 +160,15 @@ window.klarnaAsyncCallback = function () {
 
 
     function klarnaSendXHR(data) {
+        var urlShopId = getParameterByName('shp', window.location.search);
+        var urlShopParam = urlShopId ? '&shp=' + urlShopId : '';
+
         $.ajax({
             type: 'POST',
             dataType: 'json',
-            url: '?cl=order&fnc=updateKlarnaAjax',
+            url: '?cl=order&fnc=updateKlarnaAjax' + urlShopParam,
             data: JSON.stringify(data),
             statusCode: {
-                404: function () {
-                    klarnaSendXHR(data);
-                },
                 200: handleResponse
             }
         })

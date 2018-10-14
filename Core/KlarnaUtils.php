@@ -29,7 +29,6 @@ use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\CountryList;
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Application\Model\User;
-use OxidEsales\Eshop\Core\Database\Adapter\Doctrine\ResultSet;
 use OxidEsales\Eshop\Core\Exception\SystemComponentException;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\DatabaseProvider;
@@ -342,7 +341,6 @@ class KlarnaUtils
         Registry::getSession()->deleteVariable('klarna_session_data');
         Registry::getSession()->deleteVariable('finalizeRequired');
         Registry::getSession()->deleteVariable('sCountryISO');
-        Registry::getSession()->deleteVariable('oFakeKlarnaUser');
         Registry::getSession()->deleteVariable('sFakeUserId');
     }
 

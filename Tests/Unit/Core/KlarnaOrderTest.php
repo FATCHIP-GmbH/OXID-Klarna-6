@@ -157,7 +157,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
                 ],
                 [
                     'name'         => null,
-                    'redirect_url' => "https://testurlindex.php?cl=order&fnc=klarnaExternalPayment&payment_id=oxidpaypal&externalCheckout=1",
+                    'redirect_url' => "https://testurlindex.php?cl=order&fnc=klarnaExternalPayment&payment_id=oxidpaypal&displayCartInPayPal=1&externalCheckout=1",
                     'image_url'    => null,
                     'fee'          => 100000,
                     'description'  => "test",

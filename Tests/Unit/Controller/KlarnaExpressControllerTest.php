@@ -493,22 +493,34 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
     /**
      *
      */
-    public function testResolveFakeUser()
+    public function testResolveFakeUserRegistered()
     {
-        $mockUser = $this->createStub(\stdClass::class, ['isWritable' => true, 'save' => true]);
+        $mockUser = $this->getMock(User::class, ['checkUserType']);
+        $mockUser->oxuser__oxpassword = new Field('testPass');
+        $mockUser->expects($this->once())->method('checkUserType');
 
-        $session = $this->createStub(\stdClass::class, [
-            'hasVariable' => true,
-            'getVariable' => $mockUser]);
+        $session = $this->createStub(\stdClass::class, ['getVariable' => 'test@email']);
 
         $controller = $this->createStub(KlarnaExpressController::class, [
-            'getUser'    => null,
+            'getUser'    => $mockUser,
             'getSession' => $session,
         ]);
 
         $result = $controller->resolveUser();
+        $this->assertInstanceOf(User::class, $result);
+    }
 
-        $this->assertEquals($mockUser, $result);
+    public function testResolveFakeUserNew()
+    {
+        $session = $this->createStub(\stdClass::class, ['getVariable' => 'test@email']);
+
+        $controller = $this->createStub(KlarnaExpressController::class, [
+            'getUser'    => false,
+            'getSession' => $session,
+        ]);
+
+        $result = $controller->resolveUser();
+        $this->assertInstanceOf(User::class, $result);
     }
 
     /**

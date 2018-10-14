@@ -50,8 +50,9 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
         $this->tobasket();
 
         if (Registry::getSession()->getVariable('_newitem') !== null) {
+            $oConfig = Registry::getConfig();
             Registry::getUtils()->redirect(
-                Registry::getConfig()->getShopSecureHomeUrl() . 'cl=' . $this->_sRedirectController . '',
+                $oConfig->getShopSecureHomeUrl() . 'cl=' . $this->_sRedirectController . '',
                 false,
                 302
             );
