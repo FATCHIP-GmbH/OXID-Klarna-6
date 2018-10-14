@@ -7,3 +7,7 @@
 ### 4.1.0
 * Added KP B2B feature
 * Fixed issue about Amazon Payments integration
+
+### 4.2.0
+* Link BugFix for EE
+* Design changes in the admin panel

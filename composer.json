@@ -1,6 +1,6 @@
 {
   "name": "topconcepts/oxid-klarna-6",
-  "description": "Klarna module for OXID eShop version 6.0.X",
+  "description": "Klarna module for OXID eShop version 6.X",
   "type": "oxideshop-module",
   "extra": {
     "oxideshop": {
