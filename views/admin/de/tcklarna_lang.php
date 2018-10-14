@@ -38,7 +38,7 @@ $aLang = array(
     'TCKLARNA_NO_OPTIONS_MODE'   => 'In diesem Modus gibt es keine Einstellungen.',
     'TCKLARNA_CHANGES_SAVED'     => 'Alle Einstellungen wurden gesichert.',
 
-    'TCKLARNA_CONTACT_OPTIONS'              => 'Händlersupport',
+    'TCKLARNA_EASY'                         => 'So einfach ist es, Klarna zu aktiveren',
     'TCKLARNA_PHONE'                        => 'Telefon',
     'TCKLARNA_EMAIL'                        => 'Email',
     'TCKLARNA_BUSINESS_HOURS'               => 'Geschäftszeiten',
@@ -135,11 +135,20 @@ $aLang = array(
 
     'TCKLARNA_CHOOSE_KP_OPTIONS'              => 'Bitte wählen Sie die Klarna Payment Optionen, die Sie Ihren Kunden anbieten möchten:',
     'TCKLARNA_PAY_LATER'                      => 'Pay later',
+    'TCKLARNA_PAY_LATER.'                     => 'Später bezahlen.',
+    'TCKLARNA_PAY_LATER_START'                => 'Für Kunden, die jetzt kaufen und bequem später bezahlen möchten.',
     'TCKLARNA_PAY_LATER_TEXT'                 => 'Die Option “Später bezahlen” macht Kunden den Bezahlvorgang einfach und schnell, ohne dabei persönliche Daten oder komplizierte Nummern eingeben zu müssen. Der Kunde hat die Wahl zwischen Rechnung und im Monat X bezahlen.',
     'TCKLARNA_SLICE_IT'                       => 'Slice it',
+    'TCKLARNA_SLICE_IT.'                      => 'In Raten bezahlen.',
+    'TCKLARNA_SLICE_IT_START'                 => '​Steigern Sie die Kaufkraft Ihrer Kunden durch Zahlung in Raten. ',
     'TCKLARNA_SLICE_IT_TEXT'                  => 'Mit “in Raten bezahlen” können Kunden die Einkaufssumme bei geringen Zinsen in Häppchen aufteilen. Das erhöht den Investitionsrahmen und die Kaufkraft. Klarna´s einzigartige Kreditbearbeitung erfordert nur wenige Augenblicke und minimale Dateneingabe. Der Kunde hat die Wahl zwischen fixen und flexiblen Raten.',
     'TCKLARNA_PAY_NOW'                        => 'Sofort bezahlen',
+    'TCKLARNA_PAY_NOW.'                       => 'Sofort bezahlen.',
+    'TCKLARNA_PAY_NOW_START'                  => 'Einfache und schnelle Direktbezahlung mit Klarna‘s Sofort bezahlen. In Deutschland sollten Sofortüberweisung und Lastschrift im Portfolio nicht fehlen.',
     'TCKLARNA_PAY_NOW_TEXT'                   => 'Kunden, die Beträge sofort vollständig beim Bestellabschluss bezahlen möchten, können Klarna´s pay now nutzen. Zur Auswahl steht Lastschrift und das Direktüberweisungsverfahren Sofort.',
+    'TCKLARNA_CHECKOUT'                       => 'Der Klarna Checkout.​',
+    'TCKLARNA_CHECKOUT_START'                 => 'Das beste Checkout-Erlebnis für Ihre Kunden. Zuverlässige Kundenidentifizierung und Versandauswahl. Alle Zahlungen inklusive. Weltweite Verfügbarkeit, lokal optimiert. Wir übernehmen das ganze Risiko und Sie erhalten immer Ihr Geld. ',
+
     'TCKLARNA_EXTERNAL_PAYMENTS_ADMIN_DESC'   =>
         'Hier können Sie externe Bezahlarten und externe Checkouts zur Einbindung innerhalb des Klarna Checkout Iframes konfigurieren. 
         Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips 
@@ -284,16 +293,19 @@ oder wenden Sie sich an den Klarna Integration Support.',
     'TCKLARNA_ERROR_SHOP_SSL_NOT_CONFIGURED' => 'Fataler Fehler: Die Angabe einer gültigen SSL-geschützten (https) $this->sSSLShopURL in der config.inc.php Ihres Shops ist Pflicht, wenn Sie den Klarna Checkout aktivieren möchten!',
     'TCKLARNA_ERROR_KCO_INACTIVE'            => 'Setup-Fehler: Klarna Checkout ist im Shop nicht aktiv',
 
-    'KLARNA_CAPTURE_SUCCESSFULL'      => 'Der Betrag wurde erfolgreich abgebucht.',
+    'KLARNA_CAPTURE_SUCCESSFULL'            => 'Der Betrag wurde erfolgreich abgebucht.',
     'TCKLARNA_CAPUTRE_FAIL_ORDER_CANCELLED' => ' Die Bestellung konnte nicht abgebucht werden, da sie bereits storniert wurde.',
     'TCKLARNA_ANONYMIZED_PRODUCT_TOOLTIP'   => 'Geben Sie hier die Zeichenfolge ein, die anstatt des tatsächlichen Produkttitels an Klarna gesendet werden soll.',
     'TCKLARNA_NO_REQUESTS_WILL_BE_SENT'     => 'Ihre Änderungen an dieser Bestellung werden nicht an Klarna übertragen.',
     'TCKLARNA_USER_GUIDE'                   => 'Benutzerhandbuch',
-    'TCKLARNA_ONBOARDING_FLOW_BUTTON'       => 'Zugangsdaten beantragen',
+    'TCKLARNA_REGISTER_NOW_BUTTON'          => 'Registrieren',
+    'TCKLARNA_LEARN_MORE_BUTTON'            => 'Mehr erfahren',
 
-    'TCKLARNA_CUSTOMER_TYPE' => 'Unterstützte Kundenarten',
+    'TCKLARNA_CUSTOMER_TYPE'         => 'Unterstützte Kundenarten',
     'TCKLARNA_CUSTOMER_TYPE_TOOLTIP' => 'Hier können Sie einstellen, ob der Shop ausschließlich B2C Transaktionen (Standard-Einstellung). nur B2B Transaktionen oder sowohl B2C als auch B2B Transaktionen akzeptieren soll.',
-    'TCKLARNA_B2C' => 'Nur B2C Kunden',
-    'TCKLARNA_B2B' => 'Nur B2B Kunden',
-    'TCKLARNA_B2BOTH' => 'Sowohl B2C als auch B2B Kunden',
+    'TCKLARNA_B2C'                   => 'Nur B2C Kunden',
+    'TCKLARNA_B2B'                   => 'Nur B2B Kunden',
+    'TCKLARNA_B2BOTH'                => 'Sowohl B2C als auch B2B Kunden',
+    'TCKLARNA_NEED_SUPPORT'          => 'Need support with the integration?',
+    'TCKLARNA_REACH_SUPPORT'         => 'Reach out to Klarna\'s Merchant support',
 );

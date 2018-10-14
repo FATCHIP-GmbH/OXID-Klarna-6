@@ -3,6 +3,7 @@
 namespace TopConcepts\Klarna\Controller\Admin;
 
 
+use OxidEsales\Eshop\Application\Model\CountryList;
 use OxidEsales\Eshop\Core\Module\Module;
 use OxidEsales\Eshop\Core\Registry;
 
@@ -29,6 +30,15 @@ class KlarnaStart extends KlarnaBaseConfig
         $this->setEditObjectId($sShopOXID);
 
         parent::render();
+        $oCountryList = oxNew(CountryList::class);
+        $countries = array('DE', 'GB', 'AT', 'NO', 'NL', 'FI', 'SE');
+        $oSupportedCountryList = $oCountryList->getKalarnaCountriesTitles(
+            $this->getViewDataElement('adminlang'),
+            $countries
+        );
+
+        $this->addTplParam('countries', $oSupportedCountryList);
+
 
         return $this->_sThisTemplate;
     }
