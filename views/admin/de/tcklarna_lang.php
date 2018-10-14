@@ -306,6 +306,6 @@ oder wenden Sie sich an den Klarna Integration Support.',
     'TCKLARNA_B2C'                   => 'Nur B2C Kunden',
     'TCKLARNA_B2B'                   => 'Nur B2B Kunden',
     'TCKLARNA_B2BOTH'                => 'Sowohl B2C als auch B2B Kunden',
-    'TCKLARNA_NEED_SUPPORT'          => 'Need support with the integration?',
-    'TCKLARNA_REACH_SUPPORT'         => 'Reach out to Klarna\'s Merchant support',
+    'TCKLARNA_NEED_SUPPORT'          => 'Benötigen Sie Hilfe bei der Integration?',
+    'TCKLARNA_REACH_SUPPORT'         => 'Kontaktieren Sie Klarna\‘s Merchant Support',
 );
