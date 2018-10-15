@@ -78,14 +78,14 @@ Die Klarna Plugins werden stets auf Herz und Nieren geprüft und können ganz ei
 Ihre technischen Ansprechpartner aktiviert werden. Das nennen wir smoooth. Hier können Sie sowohl Klarna Payments aktivieren und anschließend genau die Zahlarten
 auswählen, die Sie wünschen oder mit der Komplettlösung, dem Klarna Checkout, Ihre Customer
 Journey optimieren.
-Erfahren Sie hier mehr zu Klarna für OXID: <a href="https://www.klarna.com/de/verkaeufer/oxid/">https://www.klarna.com/de/verkaeufer/oxid/</a>
+Erfahren Sie hier mehr zu Klarna für OXID: <a href="https://www.klarna.com/de/verkaeufer/oxid/" target="_blank">https://www.klarna.com/de/verkaeufer/oxid/</a>
 Und so einfach ist die Integration: <a href="https://hello.klarna.com/rs/778-XGY-327/images/How_to_OXID.mp4" target="_blank">Zum Video</a>',
         'en' => 'No matter what you sell, our products are made to give your customers the best purchase experience.
 This is not only smoooth for you - it is smoooth for us, too!
 Klarna plugins are always tested and can be activated by you or your technical contact with just a few
 clicks. That is smoooth. Here you can activate Klarna Payments and then select exactly the payment methods you want or
 optimize your customer journey with the complete Klarna Checkout solution.
-Find out more about Klarna for OXID: <a href="https://www.klarna.com/de/verkaeufer/oxid/">https://www.klarna.com/de/verkaeufer/oxid/</a>
+Find out more about Klarna for OXID: <a href="https://www.klarna.com/de/verkaeufer/oxid/" target="_blank">https://www.klarna.com/de/verkaeufer/oxid/</a>
 Integrating Klarna at OXID is easy as pie: <a href="https://hello.klarna.com/rs/778-XGY-327/images/How_to_OXID.mp4" target="_blank">to the video (click)</a>'
     ),
     'version'     => '4.2.0',
