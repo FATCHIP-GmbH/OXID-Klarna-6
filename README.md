@@ -1,5 +1,5 @@
-The Klarna Checkout and Klarna Payments Module for the OXID eShop
-=================================================================
+Klarna Checkout and Klarna Payments Module for the OXID eShop
+=============================================================
 
 ## General ##
 
