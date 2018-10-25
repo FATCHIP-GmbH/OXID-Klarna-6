@@ -1,9 +1,9 @@
-The Klarna Checkout and Klarna Payments Module for OXID eShop 6
-===============================================================
+The Klarna Checkout and Klarna Payments Module for the OXID eShop
+=================================================================
 
 ## General ##
 
-### Title: Klarna Checkout and Klarna Payments Module for OXID
+### Title: Klarna Checkout and Klarna Payments Module for the OXID eShop
 ### Author: top concepts GmbH, https://www.topconcepts.de
 ### Prefix: tcklarna
 ### Version: 4.2.0
@@ -12,7 +12,7 @@ The Klarna Checkout and Klarna Payments Module for OXID eShop 6
 
 ## Description ##
 
-OXID eShop Plugin to integrate Klarna Checkout and Klarna Payments to OXID eShop Version 6.0.X
+OXID eShop Plugin to integrate Klarna Checkout and Klarna Payments to OXID eShop Version >= 6.0.0
 
 ## Installation ##
 
