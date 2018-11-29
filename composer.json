@@ -5,7 +5,15 @@
   "extra": {
     "oxideshop": {
       "blacklist-filter": [
-        "documentation/**/*.*"
+        "Component/**/*",
+        "Controller/**/*",
+        "Core/**/*",
+        "Documentation/**/*",
+        "Model/**/*",
+        "Tests/**/*",
+        "CHANGELOG.md",
+        "composer.json",
+        "README.md"
       ],
       "target-directory": "tc/tcklarna"
     }
