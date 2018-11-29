@@ -1,0 +1,7 @@
+* text=auto
+
+/Documentation/ export-ignore
+/Tests/ export-ignore
+/.gitattributes export-ignore
+/.gitignore export-ignore
+/composer.lock export-ignore
