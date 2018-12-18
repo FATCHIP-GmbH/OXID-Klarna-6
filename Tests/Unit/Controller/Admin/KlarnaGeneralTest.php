@@ -27,7 +27,6 @@ class KlarnaGeneralTest extends ModuleUnitTestCase
         $this->assertEquals(json_encode($notSet), $viewData['tcklarna_countryList']);
         $this->assertEquals($expected, $viewData['tcklarna_countryCreds']);
         $this->assertEquals($notSet, $viewData['tcklarna_notSetUpCountries']);
-        $this->assertNotEmpty($viewData['activeCountries']);
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'xmlhttprequest';
         putenv("HTTP_X_REQUESTED_WITH=xmlhttprequest");

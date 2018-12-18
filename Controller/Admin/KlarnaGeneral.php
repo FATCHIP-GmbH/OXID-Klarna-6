@@ -3,6 +3,7 @@
 namespace TopConcepts\Klarna\Controller\Admin;
 
 
+use TopConcepts\Klarna\Core\KlarnaConsts;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\DatabaseProvider;
@@ -48,7 +49,6 @@ class KlarnaGeneral extends KlarnaBaseConfig
             'tcklarna_notSetUpCountries',
             array_diff_key($this->_aKlarnaCountries, $this->_aKlarnaCountryCreds) ?: false
         );
-        $this->addTplParam('activeCountries', KlarnaUtils::getKlarnaGlobalActiveShopCountries($this->getViewDataElement('adminlang')));
         $this->addTplParam('b2options', array('B2C', 'B2B', 'B2BOTH'));
 
         return $this->_sThisTemplate;
@@ -76,12 +76,11 @@ class KlarnaGeneral extends KlarnaBaseConfig
     protected function convertNestedParams($nestedArray)
     {
         /*** get Country Specific Credentials Config Keys for all Klarna Countries ***/
-        $aCountrySpecificCredsConfigKeys = array_map(
-            function ($countryISO) {
-                return 'aKlarnaCreds_' . $countryISO;
-            },
-            array_keys($this->getKlarnaCountryAssocList())
-        );
+        $db  = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
+        $sql = "SELECT oxvarname
+                FROM oxconfig 
+                WHERE oxvarname LIKE 'aKlarnaCreds_%'";
+        $aCountrySpecificCredsConfigKeys = $db->getCol($sql);
 
         if (is_array($nestedArray)) {
             foreach ($nestedArray as $key => $arr) {
@@ -112,13 +111,13 @@ class KlarnaGeneral extends KlarnaBaseConfig
             return $this->_aKlarnaCountries;
         }
         $sViewName = getViewName('oxcountry', $this->getViewDataElement('adminlang'));
-        $isoList   = KlarnaUtils::getKlarnaGlobalActiveShopCountryISOs();
+        $isoList   = KlarnaConsts::getKlarnaCoreCountries();
 
         /** @var \OxidEsales\EshopCommunity\Core\Database\Adapter\Doctrine\Database $db */
         $db  = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
         $sql = 'SELECT oxisoalpha2, oxtitle 
                 FROM ' . $sViewName . ' 
-                WHERE oxisoalpha2 IN ("' . implode('","', $isoList) . '")';
+                WHERE oxisoalpha2 IN ("' . implode('","', $isoList) . '") AND oxactive = \'1\'';
 
         /** @var \OxidEsales\EshopCommunity\Core\Database\Adapter\Doctrine\ResultSet $oResult */
         $oResult = $db->select($sql);
