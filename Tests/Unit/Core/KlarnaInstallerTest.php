@@ -185,26 +185,4 @@ class KlarnaInstallerTest extends ModuleUnitTestCase
 
         $this->assertTrue($dbMetaDataHandler->fieldExists('TCKLARNA_ORDERID', 'tcklarna_ack'));
     }
-
-    /**
-     *
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
-     */
-    public function testOnDeactivate()
-    {
-        KlarnaInstaller::onDeactivate();
-        $db = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
-
-        $sql      = 'SELECT oxid, oxactive FROM oxpayments WHERE oxid IN (?, ?, ?, ?)';
-        $payments = $db->select($sql, self::KLARNA_PAYMENT_IDS);
-
-        $this->assertEquals(4, $payments->count());
-        while (!$payments->EOF) {
-            $row = $payments->getFields();
-            $this->assertEquals('0', $row['oxactive']);
-            $payments->fetchRow();
-        }
-    }
-
 }

@@ -1,6 +1,7 @@
 ### 4.2.1
 * Admin general Settings, country select options bugfix
 * fixed issue when general terms checkbox was active
+* onDeactivate method removed. BugFix for EE
 
 ### 4.2.0
 * Link BugFix for EE
