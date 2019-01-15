@@ -198,9 +198,9 @@ abstract class KlarnaClientBase extends Base
 
         $module = oxNew(Module::class);
         $module->loadByDir('tcklarna');
-        $moduleDesc = $module->getDescription();
+        $moduleTitlt = $module->getTitle();
         $moduleVer  = $module->getInfo('version');
-        $moduleInfo = str_replace(' ', '_', $moduleDesc . "_" . $moduleVer);
+        $moduleInfo = str_replace(' ', '_', $moduleTitlt . "_" . $moduleVer);
 
         $os = php_uname('s');
         $os .= "_" . php_uname('r');
