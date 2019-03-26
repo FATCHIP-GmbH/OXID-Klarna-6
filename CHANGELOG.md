@@ -1,3 +1,6 @@
+### not yet released
+* Added street_address2/oxaddinfo mapping so c/o or company names will be transmitted from Klarna Checkout to OXID eShop
+
 ### 4.2.1
 * Admin general Settings, country select options bugfix
 * fixed issue when general terms checkbox was active
