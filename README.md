@@ -6,7 +6,7 @@ Klarna Checkout and Klarna Payments Module for the OXID eShop
 ### Title: Klarna Checkout and Klarna Payments Module for the OXID eShop
 ### Author: top concepts GmbH, https://www.topconcepts.de
 ### Prefix: tcklarna
-### Version: 4.2.1
+### Version: 4.2.2
 ### Link: http://developers.klarna.com/
 ### Mail: integration@klarna.de
 
@@ -21,11 +21,11 @@ OXID eShop Plugin to integrate Klarna Checkout and Klarna Payments to OXID eShop
 
 In the shop's main folder ( the one with composer.json file) run this command:
 
-  composer require topconcepts/oxid-klarna-6:v4.2.1
+  composer require topconcepts/oxid-klarna-6:v4.2.2
 
 or add the following line within the "require" section to your composer.json file:
 
-  "topconcepts/oxid-klarna-6": "v4.2.1"
+  "topconcepts/oxid-klarna-6": "v4.2.2"
 
 and run 
 
@@ -36,5 +36,5 @@ and run
 
 See folder /Documentation in this package or download latest manuals here:
 
-### In English: https://www.topconcepts.de/customer/klarna/docs/klarna-module-for-oxid-en-4.2.1.pdf
-### In German: https://www.topconcepts.de/customer/klarna/docs/klarna-module-for-oxid-de-4.2.1.pdf
+### In English: https://www.topconcepts.de/customer/klarna/docs/klarna-module-for-oxid-en-4.2.2.pdf
+### In German: https://www.topconcepts.de/customer/klarna/docs/klarna-module-for-oxid-de-4.2.2.pdf
