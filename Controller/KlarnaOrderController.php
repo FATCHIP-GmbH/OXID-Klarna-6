@@ -32,6 +32,7 @@ use TopConcepts\Klarna\Core\KlarnaPayment;
 use TopConcepts\Klarna\Core\KlarnaPaymentsClient;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
+use TopConcepts\Klarna\Model\KlarnaPaymentHelper;
 use TopConcepts\Klarna\Model\KlarnaUser;
 use TopConcepts\Klarna\Model\KlarnaPayment as KlarnaPaymentModel;
 use OxidEsales\Eshop\Application\Model\Basket;
@@ -268,7 +269,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         $oBasket = Registry::getSession()->getBasket();
         $paymentId = $oBasket->getPaymentId();
 
-        if(KlarnaPaymentModel::isKlarnaPayment($paymentId)){
+        if(KlarnaPaymentHelper::isKlarnaPayment($paymentId)){
             /**
              * sDelAddrMD5 value is up to date with klarna user data (we updated user object in the init method)
              *  It is required later to validate user data before order creation

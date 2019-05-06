@@ -117,6 +117,7 @@ class KlarnaPayment extends KlarnaPayment_parent
     /**
      * Check if payment is Klarna payment
      *
+     * @deprecated use KlarnaPaymentHelper
      * @param string $paymentId
      * @return bool
      */

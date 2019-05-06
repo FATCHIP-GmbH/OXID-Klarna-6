@@ -24,7 +24,6 @@ use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
-use TopConcepts\Klarna\Model\KlarnaPayment as KlarnaPaymentModel;
 
 class KlarnaOrder extends KlarnaOrder_parent
 {
@@ -44,7 +43,7 @@ class KlarnaOrder extends KlarnaOrder_parent
     {
         $paymentId = $oBasket->getPaymentId();
 
-        if(KlarnaPaymentModel::isKlarnaPayment($paymentId)) {
+        if(KlarnaPaymentHelper::isKlarnaPayment($paymentId)) {
             $_POST['sDeliveryAddressMD5'] = Registry::getSession()->getVariable('sDelAddrMD5');
         }
 

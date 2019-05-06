@@ -3,7 +3,7 @@
 namespace TopConcepts\Klarna\Controller\Admin;
 
 
-use TopConcepts\Klarna\Model\KlarnaPayment;
+use TopConcepts\Klarna\Model\KlarnaPaymentHelper;
 
 /**
  * Class Klarna_Order_Address
@@ -32,6 +32,6 @@ class KlarnaOrderAddress extends KlarnaOrderAddress_parent
      */
     protected function setReadonlyValue($paymentId)
     {
-        $this->addTplParam('readonly', KlarnaPayment::isKlarnaPayment( $paymentId ));
+        $this->addTplParam('readonly', KlarnaPaymentHelper::isKlarnaPayment( $paymentId ));
     }
 }

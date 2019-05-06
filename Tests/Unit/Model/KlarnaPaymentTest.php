@@ -11,6 +11,7 @@ namespace TopConcepts\Klarna\Tests\Unit\Model;
 
 use OxidEsales\Eshop\Application\Model\Payment;
 use TopConcepts\Klarna\Model\KlarnaPayment;
+use TopConcepts\Klarna\Model\KlarnaPaymentHelper;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaPaymentTest extends ModuleUnitTestCase
@@ -141,7 +142,7 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
      */
     public function testIsKlarnaPayment($paymentId, $expectedResult)
     {
-        $result = KlarnaPayment::isKlarnaPayment($paymentId);
+        $result = KlarnaPaymentHelper::isKlarnaPayment($paymentId);
         $this->assertEquals($expectedResult, $result);
     }
 

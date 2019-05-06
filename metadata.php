@@ -35,6 +35,7 @@ use TopConcepts\Klarna\Model\KlarnaCountryList;
 use TopConcepts\Klarna\Model\KlarnaOrder;
 use TopConcepts\Klarna\Model\KlarnaOrderArticle;
 use TopConcepts\Klarna\Model\KlarnaPayment;
+use TopConcepts\Klarna\Model\KlarnaPaymentHelper;
 use TopConcepts\Klarna\Model\KlarnaUser;
 use TopConcepts\Klarna\Model\KlarnaUserPayment;
 
@@ -258,4 +259,7 @@ $aModule = array(
     'events'      => array(
         'onActivate'   => '\TopConcepts\Klarna\Core\KlarnaInstaller::onActivate',
     ),
+    'files' => array(
+        'KlarnaPaymentHelper' => KlarnaPaymentHelper::class,
+    )
 );
