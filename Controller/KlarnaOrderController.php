@@ -148,7 +148,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      *
      *
      * @param $action
-     * @param string $requestBody
+     * @param $requestBody
      * @param $url
      * @param $response
      * @param $errors
@@ -158,15 +158,14 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      */
     protected function logKlarnaData($action, $requestBody, $url, $response, $errors, $redirectUrl = '')
     {
-        $request  = json_decode($requestBody, true);
-        $order_id = isset($request['order_id']) ? $request['order_id'] : '';
+        $order_id = isset($requestBody['order_id']) ? $requestBody['order_id'] : '';
 
         $oKlarnaLog = new KlarnaLogs;
         $aData      = array(
             'tcklarna_logs__tcklarna_method'      => $action,
             'tcklarna_logs__tcklarna_url'         => $url,
             'tcklarna_logs__tcklarna_orderid'     => $order_id,
-            'tcklarna_logs__tcklarna_requestraw'  => $requestBody .
+            'tcklarna_logs__tcklarna_requestraw'  => json_encode($requestBody) .
                                                      " \nERRORS:" . var_export($errors, true) .
                                                      " \nHeader Location:" . $redirectUrl,
             'tcklarna_logs__tcklarna_responseraw' => $response,
