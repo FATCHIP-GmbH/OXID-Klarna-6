@@ -1,4 +1,5 @@
 ### Not Yet Released
+* Added support for KP in CH
 * Klarna Logs BugFix
 * Fix payment incompatibility modules 
 
