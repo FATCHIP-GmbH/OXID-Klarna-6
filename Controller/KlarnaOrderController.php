@@ -91,6 +91,11 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
         parent::init();
 
+        //Re-set country to session if empty
+        if(empty(Registry::getSession()->getVariable('sCountryISO')) && !empty($this->getUser())) {
+            Registry::getSession()->setVariable('sCountryISO', $this->getUser()->getUserCountryISO2());
+        }
+
         if (KlarnaUtils::isKlarnaCheckoutEnabled()) {
 
             $oConfig = Registry::getConfig();
