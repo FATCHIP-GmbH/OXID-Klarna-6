@@ -1,10 +1,13 @@
 ### Not Yet Released
-* Added support for KP in CH
-* Klarna Logs BugFix
-* Fix payment incompatibility modules 
 
 ### 4.3.0
 * Added B2B to KCO
+* Added support for KP in CH
+* Klarna Logs BugFix
+* Klarna KCO execute bug fix
+* Fix payment incompatibility modules 
+* Fatal Errors bug fix
+* CH wrong badge fix
 
 ### 4.2.2
 * Added street_address2/oxaddinfo mapping so c/o or company names will be transmitted from Klarna Checkout to OXID eShop
