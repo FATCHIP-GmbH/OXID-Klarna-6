@@ -385,6 +385,16 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     protected function kcoBeforeExecute()
     {
         try {
+            $oBasket      = Registry::getSession()->getBasket();
+            $oKlarnaOrder = $this->initKlarnaOrder($oBasket);
+            $oKlarnaOrder->validateKlarnaB2B();
+            if($oKlarnaOrder->isError()) {
+                $oKlarnaOrder->displayErrors();
+                Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=order', false, 302);
+
+                return;
+            }
+
             $this->_validateUser($this->_aOrderData);
         } catch (StandardException $exception) {
             $this->_aResultErrors[] = $exception->getMessage();
@@ -1189,5 +1199,15 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         }
 
         return $sDelAddress;
+    }
+
+    /**
+     * @param $oBasket
+     * @return KlarnaOrder
+     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
+     */
+    protected function initKlarnaOrder($oBasket)
+    {
+        return new KlarnaOrder($oBasket, $this->_oUser);
     }
 }

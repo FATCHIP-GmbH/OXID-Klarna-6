@@ -11,6 +11,7 @@ use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Price;
 use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\UtilsView;
 use OxidEsales\EshopCommunity\Application\Model\PaymentList;
 use TopConcepts\Klarna\Controller\KlarnaPaymentController;
 use TopConcepts\Klarna\Core\KlarnaOrder;
@@ -22,6 +23,19 @@ use OxidEsales\Eshop\Core\UtilsObject;
 
 class KlarnaOrderTest extends ModuleUnitTestCase
 {
+    public function testDisplayErrors()
+    {
+        $oBasket = oxNew(Basket::class);
+        $oUser = oxNew(User::class);
+        $oKlarnaOrder = new  KlarnaOrder($oBasket, $oUser);
+        $this->setProtectedClassProperty($oKlarnaOrder, 'errors', ['Error1', 'Error2']);
+        $oUtilsView = $this->getMock(UtilsView::class, ['addErrorToDisplay']);
+        $oUtilsView->expects($this->at(0))->method('addErrorToDisplay')->with('Error1');
+        $oUtilsView->expects($this->at(1))->method('addErrorToDisplay')->with('Error2');
+        \oxTestModules::addModuleObject(UtilsView::class, $oUtilsView);
+        $oKlarnaOrder->displayErrors();
+    }
+
     public function testGetKlarnaCountryListByPayment()
     {
         $payment          = $this->createStub(Payment::class, ['getCountries' => ['testId']]);

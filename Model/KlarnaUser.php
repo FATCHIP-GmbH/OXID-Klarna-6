@@ -18,6 +18,7 @@
 namespace TopConcepts\Klarna\Model;
 
 
+use OxidEsales\EshopCommunity\Core\Exception\SystemComponentException;
 use TopConcepts\Klarna\Core\KlarnaConsts;
 use TopConcepts\Klarna\Core\KlarnaFormatter;
 use TopConcepts\Klarna\Core\KlarnaUtils;
@@ -51,10 +52,11 @@ class KlarnaUser extends KlarnaUser_parent
     protected $_countryISO;
 
     /**
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
+     * @param bool $isB2BAvailable
      * @return array
+     * @throws SystemComponentException
      */
-    public function getKlarnaData()
+    public function getKlarnaData($isB2BAvailable = false)
     {
         $shippingAddress = null;
         $result          = array();
@@ -62,7 +64,7 @@ class KlarnaUser extends KlarnaUser_parent
         if ((bool)KlarnaUtils::getShopConfVar('blKlarnaEnablePreFilling')) {
             $this->preFillAddress($result);
         }
-
+        $billingAddress = KlarnaFormatter::oxidToKlarnaAddress($this);
 
         if ($sCountryISO = Registry::get(Request::class)->getRequestEscapedParameter('selected-country')) {
             if (Registry::getSession()->hasVariable('invadr')) {
@@ -72,12 +74,16 @@ class KlarnaUser extends KlarnaUser_parent
             Registry::getSession()->setVariable('sCountryISO', $sCountryISO);
         }
 
+        if($isB2BAvailable && !empty($billingAddress['organization_name'])){
+            $result['customer']['type'] = 'organization';
+        }
+
         return $result;
     }
 
     /**
      * @param $result
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
+     * @throws SystemComponentException
      */
     protected function preFillAddress(&$result)
     {
@@ -112,7 +118,7 @@ class KlarnaUser extends KlarnaUser_parent
      * Applicable in KP mode
      * @param bool $isB2BAvailable
      * @return array
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
+     * @throws SystemComponentException
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function getKlarnaPaymentData($isB2BAvailable = false)

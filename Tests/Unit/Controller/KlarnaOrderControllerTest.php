@@ -24,6 +24,7 @@ use TopConcepts\Klarna\Controller\KlarnaOrderController;
 use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
 use TopConcepts\Klarna\Core\KlarnaConsts;
+use TopConcepts\Klarna\Core\KlarnaOrder;
 use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
 use TopConcepts\Klarna\Core\KlarnaPayment;
 use TopConcepts\Klarna\Core\KlarnaPaymentsClient;
@@ -278,7 +279,8 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $method->setAccessible(true);
 
         $user = $this->createStub(KlarnaUser::class, ['setNewsSubscription' => true]);
-        $mock = $this->createStub(KlarnaOrderController::class, ['_validateUser' => true, 'getUser' => $user]);
+        $order = $this->createStub(KlarnaOrder::class, ['isError' => false]);
+        $mock = $this->createStub(KlarnaOrderController::class, ['_validateUser' => true, 'getUser' => $user, 'initKlarnaOrder' => $order]);
         $this->setProtectedClassProperty(
             $mock,
             '_aOrderData',
@@ -288,7 +290,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $result = $method->invoke($mock);
         $this->assertNull($result);
 
-        $mock = $this->createStub(KlarnaOrderController::class, ['_validateUser' => true]);
+        $mock = $this->createStub(KlarnaOrderController::class, ['_validateUser' => true, 'initKlarnaOrder' => $order]);
         $this->setProtectedClassProperty(
             $mock,
             '_aOrderData',
@@ -310,9 +312,10 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $class = new \ReflectionClass(KlarnaOrderController::class);
         $method = $class->getMethod('kcoBeforeExecute');
         $method->setAccessible(true);
-
-        $mock = $this->getMock(KlarnaOrderController::class, ['_validateUser']);
+        $order = $this->createStub(KlarnaOrder::class, ['isError' => false]);
+        $mock = $this->getMock(KlarnaOrderController::class, ['_validateUser', 'initKlarnaOrder']);
         $mock->expects($this->any())->method('_validateUser')->willThrowException(new StandardException('test'));
+        $mock->expects($this->any())->method('initKlarnaOrder')->willReturn($order);
         $method->invoke($mock);
         $result = $this->getProtectedClassProperty($mock, '_aResultErrors');
         $this->assertEquals('test', $result[0]);
