@@ -167,7 +167,7 @@ class KlarnaInstaller extends ShopConfiguration
                     $name,
                     $this->_serializeConfVar($type, $name, $data),
                     $shopId,
-                    self::KLARNA_MODULE_ID
+                    "module:" . self::KLARNA_MODULE_ID
                 );
             }
         }

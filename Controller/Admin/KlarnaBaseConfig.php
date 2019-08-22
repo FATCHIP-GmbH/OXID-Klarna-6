@@ -197,7 +197,7 @@ class KlarnaBaseConfig extends ShopConfiguration
                     $sName,
                     $this->_serializeConfVar($sConfigType, $sName, $sValue),
                     $sShopId,
-                    $sModule
+                    "module:" . $sModule
                 );
             }
         }
