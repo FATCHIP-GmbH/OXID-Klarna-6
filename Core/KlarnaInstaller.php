@@ -78,6 +78,8 @@ class KlarnaInstaller extends ShopConfiguration
 
         $instance = self::getInstance();
 
+        $instance->checkAndUpdate();
+
         $instance->extendDbTables();
 
         $instance->addConfigVars();
@@ -85,6 +87,19 @@ class KlarnaInstaller extends ShopConfiguration
         $instance->addActions();
 
         $instance->addKlarnaPaymentsMethods();
+    }
+
+    protected function checkAndUpdate() {
+        // oxconfig.OXMODULE prefix
+        $requireUpdate = $this->db->select(
+            "SELECT `OXID` FROM `oxconfig` WHERE OXMODULE = ?;",
+            array('tcklarna')
+        );
+        if ($requireUpdate->count()) {
+            foreach($requireUpdate->fetchAll() as $row) {
+                $this->db->execute("UPDATE `oxconfig` SET OXMODULE = ? WHERE OXID = ?", array('module:tcklarna', $row['OXID']));
+            }
+        }
     }
 
     /**
@@ -150,7 +165,7 @@ class KlarnaInstaller extends ShopConfiguration
             'select' => array(),
         );
 
-        $savedConf     = $this->loadConfVars($shopId, self::KLARNA_MODULE_ID);
+        $savedConf     = $this->loadConfVars($shopId, 'module:'. self::KLARNA_MODULE_ID);
         $savedConfVars = $savedConf['vars'];
 
         foreach ($defaultConfVars as $type => $values) {
