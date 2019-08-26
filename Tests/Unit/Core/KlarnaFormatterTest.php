@@ -5,6 +5,7 @@ namespace TopConcepts\Klarna\Tests\Unit\Core;
 use OxidEsales\Eshop\Application\Model\Address;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Field;
+use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
 use TopConcepts\Klarna\Core\KlarnaFormatter;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
@@ -21,7 +22,8 @@ class KlarnaFormatterTest extends ModuleUnitTestCase
     public function testOxidToKlarnaAddress($object, $expectedResult)
     {
         if ($object == null) {
-            $this->setExpectedException(\Exception::class, $expectedResult);
+            $this->expectException(\Exception::class);
+            $this->expectExceptionMessage($expectedResult);
             KlarnaFormatter::oxidToKlarnaAddress('invalid');
         } else {
             $result = KlarnaFormatter::oxidToKlarnaAddress($object);

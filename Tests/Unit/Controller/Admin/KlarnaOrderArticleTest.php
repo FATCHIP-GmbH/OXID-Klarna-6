@@ -17,10 +17,9 @@ class KlarnaOrderArticleTest extends ModuleUnitTestCase
 {
     protected function setOrder($oxstorno = 0)
     {
-        $order = $this->getMock(
-            Order::class,
-            ['load', 'save', 'getTotalOrderSum', 'getNewOrderLinesAndTotals', 'updateKlarnaOrder']
-        );
+        $mockBuilder = $this->getMockBuilder(Order::class);
+        $mockBuilder->setMethods(['load', 'save', 'getTotalOrderSum', 'getNewOrderLinesAndTotals', 'updateKlarnaOrder']);
+        $order = $mockBuilder->getMock();
         $order->expects($this->any())->method('load')->willReturn(true);
         $order->expects($this->any())->method('save')->willReturn(true);
         $order->expects($this->any())->method('getTotalOrderSum')->willReturn(100);
@@ -246,7 +245,9 @@ class KlarnaOrderArticleTest extends ModuleUnitTestCase
     {
         $this->setOrder();
         $controller = $this->createStub(KlarnaOrderArticle::class, ['getEditObjectId' => 'test']);
-        $this->setExpectedException(KlarnaWrongCredentialsException::class, 'KLARNA_UNAUTHORIZED_REQUEST');
+        $this->expectException(KlarnaWrongCredentialsException::class);
+        $this->expectExceptionMessage('KLARNA_UNAUTHORIZED_REQUEST');
+
         $controller->retrieveKlarnaOrder();
     }
 

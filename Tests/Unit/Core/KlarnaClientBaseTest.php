@@ -79,8 +79,7 @@ class KlarnaClientBaseTest extends ModuleUnitTestCase
             $response->body = json_encode(['error_messages' => ['test']]);
         }
         $response->status_code = $code;
-
-        $this->setExpectedException($expectedException);
+        !$expectedException ?: $this->expectException($expectedException);
         $result = $method->invokeArgs($klarnaClientBase, [$response, __CLASS__, __METHOD__]);
 
         if($code === 200) {//assert only for status code 200

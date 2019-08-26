@@ -298,7 +298,8 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         );
         $this->setModuleConfVar('iKlarnaActiveCheckbox', 2);
 
-        $this->setExpectedException(StandardException::class, 'no user object');
+        $this->expectException(StandardException::class);
+        $this->expectExceptionMessage('no user object');
         $method->invoke($mock);
         $result = $this->getProtectedClassProperty($mock, '_aResultErrors');
         $this->assertEquals('test', $result[0]);

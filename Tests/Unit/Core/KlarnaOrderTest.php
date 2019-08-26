@@ -302,13 +302,11 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $user = $this->createStub(User::class, ['getActiveCountry' => '1111']);
         $this->setProtectedClassProperty($order, '_oUser', $user);
 
-        $this->setExpectedException(
-            KlarnaConfigException::class,
-            sprintf(
-                Registry::getLang()->translateString('TCKLARNA_ERROR_NO_SHIPPING_METHODS_SET_UP'),
-                ''
-            )
-        );
+        $this->expectException(KlarnaConfigException::class);
+        $this->expectExceptionMessage(            sprintf(
+            Registry::getLang()->translateString('TCKLARNA_ERROR_NO_SHIPPING_METHODS_SET_UP'),
+            ''
+        ));
         $methodReflection->invokeArgs($order, [$basket]);
     }
 

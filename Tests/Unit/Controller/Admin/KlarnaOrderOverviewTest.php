@@ -197,7 +197,8 @@ class KlarnaOrderOverviewTest extends ModuleUnitTestCase
     {
         $this->setOrder();
         $controller = $this->createStub(KlarnaOrderOverview::class, ['getEditObjectId' => 'test']);
-        $this->setExpectedException(KlarnaWrongCredentialsException::class, 'KLARNA_UNAUTHORIZED_REQUEST');
+        $this->expectException(KlarnaWrongCredentialsException::class);
+        $this->expectExceptionMessage('KLARNA_UNAUTHORIZED_REQUEST');
         $controller->retrieveKlarnaOrder();
     }
 
