@@ -2,7 +2,13 @@
 
 [{if $payment && $payment->isKPPayment()}]
     [{capture assign="insertLogoJS" }]
-        var $parent = $('#orderPayment').find('.panel-body');
+        var theme = '[{$oViewConf->getActiveTheme()}]';
+        if(theme === 'flow'){
+            var $parent = $('#orderPayment').find('.panel-body');
+        }
+        if(theme === 'wave'){
+            var $parent = $('#orderPayment').find('.card-body');
+        }
         var parentStyle = getComputedStyle($parent[0]);
         var offset = 5;
         var height = parseInt(parentStyle.height) - offset * 2;
