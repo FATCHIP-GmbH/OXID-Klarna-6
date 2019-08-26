@@ -1,5 +1,4 @@
 [{capture append="oxidBlock_content"}]
-    <link rel="stylesheet" type="text/css" href="[{$oViewConf->getModuleUrl('tcklarna', 'out/src/css/bootstrap.min.css')}]"/>
     [{if !$confError}]
         [{oxstyle include=$oViewConf->getModuleUrl('tcklarna', 'out/src/css/tcklarna_style.css')}]
 
