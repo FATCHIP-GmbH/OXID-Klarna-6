@@ -84,7 +84,7 @@ class KlarnaOrderManagementClientTest extends ModuleUnitTestCase
 
         $response->status_code = $code;
 
-        $this->setExpectedException($expectedException, $expectedMessage);
+        !$expectedException ?: $this->expectException($expectedException);
         $result = $method->invokeArgs($klarnaOrderManagementClient, [$response, __CLASS__, __METHOD__]);
 
         if ($code === 200) {//assert only for status code 200

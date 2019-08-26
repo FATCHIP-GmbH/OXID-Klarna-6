@@ -35,7 +35,6 @@ use TopConcepts\Klarna\Model\KlarnaCountryList;
 use TopConcepts\Klarna\Model\KlarnaOrder;
 use TopConcepts\Klarna\Model\KlarnaOrderArticle;
 use TopConcepts\Klarna\Model\KlarnaPayment;
-use TopConcepts\Klarna\Model\KlarnaPaymentHelper;
 use TopConcepts\Klarna\Model\KlarnaUser;
 use TopConcepts\Klarna\Model\KlarnaUserPayment;
 
@@ -61,7 +60,6 @@ use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Article;
 use OxidEsales\Eshop\Application\Model\UserPayment;
-use OxidEsales\Eshop\Core\Email;
 use OxidEsales\Eshop\Core\ViewConfig;
 
 /**
@@ -259,7 +257,4 @@ $aModule = array(
     'events'      => array(
         'onActivate'   => '\TopConcepts\Klarna\Core\KlarnaInstaller::onActivate',
     ),
-    'files' => array(
-        'KlarnaPaymentHelper' => KlarnaPaymentHelper::class,
-    )
 );

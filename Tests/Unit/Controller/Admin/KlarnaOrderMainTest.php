@@ -91,11 +91,11 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase
         return [
             [
                 new KlarnaWrongCredentialsException(),
-                'Unerlaubte Anfrage. Prüfen Sie die Einstellungen des Klarna Moduls und die Merchant ID sowie das zugehörige Passwort',
+                'KLARNA_UNAUTHORIZED_REQUEST',
             ],
             [
                 new KlarnaOrderNotFoundException(),
-                'Diese Bestellung konnte bei Klarna im System nicht gefunden werden. Änderungen an den Bestelldaten werden daher nicht an Klarna übertragen.',
+                'KLARNA_ORDER_NOT_FOUND',
             ],
             [new StandardException('test'), 'test'],
 
@@ -330,7 +330,8 @@ class KlarnaOrderMainTest extends ModuleUnitTestCase
     {
         $this->setOrder();
         $controller = $this->createStub(KlarnaOrderMain::class, ['getEditObjectId' => 'test']);
-        $this->setExpectedException(KlarnaWrongCredentialsException::class, 'KLARNA_UNAUTHORIZED_REQUEST');
+        $this->expectException(KlarnaWrongCredentialsException::class);
+        $this->expectExceptionMessage('KLARNA_UNAUTHORIZED_REQUEST');
         $controller->retrieveKlarnaOrder();
     }
 }

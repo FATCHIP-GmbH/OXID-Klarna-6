@@ -258,8 +258,8 @@ class KlarnaBasketTest extends ModuleUnitTestCase
         /** @var Basket|KlarnaBasket $oBasket */
         $oBasket = oxNew(Basket::class);
         $this->setUpBasket($oBasket, $ids);
+        $this->expectException(KlarnaBasketTooLargeException::class);
 
-        $this->setExpectedException(KlarnaBasketTooLargeException::class);
         $oBasket->getKlarnaOrderLines();
     }
 

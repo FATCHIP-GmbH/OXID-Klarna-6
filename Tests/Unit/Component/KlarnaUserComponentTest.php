@@ -38,7 +38,10 @@ class KlarnaUserComponentTest extends ModuleUnitTestCase
      */
     public function testLogin_noredirect($klMode, $isEnabledPrivateSales, $isKlarnaController, $redirectUrl)
     {
-        $this->getConfig()->saveShopConfVar(null, 'sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'tcklarna');
+        $this->setRequestParameter('lgn_usr', 'xxx');
+        $this->setRequestParameter('lgn_pwd', 'xxx');
+
+        $this->getConfig()->saveShopConfVar(null, 'sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'module:tcklarna');
 
         $cmpUser = $this->getMock(UserComponent::class, ['klarnaRedirect']);
         $cmpUser->expects($this->any())->method('klarnaRedirect')->willReturn($isKlarnaController);
@@ -72,7 +75,7 @@ class KlarnaUserComponentTest extends ModuleUnitTestCase
      */
     public function testChangeuser_testvalues($klMode, $showShippingAddress, $resetResult, $showShippingAddressResult, $addressIdResult)
     {
-        $this->getConfig()->saveShopConfVar(null, 'sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'tcklarna');
+        $this->getConfig()->saveShopConfVar(null, 'sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'module:tcklarna');
         $this->setRequestParameter('blshowshipaddress', $showShippingAddress);
         $this->setRequestParameter('oxaddressid', $addressIdResult);
 
@@ -99,7 +102,7 @@ class KlarnaUserComponentTest extends ModuleUnitTestCase
         UtilsObject::setClassInstance(ViewConfig::class, $oViewConfig);
 
         $baseController = $this->getMock(BaseController::class, ['getDynUrlParams']);
-        $userComponent  = $this->getMock(UserComponent::class, ['klarnaRedirect', 'getParent']);
+        $userComponent  = $this->getMock(UserComponent::class, ['klarnaRedirect', 'getDynUrlParams', 'getParent']);
         $userComponent->expects($this->any())->method('getParent')->willReturn($baseController);
         $userComponent->expects($this->any())->method('getDynUrlParams')->willReturn('dyna');
         $userComponent->expects($this->any())->method('klarnaRedirect')->willReturn($isKlarnaRedirect);

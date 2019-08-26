@@ -1,17 +1,21 @@
 <phpunit backupGlobals="true"
          backupStaticAttributes="false"
+         bootstrap="/var/www/oxideshop/vendor/oxid-esales/testing-library/bootstrap.php"
          cacheTokens="true"
-         colors="false"
+         colors="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          forceCoversAnnotation="false"
          mapTestClassNameToCoveredClassName="false"
+         printerClass="PHPUnit\TextUI\ResultPrinter"
          processIsolation="false"
          stopOnError="false"
          stopOnFailure="false"
          stopOnIncomplete="false"
          stopOnSkipped="false"
+         testSuiteLoaderClass="PHPUnit\Runner\StandardTestSuiteLoader"
+         beStrictAboutTestsThatDoNotTestAnything="false"
          verbose="false">
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">

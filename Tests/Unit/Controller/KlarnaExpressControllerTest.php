@@ -400,7 +400,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
 
         $this->assertEquals('tcklarna_checkout.tpl', $result);
 
-        $keController = $this->getMock(KlarnaExpressController::class, ['getConfig', 'rebuildFakeUser']);
+        $keController = $this->getMock(KlarnaExpressController::class, ['getKlarnaClient', 'getConfig', 'rebuildFakeUser']);
 
         $checkoutClient = $this->getMock(KlarnaCheckoutClient::class, ['createOrUpdateOrder']);
         $checkoutClient->expects($this->any())->method('createOrUpdateOrder')
