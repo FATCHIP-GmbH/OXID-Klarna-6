@@ -14,13 +14,12 @@ use OxidEsales\Eshop\Core\Config;
 use OxidEsales\PayPalModule\Controller\FrontendController;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
-class KlarnaServiceMenuTest extends ModuleUnitTestCase
-{
-    public function testInit()
-    {
+class KlarnaServiceMenuTest extends ModuleUnitTestCase {
+    public function testInit() {
         $topViewAny = $this->createStub(FrontendController::class, ['getClassName' => 'test', 'isKlarnaFakeUser' => true]);
-        $config = $this->createStub(Config::class, ['getTopActiveView' => $topViewAny]);
-        $serviceMenuMock = $this->getMock(ServiceMenu::class, ['getConfig']);
+        $config = $this->getMockBuilder(Config::class)->setMethods(['getTopActiveView'])->getMock()
+            ->expects($this->once())->method('getTopActiveView')->willReturn($topViewAny);
+        $serviceMenuMock = $this->getMockBuilder(ServiceMenu::class)->setMethods(['getConfig'])->getMock();
         $serviceMenuMock->expects($this->any())->method('getConfig')->willReturn($config);
         $serviceMenuMock->init();
 
@@ -29,8 +28,9 @@ class KlarnaServiceMenuTest extends ModuleUnitTestCase
 
 
         $topViewKlarnaExpress = $this->createStub(FrontendController::class, ['getClassName' => 'klarnaexpress', 'isKlarnaFakeUser' => true]);
-        $config = $this->createStub(Config::class, ['getTopActiveView' => $topViewKlarnaExpress]);
-        $serviceMenuMock = $this->getMock(ServiceMenu::class, ['getConfig']);
+        $config = $this->getMockBuilder(Config::class)->setMethods(['getTopActiveView'])->getMock()
+            ->expects($this->once())->method('getTopActiveView')->willReturn($topViewKlarnaExpress);
+        $serviceMenuMock = $this->getMockBuilder(ServiceMenu::class)->setMethods(['getConfig'])->getMock();
         $serviceMenuMock->expects($this->any())->method('getConfig')->willReturn($config);
         $serviceMenuMock->init();
 

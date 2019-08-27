@@ -572,7 +572,7 @@ class KlarnaExpressController extends FrontendController
     protected function checkSsl($oRequest)
     {
         $blAlreadyRedirected = $oRequest->getRequestEscapedParameter('sslredirect') == 'forced';
-        $oConfig             = $this->getConfig();
+        $oConfig             = Registry::getConfig();
         $oUtils              = Registry::getUtils();
         if ($oConfig->getCurrentShopURL() != $oConfig->getSSLShopURL() && !$blAlreadyRedirected) {
             $sUrl = $oConfig->getShopSecureHomeUrl() . 'sslredirect=forced&cl=KlarnaExpress';

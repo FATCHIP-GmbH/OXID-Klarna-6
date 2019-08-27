@@ -11,14 +11,10 @@ use OxidEsales\Eshop\Core\Field;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 use OxidEsales\Eshop\Core\UtilsObject;
 
-class KlarnaOrderListTest extends ModuleUnitTestCase
-{
-    protected function setOrder($exception = null)
-    {
-        $order = $this->getMock(
-            Order::class,
-            ['isLoaded', 'cancelKlarnaOrder', 'save', 'isKlarnaOrder', 'isDerived', 'delete']
-        );
+class KlarnaOrderListTest extends ModuleUnitTestCase {
+    protected function setOrder($exception = null) {
+        $order = $this->getMockBuilder(Order::class)
+            ->setMethods(['isLoaded', 'cancelKlarnaOrder', 'save', 'isKlarnaOrder', 'isDerived', 'delete'])->getMock();
         $order->expects($this->any())->method('isLoaded')->willReturn(true);
         $order->expects($this->any())->method('save')->willReturn(true);
         $order->expects($this->any())->method('isKlarnaOrder')->willReturn(true);
@@ -41,23 +37,30 @@ class KlarnaOrderListTest extends ModuleUnitTestCase
      * @dataProvider stornoAndDeleteDataProvider
      * @param $method
      */
-    public function testStornoAndDelete($method)
-    {
+    public function testStornoAndDelete($method) {
         $order = $this->setOrder();
 
-        $controller = $this->createStub(OrderList::class, ['getEditObjectId' => 'test', 'cancelOrder' => true, 'resetContentCache' => true, 'init' => true]);
+        $controller = $this->getMockBuilder(OrderList::class)
+            ->setMethods(['getEditObjectId', 'cancelOrder', 'init'])->getMock();
+        $controller->expects($this->once())->method('getEditObjectId')->willReturn('test');
+        $controller->expects($this->once())->method('cancelOrder')->willReturn(true);
+        $controller->expects($this->once())->method('init')->willReturn(true);
 
         $this->assertFalse($order->oxorder__tcklarna_sync);
         $controller->$method();
         $this->assertEquals(new Field(1), $order->oxorder__tcklarna_sync);
 
         if ($method == 'storno') {
-            $mockException = $this->getMock(StandardException::class, [], ['is canceled.']);
+            $mockException = $this->getMockBuilder(StandardException::class)
+                ->setConstructorArgs(['is canceled.'])
+                ->getMock();
             $this->setOrder($mockException);
             $controller->storno();
         }
 
-        $mockException = $this->getMock(StandardException::class, [], ['test']);
+        $mockException = $this->getMockBuilder(StandardException::class)
+            ->setConstructorArgs(['test'])
+            ->getMock();
         $this->setOrder($mockException);
         $controller->$method();
 
@@ -67,8 +70,7 @@ class KlarnaOrderListTest extends ModuleUnitTestCase
 
     }
 
-    public function stornoAndDeleteDataProvider()
-    {
+    public function stornoAndDeleteDataProvider() {
         return [
             ['storno'],
             ['deleteEntry'],

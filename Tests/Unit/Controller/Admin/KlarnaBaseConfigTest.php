@@ -11,29 +11,26 @@ use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
  * Class KlarnaBaseConfigTest
  * @package TopConcepts\Klarna\Tests\Unit\Controller\Admin
  */
-class KlarnaBaseConfigTest extends ModuleUnitTestCase
-{
-    public function testGetAllActiveOxPaymentIds()
-    {
-        $stub   = $this->createStub(KlarnaBaseConfig::class, ['_authorize' => true]);
+class KlarnaBaseConfigTest extends ModuleUnitTestCase {
+    public function testGetAllActiveOxPaymentIds() {
+        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['_authorize'])->getMock()
+            ->expects($this->once())->method('_authorize')->willReturn(true);
         $result = $stub->getAllActiveOxPaymentIds();
         $this->assertInstanceOf(ResultSet::class, $result);
     }
 
-    public function testRender()
-    {
-        $stub           = $this->createStub(KlarnaBaseConfig::class, [
-            '_authorize'         => true,
-            'getEditObjectId'    => 'test',
-            'getViewDataElement' => [
-                'aKlarnaDesign' => 'color_button =&gt; #D5FF4D
-color_button_text =&gt; #40FF53
-color_checkbox =&gt; #FF40DF
-color_checkbox_checkmark =&gt; #FFC387
-color_header =&gt; #FF7AC6
-color_link =&gt; #FFA200
-radius_border =&gt; 4px',
-            ],
+    public function testRender() {
+        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['_authorize'])->getMock();
+        $stub->expects($this->once())->method('_authorize')->willReturn(true);
+        $stub->expects($this->once())->method('getEditObjectId')->willReturn('test');
+        $stub->expects($this->once())->method('getViewDataElement')->willReturn(['aKlarnaDesign' =>
+                                                                                     'color_button =&gt; #D5FF4D
+            color_button_text =&gt; #40FF53
+            color_checkbox =&gt; #FF40DF
+            color_checkbox_checkmark =&gt; #FFC387
+            color_header =&gt; #FF7AC6
+            color_link =&gt; #FFA200
+            radius_border =&gt; 4px',
         ]);
         $expectedResult = [
             'aKlarnaDesign' =>
@@ -54,34 +51,36 @@ radius_border =&gt; 4px',
         $this->assertEquals($expectedResult, $result);
     }
 
-    public function testSave()
-    {
-        $stub = $this->createStub(KlarnaBaseConfig::class, ['_authorize' => true]);
+    public function testSave() {
+        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['_authorize'])->getMock()
+            ->expects($this->once())->method('_authorize')->willReturn(true);
         $stub->init();
         $stub->save();
         $this->assertNull($stub->getParameter('confaarrs'));
 
-        $stub = $this->createStub(KlarnaBaseConfig::class, ['_authorize' => true, 'getParameter' => ['test' => 'test']]);
+        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['_authorize'])->getMock();
+        $stub->expects($this->once())->method('_authorize')->willReturn(true);
+        $stub->expects($this->once())->method('getParameter')->willReturn(['test' => 'test']);
         $this->setProtectedClassProperty($stub, '_aConfParams', ['test' => 'test']);
         $stub->init();
         $stub->save();
 
         $this->assertEquals(['test' => 'test'], $stub->getParameter('confaarrs'));
-
-        $stub = $this->createStub(KlarnaBaseConfig::class, ['_authorize' => true, 'getParameter' => ['test' => 'test']]);
+        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['_authorize'])->getMock();
+        $stub->expects($this->once())->method('_authorize')->willReturn(true);
+        $stub->expects($this->once())->method('getParameter')->willReturn(['test' => 'test']);
         $this->setProtectedClassProperty($stub, '_aConfParams', ['test' => 'test']);
         $stub->init();
         $stub->save();
     }
 
-    public function testGetFlippedLangArray()
-    {
-        $stub   = $this->createStub(KlarnaBaseConfig::class, ['init' => true]);
+    public function testGetFlippedLangArray() {
+        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['init'])->getMock();
         $result = $stub->getFlippedLangArray();
-        $de     = $result['de'];
-        $en     = $result['en'];
+        $de = $result['de'];
+        $en = $result['en'];
 
-        $deExpected           = $this->getLangExpected();
+        $deExpected = $this->getLangExpected();
         $deExpected->selected = 0;
         $this->assertEquals($de, $deExpected);
 
@@ -91,36 +90,33 @@ radius_border =&gt; 4px',
 
     }
 
-    public function testSetParameter()
-    {
-        $stub = $this->createStub(KlarnaBaseConfig::class, ['init' => true]);
+    public function testSetParameter() {
+        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['init'])->getMock();
         $stub->setParameter('test', 'test');
         $this->assertEquals($stub->getParameter('test'), 'test');
     }
 
-    public function testInit()
-    {
-        $stub = $this->createStub(KlarnaBaseConfig::class, ['_authorize' => true]);
+    public function testInit() {
+        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['_authorize'])->getMock();
+        $stub->expects($this->once())->method('_authorize')->willReturn(true);
         $this->assertNull($this->getProtectedClassProperty($stub, '_oRequest'));
         $stub->init();
         $this->assertNotEmpty($this->getProtectedClassProperty($stub, '_oRequest'));
     }
 
-    public function testGetManualDownloadLink()
-    {
-        $stub   = $this->createStub(KlarnaBaseConfig::class, ['init' => true]);
+    public function testGetManualDownloadLink() {
+        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['init'])->getMock();
         $result = $stub->getManualDownloadLink();
         $this->assertStringStartsWith('https://', $result);
     }
 
-    public function testGetLangs()
-    {
-        $stub   = $this->createStub(KlarnaBaseConfig::class, ['init' => true]);
+    public function testGetLangs() {
+        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['init'])->getMock();
         $result = json_decode(html_entity_decode($stub->getLangs()));
-        $de     = $result[0];
-        $en     = $result[1];
+        $de = $result[0];
+        $en = $result[1];
 
-        $deExpected           = $this->getLangExpected();
+        $deExpected = $this->getLangExpected();
         $deExpected->selected = 0;
         $this->assertEquals($de, $deExpected);
 
@@ -130,8 +126,7 @@ radius_border =&gt; 4px',
 
     }
 
-    protected function getLangExpected($lang = 'de')
-    {
+    protected function getLangExpected($lang = 'de') {
         if ($lang == 'de') {
             return (object)[
                 'id'     => 0,
@@ -155,9 +150,8 @@ radius_border =&gt; 4px',
         }
     }
 
-    public function testGetMultiLangData()
-    {
-        $confstrs       = [
+    public function testGetMultiLangData() {
+        $confstrs = [
             'iKlarnaActiveCheckbox'            => '3',
             'iKlarnaValidation'                => '2',
             'sKlarnaActiveMode'                => 'KCO',
@@ -183,9 +177,8 @@ radius_border =&gt; 4px',
             'confstrs[sKlarnaAnonymizedProductTitle_EN]' => 'Product name',
         ];
 
-        $controller = $this->createStub(KlarnaBaseConfig::class, [
-            'getViewDataElement' => $confstrs,
-        ]);
+        $controller = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['getViewDataElement'])->getMock()
+            ->expects($this->once())->method('getViewDataElement')->willReturn($confstrs);
         $this->setProtectedClassProperty($controller, 'MLVars', ['sKlarnaAnonymizedProductTitle_']);
         $methodReflection = new \ReflectionMethod(KlarnaBaseConfig::class, 'getMultiLangData');
         $methodReflection->setAccessible(true);

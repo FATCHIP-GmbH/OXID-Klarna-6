@@ -3,6 +3,7 @@
 namespace TopConcepts\Klarna\Tests\Unit\Controller\Admin;
 
 use OxidEsales\Eshop\Core\Module\Module;
+use TopConcepts\Klarna\Controller\Admin\KlarnaPaymentMain;
 use TopConcepts\Klarna\Controller\Admin\KlarnaStart;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 use OxidEsales\Eshop\Core\UtilsObject;
@@ -20,11 +21,10 @@ class KlarnaStartTest extends ModuleUnitTestCase
 
     public function testGetKlarnaModuleInfo()
     {
-        $module = $this->getMock(Module::class, ['getInfo']);
-
+        $module = $this->getMockBuilder(Module::class)->setMethods(['getInfo'])->getMock();
         $module->expects($this->once())
             ->method('getInfo')
-            ->will($this->returnValue('1'));
+            ->willReturn('1');
 
         UtilsObject::setClassInstance(Module::class, $module);
         $start = oxNew(KlarnaStart::class);

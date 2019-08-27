@@ -14,7 +14,8 @@ class KlarnaPaymentMainTest extends ModuleUnitTestCase
      */
     public function testRender($id, $expected)
     {
-        $stub = $this->createStub(KlarnaPaymentMain::class, ['getEditObjectid' => $id]);
+        $stub = $this->getMockBuilder(KlarnaPaymentMain::class)->setMethods(['getEditObjectid'])->getMock()
+            ->expects($this->once())->method('getEditObjectid')->willReturn($id);
         $stub->render();
         $result = $stub->getViewData()['isKlarnaPayment'];
         $this->assertEquals($expected, $result);

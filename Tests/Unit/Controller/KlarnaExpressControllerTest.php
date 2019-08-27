@@ -26,35 +26,31 @@ use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
  * @package TopConcepts\Klarna\Testes\Unit\Controllers
  * @covers \TopConcepts\Klarna\Controller\KlarnaExpressController
  */
-class KlarnaExpressControllerTest extends ModuleUnitTestCase
-{
+class KlarnaExpressControllerTest extends ModuleUnitTestCase {
     /**
      * @dataProvider getBreadCrumbDataProvider
      * @param $iLang
      * @param $expectedResult
      */
-    public function testGetBreadCrumb($iLang, $expectedResult)
-    {
+    public function testGetBreadCrumb($iLang, $expectedResult) {
         $this->setLanguage($iLang);
         $expressController = oxNew(KlarnaExpressController::class);
-        $result            = $expressController->getBreadCrumb();
+        $result = $expressController->getBreadCrumb();
 
         $this->assertEquals($result[0]['title'], $expectedResult['title']);
     }
 
-    public function getBreadCrumbDataProvider()
-    {
+    public function getBreadCrumbDataProvider() {
         return [
             [0, ['title' => 'Kasse']],
             [1, ['title' => 'Checkout']],
         ];
     }
 
-    public function testGetKlarnaModalFlagCountries()
-    {
-        $countryList       = ['DE', 'AT', 'CH'];
+    public function testGetKlarnaModalFlagCountries() {
+        $countryList = ['DE', 'AT', 'CH'];
         $expressController = oxNew(KlarnaExpressController::class);
-        $result            = $expressController->getKlarnaModalFlagCountries();
+        $result = $expressController->getKlarnaModalFlagCountries();
 
         $this->assertEquals(3, count($result));
         foreach ($result as $index => $country) {
@@ -71,8 +67,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
      * @param $userId
      * @param $expectedResult
      */
-    public function testGetFormattedUserAddresses($isFake, $userId, $expectedResult)
-    {
+    public function testGetFormattedUserAddresses($isFake, $userId, $expectedResult) {
         $oUser = $this->getMock(User::class, ['isFake', 'getId']);
         $oUser->expects($this->once())
             ->method('isFake')->willReturn($isFake);
@@ -88,8 +83,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
 
     }
 
-    public function userDataProvider()
-    {
+    public function userDataProvider() {
         $address = ["41b545c65fe99ca2898614e563a7108a" => "Gregory Dabrowski, Karnapp 25, 21079 Hamburg"];
 
         return [
@@ -99,8 +93,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
         ];
     }
 
-    public function testSetKlarnaDeliveryAddress()
-    {
+    public function testSetKlarnaDeliveryAddress() {
         $this->setRequestParameter('klarna_address_id', 'delAddressId');
         $kcoController = new KlarnaExpressController();
         $kcoController->init();
@@ -111,18 +104,16 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
         $this->assertTrue($this->getSessionParam('klarna_checkout_order_id') === null);
     }
 
-    public function testGetKlarnaModalOtherCountries()
-    {
+    public function testGetKlarnaModalOtherCountries() {
         $kcoController = new KlarnaExpressController();
-        $result        = $kcoController->getKlarnaModalOtherCountries();
+        $result = $kcoController->getKlarnaModalOtherCountries();
 
         $this->assertEquals(1, count($result));
     }
 
-    public function testGetActiveShopCountries()
-    {
+    public function testGetActiveShopCountries() {
         $kcoController = new KlarnaExpressController();
-        $result        = $kcoController->getActiveShopCountries();
+        $result = $kcoController->getActiveShopCountries();
 
         $this->assertEquals(6, count($result));
 
@@ -136,8 +127,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
         $this->assertEquals(0, count($active));
     }
 
-    public function testInit_KP_mode()
-    {
+    public function testInit_KP_mode() {
         $this->setModuleMode('KP');
         $kcoController = new KlarnaExpressController();
         $kcoController->init();
@@ -145,8 +135,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
         $this->assertEquals($this->getConfig()->getShopSecureHomeUrl() . 'cl=order', \oxUtilsHelper::$sRedirectUrl);
     }
 
-    public function testInit_reset()
-    {
+    public function testInit_reset() {
         $this->setModuleMode('KCO');
         $this->setSessionParam('klarna_checkout_order_id', 'fake_id');
         $this->setSessionParam('resetKlarnaSession', 1);
@@ -158,12 +147,11 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
     }
 
 
-    public function initPopupDataProvider()
-    {
-        $oUser                      = oxNew(User::class);
+    public function initPopupDataProvider() {
+        $oUser = oxNew(User::class);
         $oUser->oxuser__oxcountryid = new Field('a7c40f6320aeb2ec2.72885259');
-        $baseUrl                    = $this->getConfig()->getSSLShopURL() . 'index.php?cl=KlarnaExpress';
-        $nonKCOUrl                  = $this->getConfig()->getSSLShopURL() . 'index.php?cl=user&non_kco_global_country=AF';
+        $baseUrl = $this->getConfig()->getSSLShopURL() . 'index.php?cl=KlarnaExpress';
+        $nonKCOUrl = $this->getConfig()->getSSLShopURL() . 'index.php?cl=user&non_kco_global_country=AF';
 
         return [
             ['AT', null, $baseUrl],
@@ -179,8 +167,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
      * @param $oUser
      * @param $expectedKlarnaSessionId
      */
-    public function testInit_popupSelection($selectedCountry, $oUser, $redirectUrl)
-    {
+    public function testInit_popupSelection($selectedCountry, $oUser, $redirectUrl) {
         $this->setSessionParam('klarna_checkout_order_id', 'fake-value');
         $this->setRequestParameter('selected-country', $selectedCountry);
         $this->setSessionParam('blshowshipaddress', 1);
@@ -211,24 +198,22 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
      * @param $expectedResult
      * @dataProvider testCheckSslDataProvider
      */
-    public function testCheckSsl($sslredirect, $getCurrentShopURL, $expectedResult)
-    {
-        $oRequest = $this->createStub(Request::class, ['getRequestEscapedParameter' => $sslredirect]);
-
-        $oConfig = $this->getMock(Config::class, ['getCurrentShopURL']);
+    public function testCheckSsl($sslredirect, $getCurrentShopURL, $expectedResult) {
+        $oRequest = $this->getMockBuilder(Request::class)->setMethods(['getRequestEscapedParameter'])->getMock();
+        $oRequest->expects($this->once())->method('getRequestEscapedParameter')->willReturn($sslredirect);
+        $oConfig = $this->getMockBuilder(Config::class)->setMethods(['getCurrentShopURL', 'getSSLShopURL'])->getMock();
         $oConfig->expects($this->once())->method('getCurrentShopURL')->willReturn($getCurrentShopURL);
+        $oConfig->expects($this->once())->method('getSSLShopURL')->willReturn(str_replace('http://', 'https://', $getCurrentShopURL));
+        \OxidEsales\Eshop\Core\Registry::set(\OxidEsales\Eshop\Core\Config::class, $oConfig);
 
-        $kcoController = $this->getMock(KlarnaExpressController::class, ['getConfig']);
-        $kcoController->expects($this->any())
-            ->method('getConfig')->willReturn($oConfig);
+        $kcoController = $this->getMockBuilder(KlarnaExpressController::class)->setMethods(['getConfig'])->getMock();
 
         $kcoController->checkSsl($oRequest);
 
         $this->assertEquals($expectedResult, \oxUtilsHelper::$sRedirectUrl);
     }
 
-    public function testCheckSslDataProvider()
-    {
+    public function testCheckSslDataProvider() {
         $forceSslUrl = $this->getConfig()->getSSLShopURL() . 'index.php?sslredirect=forced&cl=KlarnaExpress';
 
         return [
@@ -239,12 +224,11 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
         ];
     }
 
-    public function renderDataProvider()
-    {
-        $ssl_url  = $this->getConfig()->getSSLShopURL();
-        $oUser    = oxNew(User::class);
+    public function renderDataProvider() {
+        $ssl_url = $this->getConfig()->getSSLShopURL();
+        $oUser = oxNew(User::class);
         $oUser->setType(KlarnaUser::LOGGED_IN);
-        $email    = 'info@topconcepts.de';
+        $email = 'info@topconcepts.de';
         $apiCreds = [];
 
         return [
@@ -261,8 +245,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
      * @param $email
      * @param $expectedShowPopUp
      */
-    public function testRender_noShippingSet($currentUrl, $oUser, $email, $expectedShowPopUp)
-    {
+    public function testRender_noShippingSet($currentUrl, $oUser, $email, $expectedShowPopUp) {
         $oBasket = $this->prepareBasketWithProduct();
         $this->getSession()->setBasket($oBasket);
         $this->setSessionParam('sShipSet', '1b842e732a23255b1.91207751');
@@ -299,10 +282,9 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
         $this->assertEquals($expectedShowPopUp, $methodReflection->getValue($kcoController), "Show popup mismatch.");
     }
 
-    public function testRenderBlockIframeRender()
-    {
+    public function testRenderBlockIframeRender() {
         $this->setRequestParameter('sslredirect', 'forced');
-        $url     = $this->getConfig()->getCurrentShopURL();
+        $url = $this->getConfig()->getCurrentShopURL();
         $oConfig = $this->getMock(Config::class, ['getCurrentShopURL']);
         $oConfig->expects($this->once())->method('getCurrentShopURL')->willReturn($url);
 
@@ -313,10 +295,9 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
         $this->assertEquals('tcklarna_checkout.tpl', $result);
     }
 
-    public function testRenderException()
-    {
+    public function testRenderException() {
         $this->setRequestParameter('sslredirect', 'forced');
-        $url     = $this->getConfig()->getCurrentShopURL();
+        $url = $this->getConfig()->getCurrentShopURL();
         $oConfig = $this->getMock(Config::class, ['getCurrentShopURL']);
         $oConfig->expects($this->once())->method('getCurrentShopURL')->willReturn($url);
 
@@ -330,16 +311,14 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
         $this->assertEquals('tcklarna_checkout.tpl', $result);
     }
 
-    public function testGetKlarnaClient()
-    {
+    public function testGetKlarnaClient() {
         $keController = $this->createStub(KlarnaExpressController::class, ['init' => null]);
-        $result       = $keController->getKlarnaClient('DE');
+        $result = $keController->getKlarnaClient('DE');
 
         $this->assertInstanceOf(KlarnaCheckoutClient::class, $result);
     }
 
-    public function testShowCountryPopup()
-    {
+    public function testShowCountryPopup() {
         $this->setSessionParam('sCountryISO', 'test');
         $methodReflection = new \ReflectionMethod(KlarnaExpressController::class, 'showCountryPopup');
         $methodReflection->setAccessible(true);
@@ -362,8 +341,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
         $this->assertTrue($result);
     }
 
-    public function testRenderWrongMerchantUrls()
-    {
+    public function testRenderWrongMerchantUrls() {
         $this->setRequestParameter('sslredirect', 'forced');
         $url = $this->getConfig()->getCurrentShopURL();
 
@@ -385,8 +363,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
     /**
      * @throws StandardException
      */
-    public function testRenderKlarnaClient()
-    {
+    public function testRenderKlarnaClient() {
         $this->setRequestParameter('sslredirect', 'forced');
         $url = $this->getConfig()->getCurrentShopURL();
 
@@ -420,8 +397,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
      * @param $sCountryISO
      * @param $expectedResult
      */
-    public function testLastResortRenderRedirect($sCountryISO, $expectedResult)
-    {
+    public function testLastResortRenderRedirect($sCountryISO, $expectedResult) {
         $mockObj = $this->createStub(\stdClass::class, [
             'createOrUpdateOrder' => true,
         ]);
@@ -431,7 +407,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
             'initOrder'      => $mockObj,
             'getHtmlSnippet' => true,
         ]);
-        $controller   = $this->createStub(KlarnaExpressController::class, [
+        $controller = $this->createStub(KlarnaExpressController::class, [
             'getKlarnaOrder'   => $oKlarnaOrder,
             'checkSsl'         => null,
             'showCountryPopup' => true,
@@ -443,8 +419,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
         $this->assertEquals($expectedResult, \oxUtilsHelper::$sRedirectUrl);
     }
 
-    public function testLastResortRenderRedirectDataProvider()
-    {
+    public function testLastResortRenderRedirectDataProvider() {
         return [
             ['AF', Registry::getConfig()->getShopUrl() . 'index.php?cl=user'],
             ['DE', null],
@@ -456,8 +431,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
      * @param $resetCountry
      * @param $expectedResult
      */
-    public function testHandleLoggedInUserWithNonKlarnaCountry($resetCountry, $expectedResult)
-    {
+    public function testHandleLoggedInUserWithNonKlarnaCountry($resetCountry, $expectedResult) {
         $oUser = $this->createStub(User::class, [
             'getUserCountryISO2' => 'AF',
         ]);
@@ -482,8 +456,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
     /**
      * @return array
      */
-    public function testHandleLoggedInUserWithNonKlarnaCountryDataProvider()
-    {
+    public function testHandleLoggedInUserWithNonKlarnaCountryDataProvider() {
         return [
             [1, null],
             [null, 'cl=user&non_kco_global_country=AF'],
@@ -493,8 +466,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
     /**
      *
      */
-    public function testResolveFakeUserRegistered()
-    {
+    public function testResolveFakeUserRegistered() {
         $mockUser = $this->getMock(User::class, ['checkUserType']);
         $mockUser->oxuser__oxpassword = new Field('testPass');
         $mockUser->expects($this->once())->method('checkUserType');
@@ -510,8 +482,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
         $this->assertInstanceOf(User::class, $result);
     }
 
-    public function testResolveFakeUserNew()
-    {
+    public function testResolveFakeUserNew() {
         $session = $this->createStub(\stdClass::class, ['getVariable' => 'test@email']);
 
         $controller = $this->createStub(KlarnaExpressController::class, [
@@ -526,15 +497,14 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase
     /**
      *
      */
-    public function testRebuildFakeUser()
-    {
+    public function testRebuildFakeUser() {
         $orderId = 'testId';
         $email = 'test@mail.com';
         $oUser = $this->createStub(User::class, []);
         $oUser->oxuser__oxpassword = new Field('');
         $oBasket = new \stdClass();
         $aOrderData = [
-            'order_id' => $orderId,
+            'order_id'        => $orderId,
             'billing_address' => ['email' => $email]
         ];
         $oClient = $this->createStub(KlarnaCheckoutClient::class, ['getOrder' => $aOrderData]);
