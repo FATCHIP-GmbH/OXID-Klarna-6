@@ -27,7 +27,8 @@ class KlarnaEmdAdminTest extends ModuleUnitTestCase
     {
         $payments = ['klarna_checkout' => ['oxpayments__tcklarna_paymentoption' => 'other']];
 
-        $oRequest = $this->createStub(Request::class, ['getRequestEscapedParameter' => $payments]);
+        $oRequest = $this->getMockBuilder(Request::class)->setMethods(['getRequestEscapedParameter'])->getMock();
+        $oRequest->expects($this->once())->method('getRequestEscapedParameter')->willReturn($payments);
         $emd = oxNew(KlarnaEmdAdmin::class);
         $this->setProtectedClassProperty($emd, '_oRequest',  $oRequest);
 

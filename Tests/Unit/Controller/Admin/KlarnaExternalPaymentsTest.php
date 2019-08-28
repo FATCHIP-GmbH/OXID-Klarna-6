@@ -9,39 +9,36 @@ use TopConcepts\Klarna\Controller\Admin\KlarnaExternalPayments;
 use TopConcepts\Klarna\Core\KlarnaConsts;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
-class KlarnaExternalPaymentsTest extends ModuleUnitTestCase
-{
+class KlarnaExternalPaymentsTest extends ModuleUnitTestCase {
 
-    public function testRender()
-    {
+    public function testRender() {
         $controller = new KlarnaExternalPayments();
         $this->setModuleConfVar('sKlarnaActiveMode', 'test');
         $result = $controller->render();
 
         $viewData = $controller->getViewData();
 
-        $this->assertEquals('tcklarna_external_payments.tpl',$result);
+        $this->assertEquals('tcklarna_external_payments.tpl', $result);
         $this->assertEquals('test', $viewData['mode']);
         $this->assertNotEmpty($viewData['activePayments']);
         $this->assertEquals(KlarnaConsts::getKlarnaExternalPaymentNames(), $viewData['paymentNames']);
 
     }
 
-    public function testGetMultilangUrls()
-    {
+    public function testGetMultilangUrls() {
         $controller = new KlarnaExternalPayments();
         $result = $controller->getMultilangUrls();
         $this->assertNotEmpty($result);
         $this->assertJson($result);
     }
 
-    public function testSave()
-    {
+    public function testSave() {
         $payments = ['klarna_pay_later' => ['oxpayments__tcklarna_paymentoption' => 'other']];
 
-        $oRequest = $this->createStub(Request::class, ['getRequestEscapedParameter' => $payments]);
+        $oRequest = $this->getMockBuilder(Request::class)->setMethods(['getRequestEscapedParameter'])->getMock();
+        $oRequest->expects($this->once())->method('getRequestEscapedParameter')->willReturn($payments);
         $extPayments = oxNew(KlarnaExternalPayments::class);
-        $this->setProtectedClassProperty($extPayments, '_oRequest',  $oRequest);
+        $this->setProtectedClassProperty($extPayments, '_oRequest', $oRequest);
 
         $extPayments->save();
 
