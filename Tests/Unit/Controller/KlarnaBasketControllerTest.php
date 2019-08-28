@@ -20,7 +20,7 @@ class KlarnaBasketControllerTest extends ModuleUnitTestCase
         $this->setRequestParameter('openAmazonLogin', true);
         $this->setRequestParameter('klarnaInvalid', true);
         $basketController = $this->getMockBuilder(KlarnaBasketController::class)->setMethods(['displayKlarnaValidationErrors'])->getMock();
-        $basket->expects($this->once())->method('displayKlarnaValidationErrors')->willReturn(true);
+        $basketController->expects($this->once())->method('displayKlarnaValidationErrors')->willReturn(true);
         $result = $basketController->render();
         $this->assertEquals('page/checkout/basket.tpl', $result);
     }

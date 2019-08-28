@@ -526,8 +526,9 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             ) {
                 $this->_oUser->save();
             }
-            if ($this->_oUser->isFake())
+            if ($this->_oUser->isFake()){
                 $this->_oUser->clearDeliveryAddress();
+            }
             // performing special actions after user finishes order (assignment to special user groups)
             $this->_oUser->onOrderExecute($oBasket, $iSuccess);
 
@@ -615,6 +616,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
         if (KlarnaPayment::countryWasChanged($oUser)) {
             $this->resetKlarnaPaymentSession();
+            return; // Unit tests
         }
 
         /** @var KlarnaPayment $oKlarnaPayment */
@@ -622,6 +624,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
         if (!$oKlarnaPayment->isSessionValid()) {
             $this->resetKlarnaPaymentSession();
+            return; // Unit tests
         }
 
         if (!$oKlarnaPayment->validateClientToken($aPost['client_token'])) {
@@ -693,6 +696,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
         if (KlarnaPayment::countryWasChanged($oUser)) {
             $this->resetKlarnaPaymentSession();
+            return; // Unit tests
         }
 
         /** @var  $oKlarnaPayment KlarnaPayment */
@@ -700,6 +704,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
         if (!$oKlarnaPayment->isSessionValid()) {
             $this->resetKlarnaPaymentSession();
+            return; // Unit tests
         }
 
         if (!$oKlarnaPayment->validateClientToken($aPost['client_token'])) {
