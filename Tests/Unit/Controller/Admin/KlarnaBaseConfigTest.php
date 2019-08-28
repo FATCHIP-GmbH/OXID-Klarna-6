@@ -13,16 +13,16 @@ use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
  */
 class KlarnaBaseConfigTest extends ModuleUnitTestCase {
     public function testGetAllActiveOxPaymentIds() {
-        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['_authorize'])->getMock()
-            ->expects($this->once())->method('_authorize')->willReturn(true);
+        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['_authorize'])->getMock();
+        $stub->expects($this->any())->method('_authorize')->willReturn(true);
         $result = $stub->getAllActiveOxPaymentIds();
         $this->assertInstanceOf(ResultSet::class, $result);
     }
 
     public function testRender() {
-        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['_authorize'])->getMock();
+        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['_authorize', 'getEditObjectId', 'getViewDataElement'])->getMock();
         $stub->expects($this->once())->method('_authorize')->willReturn(true);
-        $stub->expects($this->once())->method('getEditObjectId')->willReturn('test');
+        $stub->expects($this->any())->method('getEditObjectId')->willReturn('test');
         $stub->expects($this->once())->method('getViewDataElement')->willReturn(['aKlarnaDesign' =>
                                                                                      'color_button =&gt; #D5FF4D
             color_button_text =&gt; #40FF53
@@ -52,23 +52,23 @@ class KlarnaBaseConfigTest extends ModuleUnitTestCase {
     }
 
     public function testSave() {
-        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['_authorize'])->getMock()
-            ->expects($this->once())->method('_authorize')->willReturn(true);
+        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['_authorize'])->getMock();
+        $stub->expects($this->once())->method('_authorize')->willReturn(true);
         $stub->init();
         $stub->save();
         $this->assertNull($stub->getParameter('confaarrs'));
 
-        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['_authorize'])->getMock();
+        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['_authorize', 'getParameter', '_aConfParams'])->getMock();
         $stub->expects($this->once())->method('_authorize')->willReturn(true);
-        $stub->expects($this->once())->method('getParameter')->willReturn(['test' => 'test']);
+        $stub->expects($this->any())->method('getParameter')->willReturn(['test' => 'test']);
         $this->setProtectedClassProperty($stub, '_aConfParams', ['test' => 'test']);
         $stub->init();
         $stub->save();
 
         $this->assertEquals(['test' => 'test'], $stub->getParameter('confaarrs'));
-        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['_authorize'])->getMock();
+        $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['_authorize', 'getParameter', '_aConfParams'])->getMock();
         $stub->expects($this->once())->method('_authorize')->willReturn(true);
-        $stub->expects($this->once())->method('getParameter')->willReturn(['test' => 'test']);
+        $stub->expects($this->any())->method('getParameter')->willReturn(['test' => 'test']);
         $this->setProtectedClassProperty($stub, '_aConfParams', ['test' => 'test']);
         $stub->init();
         $stub->save();
@@ -76,6 +76,7 @@ class KlarnaBaseConfigTest extends ModuleUnitTestCase {
 
     public function testGetFlippedLangArray() {
         $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['init'])->getMock();
+        $stub->expects($this->once())->method('init')->willReturn(true);
         $result = $stub->getFlippedLangArray();
         $de = $result['de'];
         $en = $result['en'];
@@ -112,6 +113,7 @@ class KlarnaBaseConfigTest extends ModuleUnitTestCase {
 
     public function testGetLangs() {
         $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['init'])->getMock();
+        $stub->expects($this->once())->method('init')->willReturn(true);
         $result = json_decode(html_entity_decode($stub->getLangs()));
         $de = $result[0];
         $en = $result[1];
@@ -177,8 +179,8 @@ class KlarnaBaseConfigTest extends ModuleUnitTestCase {
             'confstrs[sKlarnaAnonymizedProductTitle_EN]' => 'Product name',
         ];
 
-        $controller = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['getViewDataElement'])->getMock()
-            ->expects($this->once())->method('getViewDataElement')->willReturn($confstrs);
+        $controller = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['getViewDataElement'])->getMock();
+        $controller->expects($this->once())->method('getViewDataElement')->willReturn($confstrs);
         $this->setProtectedClassProperty($controller, 'MLVars', ['sKlarnaAnonymizedProductTitle_']);
         $methodReflection = new \ReflectionMethod(KlarnaBaseConfig::class, 'getMultiLangData');
         $methodReflection->setAccessible(true);

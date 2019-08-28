@@ -13,16 +13,15 @@ class KlarnaBasketControllerTest extends ModuleUnitTestCase
 
     public function testRender()
     {
-        $basket = $this->createStub(KlarnaBasket::class,['getPaymentId' => 'klarna_checkout']);
+        $basket = $this->getMockBuilder(KlarnaBasket::class)->setMethods(['getPaymentId'])->getMock();
+        $basket->expects($this->once())->method('getPaymentId')->willReturn('klarna_checkout');
         $session = Registry::getSession();
         $session->setBasket($basket);
         $this->setRequestParameter('openAmazonLogin', true);
         $this->setRequestParameter('klarnaInvalid', true);
-        $basketController = $this->createStub(KlarnaBasketController::class, ['displayKlarnaValidationErrors' => true]);
-
+        $basketController = $this->getMockBuilder(KlarnaBasketController::class)->setMethods(['displayKlarnaValidationErrors'])->getMock();
+        $basket->expects($this->once())->method('displayKlarnaValidationErrors')->willReturn(true);
         $result = $basketController->render();
-
         $this->assertEquals('page/checkout/basket.tpl', $result);
-
     }
 }

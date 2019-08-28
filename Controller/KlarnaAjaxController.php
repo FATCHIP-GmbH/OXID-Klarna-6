@@ -129,8 +129,6 @@ class KlarnaAjaxController extends FrontendController
      */
     protected function _initUser()
     {
-        $oSession = $this->getSession();
-
         if ($this->_oUser = $this->getUser()) {
             if ($this->getViewConfig()->isUserLoggedIn()) {
                 $this->_oUser->setType(KlarnaUser::LOGGED_IN);

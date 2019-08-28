@@ -124,7 +124,7 @@ class KlarnaExpressController extends FrontendController
      */
     public function render()
     {
-        $oSession = $this->getSession();
+        $oSession = Registry::getSession();
         $oBasket = $oSession->getBasket();
         $this->rebuildFakeUser($oBasket);
 
@@ -221,7 +221,7 @@ class KlarnaExpressController extends FrontendController
      */
     protected function showCountryPopup()
     {
-        $sCountryISO        = $this->getSession()->getVariable('sCountryISO');
+        $sCountryISO        = Registry::getSession()->getVariable('sCountryISO');
         $resetKlarnaCountry = $this->_oRequest->getRequestEscapedParameter('reset_klarna_country');
 
         if ($resetKlarnaCountry) {
@@ -549,7 +549,7 @@ class KlarnaExpressController extends FrontendController
      */
     protected function resolveUser()
     {
-        $oSession = $this->getSession();
+        $oSession = Registry::getSession();
         
         /** @var KlarnaUser|User $oUser */
         $oUser = $this->getUser();
@@ -610,13 +610,13 @@ class KlarnaExpressController extends FrontendController
             }
 
 
-            $this->getSession()->setBasket($oBasket);
+            Registry::getSession()->setBasket($oBasket);
 
             if ($_aOrderData && isset($_aOrderData['billing_address']['email'])) {
                 $user->loadByEmail($_aOrderData['billing_address']['email']);
                 $this->_oUser = $user;
-                $this->getSession()->setVariable('klarna_checkout_order_id', $_aOrderData['order_id']);
-                $this->getSession()->setVariable(
+                Registry::getSession()->setVariable('klarna_checkout_order_id', $_aOrderData['order_id']);
+                Registry::getSession()->setVariable(
                     'klarna_checkout_user_email',
                     $_aOrderData['billing_address']['email']
                 );

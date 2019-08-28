@@ -18,17 +18,28 @@ class KlarnaAcknowledgeControllerTest extends ModuleUnitTestCase {
         $this->assertNull($result);
 
         $this->setRequestParameter('klarna_order_id', '16302e97f6249f2babcdef65004954b1');
-        $controller->init();
-        $order = $this->getMockBuilder(Order::class)->setMethods(['isLoaded'])->getMock()
-            ->expects($this->once())->method->willReturn(true);
+        $order = $this->getMockBuilder(Order::class)->setMethods(['isLoaded'])->getMock();
+        $order->expects($this->once())->method('isLoaded')->willReturn(true);
         $order->oxorder__oxbillcountryid = new Field('111', Field::T_RAW);
         $client = $this->getMockBuilder(KlarnaOrderManagementClient::class)
-            ->setMethods(['acknowledgeOrder', 'cancelOrder'])->getMock();
+            ->setMethods(['acknowledgeOrder'])->getMock();
         $client->expects($this->once())->method('acknowledgeOrder')->willReturn(true);
-        $client->expects($this->once())->method('cancelOrder')->willReturn(true);
         $controller = $this->getMockBuilder(KlarnaAcknowledgeController::class)
             ->setMethods(['loadOrderByKlarnaId', 'getKlarnaClient'])->getMock();
         $controller->expects($this->once())->method('loadOrderByKlarnaId')->willReturn($order);
+        $controller->expects($this->once())->method('getKlarnaClient')->willReturn($client);
+        $controller->init();
+
+        $order = $this->getMockBuilder(Order::class)->setMethods(['isLoaded'])->getMock();
+        $order->expects($this->once())->method('isLoaded')->willReturn(false);
+        $order->oxorder__oxbillcountryid = new Field('111', Field::T_RAW);
+        $client = $this->getMockBuilder(KlarnaOrderManagementClient::class)
+            ->setMethods(['cancelOrder'])->getMock();
+        $client->expects($this->once())->method('cancelOrder')->willReturn(true);
+        $controller = $this->getMockBuilder(KlarnaAcknowledgeController::class)
+            ->setMethods(['loadOrderByKlarnaId', 'getKlarnaClient', 'getKlarnaAckCount'])->getMock();
+        $controller->expects($this->once())->method('loadOrderByKlarnaId')->willReturn($order);
+        $controller->expects($this->once())->method('getKlarnaAckCount')->willReturn(2);
         $controller->expects($this->once())->method('getKlarnaClient')->willReturn($client);
         $controller->init();
 
@@ -37,7 +48,6 @@ class KlarnaAcknowledgeControllerTest extends ModuleUnitTestCase {
         $controller = $this->getMockBuilder(KlarnaAcknowledgeController::class)
             ->setMethods(['loadOrderByKlarnaId', 'getKlarnaClient'])->getMock();
         $controller->expects($this->once())->method('loadOrderByKlarnaId')->willReturn($order);
-        $controller->expects($this->once())->method('getKlarnaClient')->willReturn($client);
         $result = $controller->init();
         $this->assertLoggedException(StandardException::class, '');
         $this->assertNull($result);

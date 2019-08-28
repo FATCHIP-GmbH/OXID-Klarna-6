@@ -119,15 +119,17 @@ class KlarnaOrderOverviewTest extends ModuleUnitTestCase {
 
     public function testRender() {
         $order = $this->setOrder();
-        $orderMain = $this->getMockBuilder(KlarnaOrderOverview::class)->setMethods(['isKlarnaOrder'])->getMock()
-            ->expects($this->once())->method('isKlarnaOrder')->willReturn(true);
+        $orderMain = $this->getMockBuilder(KlarnaOrderOverview::class)->setMethods(['isKlarnaOrder'])->getMock();
+        $orderMain->expects($this->once())->method('isKlarnaOrder')->willReturn(true);
         $result = $orderMain->render();
 
         $this->assertEquals('order_overview.tpl', $result);
 
         $warningMessage = $orderMain->getViewData()['sWarningMessage'];
-        $this->assertEquals($warningMessage, 'KLARNA_MID_CHANGED_FOR_COUNTRY');
-
+        $this->assertEquals(
+            '<strong>Wrong credentials!</strong> This order has been placed using <strong>smid</strong> merchant id. Currently configured merchant id for <strong></strong> is <strong></strong>.',
+            $warningMessage
+        );
         $this->setRequestParameter('fnc', false);
         $orderMain = $this->getMockBuilder(KlarnaOrderOverview::class)->setMethods(['isKlarnaOrder', 'isCredentialsValid'])->getMock();
         $orderMain->expects($this->once())->method('isKlarnaOrder')->willReturn(true);
@@ -135,7 +137,7 @@ class KlarnaOrderOverviewTest extends ModuleUnitTestCase {
         $this->setProtectedClassProperty($orderMain, 'klarnaOrderData', ['status' => 'CANCELLED']);
         $orderMain->render();
         $warningMessage = $orderMain->getViewData()['sWarningMessage'];
-        $this->assertEquals("Die Bestellung wurde storniert. TCKLARNA_NO_REQUESTS_WILL_BE_SENT", $warningMessage);
+        $this->assertEquals("Die Bestellung wurde storniert. Ihre Änderungen an dieser Bestellung werden nicht an Klarna übertragen.", $warningMessage);
         $this->assertEquals(new Field(0), $order->oxorder__tcklarna_sync);
 
         $orderMain = $this->getMockBuilder(KlarnaOrderOverview::class)->setMethods(['isKlarnaOrder', 'isCredentialsValid'])->getMock();
@@ -145,15 +147,10 @@ class KlarnaOrderOverviewTest extends ModuleUnitTestCase {
         $orderMain->render();
         $warningMessage = $orderMain->getViewData()['sWarningMessage'];
         $this->assertEquals(
-            $warningMessage,
-            "<strong>Achtung!</strong> Die Daten dieser Bestellung weichen von den Daten ab, die bei Klarna gespeichert sind. TCKLARNA_NO_REQUESTS_WILL_BE_SENT"
+            '<strong>Achtung!</strong> Die Daten dieser Bestellung weichen von den bei Klarna gespeicherten Daten ab. Ihre Änderungen an dieser Bestellung werden nicht an Klarna übertragen.',
+            $warningMessage
         );
         $this->assertEquals(new Field(0), $order->oxorder__tcklarna_sync);
-
-        $orderMain = $this->createStub(
-            KlarnaOrderOverview::class,
-            ['isKlarnaOrder' => true, 'isCredentialsValid' => true, 'isCaptureInSync' => true]
-        );
         $orderMain = $this->getMockBuilder(KlarnaOrderOverview::class)->setMethods(['isKlarnaOrder', 'isCredentialsValid', 'isCaptureInSync'])->getMock();
         $orderMain->expects($this->once())->method('isKlarnaOrder')->willReturn(true);
         $orderMain->expects($this->once())->method('isCredentialsValid')->willReturn(true);

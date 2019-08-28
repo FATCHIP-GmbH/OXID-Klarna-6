@@ -35,8 +35,8 @@ class KlarnaExternalPaymentsTest extends ModuleUnitTestCase {
     public function testSave() {
         $payments = ['klarna_pay_later' => ['oxpayments__tcklarna_paymentoption' => 'other']];
 
-        $oRequest = $this->getMockBuilder(Request::class)->setMethods(['getRequestEscapedParameter'])->getMock()
-            ->expects($this->once())->method('getRequestEscapedParameter')->willReturn($payments);
+        $oRequest = $this->getMockBuilder(Request::class)->setMethods(['getRequestEscapedParameter'])->getMock();
+        $oRequest->expects($this->once())->method('getRequestEscapedParameter')->willReturn($payments);
         $extPayments = oxNew(KlarnaExternalPayments::class);
         $this->setProtectedClassProperty($extPayments, '_oRequest', $oRequest);
 

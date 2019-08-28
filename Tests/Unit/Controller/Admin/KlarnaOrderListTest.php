@@ -13,8 +13,7 @@ use OxidEsales\Eshop\Core\UtilsObject;
 
 class KlarnaOrderListTest extends ModuleUnitTestCase {
     protected function setOrder($exception = null) {
-        $order = $this->getMockBuilder(Order::class)
-            ->setMethods(['isLoaded', 'cancelKlarnaOrder', 'save', 'isKlarnaOrder', 'isDerived', 'delete'])->getMock();
+        $order = $this->getMockBuilder(Order::class)->setMethods(['isLoaded', 'cancelKlarnaOrder', 'save', 'isKlarnaOrder', 'isDerived', 'delete'])->getMock();
         $order->expects($this->any())->method('isLoaded')->willReturn(true);
         $order->expects($this->any())->method('save')->willReturn(true);
         $order->expects($this->any())->method('isKlarnaOrder')->willReturn(true);
@@ -39,11 +38,9 @@ class KlarnaOrderListTest extends ModuleUnitTestCase {
      */
     public function testStornoAndDelete($method) {
         $order = $this->setOrder();
-
-        $controller = $this->getMockBuilder(OrderList::class)
-            ->setMethods(['getEditObjectId', 'cancelOrder', 'init'])->getMock();
-        $controller->expects($this->once())->method('getEditObjectId')->willReturn('test');
-        $controller->expects($this->once())->method('cancelOrder')->willReturn(true);
+        $controller = $this->getMockBuilder(OrderList::class)->setMethods(['getEditObjectId', 'cancelOrder', 'init'])->getMock();
+        $controller->expects($this->any())->method('getEditObjectId')->willReturn('test');
+        $controller->expects($this->any())->method('cancelOrder')->willReturn(true);
         $controller->expects($this->once())->method('init')->willReturn(true);
 
         $this->assertFalse($order->oxorder__tcklarna_sync);

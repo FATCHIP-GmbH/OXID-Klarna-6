@@ -143,15 +143,15 @@ class KlarnaBasketComponentTest extends ModuleUnitTestCase {
     }
 
     public function testUpdateKlarnaOrder() {
-        $basket = $this->getMockBuilder(Basket::class)->setMethods(['getKlarnaOrderLines'])->getMock()
-            ->expects($this->once())->method('getKlarnaOrderLines')->willReturn(['test']);
+        $basket = $this->getMockBuilder(Basket::class)->setMethods(['getKlarnaOrderLines'])->getMock();
+        $basket->expects($this->once())->method('getKlarnaOrderLines')->willReturn(['test']);
         Registry::getSession()->setBasket($basket);
 
-        $client = $this->getMockBuilder(KlarnaCheckoutClient::class)->setMethods(['createOrUpdateOrder'])->getMock()
-        ->expects($this->once())->method('createOrUpdateOrder')->willReturn(['testResult']);
+        $client = $this->getMockBuilder(KlarnaCheckoutClient::class)->setMethods(['createOrUpdateOrder'])->getMock();
+        $client->expects($this->once())->method('createOrUpdateOrder')->willReturn(['testResult']);
 
-        $basketComponent = $this->getMockBuilder(KlarnaBasketComponent::class)->setMethods(['getKlarnaCheckoutClient'])->getMock()
-            ->expects($this->once())->method('getKlarnaCheckoutClient')->willReturn($client);
+        $basketComponent = $this->getMockBuilder(KlarnaBasketComponent::class)->setMethods(['getKlarnaCheckoutClient'])->getMock();
+        $basketComponent->expects($this->once())->method('getKlarnaCheckoutClient')->willReturn($client);
 
         $class = new \ReflectionClass(KlarnaBasketComponent::class);
         $method = $class->getMethod('updateKlarnaOrder');

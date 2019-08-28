@@ -16,9 +16,11 @@ use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaServiceMenuTest extends ModuleUnitTestCase {
     public function testInit() {
-        $topViewAny = $this->createStub(FrontendController::class, ['getClassName' => 'test', 'isKlarnaFakeUser' => true]);
-        $config = $this->getMockBuilder(Config::class)->setMethods(['getTopActiveView'])->getMock()
-            ->expects($this->once())->method('getTopActiveView')->willReturn($topViewAny);
+        $topViewAny = $this->getMockBuilder(FrontendController::class)->setMethods(['getClassName', 'isKlarnaFakeUser'])->getMock();
+        $topViewAny->expects($this->once())->method('getClassName')->willReturn('test');
+        $topViewAny->expects($this->any())->method('isKlarnaFakeUser')->willReturn(true);
+        $config = $this->getMockBuilder(Config::class)->setMethods(['getTopActiveView'])->getMock();
+        $config->expects($this->any())->method('getTopActiveView')->willReturn($topViewAny);
         $serviceMenuMock = $this->getMockBuilder(ServiceMenu::class)->setMethods(['getConfig'])->getMock();
         $serviceMenuMock->expects($this->any())->method('getConfig')->willReturn($config);
         $serviceMenuMock->init();
@@ -28,8 +30,8 @@ class KlarnaServiceMenuTest extends ModuleUnitTestCase {
 
 
         $topViewKlarnaExpress = $this->createStub(FrontendController::class, ['getClassName' => 'klarnaexpress', 'isKlarnaFakeUser' => true]);
-        $config = $this->getMockBuilder(Config::class)->setMethods(['getTopActiveView'])->getMock()
-            ->expects($this->once())->method('getTopActiveView')->willReturn($topViewKlarnaExpress);
+        $config = $this->getMockBuilder(Config::class)->setMethods(['getTopActiveView'])->getMock();
+        $config->expects($this->once())->method('getTopActiveView')->willReturn($topViewKlarnaExpress);
         $serviceMenuMock = $this->getMockBuilder(ServiceMenu::class)->setMethods(['getConfig'])->getMock();
         $serviceMenuMock->expects($this->any())->method('getConfig')->willReturn($config);
         $serviceMenuMock->init();

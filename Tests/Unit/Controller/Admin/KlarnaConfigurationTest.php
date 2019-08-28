@@ -16,8 +16,7 @@ class KlarnaConfigurationTest extends ModuleUnitTestCase {
 
     public function testRender() {
         $payment = $this->getMockBuilder(Payment::class)->setMethods(['getKPMethods', 'load'])->getMock();
-        $payment->expects($this->once())
-            ->method('getKPMethods')->willReturn('methods');
+        $payment->expects($this->any())->method('getKPMethods')->willReturn('methods');
         $payment->expects($this->once())->method('load')->willReturn(true);
         $payment->oxpayments__oxactive = new Field(2, Field::T_RAW);
         UtilsObject::setClassInstance(Payment::class, $payment);
@@ -43,8 +42,8 @@ class KlarnaConfigurationTest extends ModuleUnitTestCase {
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'xmlhttprequest';
         putenv("HTTP_X_REQUESTED_WITH=xmlhttprequest");
-        $obj = $this->getMockBuilder(KlarnaConfiguration::class)->setMethods(['getMultiLangData'])->getMock()
-            ->expects($this->once())->method('getMultiLangData')->willReturn('test');
+        $obj = $this->getMockBuilder(KlarnaConfiguration::class)->setMethods(['getMultiLangData'])->getMock();
+        $obj->expects($this->once())->method('getMultiLangData')->willReturn('test');
         $result = $obj->render();
         $this->assertEquals('"test"', $result);
 
@@ -115,7 +114,7 @@ class KlarnaConfigurationTest extends ModuleUnitTestCase {
      */
     public function testIsActiveShopCountry($method) {
         $controller = new KlarnaConfiguration();
-        $country = $this->getMockBuilder(Country::class)->getMock();
+        $country = $this->getMockBuilder(Country::class)->disableOriginalConstructor()->getMock();
         $country->oxcountry__oxisoalpha2 = new Field('invalid', Field::T_RAW);
         UtilsObject::setClassInstance(Country::class, $country);
 
