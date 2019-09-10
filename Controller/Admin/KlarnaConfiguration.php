@@ -3,6 +3,9 @@
 namespace TopConcepts\Klarna\Controller\Admin;
 
 
+use Exception;
+use OxidEsales\Eshop\Core\Exception\SystemComponentException;
+use OxidEsales\Eshop\Core\Request;
 use TopConcepts\Klarna\Core\KlarnaConsts;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use OxidEsales\Eshop\Application\Model\Payment;
@@ -175,7 +178,7 @@ class KlarnaConfiguration extends KlarnaBaseConfig
     }
 
     /**
-     *
+     * @throws Exception
      */
     public function save()
     {
@@ -185,5 +188,71 @@ class KlarnaConfiguration extends KlarnaBaseConfig
             $oPayment = oxNew(Payment::class);
             $oPayment->setActiveKPMethods();
         }
+
+        $setting = Registry::get(Request::class)->getRequestEscapedParameter('confbools');
+        if (KlarnaUtils::isKlarnaCheckoutEnabled()) {
+            Registry::getSession()->setVariable("confbools",$setting);
+        }
+    }
+
+    /**
+     * @throws SystemComponentException
+     */
+    public function checkEuropeanCountries()
+    {
+        $setting = Registry::getSession()->getVariable("confbools");
+        $message = null;
+        if (KlarnaUtils::isKlarnaCheckoutEnabled() && $setting['blKlarnaAllowSeparateDeliveryAddress'] == 1) {
+
+            $result = self::getEuropeanCountries();
+            foreach ($result as $alpha2 => $title) {
+                $check = KlarnaUtils::isCountryActiveInKlarnaCheckout($alpha2);
+                if ($check == false) {
+                    $missingCountries[] = $title;
+                }
+            }
+
+            if (!empty($missingCountries)) {
+                $message = sprintf(
+                    Registry::getLang()->translateString('TCKLARNA_EU_WARNING'),
+                    implode(", ", $missingCountries)
+                );
+            }
+        }
+        Registry::getUtils()->showMessageAndExit(json_encode(array('warningMessage' => $message)));
+    }
+
+    public static function getEuropeanCountries()
+    {
+        return [
+            'AT' => "Österreich",
+            'BE' => "Belgien",
+            'BG' => "Bulgarien",
+            'CY' => "Zypern",
+            'CZ' => "Tschechische Republik",
+            'DE' => "Deutschland",
+            'DK' => "Dänemark",
+            'EE' => "Estland",
+            'ES' => "Spanien",
+            'FI' => "Finnland",
+            'FR' => "Frankreich",
+            'GR' => "Griechenland",
+            'HR' => "Kroatien",
+            'HU' => "Ungarn",
+            'IE' => "Irland",
+            'IT' => "Italien",
+            'LT' => "Litauen",
+            'LU' => "Luxemburg",
+            'LV' => "Lettland",
+            'MT' => "Malta",
+            'NL' => "Niederlande",
+            'PL' => "Polen",
+            'PT' => "Portugal",
+            'RO' => "Rumänien",
+            'SE' => "Schweden",
+            'SI' => "Slowenien",
+            'SK' => "Slowakei",
+            'UK' => "Großbritannien",
+        ];
     }
 }

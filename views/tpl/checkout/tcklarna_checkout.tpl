@@ -24,14 +24,16 @@
                                 [{oxmultilang ident="TCKLARNA_CHOOSE_YOUR_NOT_SUPPORTED_COUNTRY"}]
                             </p>
                         </div>
-                        <div class="col-md-6">
-                            <select class="form-control js-country-select" id="other-countries">
-                                <option disabled selected>[{oxmultilang ident="TCKLARNA_MORE_COUNTRIES"}]</option>
-                                [{foreach from=$oView->getNonKlarnaCountries() item="country" name="otherCountries" }]
-                                <option value="[{$country->oxcountry__oxisoalpha2->value}]">[{$country->oxcountry__oxtitle->value}]</option>
-                                [{/foreach}]
-                            </select>
-                        </div>
+                        [{if $oView->getNonKlarnaCountries()|count > 0}]
+                            <div class="col-md-6">
+                                <select class="form-control js-country-select" id="other-countries">
+                                    <option disabled selected>[{oxmultilang ident="TCKLARNA_MORE_COUNTRIES"}]</option>
+                                    [{foreach from=$oView->getNonKlarnaCountries() item="country" name="otherCountries" }]
+                                        <option value="[{$country->oxcountry__oxisoalpha2->value}]">[{$country->oxcountry__oxtitle->value}]</option>
+                                    [{/foreach}]
+                                </select>
+                            </div>
+                        [{/if}]
                     </div>
                 [{/if}]
             </div>

@@ -308,4 +308,6 @@ oder wenden Sie sich an den Klarna Integration Support.',
     'TCKLARNA_B2BOTH'                => 'Sowohl B2C als auch B2B Kunden',
     'TCKLARNA_NEED_SUPPORT'          => 'Benötigen Sie Hilfe bei der Integration?',
     'TCKLARNA_REACH_SUPPORT'         => 'Kontaktieren Sie Klarna‘s Merchant Support',
+
+    'TCKLARNA_EU_WARNING' => '<p>Um mit der EU Geoblocking Verordnung übereinzustimmen, wird dringend empfohlen, alle europäischen Länder zu aktivieren und der Bezahlmethode Klarna Checkout zuzweisen.</p><p>Es fehlen folgende Länder: %s</p>',
 );

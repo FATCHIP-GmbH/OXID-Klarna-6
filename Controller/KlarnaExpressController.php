@@ -359,7 +359,7 @@ class KlarnaExpressController extends FrontendController
 
         foreach ($list->getArray() as $id => $country)
         {
-            if(array_key_exists($id,KlarnaUtils::getAllActiveKCOGlobalCountryList()->getArray())){
+            if(KlarnaUtils::isCountryActiveInKlarnaCheckout($country->oxcountry__oxisoalpha2->value, false)) {
                 unset($list[$id]);
             }
         }

@@ -26,8 +26,9 @@ class KlarnaCountryList extends KlarnaCountryList_parent
      * Selects and loads all active countries that are assigned to klarna_checkout
      *
      * @param integer $iLang language
+     * @param bool $filterKcoList
      */
-    public function loadActiveKlarnaCheckoutCountries($iLang = null)
+    public function loadActiveKlarnaCheckoutCountries($iLang = null, $filterKcoList = true)
     {
         $sViewName = getViewName('oxcountry', $iLang);
         $isoList   = KlarnaConsts::getKlarnaGlobalCountries();
@@ -37,8 +38,12 @@ class KlarnaCountryList extends KlarnaCountryList_parent
                       ON oxobject2payment.oxobjectid = {$sViewName}.oxid
                       WHERE oxobject2payment.oxpaymentid = 'klarna_checkout'
                       AND oxobject2payment.oxtype = 'oxcountry'
-                      AND {$sViewName}.oxactive=1 
-                      AND {$sViewName}.oxisoalpha2 IN ('{$isoList}')";
+                      AND {$sViewName}.oxactive=1";
+
+        if($filterKcoList === true) {
+            $sSelect.= " AND {$sViewName}.oxisoalpha2 IN ('{$isoList}')";
+        }
+
         $this->selectString($sSelect);
     }
 
