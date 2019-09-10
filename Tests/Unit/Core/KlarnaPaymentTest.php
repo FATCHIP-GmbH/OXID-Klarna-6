@@ -172,7 +172,10 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
     {
 
         list($oBasket, $oUser, $aPost) = $this->getArgs();
-        $oKlarnaOrder = $this->getMock(KlarnaPayment::class, ['requiresFinalization'], [$oBasket, $oUser, $aPost]);
+        $oKlarnaOrder = $this->getMockBuilder(KlarnaPayment::class)
+            ->setConstructorArgs([$oBasket, $oUser, $aPost])
+            ->setMethods(['requiresFinalization'])
+            ->getMock();
         $oKlarnaOrder->expects($this->at(0))->method('requiresFinalization')->willReturn(true);
         $oKlarnaOrder->expects($this->at(1))->method('requiresFinalization')->willReturn(false);
         $oKlarnaOrder->expects($this->at(2))->method('requiresFinalization')->willReturn(false);
@@ -204,10 +207,18 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
 
     public function testIsTokenValid()
     {
-        $oKlarnaOrder = $this->createStub(KlarnaPayment::class, ['requiresFinalization' => true]);
+        $oKlarnaOrder = $this->getMockBuilder(KlarnaPayment::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['requiresFinalization'])
+            ->getMock();
+        $oKlarnaOrder->expects($this->at(0))->method('requiresFinalization')->willReturn(true);
         $this->assertTrue($oKlarnaOrder->isTokenValid());
 
-        $oKlarnaOrder = $this->createStub(KlarnaPayment::class, ['requiresFinalization' => false]);
+        $oKlarnaOrder = $this->getMockBuilder(KlarnaPayment::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['requiresFinalization'])
+            ->getMock();
+        $oKlarnaOrder->expects($this->at(0))->method('requiresFinalization')->willReturn(false);
         $this->assertFalse($oKlarnaOrder->isTokenValid());
 
         $validTimeStump = (new \DateTime())->getTimestamp();
@@ -292,10 +303,10 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
      */
     public function testChecksumCheck($currentCheckSums, $properties, $toUpdate, $action, $paymentChanged)
     {
-
-        $oKlarnaOrder = $this->createStub(KlarnaPayment::class,
-            ['fetchCheckSums' => null]
-        );
+        $oKlarnaOrder = $this->getMockBuilder(KlarnaPayment::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['fetchCheckSums'])
+            ->getMock();
         $this->setProtectedClassProperty($oKlarnaOrder, 'checkSums', $currentCheckSums);
         foreach($properties as $name => $value){
             $this->setProtectedClassProperty($oKlarnaOrder, $name, $value);
@@ -368,9 +379,11 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
      */
     public function testSaveCheckSums($currentCheckSums, $arg, $eRes)
     {
-        $oKlarnaOrder = $this->createStub(KlarnaPayment::class,
-            ['fetchCheckSums' => $currentCheckSums]
-        );
+        $oKlarnaOrder = $this->getMockBuilder(KlarnaPayment::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['fetchCheckSums'])
+            ->getMock();
+        $oKlarnaOrder->expects($this->once())->method('fetchCheckSums')->willReturn($currentCheckSums);
         $oKlarnaOrder->saveCheckSums($arg);
         $this->assertEquals($eRes, $this->getSessionParam('kpCheckSums'));
     }
@@ -398,7 +411,7 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
         $oUser = oxNew(User::class);
         $oKlarnaOrder = new  KlarnaPayment($oBasket, $oUser, []);
         $this->setProtectedClassProperty($oKlarnaOrder, 'errors', ['Error1', 'Error2']);
-        $oUtilsView = $this->getMock(UtilsView::class, ['addErrorToDisplay']);
+        $oUtilsView = $this->getMockBuilder(UtilsView::class)->setMethods(['addErrorToDisplay'])->getMock();
         $oUtilsView->expects($this->at(0))->method('addErrorToDisplay')->with('Error1');
         $oUtilsView->expects($this->at(1))->method('addErrorToDisplay')->with('Error2');
         \oxTestModules::addModuleObject(UtilsView::class, $oUtilsView);
@@ -609,14 +622,15 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
     public function testValidateOrder($stateChanged, $paymentChanged, $errors, $validToken, $eRes)
     {
         $this->setLanguage(1);
-        $oKlarnaOrder = $this->createStub(KlarnaPayment::class,
-            [
-                'isOrderStateChanged' => $stateChanged,
-                'isTokenValid' => $validToken,
-                'validateKlarnaUserData' => null,
-                'validateCountryAndCurrency' => null
-            ]
-        );
+        $oKlarnaOrder = $this->getMockBuilder(KlarnaPayment::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['isOrderStateChanged', 'isTokenValid', 'validateKlarnaUserData', 'validateCountryAndCurrency'])
+            ->getMock();
+        $oKlarnaOrder->expects($this->once())->method('isOrderStateChanged')->willReturn($stateChanged);
+        $oKlarnaOrder->expects($this->once())->method('isTokenValid')->willReturn($validToken);
+//        $oKlarnaOrder->expects($this->once())->method('validateKlarnaUserData')->willReturn(null);
+//        $oKlarnaOrder->expects($this->once())->method('validateCountryAndCurrency')->willReturn(null);
+
         $this->setProtectedClassProperty($oKlarnaOrder,'paymentChanged', $paymentChanged);
         $result = $oKlarnaOrder->validateOrder();
         $this->assertEquals($errors, $this->getProtectedClassProperty($oKlarnaOrder,'errors'));
@@ -627,18 +641,24 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
     public function testCountryWasChanged()
     {
         $this->setSessionParam('sCountryISO', 'DE');
-        $oUser = $this->createStub(User::class, ['resolveCountry' => 'DE']);
+
+        $oUser = $this->getMockBuilder(User::class)->setMethods(['resolveCountry'])->getMock();
+        $oUser->expects($this->once())->method('resolveCountry')->willReturn('DE');
         $this->assertFalse(KlarnaPayment::countryWasChanged($oUser));
-        $oUser = $this->createStub(User::class, ['resolveCountry' => 'AT']);
+
+        $oUser = $this->getMockBuilder(User::class)->setMethods(['resolveCountry'])->getMock();
+        $oUser->expects($this->once())->method('resolveCountry')->willReturn('AT');
         $this->assertTrue(KlarnaPayment::countryWasChanged($oUser));
     }
 
     public function testSetCheckSum()
     {
         $currentCheckSums = [];
-        $oKlarnaOrder = $this->createStub(KlarnaPayment::class,
-            ['fetchCheckSums' => null]
-        );
+        $oKlarnaOrder = $this->getMockBuilder(KlarnaPayment::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['fetchCheckSums'])
+            ->getMock();
+
         $this->setProtectedClassProperty($oKlarnaOrder, 'checkSums', $currentCheckSums);
         $oKlarnaOrder->setCheckSum('key', 'value');
         $this->assertEquals(['key' => 'value'], $this->getSessionParam('kpCheckSums'));

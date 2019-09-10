@@ -389,9 +389,8 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase {
             ->setMethods(['getRequestEscapedParameter'])->getMock();
         $oRequest->expects($this->at(0))->method('getRequestEscapedParameter')->will($this->returnValue(null));
         $oRequest->expects($this->at(1))->method('getRequestEscapedParameter')->will($this->returnValue($resetCountry));
-        $controller = $controller = $this->createStub(KlarnaExpressController::class, [
-            'getUser' => $oUser,
-        ]);
+        $controller = $controller = $this->getMockBuilder(KlarnaExpressController::class)->setMethods(['getUser'])->getMock();
+        $controller->expects($this->any())->method('getUser')->willReturn($oUser);
         $controller->determineUserControllerAccess($oRequest);
         if ($expectedResult) {
             $this->assertStringEndsWith($expectedResult, \oxUtilsHelper::$sRedirectUrl);

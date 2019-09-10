@@ -608,10 +608,12 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
     /**
      * @dataProvider undefinedActionDataProvider
+     * @param $request
      */
     public function testUpdateKlarnaAjaxUndefinedAction($request)
     {
-        $mock = $this->createStub(KlarnaOrderController::class, ['getJsonRequest' => $request]);
+        $mock = $this->getMockBuilder(KlarnaOrderController::class)->setMethods(['getJsonRequest'])->getMock();
+        $mock->expects($this->once())->method('getJsonRequest')->willReturn($request);
         $mock->updateKlarnaAjax();
         $expected = [
             "action" => "undefined action",
@@ -643,8 +645,8 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
         // test client exception
         $sut = $this->getMockBuilder(KlarnaOrderController::class)->setMethods(['getJsonRequest', 'updateKlarnaOrder'])->getMock();
-        $sut->expects($this->any())->method('getJsonRequest')->willReturn(['action' => 'shipping_address_change']);
-        $sut->expects($this->any())->method('updateKlarnaOrder')->willThrowException(new KlarnaWrongCredentialsException());
+        $sut->expects($this->once())->method('getJsonRequest')->willReturn(['action' => 'shipping_address_change']);
+        $sut->expects($this->once())->method('updateKlarnaOrder')->willThrowException(new KlarnaWrongCredentialsException());
 
         $this->setProtectedClassProperty($sut, '_aOrderData', $orderData);
         $this->setProtectedClassProperty($sut, 'forceReloadOnCountryChange', true);
@@ -1074,13 +1076,11 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
         UtilsObject::setClassInstance(KlarnaPayment::class, $oPayment);
 
-        $mock = $this->createStub(
-            KlarnaOrderController::class,
-            [
-                'getUser' => $user,
-                'getJsonRequest' => ['action' => 'addUserData'],
-            ]
-        );
+        $mock = $this->getMockBuilder(KlarnaOrderController::class)
+            ->setMethods(['getUser', 'getJsonRequest'])
+            ->getMock();
+        $mock->expects($this->once())->method('getUser')->willReturn($user);
+        $mock->expects($this->once())->method('getJsonRequest')->willReturn(['action' => 'addUserData']);
 
         $mock->updateKlarnaAjax();
 

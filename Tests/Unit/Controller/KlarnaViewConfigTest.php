@@ -75,9 +75,9 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
      */
     public function testGetIsAustria($iso, $oxCountryId, $result)
     {
-        $user = $this->getMock(User::class, ['getFieldData']);
+        $user = $this->getMockBuilder(User::class)->setMethods(['getFieldData'])->getMock();
         $user->expects($this->any())->method('getFieldData')->with('oxcountryid')->willReturn($oxCountryId);
-        $oViewConfig = $this->getMock(ViewConfig::class, ['getUser']);
+        $oViewConfig = $this->getMockBuilder(ViewConfig::class)->setMethods(['getUser'])->getMock();
         $oViewConfig->expects($this->once())->method('getUser')->willReturn($user);
         $this->assertEquals($result, $oViewConfig->getIsAustria());
 
@@ -85,7 +85,7 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
 
     public function testGetIsAustria_noUser_defaultCountry()
     {
-        $oViewConfig = $this->getMock(ViewConfig::class, ['getUser']);
+        $oViewConfig = $this->getMockBuilder(ViewConfig::class)->setMethods(['getUser'])->getMock();
         $oViewConfig->expects($this->once())->method('getUser')->willReturn(null);
         $this->assertFalse( $oViewConfig->getIsAustria());
     }
@@ -114,16 +114,16 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
      */
     public function testGetIsGermany($oxCountryId, $expectedResult)
     {
-        $user = $this->getMock(User::class, ['getFieldData']);
+        $user = $this->getMockBuilder(User::class)->setMethods(['getFieldData'])->getMock();
         $user->expects($this->any())->method('getFieldData')->with('oxcountryid')->willReturn($oxCountryId);
-        $oViewConfig = $this->getMock(ViewConfig::class, ['getUser']);
+        $oViewConfig = $this->getMockBuilder(ViewConfig::class)->setMethods(['getUser'])->getMock();
         $oViewConfig->expects($this->once())->method('getUser')->willReturn($user);
         $this->assertEquals($expectedResult, $oViewConfig->getIsGermany());
     }
 
     public function testGetIsGermany_noUser_defaultCountry()
     {
-        $oViewConfig = $this->getMock(ViewConfig::class, ['getUser']);
+        $oViewConfig = $this->getMockBuilder(ViewConfig::class)->setMethods(['getUser'])->getMock();
         $oViewConfig->expects($this->once())->method('getUser')->willReturn(null);
         $this->assertTrue( $oViewConfig->getIsGermany());
     }
@@ -170,9 +170,9 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
      */
     public function testShowCheckoutTerms($oxCountryId, $isKCOEnabled, $showPFN, $expectedResult)
     {
-        $user = $this->getMock(User::class, ['getFieldData']);
+        $user = $this->getMockBuilder(User::class)->setMethods(['getFieldData'])->getMock();
         $user->expects($this->any())->method('getFieldData')->with('oxcountryid')->willReturn($oxCountryId);
-        $viewConfig = $this->getMock(ViewConfig::class, ['getUser','isKlarnaCheckoutEnabled','isShowPrefillNotif']);
+        $viewConfig = $this->getMockBuilder(ViewConfig::class)->setMethods(['getUser','isKlarnaCheckoutEnabled','isShowPrefillNotif'])->getMock();
         $viewConfig->expects($this->any())->method('getUser')->willReturn($user);
         $viewConfig->expects($this->any())->method('isKlarnaCheckoutEnabled')->willReturn($isKCOEnabled);
         $viewConfig->expects($this->any())->method('isShowPrefillNotif')->willReturn($showPFN);
@@ -341,7 +341,7 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
     public function testGetCountryList($blShipping, $isCheckoutNonKlarnaCountry, $activeClassName, $expectedResult)
     {
 
-        $viewConfig = $this->getMock(ViewConfig::class, ['isCheckoutNonKlarnaCountry', 'getActiveClassName']);
+        $viewConfig = $this->getMockBuilder(ViewConfig::class)->setMethods(['isCheckoutNonKlarnaCountry', 'getActiveClassName'])->getMock();
         $viewConfig->expects($this->any())->method('isCheckoutNonKlarnaCountry')->willReturn($isCheckoutNonKlarnaCountry);
         $viewConfig->expects($this->any())->method('getActiveClassName')->willReturn($activeClassName);
 
@@ -441,7 +441,7 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
     {
         $this->setSessionParam('usr', $usrSession);
 
-        $viewConfig = $this->getMock(ViewConfig::class, ['getUser']);
+        $viewConfig = $this->getMockBuilder(ViewConfig::class)->setMethods(['getUser'])->getMock();
         $viewConfig->expects($this->once())->method('getUser')->willReturn($user);
 
         $this->assertEquals($expectedResult, $viewConfig->isUserLoggedIn());
@@ -454,7 +454,7 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
      */
     public function testIsActiveThemeFlow($themeName, $expectedResult)
     {
-        $oViewConfig = $this->getMock(ViewConfig::class, ['getActiveTheme']);
+        $oViewConfig = $this->getMockBuilder(ViewConfig::class)->setMethods(['getActiveTheme'])->getMock();
         $oViewConfig->expects($this->once())->method('getActiveTheme')->willReturn($themeName);
         $result = $oViewConfig->isActiveThemeFlow();
 
@@ -469,7 +469,7 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
      */
     public function testIsActiveControllerKlarnaExpress($controllerName, $expectedResult)
     {
-        $oViewConfig = $this->getMock(ViewConfig::class, ['getActiveClassName']);
+        $oViewConfig = $this->getMockBuilder(ViewConfig::class)->setMethods(['getActiveClassName'])->getMock();
         $oViewConfig->expects($this->once())->method('getActiveClassName')->willReturn($controllerName);
         $result = $oViewConfig->isActiveControllerKlarnaExpress();
 

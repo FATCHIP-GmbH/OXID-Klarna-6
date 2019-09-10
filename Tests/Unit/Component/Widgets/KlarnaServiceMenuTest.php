@@ -29,7 +29,11 @@ class KlarnaServiceMenuTest extends ModuleUnitTestCase {
         $this->assertArrayHasKey('oxcmp_user', $componentNames);
 
 
-        $topViewKlarnaExpress = $this->createStub(FrontendController::class, ['getClassName' => 'klarnaexpress', 'isKlarnaFakeUser' => true]);
+        $topViewKlarnaExpress = $this->getMockBuilder(FrontendController::class)
+            ->setMethods(['getClassName', 'isKlarnaFakeUser'])
+            ->getMock();
+        $topViewKlarnaExpress->expects($this->once())->method('getClassName')->willReturn('klarnaexpress');
+        $topViewKlarnaExpress->expects($this->once())->method('isKlarnaFakeUser')->willReturn(true);
         $config = $this->getMockBuilder(Config::class)->setMethods(['getTopActiveView'])->getMock();
         $config->expects($this->once())->method('getTopActiveView')->willReturn($topViewKlarnaExpress);
         $serviceMenuMock = $this->getMockBuilder(ServiceMenu::class)->setMethods(['getConfig'])->getMock();
