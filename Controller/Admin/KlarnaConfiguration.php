@@ -188,11 +188,6 @@ class KlarnaConfiguration extends KlarnaBaseConfig
             $oPayment = oxNew(Payment::class);
             $oPayment->setActiveKPMethods();
         }
-
-        $setting = Registry::get(Request::class)->getRequestEscapedParameter('confbools');
-        if (KlarnaUtils::isKlarnaCheckoutEnabled()) {
-            Registry::getSession()->setVariable("confbools",$setting);
-        }
     }
 
     /**
@@ -200,9 +195,10 @@ class KlarnaConfiguration extends KlarnaBaseConfig
      */
     public function checkEuropeanCountries()
     {
-        $setting = Registry::getSession()->getVariable("confbools");
+        $setting = Registry::getRequest()->getRequestEscapedParameter("separate_shipping_enabled");
+
         $message = null;
-        if (KlarnaUtils::isKlarnaCheckoutEnabled() && $setting['blKlarnaAllowSeparateDeliveryAddress'] == 1) {
+        if (KlarnaUtils::isKlarnaCheckoutEnabled() && $setting == 'true') {
 
             $result = self::getEuropeanCountries();
             foreach ($result as $alpha2 => $title) {

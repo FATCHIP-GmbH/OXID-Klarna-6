@@ -348,26 +348,7 @@ var MultiLangWidget = {
         event.preventDefault();
         var $msgBox = $('.messagebox.info');
         this.serializeForm();
-        var actionUrl = this.$form.attr('action');
-        $.post(actionUrl, this.$form.serialized).done(function(data){
-            $.ajax({
-                url: actionUrl+'cl=KlarnaConfiguration&fnc=checkEuropeanCountries',
-                type: 'POST',
-                data: data,
-                dataType: 'json'
-            }).done(function(oData){
-                var json = oData;
-                var $warnBox = $('.messagebox.warn');
-                if(json.warningMessage != null) {
-                    if($warnBox.is(':empty')){
-                        $warnBox.append('<div>'+json.warningMessage+'</div>') ;
-                    }
-                    $warnBox.slideDown();
-                } else {
-                    $warnBox.slideUp();
-                }
-            });
-        });
+        $.post(this.$form.attr('action'), this.$form.serialized);
         $msgBox.slideDown(function () {
             setTimeout(function () {
                 $msgBox.slideUp();
@@ -439,7 +420,6 @@ var MultiLangWidget = {
             this.$smbButton.click(this.validateFormData.bind(this));
         }
         this.$form.submit(this.submitFormData.bind(this));
-        //console.log(this.$form.serialized);
     }
 };
 
