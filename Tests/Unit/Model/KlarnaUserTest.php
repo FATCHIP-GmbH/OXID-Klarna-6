@@ -128,7 +128,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
 
     public function testGetCountryISO_notSet()
     {
-        $oUser = $this->getMock(User::class, ['resolveCountry']);
+        $oUser = $this->getMockBuilder(User::class)->setMethods(['resolveCountry'])->getMock();
         $oUser->expects($this->once())->method('resolveCountry')->willReturn('DE');
 
         $result = $oUser->getCountryISO();
@@ -137,7 +137,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
 
     public function testGetCountryISO()
     {
-        $oUser = $this->getMock($this->getProxyClassName(User::class), ['resolveCountry']);
+        $oUser = $this->getMockBuilder($this->getProxyClassName(User::class))->setMethods(['resolveCountry'])->getMock();
         $oUser->expects($this->never())->method('resolveCountry');
         $oUser->setNonPublicVar('_countryISO', 'DE');
 
@@ -148,7 +148,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
 
     public function testLoadByEmail_loggedIn()
     {
-        $oUser = $this->getMock(User::class, ['load']);
+        $oUser = $this->getMockBuilder(User::class)->setMethods(['load'])->getMock();
         $oUser->expects($this->never())->method('load');
         $oUser->setType(KlarnaUser::LOGGED_IN);
 
@@ -354,20 +354,18 @@ class KlarnaUserTest extends ModuleUnitTestCase
      */
     public function testUpdateDeliveryAddress($aAddressData, $isValid, $klExists, $isFake)
     {
-        $oAddress = $this->getMock(Address::class, ['isValid', 'klExists']);
+        $oAddress = $this->getMockBuilder(Address::class)->setMethods(['isValid', 'klExists'])->getMock();
         $oAddress->expects($this->once())
             ->method('isValid')->willReturn($isValid);
         $oAddress->expects($this->once())
             ->method('klExists')->willReturn($klExists);
 
 
-        $oUser = $this->getMock(User::class, ['buildAddress', 'isFake', 'updateSessionDeliveryAddressId']);
+        $oUser = $this->getMockBuilder(User::class)->setMethods(['buildAddress', 'isFake', 'updateSessionDeliveryAddressId'])->getMock();
         $oUser->expects($this->once())->method('buildAddress')->willReturn($oAddress);
         $oUser->expects($this->any())->method('isFake')->willReturn($isFake);
         $oUser->expects($this->once())->method('updateSessionDeliveryAddressId');
-
         $oUser->updateDeliveryAddress($aAddressData);
-
     }
 
 //    /**
@@ -474,7 +472,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
      */
     public function testGetAttachmentsData($isFake, $expectedResult)
     {
-        $oUser = $this->getMock(User::class, ['isFake', 'getEMD']);
+        $oUser = $this->getMockBuilder(User::class)->setMethods(['isFake', 'getEMD'])->getMock();
         $oUser->expects($this->any())->method('isFake')->willReturn($isFake);
         $oUser->expects($this->any())->method('getEMD')->willReturn(['one', 'two']);
 
@@ -631,7 +629,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
     public function testcheckUserType($userId, $session_usr, $expectedResult)
     {
         $this->setSessionParam('usr', $session_usr);
-        $oUser = $this->getMock(User::class, ['getId']);
+        $oUser = $this->getMockBuilder(User::class)->setMethods(['getId'])->getMock();
         $oUser->expects($this->once())
             ->method('getId')->willReturn($userId);
 
@@ -655,7 +653,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
      */
     public function testUpdateSessionDeliveryAddressId($resAddressId, $newAddressId, $isFake, $showShippingAddress)
     {
-        $oUser = $this->getMock(User::class, ['isFake']);
+        $oUser = $this->getMockBuilder(User::class)->setMethods(['isFake'])->getMock();
         $oUser->expects($this->once())
             ->method('isFake')->willReturn($isFake);
 
@@ -726,8 +724,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
         $class  = new \ReflectionClass(KlarnaUser::class);
         $method = $class->getMethod('setFakeUserId');
         $method->setAccessible(true);
-
-        $user = $this->createStub(KlarnaUser::class, ['getKlarnaData' => []]);
+        $user = oxNew(User::class);
 
         $method->invoke($user);
         $this->assertEquals(1, $this->getProtectedClassProperty($user, '_sOXID'));

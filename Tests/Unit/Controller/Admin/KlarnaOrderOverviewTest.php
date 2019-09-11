@@ -213,7 +213,7 @@ class KlarnaOrderOverviewTest extends ModuleUnitTestCase {
         $controller = $this->getMockBuilder(KlarnaOrderOverview::class)
             ->setMethods(['getEditObjectId', 'retrieveKlarnaOrder'])
             ->getMock();
-        $controller->expects($this->once())->method('getEditObjectId')->willReturn('test');
+        $controller->expects($this->any())->method('getEditObjectId')->willReturn('test');
         $controller->expects($this->once())->method('retrieveKlarnaOrder')->willReturn('test');
         $this->setProtectedClassProperty($controller, 'klarnaOrderData', ['remaining_authorized_amount' => 1]);
         $controller->sendOrder();
@@ -288,7 +288,7 @@ class KlarnaOrderOverviewTest extends ModuleUnitTestCase {
         $controller = $this->getMockBuilder(KlarnaOrderOverview::class)
         ->setMethods(['getEditObjectId'])
         ->getMock();
-        $controller->expects($this->once())->method('getEditObjectId')->willReturn('test');
+        $controller->expects($this->any())->method('getEditObjectId')->willReturn('test');
         $result = $controller->isCredentialsValid();
         $this->assertTrue($result);
     }

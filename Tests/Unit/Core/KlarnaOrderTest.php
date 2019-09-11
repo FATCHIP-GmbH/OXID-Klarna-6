@@ -54,7 +54,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
         $price = $this->getMockBuilder(Price::class)
             ->setMethods(['getBruttoPrice', 'getVat'])
             ->getMock();
-        $price->expects($this->exactly(3))->method('getBruttoPrice')->willReturn(1000);
+        $price->expects($this->any())->method('getBruttoPrice')->willReturn(1000);
         $price->expects($this->once())->method('getVat')->willReturn(0.23);
 
         $payment = $this->getMockBuilder(Payment::class)

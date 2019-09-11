@@ -1096,7 +1096,6 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
     public function testUpdateKlarnaAjaxPaymentEnabled()
     {
-//        $sut = $this->createStub(KlarnaOrderController::class, ['getJsonRequest' => ['test' => 'test']]);
         $sut = oxNew(KlarnaOrderController::class);
         $this->setModuleConfVar('sKlarnaActiveMode', KlarnaConsts::MODULE_MODE_KP);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'xmlhttprequest';

@@ -133,7 +133,6 @@ class KlarnaPaymentsClientTest extends ModuleUnitTestCase
         $sessionData = ['test'];
         $this->setProtectedClassProperty($clientMock,'aSessionData', $sessionData);
         $result = $clientMock->createOrUpdateSession();
-
         $this->assertEquals($result, $sessionData);
 
         $body = ['test' => 'test'];
@@ -142,11 +141,11 @@ class KlarnaPaymentsClientTest extends ModuleUnitTestCase
         $klarnaPaymentClient->expects($this->once())->method('post')->willReturn($this->getPostResponse($body));
         $klarnaPaymentClient->initOrder($this->createKPOrderMock());
         $result = $klarnaPaymentClient->createOrUpdateSession();
-
         $this->assertEquals($result, $body);
         $this->assertEquals($this->getSession()->getVariable('klarna_session_data'), $body);
         $this->assertTrue($this->getSession()->hasVariable('sSessionTimeStamp'));
 
+        $klarnaPaymentClient->expects($this->any())->method('post')->willReturn($this->getPostResponse($body));
         $sessionData['payment_method_categories'] = ['test1','test2'];
         $this->setProtectedClassProperty($klarnaPaymentClient,'sSessionId', 1);
         $this->setProtectedClassProperty($klarnaPaymentClient,'aSessionData', $sessionData);
@@ -174,12 +173,12 @@ class KlarnaPaymentsClientTest extends ModuleUnitTestCase
             ->setMethods(['getOrderData', 'saveCheckSums', 'setStatus', 'getStatus', 'isAuthorized', 'getChangedData'])
             ->disableOriginalConstructor()
             ->getMock();
-        $order->expects($this->once())->method('getOrderData')->willReturn(['test', 'test']);
+        $order->expects($this->any())->method('getOrderData')->willReturn(['test', 'test']);
         $order->expects($this->once())->method('saveCheckSums')->willReturn('');
         $order->expects($this->once())->method('setStatus')->willReturn('');
         $order->expects($this->once())->method('getStatus')->willReturn('authorize');
-        $order->expects($this->once())->method('isAuthorized')->willReturn(true);
-        $order->expects($this->once())->method('getChangedData')->willReturn(['billing_address' => 'billingaddresstest']);
+        $order->expects($this->any())->method('isAuthorized')->willReturn(true);
+        $order->expects($this->any())->method('getChangedData')->willReturn(['billing_address' => 'billingaddresstest']);
 
         return $order;
     }
