@@ -76,7 +76,7 @@ class KlarnaUtils
         $config = Registry::getConfig();
         $shopId = $config->getShopId();
 
-        return $config->getShopConfVar($name, $shopId, 'tcklarna');
+        return $config->getShopConfVar($name, $shopId, 'module:tcklarna');
     }
 
     /**

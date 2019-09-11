@@ -45,18 +45,15 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
      */
     public function actionKlarnaExpressCheckoutFromDetailsPage()
     {
-        Registry::getSession()->deleteVariable('_newitem');
-
+        // trows exception if adding item to basket fails
         $this->tobasket();
 
-        if (Registry::getSession()->getVariable('_newitem') !== null) {
-            $oConfig = Registry::getConfig();
-            Registry::getUtils()->redirect(
-                $oConfig->getShopSecureHomeUrl() . 'cl=' . $this->_sRedirectController . '',
-                false,
-                302
-            );
-        }
+        $oConfig = Registry::getConfig();
+        Registry::getUtils()->redirect(
+            $oConfig->getShopSecureHomeUrl() . 'cl=' . $this->_sRedirectController . '',
+            false,
+            302
+        );
     }
 
     /**

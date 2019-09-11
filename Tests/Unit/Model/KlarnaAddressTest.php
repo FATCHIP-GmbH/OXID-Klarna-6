@@ -4,8 +4,8 @@ namespace TopConcepts\Klarna\Tests\Unit\Model;
 
 
 use OxidEsales\Eshop\Application\Model\Address;
+use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
-use TopConcepts\Klarna\Model\KlarnaAddress;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 /**
@@ -51,7 +51,7 @@ class KlarnaAddressTest extends ModuleUnitTestCase
 
     public function testKlExistsException()
     {
-        $this->setExpectedException('OxidEsales\EshopCommunity\Core\Exception\StandardException');
+        $this->expectException(StandardException::class);
         $address = $this->createKlarnaAddress();
         $address->klExists();
     }

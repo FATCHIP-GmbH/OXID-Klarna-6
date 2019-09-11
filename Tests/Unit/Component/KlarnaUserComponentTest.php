@@ -38,12 +38,15 @@ class KlarnaUserComponentTest extends ModuleUnitTestCase
      */
     public function testLogin_noredirect($klMode, $isEnabledPrivateSales, $isKlarnaController, $redirectUrl)
     {
-        $this->getConfig()->saveShopConfVar(null, 'sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'tcklarna');
+        $this->setRequestParameter('lgn_usr', 'xxx');
+        $this->setRequestParameter('lgn_pwd', 'xxx');
 
-        $cmpUser = $this->getMock(UserComponent::class, ['klarnaRedirect']);
+        $this->getConfig()->saveShopConfVar(null, 'sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'module:tcklarna');
+
+        $cmpUser = $this->getMockBuilder(UserComponent::class)->setMethods(['klarnaRedirect'])->getMock();
         $cmpUser->expects($this->any())->method('klarnaRedirect')->willReturn($isKlarnaController);
 
-        $oParent = $this->getMock('stdClass', array('isEnabledPrivateSales'));
+        $oParent = $this->getMockBuilder(\stdClass::class)->setMethods(array('isEnabledPrivateSales'))->getMock();
         $oParent->expects($this->any())->method('isEnabledPrivateSales')->willReturn($isEnabledPrivateSales);
         $cmpUser->setParent($oParent);
 
@@ -72,11 +75,11 @@ class KlarnaUserComponentTest extends ModuleUnitTestCase
      */
     public function testChangeuser_testvalues($klMode, $showShippingAddress, $resetResult, $showShippingAddressResult, $addressIdResult)
     {
-        $this->getConfig()->saveShopConfVar(null, 'sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'tcklarna');
+        $this->getConfig()->saveShopConfVar(null, 'sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'module:tcklarna');
         $this->setRequestParameter('blshowshipaddress', $showShippingAddress);
         $this->setRequestParameter('oxaddressid', $addressIdResult);
 
-        $cmpUser = $this->getMock(UserComponent::class, ['_changeUser_noRedirect']);
+        $cmpUser = $this->getMockBuilder(UserComponent::class)->setMethods(['_changeUser_noRedirect'])->getMock();
         $cmpUser->expects($this->once())->method('_changeUser_noRedirect')->willReturn(true);
 
         $cmpUser->changeuser_testvalues();
@@ -93,13 +96,13 @@ class KlarnaUserComponentTest extends ModuleUnitTestCase
      */
     public function test_getLogoutLink($isKlarnaCheckoutEnabled, $isKlarnaRedirect, $expectedResult)
     {
-        $oViewConfig = $this->getMock(ViewConfig::class, ['isKlarnaCheckoutEnabled']);
+        $oViewConfig = $this->getMockBuilder(ViewConfig::class)->setMethods(['isKlarnaCheckoutEnabled'])->getMock();
         $oViewConfig->expects($this->any())
             ->method('isKlarnaCheckoutEnabled')->willReturn($isKlarnaCheckoutEnabled);
         UtilsObject::setClassInstance(ViewConfig::class, $oViewConfig);
 
-        $baseController = $this->getMock(BaseController::class, ['getDynUrlParams']);
-        $userComponent  = $this->getMock(UserComponent::class, ['klarnaRedirect', 'getParent']);
+        $baseController = $this->getMockBuilder(BaseController::class)->setMethods(['getDynUrlParams'])->getMock();
+        $userComponent  = $this->getMockBuilder(UserComponent::class)->setMethods(['klarnaRedirect', 'getDynUrlParams', 'getParent'])->getMock();
         $userComponent->expects($this->any())->method('getParent')->willReturn($baseController);
         $userComponent->expects($this->any())->method('getDynUrlParams')->willReturn('dyna');
         $userComponent->expects($this->any())->method('klarnaRedirect')->willReturn($isKlarnaRedirect);

@@ -30,7 +30,8 @@ class KlarnaGeneralTest extends ModuleUnitTestCase
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'xmlhttprequest';
         putenv("HTTP_X_REQUESTED_WITH=xmlhttprequest");
-        $general = $this->createStub(KlarnaGeneral::class, ['getMultiLangData' => 'test']);
+        $general = $this->getMockBuilder(KlarnaGeneral::class)->setMethods(['getMultiLangData'])->getMock();
+        $general->expects($this->once())->method('getMultiLangData')->willReturn('test');
         $result = $general->render();
         $this->assertEquals('"test"', $result);
     }
@@ -44,7 +45,8 @@ class KlarnaGeneralTest extends ModuleUnitTestCase
         $methodReflection = new \ReflectionMethod(KlarnaGeneral::class, 'convertNestedParams');
         $methodReflection->setAccessible(true);
 
-        $general = $this->createStub(KlarnaGeneral::class, ['removeConfigKeys' => null]);
+        $general = $this->getMockBuilder(KlarnaGeneral::class)->setMethods(['removeConfigKeys'])->getMock();
+        $general->expects($this->any())->method('removeConfigKeys')->willReturn(null);
         $this->setProtectedClassProperty($general, '_aKlarnaCountries', $notSet);
         $result = $methodReflection->invokeArgs($general, ['nestedArray' => $expected]);
 
@@ -52,6 +54,5 @@ class KlarnaGeneralTest extends ModuleUnitTestCase
 
         $result = $methodReflection->invokeArgs($general, ['nestedArray' => 'invalid']);
         $this->assertEquals('invalid', $result);
-
     }
 }
