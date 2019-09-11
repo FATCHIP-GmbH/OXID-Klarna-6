@@ -161,7 +161,7 @@ class KlarnaOrder extends BaseModel
 
             $allowSeperateDel = (bool)KlarnaUtils::getShopConfVar('blKlarnaAllowSeparateDeliveryAddress');
             $this->_aOrderData['billing_countries'] = array_values($this->getKlarnaCountryList());
-            if($allowSeperateDel === false) {
+            if($allowSeperateDel === true) {
                 $list = $this->tcklarna_getAllSets($oBasket);
                 $aCountries = $this->getKlarnaCountryList();
                 $oDelList = Registry::get(DeliveryList::class);
