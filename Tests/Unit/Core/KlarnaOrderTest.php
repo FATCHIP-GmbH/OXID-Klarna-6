@@ -77,14 +77,14 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
         $user = $this->getMockBuilder(User::class)
             ->setMethods(['getKlarnaData'])
             ->getMock();
-        $user->expects($this->once())->method('getKlarnaData')->willReturn(['test' => 'test']);
+        $user->expects($this->any())->method('getKlarnaData')->willReturn(['test' => 'test']);
         $basket = $this->getMockBuilder(Basket::class)
             ->setMethods(['getBasketCurrency', 'getKlarnaOrderLines', 'getShippingId', 'tcklarna_calculateDeliveryCost', 'getPriceForPayment'])
             ->getMock();
-        $basket->expects($this->once())->method('getBasketCurrency')->willReturn((object)['name' => 'test']);
+        $basket->expects($this->any())->method('getBasketCurrency')->willReturn((object)['name' => 'test']);
         $basket->expects($this->once())->method('getKlarnaOrderLines')->willReturn(['order_lines' => 'test']);
         $basket->expects($this->any())->method('getShippingId')->willReturn('');
-        $basket->expects($this->exactly(2))->method('tcklarna_calculateDeliveryCost')->willReturn($price);
+        $basket->expects($this->once())->method('tcklarna_calculateDeliveryCost')->willReturn($price);
         $basket->expects($this->exactly(2))->method('getPriceForPayment')->willReturn(100);
         $delivery = oxNew(DeliverySet::class);
         $delivery->oxdeliveryset__oxtitle = new Field('title', Field::T_RAW);

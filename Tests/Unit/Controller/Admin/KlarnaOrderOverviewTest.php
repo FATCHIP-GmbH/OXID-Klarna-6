@@ -219,16 +219,17 @@ class KlarnaOrderOverviewTest extends ModuleUnitTestCase {
         $controller->sendOrder();
 
         $result = $controller->getViewData()['sMessage'];
-        $this->assertEquals('KLARNA_CAPTURE_SUCCESSFULL', $result);
+        $this->assertEquals('Der Betrag wurde erfolgreich abgebucht.', $result);
+    }
 
+    public function testSendorderException() {
         $order = $this->setOrder();
         $order->oxorder__tcklarna_sync = new Field(1, Field::T_RAW);
         $order->expects($this->any())->method('captureKlarnaOrder')->willThrowException(new StandardException('test'));
         $controller = $this->getMockBuilder(KlarnaOrderOverview::class)
-            ->setMethods(['getEditObjectId', 'retrieveKlarnaOrder'])
+            ->setMethods(['getEditObjectId'])
             ->getMock();
         $controller->expects($this->any())->method('getEditObjectId')->willReturn('test');
-        $controller->expects($this->once())->method('retrieveKlarnaOrder')->willReturn('test');
 
         $this->setProtectedClassProperty($controller, 'klarnaOrderData', ['remaining_authorized_amount' => 1]);
         $controller->sendOrder();
