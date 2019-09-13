@@ -45,7 +45,7 @@ class KlarnaOrderOverviewTest extends ModuleUnitTestCase {
                 'isCredentialsValid'
             ])
             ->getMock();
-        $controller->expects($this->any())->method('_authorize')->willReturn(true);
+        $controller->expects($this->once())->method('_authorize')->willReturn(true);
         $controller->expects($this->any())->method('getEditObjectId')->willReturn('test');
         $controller->expects($this->once())->method('isCredentialsValid')->willReturn(false);
         $controller->init();
@@ -53,11 +53,13 @@ class KlarnaOrderOverviewTest extends ModuleUnitTestCase {
 
         $controller = $this->getMockBuilder(KlarnaOrderOverview::class)
             ->setMethods([
+                '_authorize',
                 'getEditObjectId',
                 'isCredentialsValid',
                 'retrieveKlarnaOrder'
             ])
             ->getMock();
+        $controller->expects($this->once())->method('_authorize')->willReturn(true);
         $controller->expects($this->any())->method('getEditObjectId')->willReturn('test');
         $controller->expects($this->once())->method('isCredentialsValid')->willReturn(true);
         $controller->expects($this->once())->method('retrieveKlarnaOrder')->willReturn(['status' => 'CANCEL']);
@@ -71,20 +73,18 @@ class KlarnaOrderOverviewTest extends ModuleUnitTestCase {
         ];
         $controller = $this->getMockBuilder(KlarnaOrderOverview::class)
             ->setMethods([
+                '_authorize',
                 'getEditObjectId',
                 'isCredentialsValid',
                 'retrieveKlarnaOrder'
             ])
             ->getMock();
+        $controller->expects($this->once())->method('_authorize')->willReturn(true);
         $controller->expects($this->any())->method('getEditObjectId')->willReturn('test');
         $controller->expects($this->once())->method('isCredentialsValid')->willReturn(true);
         $controller->expects($this->once())->method('retrieveKlarnaOrder')->willReturn($orderData);
         $controller->init();
-
-        $controller->init();
-
         $this->assertEquals(new Field(1), $order->oxorder__tcklarna_sync);
-
     }
 
     /**
