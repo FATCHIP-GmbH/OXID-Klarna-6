@@ -4,6 +4,7 @@ namespace TopConcepts\Klarna\Tests\Unit\Core;
 
 use OxidEsales\Eshop\Application\Controller\PaymentController;
 use OxidEsales\Eshop\Application\Model\Basket;
+use OxidEsales\Eshop\Application\Model\DeliveryList;
 use OxidEsales\Eshop\Application\Model\DeliverySet;
 use OxidEsales\Eshop\Application\Model\NewsSubscribed;
 use OxidEsales\Eshop\Application\Model\Payment;
@@ -89,7 +90,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
         $delivery = oxNew(DeliverySet::class);
         $delivery->oxdeliveryset__oxtitle = new Field('title', Field::T_RAW);
         $payment = $this->getMockBuilder(PaymentController::class)->setMethods(['getCheckoutShippingSets'])->getMock();
-        $payment->expects($this->once())->method('getCheckoutShippingSets')->willReturn(['1' => $delivery]);
+        $payment->expects($this->once())->method('getCheckoutShippingSets')->willReturn(['shippingSetMock' => $delivery]);
 
         //setup mock
         $order = $this->getMockBuilder(KlarnaOrder::class)
@@ -99,15 +100,19 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
         $order->expects($this->once())->method('_getPayment')->willReturn($payment);
         $order->expects($this->once())->method('doesShippingMethodSupportKCO')->willReturn(true);
 
+        $oDeliveryList = $this->getMockBuilder(DeliveryList::class)->setMethods(['hasDeliveries'])->getMock();
+        $oDeliveryList->expects($this->any())->method('hasDeliveries')->willReturn(true);
+        Registry::set(DeliveryList::class, $oDeliveryList);
+
         $this->setModuleConfVar('sKlarnaTermsConditionsURI_DE', 'https://testurl');
         $this->setModuleConfVar('sKlarnaCancellationRightsURI_DE', 'https://testurl');
         $this->setModuleConfVar('iKlarnaValidation', 1);
         $this->setModuleConfVar('blKlarnaEnableAutofocus', false);
+        $this->setModuleConfVar('blKlarnaAllowSeparateDeliveryAddress', true);
         $this->setConfigParam('sSSLShopURL', 'https://testurl');
 
         //call constructor
         $order->__construct($basket, $user);
-
         $sGetChallenge = Registry::getSession()->getSessionChallengeToken();
         $this->setRequestParameter('stoken', $sGetChallenge);
 
@@ -135,7 +140,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
             'shipping_options'         =>
                 [
                     [
-                        'id'          => 1,
+                        'id'          => 'shippingSetMock',
                         'name'        => "title",
                         'description' => null,
                         'promo'       => null,
@@ -192,10 +197,10 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
                 ],
             'gui'                      => ['options' => ['disable_autofocus']],
             'merchant_data'            => 'To be implemented by the merchant.',
+            'billing_countries' => ["AD", "AT", "DE"]
         ];
 
         $result = $this->getProtectedClassProperty($order, '_aOrderData');
-
         $this->assertEquals($expected, $result);
 
         $this->setModuleConfVar('sKlarnaCancellationRightsURI_DE', null);

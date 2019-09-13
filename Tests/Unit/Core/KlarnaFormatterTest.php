@@ -60,12 +60,13 @@ class KlarnaFormatterTest extends ModuleUnitTestCase
     /**
      * @dataProvider klarnaToOxidAddressDataprovider
      */
-    public function testKlarnaToOxidAddress($address, $addressData, $expected)
+    public function testKlarnaToOxidAddress($sKey, $addressData, $expected)
     {
 
-        $result = KlarnaFormatter::klarnaToOxidAddress($addressData, $address);
-        $this->assertEquals($expected, $result);
-
+        $result = KlarnaFormatter::klarnaToOxidAddress($addressData, $sKey);
+        $sKey === null
+            ? $this->assertNull($result)
+            : $this->assertArraySubset($expected, $result);
     }
 
     public function klarnaToOxidAddressDataprovider()

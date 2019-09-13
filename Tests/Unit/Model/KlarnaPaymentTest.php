@@ -54,10 +54,12 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
         $oPayment = oxNew(Payment::class);
         $result   = $oPayment->getKPMethods();
 
-        $this->assertTrue(count($result) === 3);
+        $this->assertTrue(count($result) === 5);
         $this->assertArrayHasKey(KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID, $result);
         $this->assertArrayHasKey(KlarnaPayment::KLARNA_PAYMENT_PAY_LATER_ID, $result);
         $this->assertArrayHasKey(KlarnaPayment::KLARNA_PAYMENT_PAY_NOW, $result);
+        $this->assertArrayHasKey(KlarnaPayment::KLARNA_DIRECTDEBIT, $result);
+        $this->assertArrayHasKey(KlarnaPayment::KLARNA_SOFORT, $result);
     }
 
     /**
@@ -181,11 +183,15 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
             KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID,
             KlarnaPayment::KLARNA_PAYMENT_PAY_LATER_ID,
             KlarnaPayment::KLARNA_PAYMENT_PAY_NOW,
+            KlarnaPayment::KLARNA_DIRECTDEBIT,
+            KlarnaPayment::KLARNA_SOFORT
         ];
         $expectedResult_2 = [
             KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID,
             KlarnaPayment::KLARNA_PAYMENT_PAY_LATER_ID,
             KlarnaPayment::KLARNA_PAYMENT_PAY_NOW,
+            KlarnaPayment::KLARNA_DIRECTDEBIT,
+            KlarnaPayment::KLARNA_SOFORT
         ];
 
         return [

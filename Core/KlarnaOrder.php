@@ -74,6 +74,7 @@ class KlarnaOrder extends BaseModel
     protected $b2cAllowed;
 
     protected $_aUserData;
+    protected $_klarnaCountryList;
 
     /**
      * @return array
@@ -159,26 +160,10 @@ class KlarnaOrder extends BaseModel
         // skip all other data if there are no items in the basket
         if (!empty($this->_aOrderData['order_lines'])) {
 
-            $allowSeperateDel = (bool)KlarnaUtils::getShopConfVar('blKlarnaAllowSeparateDeliveryAddress');
             $this->_aOrderData['billing_countries'] = array_values($this->getKlarnaCountryList());
+            $allowSeperateDel = (bool)KlarnaUtils::getShopConfVar('blKlarnaAllowSeparateDeliveryAddress');
             if($allowSeperateDel === true) {
-                $list = $this->tcklarna_getAllSets($oBasket);
-                $aCountries = $this->getKlarnaCountryList();
-                $oDelList = Registry::get(DeliveryList::class);
-                $shippingCountries = [];
-
-                foreach ($list as $l)
-                {
-                    $sShipSetId = $l['id'];
-                    foreach ($aCountries as $sCountryId => $alpha2) {
-                        if ($oDelList->hasDeliveries($oBasket, $oUser, $sCountryId, $sShipSetId)) {
-                            $shippingCountries[$alpha2] = $alpha2;
-                        }
-                    }
-
-                }
-
-                $this->_aOrderData['shipping_countries'] = array_values($shippingCountries);
+                $this->_aOrderData['shipping_countries'] = array_values($this->getShippingCountries($oBasket));
             }
 
             $this->_aOrderData['shipping_options'] = $this->tcklarna_getAllSets($oBasket);
@@ -270,13 +255,36 @@ class KlarnaOrder extends BaseModel
      */
     public function tcklarna_getAllSets(Basket $oBasket)
     {
-        if (is_null($this->_klarnaShippingSets)) {
+        if ($this->_klarnaShippingSets === null) {
             $this->_klarnaShippingSets = $this->getSupportedShippingMethods($oBasket);
         }
 
         return $this->_klarnaShippingSets;
     }
 
+    /**
+     * @param $oBasket
+     * @return array
+     */
+    protected function getShippingCountries($oBasket)
+    {
+        $list = $this->tcklarna_getAllSets($oBasket);
+        $aCountries = $this->getKlarnaCountryList();
+        $oDelList = Registry::get(DeliveryList::class);
+        $shippingCountries = [];
+        foreach ($list as $l)
+        {
+            $sShipSetId = $l['id'];
+            foreach ($aCountries as $sCountryId => $alpha2) {
+                if ($oDelList->hasDeliveries($oBasket, $this->_oUser, $sCountryId, $sShipSetId)) {
+                    $shippingCountries[$alpha2] = $alpha2;
+                }
+            }
+
+        }
+
+        return $shippingCountries;
+    }
 
     /**
      * Get shipping methods that support Klarna Checkout payment
@@ -371,15 +379,16 @@ class KlarnaOrder extends BaseModel
      */
     public function getKlarnaCountryList()
     {
-        $oCountryList = oxNew(CountryList::class);
-        $oCountryList->loadActiveKlarnaCheckoutCountries();
-
-        $aCountriesISO = array();
-        foreach ($oCountryList as $oCountry) {
-            $aCountriesISO[$oCountry->oxcountry__oxid->value] = $oCountry->oxcountry__oxisoalpha2->value;
+        if ($this->_klarnaCountryList === null) {
+            $this->_klarnaCountryList = array();
+            $oCountryList = oxNew(CountryList::class);
+            $oCountryList->loadActiveKlarnaCheckoutCountries();
+            foreach ($oCountryList as $oCountry) {
+                $this->_klarnaCountryList[$oCountry->oxcountry__oxid->value] = $oCountry->oxcountry__oxisoalpha2->value;
+            }
         }
 
-        return $aCountriesISO;
+        return $this->_klarnaCountryList;
     }
 
     /**
