@@ -92,12 +92,12 @@ class KlarnaOrderOverviewTest extends ModuleUnitTestCase {
      * @param $expected
      */
     public function testInitExceptions($exception, $expected) {
-        $this->markTestSkipped();
 
         $this->setOrder();
         $controller = $this->getMockBuilder(KlarnaOrderOverview::class)
-            ->setMethods(['getEditObjectId', 'retrieveKlarnaOrder', 'isCredentialsValid'])
+            ->setMethods(['_authorize', 'getEditObjectId', 'retrieveKlarnaOrder', 'isCredentialsValid'])
             ->getMock();
+        $controller->expects($this->any())->method('_authorize')->willReturn(true);
         $controller->expects($this->any())->method('isCredentialsValid')->willReturn(true);
         $controller->expects($this->any())->method('getEditObjectId')->willReturn('test');
         $controller->expects($this->any())->method('retrieveKlarnaOrder')->will($this->throwException($exception));
