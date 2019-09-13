@@ -5,7 +5,6 @@ namespace TopConcepts\Klarna\Tests\Unit\Core;
 use OxidEsales\Eshop\Application\Model\Address;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Field;
-use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
 use TopConcepts\Klarna\Core\KlarnaFormatter;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
@@ -13,10 +12,9 @@ class KlarnaFormatterTest extends ModuleUnitTestCase
 {
 
     /**
-     * @dataProvider oxidtoklarnaDataprovider
+     * @dataProvider oxidtoklarnaDataProvider
      * @param $object
      * @param $expectedResult
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      * @throws \Exception
      */
     public function testOxidToKlarnaAddress($object, $expectedResult)
@@ -27,16 +25,14 @@ class KlarnaFormatterTest extends ModuleUnitTestCase
             KlarnaFormatter::oxidToKlarnaAddress('invalid');
         } else {
             $result = KlarnaFormatter::oxidToKlarnaAddress($object);
-
-            $this->assertEquals($result, $expectedResult);
+            $this->assertEquals($expectedResult, $result);
         }
     }
 
-    public function oxidtoklarnaDataprovider()
+    public function oxidtoklarnaDataProvider()
     {
-        $addressMock = $this->createStub(Address::class, []);
-
-        $userMock = $this->getMock(User::class, ['getFieldData']);
+        $addressMock = oxNew(Address::class);
+        $userMock = oxNew(User::class);
         $userMock->oxuser__oxcountryid = new Field('a7c40f632a0804ab5.18804076', Field::T_RAW);
         $userMock->oxuser__oxstreet = new Field('street', Field::T_RAW);
         $userMock->oxuser__oxstreetnr = new Field('streetnr', Field::T_RAW);

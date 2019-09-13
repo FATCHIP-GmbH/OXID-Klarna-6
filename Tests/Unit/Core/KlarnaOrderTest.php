@@ -27,7 +27,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
         $oUser = oxNew(User::class);
         $oKlarnaOrder = new  KlarnaOrder($oBasket, $oUser);
         $this->setProtectedClassProperty($oKlarnaOrder, 'errors', ['Error1', 'Error2']);
-        $oUtilsView = $this->getMock(UtilsView::class, ['addErrorToDisplay']);
+        $oUtilsView = $this->getMockBuilder(UtilsView::class)->setMethods(['addErrorToDisplay'])->getMock();
         $oUtilsView->expects($this->at(0))->method('addErrorToDisplay')->with('Error1');
         $oUtilsView->expects($this->at(1))->method('addErrorToDisplay')->with('Error2');
         \oxTestModules::addModuleObject(UtilsView::class, $oUtilsView);
@@ -36,7 +36,8 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
 
     public function testGetKlarnaCountryListByPayment()
     {
-        $payment          = $this->createStub(Payment::class, ['getCountries' => ['testId']]);
+        $payment = $this->getMockBuilder(Payment::class)->setMethods(['getCountries'])->getMock();
+        $payment->expects($this->once())->method('getCountries')->willReturn(['testId']);
         $aActiveCountries = ['testId' => 'test'];
 
         $order = $this->getMockBuilder(KlarnaOrder::class)
@@ -50,9 +51,17 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
     }
 
     public function test__construct() {
-        $price = $this->createStub(Price::class, ['getBruttoPrice' => 1000, 'getVat' => 0.23]);
+        $price = $this->getMockBuilder(Price::class)
+            ->setMethods(['getBruttoPrice', 'getVat'])
+            ->getMock();
+        $price->expects($this->any())->method('getBruttoPrice')->willReturn(1000);
+        $price->expects($this->once())->method('getVat')->willReturn(0.23);
 
-        $payment = $this->createStub(Payment::class, ['calculate' => null, 'getPrice' => $price]);
+        $payment = $this->getMockBuilder(Payment::class)
+            ->setMethods(['calculate', 'getPrice'])
+            ->getMock();
+        $payment->expects($this->exactly(2))->method('calculate')->willReturn(null);
+        $payment->expects($this->exactly(2))->method('getPrice')->willReturn($price);
         $payment->oxpayments__tcklarna_externalpayment = new Field(1, Field::T_RAW);
         $payment->oxpayments__tcklarna_externalcheckout = new Field(1, Field::T_RAW);
         $payment->oxpayments__oxlongdesc = new Field('<title>test</title>', Field::T_RAW);
@@ -61,40 +70,34 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
             'klarna_checkout' => $payment,
             'oxidpaypal'      => $payment,
         ];
-        $oPaymentList = $this->createStub(PaymentList::class, ['getPaymentList' => $paymentList]);
+        $oPaymentList = $this->getMockBuilder(PaymentList::class)->setMethods(['getPaymentList'])->getMock();
+        $oPaymentList->expects($this->once())->method('getPaymentList')->willReturn($paymentList);
         UtilsObject::setClassInstance(PaymentList::class, $oPaymentList);
 
-        $user = $this->createStub(
-            User::class,
-            [
-                'getKlarnaData' => ['test' => 'test'],
-            ]
-        );
-
-        $basket = $this->createStub(
-            Basket::class,
-            [
-                'getBasketCurrency'              => (object)['name' => 'test'],
-                'getKlarnaOrderLines'            => ['order_lines' => 'test'],
-                'getShippingId'                  => '',
-                'tcklarna_calculateDeliveryCost' => $price,
-                'getPriceForPayment'             => 100,
-            ]
-        );
-
+        $user = $this->getMockBuilder(User::class)
+            ->setMethods(['getKlarnaData'])
+            ->getMock();
+        $user->expects($this->any())->method('getKlarnaData')->willReturn(['test' => 'test']);
+        $basket = $this->getMockBuilder(Basket::class)
+            ->setMethods(['getBasketCurrency', 'getKlarnaOrderLines', 'getShippingId', 'tcklarna_calculateDeliveryCost', 'getPriceForPayment'])
+            ->getMock();
+        $basket->expects($this->any())->method('getBasketCurrency')->willReturn((object)['name' => 'test']);
+        $basket->expects($this->once())->method('getKlarnaOrderLines')->willReturn(['order_lines' => 'test']);
+        $basket->expects($this->any())->method('getShippingId')->willReturn('');
+        $basket->expects($this->once())->method('tcklarna_calculateDeliveryCost')->willReturn($price);
+        $basket->expects($this->exactly(2))->method('getPriceForPayment')->willReturn(100);
         $delivery = oxNew(DeliverySet::class);
         $delivery->oxdeliveryset__oxtitle = new Field('title', Field::T_RAW);
-        $payment = $this->createStub(PaymentController::class, ['getCheckoutShippingSets' => ['1' => $delivery]]);
+        $payment = $this->getMockBuilder(PaymentController::class)->setMethods(['getCheckoutShippingSets'])->getMock();
+        $payment->expects($this->once())->method('getCheckoutShippingSets')->willReturn(['1' => $delivery]);
 
         //setup mock
-        $order = $this->createStub(
-            KlarnaOrder::class,
-            [
-                '_getPayment'                  => $payment,
-                'getConfig'                    => Registry::getConfig(),
-                'doesShippingMethodSupportKCO' => true,
-            ]
-        );
+        $order = $this->getMockBuilder(KlarnaOrder::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['_getPayment', 'doesShippingMethodSupportKCO'])
+            ->getMock();
+        $order->expects($this->once())->method('_getPayment')->willReturn($payment);
+        $order->expects($this->once())->method('doesShippingMethodSupportKCO')->willReturn(true);
 
         $this->setModuleConfVar('sKlarnaTermsConditionsURI_DE', 'https://testurl');
         $this->setModuleConfVar('sKlarnaCancellationRightsURI_DE', 'https://testurl');
@@ -212,7 +215,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
         $methodReflection = new \ReflectionMethod(KlarnaOrder::class, '_getPayment');
         $methodReflection->setAccessible(true);
 
-        $order = $this->createStub(KlarnaOrder::class, []);
+        $order = $this->getMockBuilder(KlarnaOrder::class)->disableOriginalConstructor()->getMock();
         $result = $methodReflection->invoke($order);
         $this->assertInstanceOf(KlarnaPaymentController::class, $result);
 
@@ -222,7 +225,10 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
         $methodReflection = new \ReflectionMethod(KlarnaOrder::class, 'getAdditionalCheckbox');
         $methodReflection->setAccessible(true);
 
-        $user = $this->createStub(User::class, ['getType' => KlarnaUser::NOT_EXISTING]);
+        $user = $this->getMockBuilder(User::class)
+            ->setMethods(['getType'])
+            ->getMock();
+        $user->expects($this->once())->method('getType')->willReturn(KlarnaUser::NOT_EXISTING);
         $order = $this->getMockBuilder(KlarnaOrder::class)
             ->setMethods(['getExternalPaymentMethods'])
             ->disableOriginalConstructor()
@@ -230,27 +236,34 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
         $this->setProtectedClassProperty($order, '_oUser', $user);
         $this->setModuleConfVar('iKlarnaActiveCheckbox', '22');
         $result = $methodReflection->invoke($order);
-
         $this->assertEquals(22, $result);
 
 
-        $user = $this->createStub(User::class, ['getType' => KlarnaUser::REGISTERED]);
+        $user = $this->getMockBuilder(User::class)
+            ->setMethods(['getType'])
+            ->getMock();
+        $user->expects($this->any())->method('getType')->willReturn(KlarnaUser::REGISTERED);
+        $order = $this->getMockBuilder(KlarnaOrder::class)
+            ->setMethods(['getExternalPaymentMethods'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $this->setProtectedClassProperty($order, '_oUser', $user);
-
         $result = $methodReflection->invoke($order);
-
         $this->assertEquals(2, $result);
 
         $this->setModuleConfVar('iKlarnaActiveCheckbox', '0');
         $result = $methodReflection->invoke($order);
-
         $this->assertEquals(0, $result);
 
-        $newsSubscribed = $this->createStub(NewsSubscribed::class, ['getOptInStatus' => 1]);
-        $user = $this->createStub(User::class, ['getType' => KlarnaUser::REGISTERED, 'getNewsSubscription' => $newsSubscribed]);
+        $newsSubscribed = $this->getMockBuilder(NewsSubscribed::class)->setMethods(['getOptInStatus'])->getMock();
+        $newsSubscribed->expects($this->once())->method('getOptInStatus')->willReturn(1);
+        $user = $this->getMockBuilder(User::class)
+            ->setMethods(['getType', 'getNewsSubscription'])
+            ->getMock();
+        $user->expects($this->any())->method('getType')->willReturn(KlarnaUser::REGISTERED);
+        $user->expects($this->once())->method('getNewsSubscription')->willReturn($newsSubscribed);
         $this->setProtectedClassProperty($order, '_oUser', $user);
         $result = $methodReflection->invoke($order);
-
         $this->assertEquals(0, $result);
     }
 
@@ -258,7 +271,8 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
         $methodReflection = new \ReflectionMethod(KlarnaOrder::class, 'doesShippingMethodSupportKCO');
         $methodReflection->setAccessible(true);
 
-        $oPaymentList = $this->createStub(PaymentList::class, ['getPaymentList' => ['klarna_checkout' => 'test']]);
+        $oPaymentList = $this->getMockBuilder(PaymentList::class)->setMethods(['getPaymentList'])->getMock();
+        $oPaymentList->expects($this->once())->method('getPaymentList')->willReturn(['klarna_checkout' => 'test']);
         \oxTestModules::addModuleObject(PaymentList::class, $oPaymentList);
         $order = $this->getMockBuilder(KlarnaOrder::class)
             ->setMethods(['getExternalPaymentMethods'])
@@ -273,7 +287,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
 
 
     public function testGetSupportedShippingMethods() {
-        $basket = $this->createStub(Basket::class, []);
+        $basket = $this->getMockBuilder(Basket::class)->getMock();
         $methodReflection = new \ReflectionMethod(KlarnaOrder::class, 'getSupportedShippingMethods');
         $methodReflection->setAccessible(true);
         $order = $this->getMockBuilder(KlarnaOrder::class)
@@ -281,32 +295,30 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
             ->disableOriginalConstructor()
             ->getMock();
         $result = $methodReflection->invokeArgs($order, [$basket]);
-
         $this->assertEmpty($result);
 
-        $basket = $this->createStub(
-            Basket::class,
-            [
-                'getShippingId'      => '1',
-                'getPriceForPayment' => 100,
-            ]
-        );
 
+        $basket = $this->getMockBuilder(Basket::class)
+            ->setMethods(['getShippingId', 'getPriceForPayment'])
+            ->getMock();
+        $basket->expects($this->once())->method('getShippingId')->willReturn('1');
+        $basket->expects($this->once())->method('getPriceForPayment')->willReturn(100);
         $delivery = oxNew(DeliverySet::class);
         $delivery->oxdeliveryset__oxtitle = new Field('title', Field::T_RAW);
-        $payment = $this->createStub(PaymentController::class, ['getCheckoutShippingSets' => ['1' => $delivery]]);
+        $payment = $this->getMockBuilder(PaymentController::class)->setMethods(['getCheckoutShippingSets'])->getMock();
+        $payment->expects($this->once())->method('getCheckoutShippingSets')->willReturn(['1' => $delivery]);
 
         //setup mock
-        $order = $this->createStub(
-            KlarnaOrder::class,
-            [
-                '_getPayment'                  => $payment,
-                'getConfig'                    => Registry::getConfig(),
-                'doesShippingMethodSupportKCO' => false,
-            ]
-        );
-
-        $user = $this->createStub(User::class, ['getActiveCountry' => '1111']);
+        $order = $this->getMockBuilder(KlarnaOrder::class)
+            ->setMethods(['_getPayment', 'doesShippingMethodSupportKCO'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $order->expects($this->once())->method('_getPayment')->willReturn($payment);
+        $order->expects($this->once())->method('doesShippingMethodSupportKCO')->willReturn(false);
+        $user = $this->getMockBuilder(User::class)
+            ->setMethods(['getActiveCountry'])
+            ->getMock();
+        $user->expects($this->once())->method('getActiveCountry')->willReturn('1111');
         $this->setProtectedClassProperty($order, '_oUser', $user);
 
         $this->expectException(KlarnaConfigException::class);
@@ -320,15 +332,20 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
     public function testSetAttachmentsData() {
         $methodReflection = new \ReflectionMethod(KlarnaOrder::class, 'setAttachmentsData');
         $methodReflection->setAccessible(true);
-
-        $oMockKlarnaEMD = $this->createStub(KlarnaEMD::class, ['getAttachments' => ['test']]);
+        $oMockKlarnaEMD = $this->getMockBuilder(KlarnaEMD::class)
+            ->setMethods(['getAttachments'])
+            ->getMock();
+        $oMockKlarnaEMD->expects($this->once())->method('getAttachments')->willReturn(['test']);
         UtilsObject::setClassInstance(KlarnaEMD::class, $oMockKlarnaEMD);
         $order = $this->getMockBuilder(KlarnaOrder::class)
             ->setMethods(['getExternalPaymentMethods'])
             ->disableOriginalConstructor()
             ->getMock();
+        $user = $this->getMockBuilder(User::class)
+            ->setMethods(['isFake'])
+            ->getMock();
+        $user->expects($this->once())->method('isFake')->willReturn(false);
 
-        $user = $this->createStub(User::class, ['isFake' => false]);
         $this->setProtectedClassProperty($order, '_oUser', $user);
 
         $methodReflection->invoke($order);

@@ -43,7 +43,9 @@ class KlarnaClientBaseTest extends ModuleUnitTestCase
         $response->status_code = 200;
 
         $klarnaClientBase = $this->getMockForAbstractClass(KlarnaClientBase::class);
-        $sessionMock = $this->createStub(\Requests_Session::class, [$method => $response]);
+        $sessionMock = $this->getMockBuilder(\Requests_Session::class)
+            ->setMethods([$method])->getMock();
+        $sessionMock->expects($this->once())->method($method)->willReturn($response);
 
         $this->setProtectedClassProperty($klarnaClientBase,'session',$sessionMock);
 

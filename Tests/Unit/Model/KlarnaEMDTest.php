@@ -10,40 +10,38 @@ use TopConcepts\Klarna\Model\KlarnaEMD;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 use OxidEsales\Eshop\Core\UtilsObject;
 
-class KlarnaEMDTest extends ModuleUnitTestCase
-{
+class KlarnaEMDTest extends ModuleUnitTestCase {
     /**
      * @param $data
      * @dataProvider getAttachmentsDataProvider
      */
-    public function testGetAttachments($data, $expectedResult)
-    {
+    public function testGetAttachments($data, $expectedResult) {
         $this->setModuleConfVar('blKlarnaEmdCustomerAccountInfo', $data['blKlarnaEmdCustomerAccountInfo']);
         $this->setModuleConfVar('blKlarnaEmdPaymentHistoryFull', $data['blKlarnaEmdPaymentHistoryFull']);
 
         $klarnaEMD = oxNew(KlarnaEMD::class);
 
-        $oUser               = oxNew(User::class);
-        $oMockCustomerInfo   = $this->createStub(KlarnaCustomerAccountInfo::class, [
-            'getCustomerAccountInfo' =>
-                ['customer_account_info' =>
-                     [
-                         [
-                             'unique_account_identifier' => "test_id",
-                             'account_registration_date' => "2018-04-20T15:53:40Z",
-                             'account_last_modified'     => "2018-04-20T15:53:40Z",
-                         ],
-                     ],
-                ],
-        ]);
-        $oMockPaymentHistory = $this->createStub(KlarnaPaymentHistoryFull::class, [
-            'getPaymentHistoryFull' =>
-                ['payment_history_full' =>
-                     [
-                         ['test' => 'orderhistory'],
-                     ],
-                ],
-        ]);
+        $oUser = oxNew(User::class);
+        $oMockCustomerInfo = $this->getMockBuilder(KlarnaCustomerAccountInfo::class)->setMethods(['getCustomerAccountInfo'])->getMock();
+        $oMockCustomerInfo->expects($this->any())->method('getCustomerAccountInfo')
+            ->willReturn([
+                'customer_account_info' =>
+                    [
+                        [
+                            'unique_account_identifier' => "test_id",
+                            'account_registration_date' => "2018-04-20T15:53:40Z",
+                            'account_last_modified'     => "2018-04-20T15:53:40Z",
+                        ],
+                    ]
+            ]);
+        $oMockPaymentHistory = $this->getMockBuilder(KlarnaPaymentHistoryFull::class)->setMethods(['getPaymentHistoryFull'])->getMock();
+        $oMockPaymentHistory->expects($this->any())->method('getPaymentHistoryFull')
+            ->willReturn([
+                'payment_history_full' =>
+                    [
+                        ['test' => 'orderhistory'],
+                    ],
+            ]);
         UtilsObject::setClassInstance(KlarnaCustomerAccountInfo::class, $oMockCustomerInfo);
         UtilsObject::setClassInstance(KlarnaPaymentHistoryFull::class, $oMockPaymentHistory);
 
@@ -55,8 +53,7 @@ class KlarnaEMDTest extends ModuleUnitTestCase
     /**
      *
      */
-    public function getAttachmentsDataProvider()
-    {
+    public function getAttachmentsDataProvider() {
         return [
             [
                 [

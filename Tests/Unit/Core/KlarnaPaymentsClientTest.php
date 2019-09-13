@@ -17,16 +17,20 @@ class KlarnaPaymentsClientTest extends ModuleUnitTestCase
     {
         $body = ['test' => 'test'];
         $getResponse = $this->getPostResponse($body);
-
-        $checkoutClient = $this->createStub(KlarnaPaymentsClient::class, ['get' => $this->getPostResponse($body), 'getSessionId' => 1]);
+        $checkoutClient = $this->getMockBuilder(KlarnaPaymentsClient::class)
+            ->setMethods(['get', 'getSessionId'])
+            ->getMock();
+        $checkoutClient->expects($this->once())->method('get')->willReturn($getResponse);
+        $checkoutClient->expects($this->once())->method('getSessionId')->willReturn(1);
         $result = $checkoutClient->getSessionData();
-
         $this->assertEquals($body, $result);
 
         $exception = new KlarnaClientException('test', 404);
-        $mock = $this->getMock(KlarnaPaymentsClient::class, ['get','handleResponse']);
-        $mock->expects($this->any())->method('get')->willReturn($getResponse);
-        $mock->expects($this->any())->method('handleResponse')->will($this->throwException($exception));
+        $mock = $this->getMockBuilder(KlarnaPaymentsClient::class)
+            ->setMethods(['get', 'handleResponse'])
+            ->getMock();
+        $mock->expects($this->once())->method('get')->willReturn($getResponse);
+        $mock->expects($this->once())->method('handleResponse')->will($this->throwException($exception));
         $result = $mock->getSessionData();
         $this->assertNull($result);
 
@@ -67,26 +71,27 @@ class KlarnaPaymentsClientTest extends ModuleUnitTestCase
 
     protected function prepareNewOrderTestStub($body, $statusCode)
     {
+        $user = $this->getMockBuilder(KlarnaUser::class)
+            ->setMethods(['getKlarnaPaymentData'])
+            ->getMock();
+        $user->expects($this->once())->method('getKlarnaPaymentData')->willReturn([]);
+        $order = $this->getMockBuilder(KlarnaPayment::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getChangedData', 'getOrderData'])
+            ->getMock();
+        $order->expects($this->any())->method('getChangedData')->willReturn(['billing_address', 'test']);
+        $order->expects($this->once())->method('getOrderData')->willReturn(['test', 'test']);
 
-        $user = $this->createStub(KlarnaUser::class, ['getKlarnaPaymentData' => []]);
+        $checkoutClient = $this->getMockBuilder(KlarnaPaymentsClient::class)
+            ->setMethods(['post', 'getUser', 'getSessionId', 'formatAndShowErrorMessage'])
+            ->getMock();
+        $checkoutClient->expects($this->once())->method('post')->willReturn($this->getPostResponse($body, $statusCode));
+        $checkoutClient->expects($this->once())->method('getUser')->willReturn($user);
+        $checkoutClient->expects($this->any())->method('getSessionId')->willReturn(1);
+        $checkoutClient->expects($this->any())->method('formatAndShowErrorMessage')->willReturn('');
 
-        $order = $this->createStub(KlarnaOrder::class, [
-            'getChangedData' => ['billing_address', 'test'],
-            'getOrderData' => ['test', 'test'],
-            'getUser' => $user
-        ]);
-
-        $checkoutClient = $this->createStub(
-            KlarnaPaymentsClient::class,
-            [
-                'post' => $this->getPostResponse($body, $statusCode),
-                'getUser' => $user,
-                'getSessionId' => 1,
-                'formatAndShowErrorMessage' => ''
-            ]
-        );
         $this->setSessionParam('sAuthToken', 'test');
-        $this->setProtectedClassProperty($checkoutClient, '_oKlarnaOrder', $order);
+        $checkoutClient->initOrder($order);
         $sessionData['session_id'] = 1;
         $this->setProtectedClassProperty($checkoutClient,'aSessionData', $sessionData);
 
@@ -97,7 +102,11 @@ class KlarnaPaymentsClientTest extends ModuleUnitTestCase
     {
         $body = ['test' => 'test'];
 
-        $checkoutClient = $this->createStub(KlarnaPaymentsClient::class, ['post' => $this->getPostResponse($body), 'getSessionId' => 1]);
+        $checkoutClient = $this->getMockBuilder(KlarnaPaymentsClient::class)
+            ->setMethods(['post', 'getSessionId'])
+            ->getMock();
+        $checkoutClient->expects($this->once())->method('post')->willReturn($this->getPostResponse($body));
+        $checkoutClient->expects($this->once())->method('getSessionId')->willReturn(1);
 
         $result = $checkoutClient->updateSession($body);
 
@@ -106,7 +115,9 @@ class KlarnaPaymentsClientTest extends ModuleUnitTestCase
 
     public function testInitOrder()
     {
-        $klarnaPayment = $this->getMock(KlarnaPayment::class, [], [] , "", false);
+        $klarnaPayment = $this->getMockBuilder(KlarnaPayment::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $klarnaPaymentClient = oxNew(KlarnaPaymentsClient::class);
         $result = $klarnaPaymentClient->initOrder($klarnaPayment);
 
@@ -116,56 +127,56 @@ class KlarnaPaymentsClientTest extends ModuleUnitTestCase
 
     public function testCreateOrUpdateSession()
     {
-        $clientMock = $this->getMock(KlarnaPaymentsClient::class, ['formatOrderData']);
+        $clientMock = $this->getMockBuilder(KlarnaPaymentsClient::class)
+            ->setMethods(['formatOrderData'])->getMock();
         $clientMock->expects($this->at(0))->method('formatOrderData')->willReturn([null,null]);
         $sessionData = ['test'];
         $this->setProtectedClassProperty($clientMock,'aSessionData', $sessionData);
         $result = $clientMock->createOrUpdateSession();
-
         $this->assertEquals($result, $sessionData);
 
+    }
+
+    public function testCreateOrUpdateSession_1()
+    {
         $body = ['test' => 'test'];
-        $klarnaPaymentClient = $this->createStub(KlarnaPaymentsClient::class, ['post' => $this->getPostResponse($body)]);
-
-        $order = $this->createStub(KlarnaPayment::class,
-            [
-                'getOrderData' => ['test', 'test'],
-                'saveCheckSums' => '',
-                'setStatus' => '',
-                'getStatus' => 'authorize',
-                'isAuthorized' => true,
-                'getChangedData' => ['billing_address' => 'billingaddresstest']
-            ]
-        );
-
-        $this->setProtectedClassProperty($klarnaPaymentClient, '_oKlarnaOrder', $order);
+        $klarnaPaymentClient = $this->getMockBuilder(KlarnaPaymentsClient::class)
+            ->setMethods(['post'])->getMock();
+        $klarnaPaymentClient->expects($this->once())->method('post')->willReturn($this->getPostResponse($body));
+        $klarnaPaymentClient->initOrder($this->createKPOrderMock());
         $result = $klarnaPaymentClient->createOrUpdateSession();
-
         $this->assertEquals($result, $body);
         $this->assertEquals($this->getSession()->getVariable('klarna_session_data'), $body);
         $this->assertTrue($this->getSession()->hasVariable('sSessionTimeStamp'));
+    }
 
-        $sessionData['payment_method_categories'] = ['test1','test2'];
-        $this->setProtectedClassProperty($klarnaPaymentClient,'sSessionId', 1);
-        $this->setProtectedClassProperty($klarnaPaymentClient,'aSessionData', $sessionData);
+    public function testCreateOrUpdateSession_2() {
+        $body = ['test' => 'test'];
+        $klarnaPaymentClient = $this->getMockBuilder(KlarnaPaymentsClient::class)
+            ->setMethods(['post'])->getMock();
+        $klarnaPaymentClient->expects($this->once())->method('post')->willReturn($this->getPostResponse($body));
+        $klarnaPaymentClient->initOrder($this->createKPOrderMock());
+        $sessionData = ['test'];
+        $sessionData['payment_method_categories'] = ['test1', 'test2'];
+        $this->setProtectedClassProperty($klarnaPaymentClient, 'sSessionId', 1);
+        $this->setProtectedClassProperty($klarnaPaymentClient, 'aSessionData', $sessionData);
         $result = $klarnaPaymentClient->createOrUpdateSession();
         $this->assertEquals($result, $body);
 
-        $order = $this->createStub(KlarnaOrder::class,
-            [
-                'getOrderData' => ['test', 'test'],
-                'saveCheckSums' => '',
-                'setStatus' => '',
-                'getStatus' => 'authorize',
-                'isAuthorized' => true,
-                'getChangedData' => ['billing_address' => 'billingaddresstest']
-            ]
-        );
-
-        $exceptionMock = $this->getMock(KlarnaPaymentsClient::class, ['updateSession', 'post']);
+    }
+    public function testCreateOrUpdateSession_3()
+    {
+        $body = ['test' => 'test'];
+        $sessionData = ['test'];
+        $sessionData['payment_method_categories'] = ['test1', 'test2'];
+        $klarnaPaymentClient = $this->getMockBuilder(KlarnaPaymentsClient::class)
+            ->setMethods(['post'])->getMock();
+        $klarnaPaymentClient->initOrder($this->createKPOrderMock());
+        $exceptionMock = $this->getMockBuilder(KlarnaPaymentsClient::class)
+            ->setMethods(['updateSession', 'post'])->getMock();
         $this->setProtectedClassProperty($exceptionMock,'sSessionId', 1);
         $this->setProtectedClassProperty($exceptionMock,'aSessionData', $sessionData);
-        $this->setProtectedClassProperty($exceptionMock, '_oKlarnaOrder', $order);
+        $exceptionMock->initOrder($this->createKPOrderMock());
 
         $exceptionTestBody = ['test2' => 'test2'];
         $exceptionMock->expects($this->any())->method('post')->willReturn($this->getPostResponse($exceptionTestBody));
@@ -173,10 +184,22 @@ class KlarnaPaymentsClientTest extends ModuleUnitTestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'xmlhttprequest';
         putenv("HTTP_X_REQUESTED_WITH=xmlhttprequest");
         $result = $exceptionMock->createOrUpdateSession();
-
-        //$this->assertLoggedException(KlarnaOrderNotFoundException::class, 'KLARNA_ORDER_NOT_FOUND');
         $this->assertEquals($this->getSession()->getVariable('klarna_session_data'), $exceptionTestBody);
         $this->assertEquals($result, $exceptionTestBody);
+    }
+    public function createKPOrderMock() {
+        $order = $this->getMockBuilder(KlarnaPayment::class)
+            ->setMethods(['getOrderData', 'saveCheckSums', 'setStatus', 'getStatus', 'isAuthorized', 'getChangedData'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $order->expects($this->any())->method('getOrderData')->willReturn(['test', 'test']);
+        $order->expects($this->any())->method('saveCheckSums')->willReturn('');
+        $order->expects($this->any())->method('setStatus')->willReturn('');
+        $order->expects($this->any())->method('getStatus')->willReturn('authorize');
+        $order->expects($this->any())->method('isAuthorized')->willReturn(true);
+        $order->expects($this->any())->method('getChangedData')->willReturn(['billing_address' => 'billingaddresstest']);
+
+        return $order;
     }
 
     public function testGetSessionId()

@@ -76,18 +76,17 @@ class KlarnaBaseConfigTest extends ModuleUnitTestCase {
 
     public function testGetFlippedLangArray() {
         $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['init'])->getMock();
-        $stub->expects($this->once())->method('init')->willReturn(true);
         $result = $stub->getFlippedLangArray();
         $de = $result['de'];
         $en = $result['en'];
 
         $deExpected = $this->getLangExpected();
-        $deExpected->selected = 0;
-        $this->assertEquals($de, $deExpected);
+        $deExpected->selected = $de->selected;
+        $this->assertEquals($deExpected, $de);
 
         $enExpected = $this->getLangExpected('en');
-
-        $this->assertEquals($en, $enExpected);
+        $enExpected->selected = $en->selected;
+        $this->assertEquals($enExpected, $en);
 
     }
 
@@ -113,18 +112,17 @@ class KlarnaBaseConfigTest extends ModuleUnitTestCase {
 
     public function testGetLangs() {
         $stub = $this->getMockBuilder(KlarnaBaseConfig::class)->setMethods(['init'])->getMock();
-        $stub->expects($this->once())->method('init')->willReturn(true);
         $result = json_decode(html_entity_decode($stub->getLangs()));
         $de = $result[0];
         $en = $result[1];
 
         $deExpected = $this->getLangExpected();
-        $deExpected->selected = 0;
+        $deExpected->selected = $de->selected;
         $this->assertEquals($de, $deExpected);
 
         $enExpected = $this->getLangExpected('en');
-
-        $this->assertEquals($en, $enExpected);
+        $enExpected->selected = $en->selected;
+        $this->assertEquals($enExpected, $en);
 
     }
 

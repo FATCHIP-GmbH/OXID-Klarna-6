@@ -17,7 +17,7 @@ class KlarnaPaymentHistoryFullTest extends ModuleUnitTestCase
 
     public function testGetPaymentHistoryFull()
     {
-        $oUser = $this->getMock(User::class, ['getId', 'isFake']);
+        $oUser = $this->getMockBuilder(User::class)->setMethods(['getId', 'isFake'])->getMock();
         $oUser->expects($this->any())
             ->method('getId')->willReturn('oxdefaultadmin');
 
@@ -27,7 +27,7 @@ class KlarnaPaymentHistoryFullTest extends ModuleUnitTestCase
         $oUser->expects($this->at(1))
             ->method('isFake')->willReturn(false);
 
-        $paymentHistoryFull = $this->getMock(KlarnaPaymentHistoryFull::class, ['isPaymentDateRequired']);
+        $paymentHistoryFull = $this->getMockBuilder(KlarnaPaymentHistoryFull::class)->setMethods(['isPaymentDateRequired'])->getMock();
 
         $history = $paymentHistoryFull->getPaymentHistoryFull($oUser);
 

@@ -14,8 +14,7 @@ use OxidEsales\Eshop\Core\UtilsObject;
 class KlarnaUtilsTest extends ModuleUnitTestCase
 {
 
-    public function testCalculateOrderAmountsPricesAndTaxes()
-    {
+    public function testCalculateOrderAmountsPricesAndTaxes() {
         $expected = [
             0,
             0,
@@ -26,55 +25,76 @@ class KlarnaUtilsTest extends ModuleUnitTestCase
             "pcs",
         ];
 
-        $price = $this->createStub(Price::class, ['getVat' => 100]);
-        $item = $this->createStub(BasketItem::class, ['isBundle' => true, 'getUnitPrice' => $price]);
+        $price = $this->getMockBuilder(Price::class)->setMethods(['getVat'])->getMock();
+        $price->expects($this->once())->method('getVat')->willReturn(100);
+
+        $item = $this->getMockBuilder(BasketItem::class)->setMethods(['isBundle', 'getUnitPrice'])->getMock();
+        $item->expects($this->exactly(2))->method('isBundle')->willReturn(true);
+        $item->expects($this->once())->method('getUnitPrice')->willReturn($price);
         $result = KlarnaUtils::calculateOrderAmountsPricesAndTaxes($item, false);
         $this->assertEquals($expected, $result);
+    }
 
-        $price = $this->createStub(Price::class, ['getVat' => 100, 'getBruttoPrice' => 20]);
-        $priceUnit = $this->createStub(Price::class, ['getVat' => 100, 'getBruttoPrice' => 10]);
-
-        $article = $this->createStub(Article::class, ['getUnitPrice' => $price]);
-
-        $item = $this->createStub(
-            BasketItem::class,
-            ['isBundle' => false, 'getUnitPrice' => $price, 'getArticle' => $article, 'getRegularUnitPrice' => $priceUnit]
-        );
+    public function testCalculateOrderAmountsPricesAndTaxes_1()
+    {
+        $price = $this->getMockBuilder(Price::class)->setMethods(['getVat', 'getBruttoPrice'])->getMock();
+        $price->expects($this->any())->method('getBruttoPrice')->willReturn(20);
+        $price->expects($this->any())->method('getVat')->willReturn(2);
+        $priceUnit = $this->getMockBuilder(Price::class)->setMethods(['getBruttoPrice'])->getMock();
+        $priceUnit->expects($this->any())->method('getBruttoPrice')->willReturn(10);
+        $article = $this->getMockBuilder(Article::class)->setMethods(['getUnitPrice'])->getMock();
+        $article->expects($this->once())->method('getUnitPrice')->willReturn($price);
+        $item = $this->getMockBuilder(BasketItem::class)
+            ->setMethods(['isBundle', 'getUnitPrice', 'getArticle', 'getRegularUnitPrice'])
+            ->getMock();
+        $item->expects($this->exactly(2))->method('isBundle')->willReturn(false);
+        $item->expects($this->once())->method('getUnitPrice')->willReturn($price);
+        $item->expects($this->once())->method('getArticle')->willReturn($article);
+        $item->expects($this->once())->method('getRegularUnitPrice')->willReturn($priceUnit);
         $result = KlarnaUtils::calculateOrderAmountsPricesAndTaxes($item, true);
         $expected = [
             0,
             1000,
             0,
             0,
-            10000,
+            200,
             0,
             "pcs",
         ];
         $this->assertEquals($expected, $result);
+    }
 
+    public function testCalculateOrderAmountsPricesAndTaxes_2()
+    {
+        $item = $this->getMockBuilder(BasketItem::class)
+            ->setMethods(['isBundle', 'getUnitPrice', 'getRegularUnitPrice'])
+            ->getMock();
+        $item->expects($this->exactly(2))->method('isBundle')->willReturn(false);
+        $price = $this->getMockBuilder(Price::class)->setMethods(['getVat', 'getBruttoPrice'])->getMock();
+        $price->expects($this->once())->method('getBruttoPrice')->willReturn(20);
+        $price->expects($this->any())->method('getVat')->willReturn(7);
+        $priceUnit = $this->getMockBuilder(Price::class)->setMethods(['getBruttoPrice'])->getMock();
+        $priceUnit->expects($this->any())->method('getBruttoPrice')->willReturn(10);
+        $item->expects($this->any())->method('getUnitPrice')->willReturn($price);
+        $item->expects($this->once())->method('getRegularUnitPrice')->willReturn($priceUnit);
 
-        $item = $this->createStub(
-            BasketItem::class,
-            ['isBundle' => false, 'getUnitPrice' => $price, 'getRegularUnitPrice' => $priceUnit]
-        );
         $result = KlarnaUtils::calculateOrderAmountsPricesAndTaxes($item, false);
         $expected = [
             0,
             1000,
             0,
             0,
-            10000,
+            700,
             0,
             "pcs",
         ];
         $this->assertEquals($expected, $result);
-
-
     }
 
     public function testIsNonKlarnaCountryActive()
     {
-        $list = $this->createStub(CountryList::class, ['loadActiveNonKlarnaCheckoutCountries' => [null]]);
+        $list = $this->getMockBuilder(CountryList::class)->setMethods(['loadActiveNonKlarnaCheckoutCountries'])->getMock();
+        $list->expects($this->any())->method('loadActiveNonKlarnaCheckoutCountries')->willReturn([null]);
         UtilsObject::setClassInstance(CountryList::class, $list);
         $result = KlarnaUtils::isNonKlarnaCountryActive();
         $this->assertFalse($result);
@@ -88,11 +108,13 @@ class KlarnaUtilsTest extends ModuleUnitTestCase
 
     public function testGetSubCategoriesArray()
     {
-        $categoryParent = $this->createStub(Category::class, ['getTitle' => 'parentTitle']);
-        $category = $this->createStub(
-            Category::class,
-            ['getTitle' => 'category', 'getParentCategory' => $categoryParent]
-        );
+        $categoryParent = $this->getMockBuilder(Category::class)
+            ->setMethods(['getTitle', 'getParentCategory'])->getMock();
+        $category = clone $categoryParent;
+        $categoryParent->expects($this->once())->method('getTitle')->willReturn('parentTitle');
+        $category->expects($this->once())->method('getTitle')->willReturn('category');
+        $category->expects($this->once())->method('getParentCategory')->willReturn($categoryParent);
+
         $result = KlarnaUtils::getSubCategoriesArray($category, ['test' => 'test']);
         $expected = [
             'test' => 'test',
@@ -105,7 +127,8 @@ class KlarnaUtilsTest extends ModuleUnitTestCase
 
     public function testIsCountryActiveInKlarnaCheckout()
     {
-        $list = $this->createStub(CountryList::class, ['loadActiveKlarnaCheckoutCountries' => [null]]);
+        $list = $this->getMockBuilder(CountryList::class)->setMethods(['loadActiveKlarnaCheckoutCountries'])->getMock();
+        $list->expects($this->once())->method('loadActiveKlarnaCheckoutCountries')->willReturn([null]);
         $this->setProtectedClassProperty($list, '_aArray', []);
         UtilsObject::setClassInstance(CountryList::class, $list);
         $result = KlarnaUtils::isCountryActiveInKlarnaCheckout('invalid');

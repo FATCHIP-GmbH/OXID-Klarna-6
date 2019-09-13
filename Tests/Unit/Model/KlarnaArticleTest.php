@@ -14,11 +14,14 @@ class KlarnaArticleTest extends ModuleUnitTestCase
     public function testTcklarna_getArticleUrl()
     {
         $articleClass = oxNew(Article::class);
-
         $result = $articleClass->tcklarna_getArticleUrl();
         $this->assertNotNull($result);
 
-        $article = $this->createStub(KlarnaArticle::class, ['getLink' => null]);
+
+        $article = $this->getMockBuilder(Article::class)
+            ->setMethods(['getLink'])
+            ->getMock();
+        $article->expects($this->once())->method('getLink')->willReturn(null);
 
         $result = $article->tcklarna_getArticleUrl();
 
@@ -48,7 +51,9 @@ class KlarnaArticleTest extends ModuleUnitTestCase
         $result = $articleClass->tcklarna_getArticleCategoryPath();
         $this->assertEquals($result, 'Angebote');
 
-        $article = $this->createStub(KlarnaArticle::class, ['getCategory' => false]);
+        $article = $this->getMockBuilder(KlarnaArticle::class)
+            ->setMethods(['getCategory'])->getMock();
+        $article->expects($this->once())->method('getCategory')->willReturn(false);
         $result = $article->tcklarna_getArticleCategoryPath();
 
         $this->assertNull($result);
@@ -63,12 +68,15 @@ class KlarnaArticleTest extends ModuleUnitTestCase
         $this->assertNull($result);
 
         $this->setModuleConfVar('blKlarnaEnableAnonymization', false, 'bool');
-        $article = $this->createStub(KlarnaArticle::class, ['getManufacturer' => false]);
+        $article = $this->getMockBuilder(KlarnaArticle::class)->setMethods(['getManufacturer'])->getMock();
+        $article->expects($this->once())->method('getManufacturer')->willReturn(false);
         $result = $article->tcklarna_getArticleManufacturer();
         $this->assertNull($result);
 
-        $manufacturer = $this->createStub(Manufacturer::class, ['getTitle' => 'test']);
-        $article = $this->createStub(KlarnaArticle::class, ['getManufacturer' => $manufacturer]);
+        $manufacturer = $this->getMockBuilder(Manufacturer::class)->setMethods(['getTitle'])->getMock();
+        $manufacturer->expects($this->once())->method('getTitle')->willReturn('test');
+        $article = $this->getMockBuilder(KlarnaArticle::class)->setMethods(['getManufacturer'])->getMock();
+        $article->expects($this->once())->method('getManufacturer')->willReturn($manufacturer);
         $result = $article->tcklarna_getArticleManufacturer();
         $this->assertEquals($result, 'test');
 
@@ -95,8 +103,8 @@ class KlarnaArticleTest extends ModuleUnitTestCase
             [true, null, 'Produktname ', null],
             [true, 'test', 'Produktname test', null],
             [true, 'test', 'Product name test', 1],
-            [false, null, '(no title)', null],
-            [false, null, '(no title)', 1],
+            [false, null, 'Neoprenanzug NPX VAMP', null],
+            [false, null, 'Neoprenanzug NPX VAMP', 1],
 
         ];
     }
@@ -112,24 +120,18 @@ class KlarnaArticleTest extends ModuleUnitTestCase
     {
 
         $this->setModuleConfVar('blKlarnaEnableAnonymization', $configValue, 'bool');
-        $articleClass = oxNew(Article::class);
-        $result = $articleClass->tcklarna_getOrderArticleName($aticleName, $iOrderLang);
-
-        $this->assertEquals($result, $expectedResult);
-
+        $article = oxNew(Article::class);
         if ($configValue == false) {
             $parent = oxNew(Article::class);
             $parent->load('adc5ee42bd3c37a27a488769d22ad9ed');
 
-            $article = $this->createStub(
-                KlarnaArticle::class,
-                ['getParentArticle' => $parent, 'getViewName' => $parent->getViewName()]
-            );
-            $result = $article->tcklarna_getOrderArticleName(null, $iOrderLang);
-
-            $this->assertEquals($result, $expectedResult);
+            $article = $this->getMockBuilder(KlarnaArticle::class)
+                ->setMethods(['getParentArticle', 'getViewName'])->getMock();
+            $article->expects($this->any())->method('getParentArticle')->willReturn($parent);
+            $article->expects($this->any())->method('getViewName')->willReturn($parent->getViewName());
         }
-
+        $result = $article->tcklarna_getOrderArticleName($aticleName, $iOrderLang);
+        $this->assertEquals($expectedResult, $result);
     }
 
     public function testTcklarna_getArticleEAN()

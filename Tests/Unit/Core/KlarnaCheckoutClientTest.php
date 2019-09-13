@@ -19,8 +19,12 @@ class KlarnaCheckoutClientTest extends ModuleUnitTestCase
         $order['billing_address']['email'] = 'test@test.com';
         $order['order_id'] = 1;
 
-        $checkoutClient = $this->createStub(KlarnaCheckoutClient::class, ['post' => $getResponse,'handleResponse' => $order, 'formatOrderData' => json_encode(['dummy' => 'data'])]);
-
+        $checkoutClient = $this->getMockBuilder(KlarnaCheckoutClient::class)
+            ->setMethods(['post', 'handleResponse', 'formatOrderData'])
+            ->getMock();
+        $checkoutClient->expects($this->once())->method('post')->willReturn($getResponse);
+        $checkoutClient->expects($this->once())->method('handleResponse')->willReturn($order);
+        $checkoutClient->expects($this->once())->method('formatOrderData')->willReturn(json_encode(['dummy' => 'data']));
         $result = $checkoutClient->createOrUpdateOrder();
 
         $orderId = $this->getSessionParam('klarna_checkout_order_id');
@@ -31,7 +35,9 @@ class KlarnaCheckoutClientTest extends ModuleUnitTestCase
 
         $this->assertEquals($order, $result);
 
-        $exceptionMock = $this->getMock(KlarnaCheckoutClient::class, ['postOrder']);
+        $exceptionMock = $this->getMockBuilder(KlarnaCheckoutClient::class)
+            ->setMethods(['postOrder'])
+            ->getMock();
         $exceptionMock->expects($this->at(0))->method('postOrder')->will($this->throwException(new KlarnaOrderNotFoundException()));
 
         $result = $exceptionMock->createOrUpdateOrder(['dummy' => 'data']);
@@ -43,7 +49,9 @@ class KlarnaCheckoutClientTest extends ModuleUnitTestCase
     public function testInitOrder()
     {
         $checkoutClient = oxNew(KlarnaCheckoutClient::class);
-        $order = $this->getMockBuilder(KlarnaOrder::class)->disableOriginalConstructor()->getMock();
+        $order = $this->getMockBuilder(KlarnaOrder::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $checkoutClient->initOrder($order);
         $property = $this->getProtectedClassProperty($checkoutClient,'_oKlarnaOrder');
         $this->assertEquals($property, $order);
@@ -88,7 +96,12 @@ class KlarnaCheckoutClientTest extends ModuleUnitTestCase
 
         $order['billing_address']['email'] = 'test@test.com';
 
-        $checkoutClient = $this->createStub(KlarnaCheckoutClient::class, ['get' => $getResponse,'handleResponse' => $order, 'getOrderId' => 1]);
+        $checkoutClient = $this->getMockBuilder(KlarnaCheckoutClient::class)
+            ->setMethods(['get','handleResponse', 'getOrderId'])
+            ->getMock();
+        $checkoutClient->expects($this->once())->method('get')->willReturn($getResponse);
+        $checkoutClient->expects($this->once())->method('handleResponse')->willReturn($order);
+        $checkoutClient->expects($this->once())->method('getOrderId')->willReturn(1);
 
         $result = $checkoutClient->getOrder();
         $param = $this->getSessionParam('klarna_checkout_user_email');

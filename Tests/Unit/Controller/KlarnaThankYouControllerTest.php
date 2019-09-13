@@ -33,10 +33,12 @@ class KlarnaThankYouControllerTest extends ModuleUnitTestCase
 
 
 
-        $apiClient = $this->createStub(KlarnaCheckoutClient::class, ['getOrder' => [], 'getHtmlSnippet' => $snippet]);
+        $apiClient = $this->getMockBuilder(KlarnaCheckoutClient::class)->setMethods(['getOrder', 'getHtmlSnippet'])->getMock();
+        $apiClient->expects($this->once())->method('getOrder')->willReturn([]);
+        $apiClient->expects($this->once())->method('getHtmlSnippet')->willReturn($snippet);
 
         $oBasketItem = oxNew(BasketItem::class);
-        $oBasket = $this->getMock(\OxidEsales\Eshop\Application\Model\Basket::class, array('getContents', 'getProductsCount', 'getOrderId'));
+        $oBasket = $this->getMockBuilder(\OxidEsales\Eshop\Application\Model\Basket::class)->setMethods(['getContents', 'getProductsCount', 'getOrderId'])->getMock();
         $oBasket->expects($this->any())->method('getContents')->will($this->returnValue(array($oBasketItem)));
         $oBasket->expects($this->any())->method('getProductsCount')->will($this->returnValue(1));
         $oBasket->expects($this->any())->method('getOrderId')->will($this->returnValue(1));
@@ -58,7 +60,7 @@ class KlarnaThankYouControllerTest extends ModuleUnitTestCase
 
         // check exception
         $this->setSessionParam('paymentid', $payId);
-        $exception = $this->getMock(KlarnaClientException::class, ['debugOut']);
+        $exception = $this->getMockBuilder(KlarnaClientException::class)->setMethods(['debugOut'])->getMock();
         $exception->expects($this->once())->method("debugOut");
         $apiClient->expects($this->once())->method('getOrder')->willThrowException($exception);
         $thankYouController->render();
@@ -73,7 +75,7 @@ class KlarnaThankYouControllerTest extends ModuleUnitTestCase
 
         $oBasketItem = oxNew(BasketItem::class);
         $this->setProtectedClassProperty($oBasketItem,'_sProductId', '_testArt');
-        $oBasket = $this->getMock(\OxidEsales\Eshop\Application\Model\Basket::class, array('getContents', 'getProductsCount', 'getOrderId'));
+        $oBasket = $this->getMockBuilder(\OxidEsales\Eshop\Application\Model\Basket::class)->setMethods(['getContents', 'getProductsCount', 'getOrderId'])->getMock();
         $oBasket->expects($this->once())->method('getContents')->will($this->returnValue(array($oBasketItem)));
         $oBasket->expects($this->once())->method('getProductsCount')->will($this->returnValue(1));
         $oBasket->expects($this->once())->method('getOrderId')->will($this->returnValue(1));

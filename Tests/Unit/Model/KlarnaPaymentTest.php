@@ -205,7 +205,7 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
     {
         $this->setSessionParam('klarna_session_data', $sessionData);
 
-        $oPayment = $this->getMock(Payment::class, ['getPaymentCategoryName']);
+        $oPayment = $this->getMockBuilder(Payment::class)->setMethods(['getPaymentCategoryName'])->getMock();
         $oPayment->expects($this->once())->method('getPaymentCategoryName')->willReturn($klPaymentName);
 
         $result = $oPayment->getBadgeUrl();

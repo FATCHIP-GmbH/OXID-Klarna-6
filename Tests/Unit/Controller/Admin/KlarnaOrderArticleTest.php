@@ -7,6 +7,7 @@ use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Application\Model\OrderArticle;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
+use Selenium\Specification\Method;
 use TopConcepts\Klarna\Controller\Admin\KlarnaOrderArticle;
 use TopConcepts\Klarna\Core\Exception\KlarnaOrderNotFoundException;
 use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
@@ -194,7 +195,8 @@ class KlarnaOrderArticleTest extends ModuleUnitTestCase {
      */
     public function testIsCaptureInSync($klarnaOrderData, $expected, $withOrder = false) {
 
-        $controller = $this->createStub(KlarnaOrderArticle::class, ['getEditObjectId' => 'test']);
+        $controller = $this->getMockBuilder(KlarnaOrderArticle::class)->setMethods(['getEditObjectId'])->getMock();
+        $controller->expects($this->any())->method('getEditObjectId')->willReturn('test');
         if ($withOrder) {
             $order = $this->setOrder();
             $order->oxorder__oxsenddate = new Field('-', Field::T_RAW);
