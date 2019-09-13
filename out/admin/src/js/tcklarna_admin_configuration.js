@@ -58,6 +58,33 @@ multiLangForm.onInit({
     }
 });
 
+var checkEuropeanCountries = function(data, actionUrl){
+    $.ajax({
+        url: actionUrl+'cl=KlarnaConfiguration&fnc=checkEuropeanCountries',
+        type: 'POST',
+        data: data,
+        dataType: 'json'
+    }).done(function(oData){
+        var json = oData;
+        var $warnBox = $('.messagebox.warn');
+        if(json.warningMessage != null) {
+            if($warnBox.is(':empty')){
+                $warnBox.append('<div>'+json.warningMessage+'</div>') ;
+            }
+            $warnBox.slideDown();
+        } else {
+            $warnBox.slideUp();
+        }
+    });
+};
+
+var deliveryAddress = $('#AllowSeparateDeliveryAddress');
+
+checkEuropeanCountries({separate_shipping_enabled: deliveryAddress.prop("checked")}, multiLangForm.$form.attr('action'));
+
+deliveryAddress.on("change",function(evt) {
+    checkEuropeanCountries({separate_shipping_enabled: deliveryAddress.prop("checked")}, multiLangForm.$form.attr('action'));
+});
 
 var defaultCountrySelector = new Selector2({
     id: 'defaultCountry',

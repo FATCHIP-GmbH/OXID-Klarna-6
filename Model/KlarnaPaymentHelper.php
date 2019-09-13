@@ -36,6 +36,20 @@ class KlarnaPaymentHelper
     const KLARNA_PAYMENT_PAY_NOW = 'klarna_pay_now';
 
     /**
+     * Oxid value of Klarna Pay Now payment
+     *
+     * @var string
+     */
+    const KLARNA_DIRECTDEBIT = 'klarna_directdebit';
+
+    /**
+     * Oxid value of Klarna Pay Now payment
+     *
+     * @var string
+     */
+    const KLARNA_SOFORT = 'klarna_sofort';
+
+    /**
      * Get list of Klarna payments ids
      *
      * @param null||string $filter KP - Klarna Payment Options
@@ -49,7 +63,8 @@ class KlarnaPaymentHelper
                 self::KLARNA_PAYMENT_SLICE_IT_ID,
                 self::KLARNA_PAYMENT_PAY_LATER_ID,
                 self::KLARNA_PAYMENT_PAY_NOW,
-
+                self::KLARNA_DIRECTDEBIT,
+                self::KLARNA_SOFORT,
             );
         }
         if ($filter === 'KP') {
@@ -57,6 +72,8 @@ class KlarnaPaymentHelper
                 self::KLARNA_PAYMENT_SLICE_IT_ID,
                 self::KLARNA_PAYMENT_PAY_LATER_ID,
                 self::KLARNA_PAYMENT_PAY_NOW,
+                self::KLARNA_DIRECTDEBIT,
+                self::KLARNA_SOFORT,
             );
         }
 

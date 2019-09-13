@@ -1,5 +1,13 @@
 ### Not Yet Released
 
+### 5.0.0
+* KP Pay Now Split changes
+* EU Geoblocking regulation implementation
+* KCO: Bugfix for Country list drop-down
+* OXID Wave Theme support
+* Porting of Selenium Tests to Codeception Framework
+* Rewriting of PHPUnit Tests for phpunit Version 6
+
 ### 4.3.0
 * Added B2B to KCO
 * Added support for KP in CH

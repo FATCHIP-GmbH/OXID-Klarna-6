@@ -17,6 +17,7 @@
 
 namespace TopConcepts\Klarna\Core;
 
+use OxidEsales\Eshop\Application\Model\DeliveryList;
 use OxidEsales\Eshop\Core\UtilsView;
 use OxidEsales\EshopCommunity\Core\Exception\SystemComponentException;
 use TopConcepts\Klarna\Core\Exception\KlarnaConfigException;
@@ -158,7 +159,27 @@ class KlarnaOrder extends BaseModel
         // skip all other data if there are no items in the basket
         if (!empty($this->_aOrderData['order_lines'])) {
 
-            $this->_aOrderData['shipping_countries'] = array_values($this->getKlarnaCountryList());
+            $allowSeperateDel = (bool)KlarnaUtils::getShopConfVar('blKlarnaAllowSeparateDeliveryAddress');
+            $this->_aOrderData['billing_countries'] = array_values($this->getKlarnaCountryList());
+            if($allowSeperateDel === true) {
+                $list = $this->tcklarna_getAllSets($oBasket);
+                $aCountries = $this->getKlarnaCountryList();
+                $oDelList = Registry::get(DeliveryList::class);
+                $shippingCountries = [];
+
+                foreach ($list as $l)
+                {
+                    $sShipSetId = $l['id'];
+                    foreach ($aCountries as $sCountryId => $alpha2) {
+                        if ($oDelList->hasDeliveries($oBasket, $oUser, $sCountryId, $sShipSetId)) {
+                            $shippingCountries[$alpha2] = $alpha2;
+                        }
+                    }
+
+                }
+
+                $this->_aOrderData['shipping_countries'] = array_values($shippingCountries);
+            }
 
             $this->_aOrderData['shipping_options'] = $this->tcklarna_getAllSets($oBasket);
 
