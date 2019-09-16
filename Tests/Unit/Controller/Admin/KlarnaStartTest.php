@@ -3,7 +3,6 @@
 namespace TopConcepts\Klarna\Tests\Unit\Controller\Admin;
 
 use OxidEsales\Eshop\Core\Module\Module;
-use TopConcepts\Klarna\Controller\Admin\KlarnaPaymentMain;
 use TopConcepts\Klarna\Controller\Admin\KlarnaStart;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 use OxidEsales\Eshop\Core\UtilsObject;
