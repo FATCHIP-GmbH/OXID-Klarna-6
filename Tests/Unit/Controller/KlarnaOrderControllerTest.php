@@ -519,10 +519,8 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         Registry::getSession()->setBasket($oBasket);
         Registry::getSession()->freeze();
 
-        $e = $this->getMockBuilder(KlarnaClientException::class)->setMethods(['debugOut'])->getMock();
-        $e->expects($this->once())->method('debugOut');
         $client = $this->getMockBuilder(KlarnaCheckoutClient::class)->setMethods(['getOrder'])->getMock();
-        $client->expects($this->once())->method('getOrder')->willThrowException($e);
+        $client->expects($this->once())->method('getOrder')->willThrowException(new KlarnaClientException('Test'));
 
         $oOrderController = $this->getMockBuilder(OrderController::class)->setMethods(['getKlarnaCheckoutClient'])->getMock();
         $oOrderController->expects($this->once())->method('getKlarnaCheckoutClient')->willReturn($client);
@@ -540,6 +538,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $oOrderController->expects($this->once())->method('getKlarnaCheckoutClient')->willReturn($client);
         $oOrderController->init();
         $this->assertEquals('{"action":"ajax","status":"read_only","data":null}', \oxUtilsHelper::$response);
+        $this->assertLoggedException(KlarnaClientException::class, 'Test');
     }
 
     public function testInit_countryChanged()
@@ -731,11 +730,8 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $this->assertEquals($expected, json_decode(\oxUtilsHelper::$response, true));
 
 
-
-        $e = $this->getMockBuilder(StandardException::class)->setMethods(['debugOut'])->getMock();
-        $e->expects($this->once())->method('debugOut');
         $sut = $this->getMockBuilder(KlarnaOrderController::class)->setMethods(['getJsonRequest', 'updateKlarnaOrder'])->getMock();
-        $sut->expects($this->once())->method('updateKlarnaOrder')->willThrowException($e);
+        $sut->expects($this->once())->method('updateKlarnaOrder')->willThrowException(new StandardException('Test'));
         $sut->expects($this->once())->method('getJsonRequest')->willReturn(
             ['action' => 'shipping_option_change', 'id' => '1']
         );
@@ -751,7 +747,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
             "status" => "changed",
             "data" => [],
         ];
-
+        $this->assertLoggedException(StandardException::class, 'Test');
         $this->assertEquals($expected, json_decode(\oxUtilsHelper::$response, true));
     }
 
@@ -767,10 +763,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
             KlarnaOrderController::class)->setMethods(
             ['updateKlarnaOrder', 'getJsonRequest']
         )->getMock();
-
-        $e = $this->getMockBuilder(StandardException::class)->setMethods(['debugOut'])->getMock();
-        $e->expects($this->once())->method('debugOut');
-        $sut->expects($this->any())->method('updateKlarnaOrder')->willThrowException($e);
+        $sut->expects($this->any())->method('updateKlarnaOrder')->willThrowException(new StandardException('Test'));
         $sut->expects($this->any())->method('getJsonRequest')->willReturn(
             ['action' => 'change', 'country' => 'country']
         );
@@ -787,7 +780,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
             "status" => "redirect",
             "data" => ['url' => 'url'],
         ];
-
+        $this->assertLoggedException(StandardException::class, 'Test');
         $this->assertEquals($expected, json_decode(\oxUtilsHelper::$response, true));
         $this->assertTrue($this->getProtectedClassProperty($sut, 'forceReloadOnCountryChange'));
         $this->assertEquals('test', $this->getSessionParam('sCountryISO'));

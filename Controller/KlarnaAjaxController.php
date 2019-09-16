@@ -105,7 +105,7 @@ class KlarnaAjaxController extends FrontendController
             try {
                 $this->updateKlarnaOrder();
             } catch (StandardException $e) {
-                $e->debugOut();
+                Registry::getLogger()->error($e->getMessage(), [$e]);
             }
         }
 

@@ -67,13 +67,12 @@ class KlarnaAjaxControllerTest extends ModuleUnitTestCase {
     }
 
     public function testRender() {
-        $e = $this->getMockBuilder(StandardException::class)->setMethods(['debugOut'])->getMock();
-        $e->expects($this->once())->method('debugOut');
 
         $ajaxController = $this->getMockBuilder(KlarnaAjaxController::class)->setMethods(['getKlarnaCheckoutClient', 'updateKlarnaOrder'])->getMock();
-        $ajaxController->expects($this->any())->method('updateKlarnaOrder')->willThrowException($e);
+        $ajaxController->expects($this->any())->method('updateKlarnaOrder')->will($this->throwException(new StandardException('Test')));
         $ajaxController->render();
 
+        $this->assertLoggedException(StandardException::class, 'Test');
         $oOrder = $this->getMockBuilder(Order::class)->disableOriginalConstructor()->getMock();
         UtilsObject::setClassInstance(Order::class, $oOrder);
         $user = $this->getMockBuilder(KlarnaUser::class)->setMethods(['getKlarnaData'])->getMock();

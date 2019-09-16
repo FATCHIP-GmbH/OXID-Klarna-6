@@ -71,7 +71,7 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
             try {
                 $this->updateKlarnaOrder();
             } catch (StandardException $e) {
-                $e->debugOut();
+                Registry::getLogger()->error($e->getMessage(), [$e]);
                 KlarnaUtils::fullyResetKlarnaSession();
             }
         }
@@ -92,7 +92,7 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
             try {
                 $this->updateKlarnaOrder();
             } catch (StandardException $e) {
-                $e->debugOut();
+                Registry::getLogger()->error($e->getMessage(), [$e]);
                 KlarnaUtils::fullyResetKlarnaSession();
 
             }

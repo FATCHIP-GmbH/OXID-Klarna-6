@@ -134,8 +134,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                     try {
                         $this->_aOrderData = $oClient->getOrder();
                     } catch (KlarnaClientException $oEx) {
-                        $oEx->debugOut();
-
+                        Registry::getLogger()->error($oEx->getMessage(), [$oEx]);
                     }
 
                     if (KlarnaUtils::is_ajax() && $this->_aOrderData['status'] === 'checkout_complete') {
@@ -753,7 +752,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             try {
                 $this->updateKlarnaOrder();
             } catch (StandardException $e) {
-                $e->debugOut();
+                Registry::getLogger()->error($e->getMessage(), [$e]);
             }
 
             $responseData['url'] = $this->_aOrderData['merchant_urls']['checkout'];
@@ -783,7 +782,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             try {
                 $this->updateKlarnaOrder();
             } catch (StandardException $e) {
-                $e->debugOut();
+                Registry::getLogger()->error($e->getMessage(), [$e]);
             }
 
             $responseData = array();
@@ -812,7 +811,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             $this->updateKlarnaOrder();
             $status = isset($status) ? $status : 'changed';
         } catch (StandardException $e) {
-            $e->debugOut();
+            Registry::getLogger()->error($e->getMessage(), [$e]);
         }
 
         return $this->jsonResponse(__FUNCTION__, $status);

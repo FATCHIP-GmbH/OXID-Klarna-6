@@ -60,10 +60,9 @@ class KlarnaThankYouControllerTest extends ModuleUnitTestCase
 
         // check exception
         $this->setSessionParam('paymentid', $payId);
-        $exception = $this->getMockBuilder(KlarnaClientException::class)->setMethods(['debugOut'])->getMock();
-        $exception->expects($this->once())->method("debugOut");
-        $apiClient->expects($this->once())->method('getOrder')->willThrowException($exception);
+        $apiClient->expects($this->once())->method('getOrder')->willThrowException(new KlarnaClientException('Test'));
         $thankYouController->render();
+        $this->assertLoggedException(KlarnaClientException::class, 'Test');
     }
 
     public function testRender_nonKCO()

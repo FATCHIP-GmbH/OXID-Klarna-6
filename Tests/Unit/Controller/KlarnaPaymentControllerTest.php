@@ -314,16 +314,12 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
             ->method('countKPMethods')->willReturn(3);
         $oPaymentController->expects($this->any())
             ->method('getUser')->willReturn($oUser);
-
-        $e = $this->getMockBuilder(KlarnaClientException::class)->setMethods(['debugOut'])->getMock();
-        $e->expects($this->once())->method('debugOut');
-
         $client = $this->getMockBuilder(KlarnaPaymentsClient::class)->setMethods(['initOrder'])->getMock();
-        $client->expects($this->any())->method('initOrder')->willThrowException($e);
+        $client->expects($this->any())->method('initOrder')->willThrowException(new KlarnaClientException('Test'));
         $this->setProtectedClassProperty($oPaymentController, 'client', $client);
 
         $oPaymentController->render();
-
+        $this->assertLoggedException(KlarnaClientException::class, 'Test');
     }
 
     public function testGetPaymentList()

@@ -333,17 +333,15 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $this->setSessionParam('klarna_checkout_order_id', 'klarnaId');
 
         $response = ['response'];
-        $e        = $this->getMockBuilder(KlarnaClientException::class)->setMethods(['debugOut'])->getMock();
-        $e->expects($this->once())->method('debugOut');
         $client = $this->getMockBuilder(KlarnaOrderManagementClient::class)->setMethods(['sendOxidOrderNr'])->getMock();
         $client->expects($this->once())->method('sendOxidOrderNr')->willReturn($response);
         $client->expects($this->once())
             ->method('sendOxidOrderNr')
-            ->willThrowException($e);
+            ->willThrowException(new KlarnaClientException('Test'));
 
         $result = $method->invokeArgs($order, [$client]);
         $this->assertTrue($result);
-
+        $this->assertLoggedException(KlarnaClientException::class, 'Test');
         $this->removeKlarnaOrder($id);
     }
 

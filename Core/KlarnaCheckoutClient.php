@@ -71,7 +71,7 @@ class KlarnaCheckoutClient extends KlarnaClientBase
             /**
              * Try again with a new session ( no order id )
              */
-            $oEx->debugOut();
+            Registry::getLogger()->error($oEx->getMessage(), [$oEx]);
             return $this->postOrder($requestBody);
         }
         return;
