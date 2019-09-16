@@ -11,10 +11,11 @@ namespace TopConcepts\Klarna\Tests\Unit\Core;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Field;
+use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\UtilsView;
 use TopConcepts\Klarna\Core\KlarnaPayment;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
-use OxidEsales\Eshop\Core\UtilsObject;
+
 
 class KlarnaPaymentTest extends ModuleUnitTestCase
 {
@@ -414,7 +415,7 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
         $oUtilsView = $this->getMockBuilder(UtilsView::class)->setMethods(['addErrorToDisplay'])->getMock();
         $oUtilsView->expects($this->at(0))->method('addErrorToDisplay')->with('Error1');
         $oUtilsView->expects($this->at(1))->method('addErrorToDisplay')->with('Error2');
-        \oxTestModules::addModuleObject(UtilsView::class, $oUtilsView);
+        Registry::set(UtilsView::class, $oUtilsView);
         $oKlarnaOrder->displayErrors();
     }
 

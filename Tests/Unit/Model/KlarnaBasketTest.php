@@ -192,7 +192,6 @@ class KlarnaBasketTest extends ModuleUnitTestCase
 
         $this->setModuleMode('KCO');
         $this->setModuleConfVar('blKlarnaEnableAnonymization', 0, 'bool');
-        \oxTestModules::cleanAllModules();
     }
 
 

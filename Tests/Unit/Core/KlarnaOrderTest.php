@@ -31,7 +31,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
         $oUtilsView = $this->getMockBuilder(UtilsView::class)->setMethods(['addErrorToDisplay'])->getMock();
         $oUtilsView->expects($this->at(0))->method('addErrorToDisplay')->with('Error1');
         $oUtilsView->expects($this->at(1))->method('addErrorToDisplay')->with('Error2');
-        \oxTestModules::addModuleObject(UtilsView::class, $oUtilsView);
+        Registry::set(UtilsView::class, $oUtilsView);
         $oKlarnaOrder->displayErrors();
     }
 
@@ -73,7 +73,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
         ];
         $oPaymentList = $this->getMockBuilder(PaymentList::class)->setMethods(['getPaymentList'])->getMock();
         $oPaymentList->expects($this->once())->method('getPaymentList')->willReturn($paymentList);
-        UtilsObject::setClassInstance(PaymentList::class, $oPaymentList);
+        Registry::set(PaymentList::class, $oPaymentList);
 
         $user = $this->getMockBuilder(User::class)
             ->setMethods(['getKlarnaData'])
@@ -278,7 +278,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
 
         $oPaymentList = $this->getMockBuilder(PaymentList::class)->setMethods(['getPaymentList'])->getMock();
         $oPaymentList->expects($this->once())->method('getPaymentList')->willReturn(['klarna_checkout' => 'test']);
-        \oxTestModules::addModuleObject(PaymentList::class, $oPaymentList);
+        Registry::set(PaymentList::class, $oPaymentList);
         $order = $this->getMockBuilder(KlarnaOrder::class)
             ->setMethods(['getExternalPaymentMethods'])
             ->disableOriginalConstructor()

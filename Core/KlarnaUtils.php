@@ -167,7 +167,7 @@ class KlarnaUtils
         }
 
         /** @var CountryList | \TopConcepts\Klarna\Model\KlarnaCountryList $activeKlarnaCountries */
-        $activeKlarnaCountries = oxNew(CountryList::class);
+        $activeKlarnaCountries = Registry::get(CountryList::class);
         $activeKlarnaCountries->loadActiveKlarnaCheckoutCountries($filterKcoList);
         if (!count($activeKlarnaCountries)) {
             return false;
@@ -186,7 +186,7 @@ class KlarnaUtils
      */
     public static function isNonKlarnaCountryActive()
     {
-        $activeNonKlarnaCountries = oxNew(CountryList::class);
+        $activeNonKlarnaCountries = Registry::get(CountryList::class);
         $activeNonKlarnaCountries->loadActiveNonKlarnaCheckoutCountries();
         if (count($activeNonKlarnaCountries) > 0) {
             return true;

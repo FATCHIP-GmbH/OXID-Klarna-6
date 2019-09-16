@@ -159,7 +159,7 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
             ->willReturn($aDelSetData);;
 
 
-        \oxTestModules::addModuleObject(DeliverySetList::class, $oDeliverySetList);
+        Registry::set(DeliverySetList::class, $oDeliverySetList);
         $oPaymentController = oxNew(PaymentController::class);
 
         $this->setRequestParameter('sShipSet', $sActShipSet);

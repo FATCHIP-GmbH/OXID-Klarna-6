@@ -579,7 +579,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
     {
         $dispatcher = $this->getMockBuilder(BaseController::class)->setMethods(['setExpressCheckout'])->getMock();
         $dispatcher->expects($this->exactly($dispatcherCallsCount))->method('setExpressCheckout');
-        \oxTestModules::addModuleObject(ExpressCheckoutDispatcher::class, $dispatcher);
+        Registry::set(ExpressCheckoutDispatcher::class, $dispatcher);
         $oOrderController = oxNew(OrderController::class);
         $this->setProtectedClassProperty($oOrderController, 'selfUrl', $rUrl);
         $oOrderController->klarnaExternalCheckout($paymentId);

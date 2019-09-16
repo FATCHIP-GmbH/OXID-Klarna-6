@@ -7,9 +7,9 @@ use OxidEsales\Eshop\Application\Model\BasketItem;
 use OxidEsales\Eshop\Application\Model\Category;
 use OxidEsales\Eshop\Application\Model\CountryList;
 use OxidEsales\Eshop\Core\Price;
+use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
-use OxidEsales\Eshop\Core\UtilsObject;
 
 class KlarnaUtilsTest extends ModuleUnitTestCase
 {
@@ -95,12 +95,11 @@ class KlarnaUtilsTest extends ModuleUnitTestCase
     {
         $list = $this->getMockBuilder(CountryList::class)->setMethods(['loadActiveNonKlarnaCheckoutCountries'])->getMock();
         $list->expects($this->any())->method('loadActiveNonKlarnaCheckoutCountries')->willReturn([null]);
-        UtilsObject::setClassInstance(CountryList::class, $list);
+        Registry::set(CountryList::class, $list);
         $result = KlarnaUtils::isNonKlarnaCountryActive();
         $this->assertFalse($result);
 
         $this->setProtectedClassProperty($list, '_aArray', ['test1', 'test2']);
-        UtilsObject::setClassInstance(CountryList::class, $list);
         $result = KlarnaUtils::isNonKlarnaCountryActive();
         $this->assertTrue($result);
 
@@ -130,7 +129,7 @@ class KlarnaUtilsTest extends ModuleUnitTestCase
         $list = $this->getMockBuilder(CountryList::class)->setMethods(['loadActiveKlarnaCheckoutCountries'])->getMock();
         $list->expects($this->once())->method('loadActiveKlarnaCheckoutCountries')->willReturn([null]);
         $this->setProtectedClassProperty($list, '_aArray', []);
-        UtilsObject::setClassInstance(CountryList::class, $list);
+        Registry::set(CountryList::class, $list);
         $result = KlarnaUtils::isCountryActiveInKlarnaCheckout('invalid');
         $this->assertFalse($result);
     }
