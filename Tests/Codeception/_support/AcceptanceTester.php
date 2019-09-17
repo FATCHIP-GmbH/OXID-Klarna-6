@@ -71,7 +71,7 @@ class AcceptanceTester extends \Codeception\Actor
     public function getKlarnaDataByName($varName)
     {
         if (!$varValue = getenv($varName)) {
-            $varValue = $this->getArrayValueFromFile($varName, __DIR__ .'/klarnaData.php');
+            $varValue = $this->getArrayValueFromFile($varName, __DIR__ . '/klarnaData.php');
         }
 
         if (!$varValue) {

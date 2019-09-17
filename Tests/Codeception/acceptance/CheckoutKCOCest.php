@@ -1,6 +1,7 @@
 <?php
 namespace TopConcepts\Klarna\Tests\Codeception;
 
+use Codeception\Util\Fixtures;
 use OxidEsales\Codeception\Module\Translation\Translator;
 use OxidEsales\Codeception\Step\Basket;
 use OxidEsales\EshopCommunity\Tests\Codeception\AcceptanceTester;
@@ -14,8 +15,10 @@ class CheckoutKCOCest {
      */
     public function createAccountAndSubscribe(AcceptanceTester $I)
     {
+        $I->loadKlarnaAdminConfig('KCO');
+
         $basket = new Basket($I);
-        $I->wantToTest('Checkout ith newsletter');
+        $I->wantToTest('Checkout with newsletter');
 
         $homePage = $I->openShop();
 
@@ -23,25 +26,10 @@ class CheckoutKCOCest {
         $basket->addProductToBasket('05848170643ab0deb9914566391c0c63', 1);
         $basket->addProductToBasket('058de8224773a1d5fd54d523f0c823e0', 1);
 
-
-//        $userCheckoutPage = $homePage->seeMiniBasketContains([$basketItem1, $basketItem2], '200,00 €', 3);
-
         $homePage->openMiniBasket();
-        $homePage->openCheckout();
-        $this->assertTextPresent('Your chosen country');
+        $I->click(Translator::translate('CHECKOUT'));
+//        $I->canSee('Your chosen country');
 
-//
-//        $breadCrumbName = Translator::translate("ADDRESS");
-//        $userCheckoutPage->seeOnBreadCrumb($breadCrumbName);
-//
-//        $userData = $this->getExistingUserData();
-//        $homePage = $userCheckoutPage->openHomePage()
-//            ->loginUser($userData['userLoginName'], $userData['userPassword']);
-//
-//        $paymentCheckoutPage = $homePage->openMiniBasket()->openCheckout();
-//
-//        $breadCrumbName = Translator::translate("PAY");
-//        $paymentCheckoutPage->seeOnBreadCrumb($breadCrumbName);
     }
 
     /**
