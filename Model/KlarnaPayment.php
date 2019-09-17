@@ -167,6 +167,9 @@ class KlarnaPayment extends KlarnaPayment_parent
         return $kpMethods;
     }
 
+    /**
+     * Activate KP Methods
+     */
     public function setActiveKPMethods()
     {
         $aKPmethods = Registry::get(Request::class)->getRequestEscapedParameter('kpMethods');
@@ -175,7 +178,25 @@ class KlarnaPayment extends KlarnaPayment_parent
             $this->load($oxId);
             $this->oxpayments__oxactive = new Field($value, Field::T_RAW);
             $this->save();
+            if($oxId == "klarna_pay_now") {
+                $this->updatePayNowSubPayments($value);
+            }
         }
+    }
+
+    /**
+     * Activate/Deactivate Pay now sub payments
+     * @param $value
+     */
+    protected function updatePayNowSubPayments($value)
+    {
+        $this->load("klarna_directdebit");
+        $this->oxpayments__oxactive = new Field($value, Field::T_RAW);
+        $this->save();
+
+        $this->load("klarna_sofort");
+        $this->oxpayments__oxactive = new Field($value, Field::T_RAW);
+        $this->save();
     }
 
     /**
