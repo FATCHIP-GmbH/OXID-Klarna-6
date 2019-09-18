@@ -45,7 +45,7 @@ class AcceptanceTester extends \Codeception\Actor
     public function fillKcoForm()
     {
         $I = $this;
-//        $this->waitForFrameToLoad("klarna-checkout-iframe", 2000);
+        $I->waitForElement('#klarna-checkout-iframe');
         $I->switchToIFrame("klarna-checkout-iframe");
         $I->fillField("//div[@id='klarna-checkout-customer-details']//input[@id='email']", $this->getKlarnaDataByName('sKlarnaKCOEmail'));
         $I->fillField("//div[@id='klarna-checkout-customer-details']//input[@id='postal_code']",$this->getKlarnaDataByName('sKCOFormPostCode'));
@@ -61,39 +61,6 @@ class AcceptanceTester extends \Codeception\Actor
         if($I->waitForElementClickable("//div[@id='klarna-checkout-customer-details']//*[text()='Submit']")){
             $this->click("//div[@id='klarna-checkout-customer-details']//*[text()='Submit']");
         }
-    }
-
-    /**
-     * @param $varName
-     * @return array|false|mixed|string
-     * @throws Exception
-     */
-    public function getKlarnaDataByName($varName)
-    {
-        if (!$varValue = getenv($varName)) {
-            $varValue = $this->getArrayValueFromFile($varName, __DIR__ . '/klarnaData.php');
-        }
-
-        if (!$varValue) {
-            throw new Exception('Undefined variable: ' . $varName);
-        }
-
-        return $varValue;
-    }
-
-    /**
-     * @param $sVarName
-     * @param $sFilePath
-     * @return mixed
-     */
-    public function getArrayValueFromFile($sVarName, $sFilePath)
-    {
-        $aData = null;
-        if (file_exists($sFilePath)) {
-            $aData = include $sFilePath;
-        }
-
-        return $aData[$sVarName];
     }
 
     public function switchCurrency($currency)

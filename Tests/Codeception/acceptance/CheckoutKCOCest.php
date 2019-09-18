@@ -12,6 +12,7 @@ class CheckoutKCOCest {
      * @group KCO_frontend
      *
      * @param AcceptanceTester $I
+     * @throws \Exception
      */
     public function createAccountAndSubscribe(AcceptanceTester $I)
     {
@@ -29,6 +30,8 @@ class CheckoutKCOCest {
         $homePage->openMiniBasket();
         $I->click(Translator::translate('CHECKOUT'));
 //        $I->canSee('Your chosen country');
+
+        $I->fillKcoForm();
 
     }
 

@@ -39,7 +39,7 @@ class ConfigLoader extends Module
      * @return mixed|null|string
      * @throws \Exception
      */
-    protected function _getKlarnaDataByName($varName)
+    public function getKlarnaDataByName($varName)
     {
         if (!$varValue = getenv($varName)) {
             $varValue = $this->_getArrayValueFromFile($varName, __DIR__ . '/../config/klarnaData.php');
@@ -66,7 +66,7 @@ class ConfigLoader extends Module
     public function loadKlarnaAdminConfig($type, $setB2BOption = null) {
         $this->_getDbHandler();
 
-        $klarnaKey = $this->_getKlarnaDataByName('sKlarnaEncodeKey');
+        $klarnaKey = $this->getKlarnaDataByName('sKlarnaEncodeKey');
         $sql = "DELETE FROM `oxconfig` WHERE `OXVARNAME`='sKlarnaActiveMode'";
         $this->dbHandler->exec($sql);
 
@@ -78,7 +78,7 @@ class ConfigLoader extends Module
         $sql = "DELETE FROM `oxconfig` WHERE `OXVARNAME`='sKlarnaMerchantId'";
         $this->dbHandler->exec($sql);
 
-        $klarnaMerchantId = $this->_getKlarnaDataByName('sKlarna'.$type.'MerchantId');
+        $klarnaMerchantId = $this->getKlarnaDataByName('sKlarna'.$type.'MerchantId');
         $encode = "ENCODE('{$klarnaMerchantId}', '{$klarnaKey}')";
 
         $sql = "INSERT INTO `oxconfig` VALUES ('f3b48ef3f7c17c916ef6018768377988', 1, 'module:tcklarna', 'sKlarnaMerchantId', 'str', {$encode}, 'now()')";
@@ -87,7 +87,7 @@ class ConfigLoader extends Module
         $sql = "DELETE FROM `oxconfig` WHERE `OXVARNAME`='sKlarnaPassword'";
         $this->dbHandler->exec($sql);
 
-        $klarnaPassword = $this->_getKlarnaDataByName('sKlarna'.$type.'Password');
+        $klarnaPassword = $this->getKlarnaDataByName('sKlarna'.$type.'Password');
         $encode = "ENCODE('{$klarnaPassword}', '{$klarnaKey}')";
 
         $sql = "INSERT INTO `oxconfig` VALUES ('efbd96702f6cead0967cd37ad2cdf49d', 1, 'module:tcklarna', 'sKlarnaPassword', 'str', {$encode}, 'now()')";
