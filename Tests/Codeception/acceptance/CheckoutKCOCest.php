@@ -15,22 +15,15 @@ class CheckoutKCOCest {
      */
     public function createAccountAndSubscribe(AcceptanceTester $I)
     {
-        $I->loadKlarnaAdminConfig('KCO');
-
-        $basket = new Basket($I);
         $I->wantToTest('Checkout with newsletter');
-
+        $I->loadKlarnaAdminConfig('KCO');
+        $basket = new Basket($I);
         $homePage = $I->openShop();
-
-        //add Product to basket
         $basket->addProductToBasket('05848170643ab0deb9914566391c0c63', 1);
         $basket->addProductToBasket('058de8224773a1d5fd54d523f0c823e0', 1);
-
         $homePage->openMiniBasket();
         $I->click(Translator::translate('CHECKOUT'));
-//        $I->canSee('Your chosen country');
-
-        $I->fillKcoForm();
+        $I->fillKcoForm($I);
 
 
 

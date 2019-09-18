@@ -10,7 +10,8 @@ use TopConcepts\Klarna\Tests\Codeception\AcceptanceTester;
 class FormPopulator extends Module
 {
     /**
-     * @throws Exception
+     * @param AcceptanceTester $I
+     * @throws \Exception
      */
     public function fillKcoForm(AcceptanceTester $I)
     {
@@ -18,16 +19,16 @@ class FormPopulator extends Module
         $I->switchToIFrame("klarna-checkout-iframe");
         $I->waitForElementClickable('//*[@id="email"]');
         $I->wait(2);
-        $I->fillField("//*[@id=\"postal_code\"]",$this->getKlarnaDataByName('sKCOFormPostCode'));
-        $I->fillField("//*[@id=\"email\"]", rand(0, 1000) . $this->getKlarnaDataByName('sKlarnaKCOEmail'));
+        $I->fillField("//*[@id=\"postal_code\"]",$I->getKlarnaDataByName('sKCOFormPostCode'));
+        $I->fillField("//*[@id=\"email\"]", rand(0, 1000) . $I->getKlarnaDataByName('sKlarnaKCOEmail'));
         $I->waitForElement('//*[@id="title__root"]');
         $I->selectOption("//select[@id='title']", ['value' => 'frau']);
-        $I->fillField("//*[@id=\"given_name\"]",$this->getKlarnaDataByName('sKCOFormGivenName'));
-        $I->fillField("//*[@id='family_name']",$this->getKlarnaDataByName('sKCOFormFamilyName'));
-        $I->fillField("//*[@id='street_address']",$this->getKlarnaDataByName('sKCOFormStreetName').' '.$this->getKlarnaDataByName('sKCOFormStreetNumber'));
-        $I->fillField("//*[@id='city']",$this->getKlarnaDataByName('sKCOFormCity'));
-        $I->fillField("//*[@id='phone']",$this->getKlarnaDataByName('sKCOFormPhone'));
-        $I->fillField("//*[@id='date_of_birth']",$this->getKlarnaDataByName('sKCOFormDob'));
+        $I->fillField("//*[@id=\"given_name\"]",$I->getKlarnaDataByName('sKCOFormGivenName'));
+        $I->fillField("//*[@id='family_name']",$I->getKlarnaDataByName('sKCOFormFamilyName'));
+        $I->fillField("//*[@id='street_address']",$I->getKlarnaDataByName('sKCOFormStreetName').' '.$I->getKlarnaDataByName('sKCOFormStreetNumber'));
+        $I->fillField("//*[@id='city']",$I->getKlarnaDataByName('sKCOFormCity'));
+        $I->fillField("//*[@id='phone']",$I->getKlarnaDataByName('sKCOFormPhone'));
+        $I->fillField("//*[@id='date_of_birth']",$I->getKlarnaDataByName('sKCOFormDob'));
         $I->click("//*[@id=\"button-primary\"]");
     }
 }
