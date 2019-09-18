@@ -4,7 +4,6 @@ namespace TopConcepts\Klarna\Tests\Codeception;
 use Codeception\Util\Fixtures;
 use OxidEsales\Codeception\Module\Translation\Translator;
 use OxidEsales\Codeception\Step\Basket;
-use OxidEsales\EshopCommunity\Tests\Codeception\AcceptanceTester;
 
 class CheckoutKCOCest {
 
@@ -32,6 +31,8 @@ class CheckoutKCOCest {
 //        $I->canSee('Your chosen country');
 
         $I->fillKcoForm();
+
+
 
     }
 

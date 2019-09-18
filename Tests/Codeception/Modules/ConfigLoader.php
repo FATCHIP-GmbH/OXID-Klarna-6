@@ -2,34 +2,25 @@
 
 namespace TopConcepts\Klarna\Tests\Codeception\Modules;
 
+use Codeception\Lib\ModuleContainer;
 use Codeception\Module;
 use Codeception\TestInterface;
 use OxidEsales\Eshop\Core\ConfigFile;
-use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Facts\Facts;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseHandler;
 
 class ConfigLoader extends Module
 {
+    public function __construct(ModuleContainer $moduleContainer, $config = null)
+    {
+        parent::__construct($moduleContainer, $config);
+        $facts = new Facts();
+        $configFile = new ConfigFile($facts->getSourcePath() . '/config.inc.php');
+        $this->dbHandler = new DatabaseHandler($configFile);
+    }
+
     /** @var DatabaseHandler */
     protected $dbHandler;
-    /**
-     * @param TestInterface $test
-     * @throws \Exception
-     */
-    public function _before(TestInterface $test)
-    {
-    }
-
-    protected function _getDbHandler() {
-        if ($this->dbHandler === null) {
-            $facts = new Facts();
-            $configFile = new ConfigFile($facts->getSourcePath() . '/config.inc.php');
-
-            $this->dbHandler = new DatabaseHandler($configFile);
-        }
-        return $this->dbHandler;
-    }
 
     /**
      * Returns klarna data by variable name
@@ -64,7 +55,6 @@ class ConfigLoader extends Module
     }
 
     public function loadKlarnaAdminConfig($type, $setB2BOption = null) {
-        $this->_getDbHandler();
 
         $klarnaKey = $this->getKlarnaDataByName('sKlarnaEncodeKey');
         $sql = "DELETE FROM `oxconfig` WHERE `OXVARNAME`='sKlarnaActiveMode'";
@@ -72,7 +62,7 @@ class ConfigLoader extends Module
 
         $encode = "ENCODE('{$type}', '{$klarnaKey}')";
 
-        $sql = "INSERT INTO `oxconfig` VALUES ('4060f0f9f705d470282a2ce5ed936e48', 1, 'module:tcklarna', 'sKlarnaActiveMode', 'str', {$encode}, 'now()')";
+        $sql = "INSERT INTO `oxconfig` VALUES ('4060f0f9f705d470282a2ce5ed936e48', 1, 'module:tcklarna', 'sKlarnaActiveMode', 'str', {$encode}, now())";
         $this->dbHandler->exec($sql);
 
         $sql = "DELETE FROM `oxconfig` WHERE `OXVARNAME`='sKlarnaMerchantId'";
@@ -81,7 +71,7 @@ class ConfigLoader extends Module
         $klarnaMerchantId = $this->getKlarnaDataByName('sKlarna'.$type.'MerchantId');
         $encode = "ENCODE('{$klarnaMerchantId}', '{$klarnaKey}')";
 
-        $sql = "INSERT INTO `oxconfig` VALUES ('f3b48ef3f7c17c916ef6018768377988', 1, 'module:tcklarna', 'sKlarnaMerchantId', 'str', {$encode}, 'now()')";
+        $sql = "INSERT INTO `oxconfig` VALUES ('f3b48ef3f7c17c916ef6018768377988', 1, 'module:tcklarna', 'sKlarnaMerchantId', 'str', {$encode}, now())";
         $this->dbHandler->exec($sql);
 
         $sql = "DELETE FROM `oxconfig` WHERE `OXVARNAME`='sKlarnaPassword'";
@@ -90,7 +80,7 @@ class ConfigLoader extends Module
         $klarnaPassword = $this->getKlarnaDataByName('sKlarna'.$type.'Password');
         $encode = "ENCODE('{$klarnaPassword}', '{$klarnaKey}')";
 
-        $sql = "INSERT INTO `oxconfig` VALUES ('efbd96702f6cead0967cd37ad2cdf49d', 1, 'module:tcklarna', 'sKlarnaPassword', 'str', {$encode}, 'now()')";
+        $sql = "INSERT INTO `oxconfig` VALUES ('efbd96702f6cead0967cd37ad2cdf49d', 1, 'module:tcklarna', 'sKlarnaPassword', 'str', {$encode}, now())";
         $this->dbHandler->exec($sql);
 
         if($type == 'KCO') {
@@ -100,9 +90,8 @@ class ConfigLoader extends Module
 
         if($setB2BOption){
             $encode = "ENCODE('$setB2BOption', '$klarnaKey')";
-            $sql = "INSERT INTO `oxconfig` VALUES ('f7309beb088c3437462abb18c893c755', 1, 'module:tcklarna', 'sKlarnaB2Option', 'str', {$encode}, 'now()')";
+            $sql = "INSERT INTO `oxconfig` VALUES ('f7309beb088c3437462abb18c893c755', 1, 'module:tcklarna', 'sKlarnaB2Option', 'str', {$encode}, now())";
             $this->dbHandler->exec($sql);
         }
     }
-
 }

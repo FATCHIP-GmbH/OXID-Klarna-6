@@ -1,4 +1,4 @@
-namespace: OxidEsales\EshopCommunity\Tests\Codeception
+namespace: TopConcepts\Klarna\Tests\Codeception
 params:
     - Codeception/config/params.php
 paths:
