@@ -5,6 +5,7 @@ namespace TopConcepts\Klarna\Tests\Codeception\Modules;
 
 
 use Codeception\Module;
+use Codeception\Util\Fixtures;
 use TopConcepts\Klarna\Tests\Codeception\AcceptanceTester;
 
 class FormPopulator extends Module
@@ -19,12 +20,15 @@ class FormPopulator extends Module
      */
     public function fillKcoUserForm(AcceptanceTester $I)
     {
+        //generate and save email
+        $generatedEmail = rand(0, 1000) . $I->getKlarnaDataByName('sKlarnaKCOEmail');
+        Fixtures::add('gKCOEmail', $generatedEmail);
         $I->waitForElement('#' . $this->frames['main']);
         $I->switchToIFrame($this->frames['main']);
         $I->waitForElementClickable('//*[@id="email"]');
         $I->wait(2);
         $I->fillField("//*[@id=\"postal_code\"]",$I->getKlarnaDataByName('sKCOFormPostCode'));
-        $I->fillField("//*[@id=\"email\"]", rand(0, 1000) . $I->getKlarnaDataByName('sKlarnaKCOEmail'));
+        $I->fillField("//*[@id=\"email\"]", $generatedEmail);
         $I->waitForElement('//*[@id="title__root"]', 20);
         $I->selectOption("//select[@id='title']", ['value' => 'frau']);
         $I->fillField("//*[@id=\"given_name\"]",$I->getKlarnaDataByName('sKCOFormGivenName'));
@@ -55,8 +59,8 @@ class FormPopulator extends Module
         $I->click('//*[@id="SHIPMO-dialog-submit-button"]/div/div[2]');
         $I->switchToIFrame();
         $I->switchToIFrame($this->frames['main']);
-        $I->wait(2);
+        $I->wait(3);
         $I->selectOption('#SHIPMO-container input[name=radio]', 'UPS 48');
-        $I->wait(2);
+        $I->wait(3);
     }
 }
