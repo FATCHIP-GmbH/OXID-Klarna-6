@@ -4,7 +4,6 @@ namespace TopConcepts\Klarna\Tests\Codeception\Modules;
 
 use Codeception\Lib\ModuleContainer;
 use Codeception\Module;
-use Codeception\TestInterface;
 use OxidEsales\Eshop\Core\ConfigFile;
 use OxidEsales\Facts\Facts;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseHandler;
@@ -21,6 +20,11 @@ class ConfigLoader extends Module
 
     /** @var DatabaseHandler */
     protected $dbHandler;
+
+    public function getDBHandler()
+    {
+        return $this->dbHandler;
+    }
 
     /**
      * Returns klarna data by variable name

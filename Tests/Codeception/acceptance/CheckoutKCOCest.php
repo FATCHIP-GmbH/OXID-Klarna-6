@@ -23,23 +23,23 @@ class CheckoutKCOCest {
         $basket->addProductToBasket('058de8224773a1d5fd54d523f0c823e0', 1);
         $homePage->openMiniBasket();
         $I->click(Translator::translate('CHECKOUT'));
-        $I->fillKcoUserForm($I);
 
+        $I->fillKcoUserForm($I);
         //different delivery address
         $I->fillKcoShippingForm($I);
+
         $I->see('Create Customer Account AND subscribe to Newsletter');
         $I->executeJS('document.querySelector("#additional_checkbox_from_merchant__root>div input").click()');
         $I->executeJS('document.querySelector("[data-cid=\'button.buy_button\']").click()');
-        $I->switchToIFrame(); // navigate to to main document frame
+        $I->switchToIFrame(); // navigate back to to main document frame
+        $I->waitForElement('#thankyouPage');
         $I->waitForPageLoad();
-        $I->seeInCurrentUrl('thankyou');
-    }
 
-    /**
-     * @return mixed
-     */
-    private function getExistingUserData()
-    {
-        return \Codeception\Util\Fixtures::get('existingUser');
+        $billEmail = Fixtures::get('gKCOEmail'); // recall generated and stored email
+        $I->seeInDatabase('oxuser', ['oxusername' => $billEmail, 'oxpassword !=' => '']);
+        $klarnaId = $I->grabFromDatabase('oxorder', 'TCKLARNA_ORDERID', ['OXBILLEMAIL' => $billEmail]);
+        $I->assertNotEmpty($klarnaId);
+        $I->seeOrderInDb($klarnaId);
+        $I->seeInKlarnaAPI($klarnaId);
     }
 }
