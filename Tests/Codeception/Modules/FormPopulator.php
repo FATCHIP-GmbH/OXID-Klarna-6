@@ -25,7 +25,7 @@ class FormPopulator extends Module
         $I->wait(2);
         $I->fillField("//*[@id=\"postal_code\"]",$I->getKlarnaDataByName('sKCOFormPostCode'));
         $I->fillField("//*[@id=\"email\"]", rand(0, 1000) . $I->getKlarnaDataByName('sKlarnaKCOEmail'));
-        $I->waitForElement('//*[@id="title__root"]');
+        $I->waitForElement('//*[@id="title__root"]', 20);
         $I->selectOption("//select[@id='title']", ['value' => 'frau']);
         $I->fillField("//*[@id=\"given_name\"]",$I->getKlarnaDataByName('sKCOFormGivenName'));
         $I->fillField("//*[@id='family_name']",$I->getKlarnaDataByName('sKCOFormFamilyName'));

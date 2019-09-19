@@ -25,15 +25,14 @@ class CheckoutKCOCest {
         $I->click(Translator::translate('CHECKOUT'));
         $I->fillKcoUserForm($I);
 
-        //diferent delivery address
+        //different delivery address
         $I->fillKcoShippingForm($I);
-
-
-
-
-
-
-
+        $I->see('Create Customer Account AND subscribe to Newsletter');
+        $I->executeJS('document.querySelector("#additional_checkbox_from_merchant__root>div input").click()');
+        $I->executeJS('document.querySelector("[data-cid=\'button.buy_button\']").click()');
+        $I->switchToIFrame(); // navigate to to main document frame
+        $I->waitForPageLoad();
+        $I->seeInCurrentUrl('thankyou');
     }
 
     /**
