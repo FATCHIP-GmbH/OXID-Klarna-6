@@ -86,6 +86,9 @@ class ConfigLoader extends Module
         if($type == 'KCO') {
             $sql = "UPDATE oxuser SET oxbirthdate='1980-01-01', oxfon='02079460125' WHERE oxusername = 'user_gb@oxid-esales.com'";
             $this->dbHandler->exec($sql);
+            $sql = "UPDATE oxconfig SET OXVARVALUE = ENCODE('3', '{$klarnaKey}') WHERE OXVARNAME = 'iKlarnaActiveCheckbox'";
+            $this->dbHandler->exec($sql);
+
         }
 
         if($setB2BOption){

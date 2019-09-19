@@ -51,16 +51,12 @@ class FormPopulator extends Module
         $I->fillField('//*[@id="street_address"]', $I->getKlarnaDataByName('sKCOFormDelStreetName') .' '. $I->getKlarnaDataByName('sKCOFormDelStreetNumber'));
         $I->fillField('//*[@id="city"]', $I->getKlarnaDataByName('sKCOFormDelCity'));
         $I->click('//*[@id="SHIPMO-dialog-submit-button"]/div/div[2]');
-        $I->wait(2);
+        $I->wait(1);
         $I->click('//*[@id="SHIPMO-dialog-submit-button"]/div/div[2]');
-        $I->wait(2);
-
-
-//        $I->waitForJS('return !!window.$ && window.$.active == 0;', 5);
         $I->switchToIFrame();
         $I->switchToIFrame($this->frames['main']);
         $I->wait(2);
-        $I->click("//div[@class='shipping-module']//*[text()='Example Set1: UPS 48 hours']");
-
+        $I->selectOption('#SHIPMO-container input[name=radio]', 'UPS 48');
+        $I->wait(2);
     }
 }
