@@ -23,7 +23,14 @@ class CheckoutKCOCest {
         $basket->addProductToBasket('058de8224773a1d5fd54d523f0c823e0', 1);
         $homePage->openMiniBasket();
         $I->click(Translator::translate('CHECKOUT'));
-        $I->fillKcoForm($I);
+        $I->fillKcoUserForm($I);
+
+        //diferent delivery address
+        $I->fillKcoShippingForm($I);
+
+
+
+
 
 
 
