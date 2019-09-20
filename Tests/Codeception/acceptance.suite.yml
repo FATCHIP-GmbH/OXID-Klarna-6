@@ -33,7 +33,6 @@ modules:
               - Db
         - \TopConcepts\Klarna\Tests\Codeception\Modules\ConfigLoader
         - \TopConcepts\Klarna\Tests\Codeception\Modules\Assertions
-        - \TopConcepts\Klarna\Tests\Codeception\Modules\FormPopulator
         - \OxidEsales\Codeception\Module\Database:
             config_key: 'fq45QS09_fqyx09239QQ'
             depends: Db

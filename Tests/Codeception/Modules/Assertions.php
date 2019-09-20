@@ -106,7 +106,7 @@ class Assertions extends Module
             ->query("SELECT * FROM oxorder WHERE TCKLARNA_ORDERID = '$klarnaId'")
             ->fetch(\PDO::FETCH_ASSOC);
 
-        $oxidOrderData = $this->prepareOxidData($oxidOrder, $expectedStatus);
+        $oxidOrderData = $this->_prepareOxidData($oxidOrder, $expectedStatus);
 
         $billingDataMapper = [
             'OXBILLEMAIL' => 'email',
@@ -158,7 +158,7 @@ class Assertions extends Module
      * @throws ModuleException
      * @throws Exception
      */
-    protected function prepareOxidData($oxidRow, $expectedStatus) {
+    protected function _prepareOxidData($oxidRow, $expectedStatus) {
         foreach($oxidRow as $colName => $val) {
             // replace COUNTRYID with OXISOALPHA2
             if (strpos($colName, 'COUNTRYID') !== false) {
