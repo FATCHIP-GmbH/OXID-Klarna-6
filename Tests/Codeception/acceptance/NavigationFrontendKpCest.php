@@ -18,6 +18,7 @@ class NavigationFrontendKpCest
      */
     public function testB2BOrder(AcceptanceTester $I)
     {
+        $I->clearShopCache();
         $I->loadKlarnaAdminConfig('KP', 'B2BOTH');
 
         //Navigate untill step 3
@@ -40,6 +41,7 @@ class NavigationFrontendKpCest
         $I->waitForPageLoad();
         $I->wait(2);
         $I->seeInCurrentUrl('thankyou');
+        $I->wait(2);
         $I->assertKlarnaData();
     }
 
@@ -49,6 +51,7 @@ class NavigationFrontendKpCest
      */
     public function testKpPayNowDebitOrder(AcceptanceTester $I)
     {
+        $I->clearShopCache();
         $I->loadKlarnaAdminConfig('KP');
 
         //Navigate untill step 3
@@ -89,6 +92,7 @@ class NavigationFrontendKpCest
         $I->waitForPageLoad();
         $I->wait(2);
         $I->seeInCurrentUrl('thankyou');
+        $I->wait(2);
         $I->assertKlarnaData();
     }
 
@@ -176,6 +180,8 @@ class NavigationFrontendKpCest
         $I->waitForPageLoad();
         $I->wait(2);
         $I->seeInCurrentUrl('thankyou');
+        $I->wait(2);
+        $I->assertKlarnaData();
     }
 
     /**
