@@ -166,7 +166,7 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
                     return $sTplName;
 
                 } catch (KlarnaClientException $e) {
-                    Registry::getLogger()->error($e->getMessage(), [$e]);
+                    KlarnaUtils::logException($e);
 
                     return $sTplName;
                 }

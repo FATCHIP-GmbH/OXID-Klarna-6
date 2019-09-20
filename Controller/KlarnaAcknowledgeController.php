@@ -64,7 +64,7 @@ class KlarnaAcknowledgeController extends FrontendController
                 $this->getKlarnaClient($countryISO)->cancelOrder($orderId);
             }
         } catch (StandardException $e) {
-            Registry::getLogger()->error($e->getMessage(), [$e]);
+            KlarnaUtils::logException($e);
 
             return;
         }

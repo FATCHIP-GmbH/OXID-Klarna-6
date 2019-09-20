@@ -396,4 +396,15 @@ class KlarnaUtils
 
         return DatabaseProvider::getDb()->getOne($sql, array($orderId));
     }
+
+    /**
+     * @param $e \Exception
+     */
+    public static function logException($e) {
+        if (method_exists(Registry::class, 'getLogger')) {
+            Registry::getLogger()->error($e->getMessage(), [$e]);
+        } else {
+            $e->debugOut();
+        }
+    }
 }

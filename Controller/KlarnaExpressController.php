@@ -204,7 +204,7 @@ class KlarnaExpressController extends FrontendController
 
             return $this->_sThisTemplate;
         } catch (StandardException $oEx) {
-            Registry::getLogger()->error($oEx->getMessage(), [$oEx]);
+            KlarnaUtils::logException($oEx);
             KlarnaUtils::fullyResetKlarnaSession();
             Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeURL() . 'cl=KlarnaExpress', false, 302);
 
