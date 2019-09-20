@@ -228,10 +228,6 @@ class KlarnaExpressController extends FrontendController
             return true;
         }
 
-        if (!KlarnaUtils::isNonKlarnaCountryActive()) {
-            return false;
-        }
-
         if ($this->isKLUserLoggedIn()) {
             return false;
         }
