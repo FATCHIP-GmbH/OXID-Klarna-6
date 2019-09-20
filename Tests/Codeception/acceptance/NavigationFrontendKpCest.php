@@ -12,6 +12,42 @@ class NavigationFrontendKpCest
 {
 
     /**
+     * @group KP_frontend2
+     * @param AcceptanceTester $I
+     * @throws Exception
+     */
+    public function testKpSplitOrder(AcceptanceTester $I)
+    {
+        $I->clearShopCache();
+        $I->loadKlarnaAdminConfig('KPSPLIT');
+        //Navigate untill step 3
+        $this->navigateToPay($I);
+        //Wait for Klarna page to load
+        $I->wait(6);
+        $I->selectOption('form input[name=paymentid]', 'Pay Now Direct Debit');
+        $I->click(".nextStep");
+        $I->wait(2);
+        $I->switchToIFrame('klarna-direct-debit-fullscreen');
+        $this->fillFieldSpecial('//*[@id="purchase-approval-date-of-birth"]',$I->getKlarnaDataByName('sKlarnaBDate'), $I);
+        $this->fillFieldSpecial('//*[@id="purchase-approval-phone-number"]',$I->getKlarnaDataByName('sKlarnaPhoneNumber'), $I);
+
+        $I->click('//*[@id="purchase-approval-continue"]');
+        $I->wait(2);
+
+        $I->waitForElementClickable('//*[@id="direct-debit-mandate-review__bottom"]');
+        $I->click('//*[@id="direct-debit-mandate-review__bottom"]/span/button');
+        $I->waitForElementClickable('//*[@id="direct-debit-confirmation__bottom"]');
+        $I->click('//*[@id="direct-debit-confirmation__bottom"]/span/button');
+
+        $I->switchToIFrame();
+        $I->click(".nextStep");
+        $I->wait(7);
+        $I->seeInCurrentUrl('thankyou');
+        $I->wait(2);
+        $I->assertKlarnaData();
+    }
+
+    /**
      * @group KP_frontend
      * @param AcceptanceTester $I
      * @throws Exception
@@ -23,6 +59,7 @@ class NavigationFrontendKpCest
 
         //Navigate untill step 3
         $this->navigateToPay($I, 'DE', true);
+        //Wait for Klarna page to load
         $I->wait(6);
         $I->selectOption('form input[name=paymentid]', 'Pay Later');
         $I->click(".nextStep");
@@ -41,7 +78,6 @@ class NavigationFrontendKpCest
         $I->waitForPageLoad();
         $I->wait(2);
         $I->seeInCurrentUrl('thankyou');
-        $I->wait(2);
         $I->assertKlarnaData();
     }
 
@@ -56,6 +92,7 @@ class NavigationFrontendKpCest
 
         //Navigate untill step 3
         $this->navigateToPay($I);
+        //Wait for Klarna page to load
         $I->wait(6);
         $I->selectOption('form input[name=paymentid]', 'Pay Now');
         $I->switchToIFrame("klarna-pay-now-main");
@@ -116,6 +153,7 @@ class NavigationFrontendKpCest
         $this->navigateToPay($I, $data['country']);
 
         //step 3
+        //Wait for Klarna page to load
         $I->wait(6);
         $I->click("//input[@value='".$data['radio']."']");
 
@@ -133,11 +171,11 @@ class NavigationFrontendKpCest
                         $number = "311280-999J";
                         break;
                     case "DK":
-                        $number = "171035-4509";
+                        $number = "171085-4509";
                         $phone = "41468007";
                         break;
                     case "NO":
-                        $number = "01018043587";
+                        $number = "01087000571";
                         $phone = "48404583";
                         break;
                     case "SE":
