@@ -353,7 +353,7 @@ var MultiLangWidget = {
             setTimeout(function () {
                 $msgBox.slideUp();
             }, 2000);
-        })
+        });
     },
 
     beforeSelection: function(selected){
@@ -420,7 +420,6 @@ var MultiLangWidget = {
             this.$smbButton.click(this.validateFormData.bind(this));
         }
         this.$form.submit(this.submitFormData.bind(this));
-        //console.log(this.$form.serialized);
     }
 };
 

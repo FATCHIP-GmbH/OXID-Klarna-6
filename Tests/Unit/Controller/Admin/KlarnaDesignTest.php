@@ -23,7 +23,8 @@ class KlarnaDesignTest extends ModuleUnitTestCase
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'xmlhttprequest';
         putenv("HTTP_X_REQUESTED_WITH=xmlhttprequest");
-        $obj    = $this->createStub(KlarnaDesign::class, ['getMultiLangData' => 'test']);
+        $obj    = $this->getMockBuilder(KlarnaDesign::class)->setMethods(['getMultiLangData'])->getMock();
+        $obj->expects($this->once())->method('getMultiLangData')->willReturn('test');
         $result = $obj->render();
         $this->assertEquals('"test"', $result);
 

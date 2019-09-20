@@ -134,8 +134,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                     try {
                         $this->_aOrderData = $oClient->getOrder();
                     } catch (KlarnaClientException $oEx) {
-                        $oEx->debugOut();
-
+                        KlarnaUtils::logException($oEx);
                     }
 
                     if (KlarnaUtils::is_ajax() && $this->_aOrderData['status'] === 'checkout_complete') {
@@ -526,8 +525,9 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             ) {
                 $this->_oUser->save();
             }
-            if ($this->_oUser->isFake())
+            if ($this->_oUser->isFake()){
                 $this->_oUser->clearDeliveryAddress();
+            }
             // performing special actions after user finishes order (assignment to special user groups)
             $this->_oUser->onOrderExecute($oBasket, $iSuccess);
 
@@ -615,6 +615,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
         if (KlarnaPayment::countryWasChanged($oUser)) {
             $this->resetKlarnaPaymentSession();
+            return; // Unit tests
         }
 
         /** @var KlarnaPayment $oKlarnaPayment */
@@ -622,6 +623,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
         if (!$oKlarnaPayment->isSessionValid()) {
             $this->resetKlarnaPaymentSession();
+            return; // Unit tests
         }
 
         if (!$oKlarnaPayment->validateClientToken($aPost['client_token'])) {
@@ -693,6 +695,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
         if (KlarnaPayment::countryWasChanged($oUser)) {
             $this->resetKlarnaPaymentSession();
+            return; // Unit tests
         }
 
         /** @var  $oKlarnaPayment KlarnaPayment */
@@ -700,6 +703,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
         if (!$oKlarnaPayment->isSessionValid()) {
             $this->resetKlarnaPaymentSession();
+            return; // Unit tests
         }
 
         if (!$oKlarnaPayment->validateClientToken($aPost['client_token'])) {
@@ -748,7 +752,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             try {
                 $this->updateKlarnaOrder();
             } catch (StandardException $e) {
-                $e->debugOut();
+                KlarnaUtils::logException($e);
             }
 
             $responseData['url'] = $this->_aOrderData['merchant_urls']['checkout'];
@@ -778,7 +782,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             try {
                 $this->updateKlarnaOrder();
             } catch (StandardException $e) {
-                $e->debugOut();
+                KlarnaUtils::logException($e);
             }
 
             $responseData = array();
@@ -807,7 +811,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             $this->updateKlarnaOrder();
             $status = isset($status) ? $status : 'changed';
         } catch (StandardException $e) {
-            $e->debugOut();
+            KlarnaUtils::logException($e);
         }
 
         return $this->jsonResponse(__FUNCTION__, $status);

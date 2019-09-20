@@ -12,17 +12,19 @@ class KlarnaEpmDispatcherTest extends ModuleUnitTestCase
 
     public function testAmazonLogin()
     {
-        $view = $this->createStub(ViewConfig::class, ['getAmazonProperty' => 'https://widgetUrl', 'getAmazonConfigValue' => 'test', 'getModuleUrl' => 'https://moduleUrl']);
-        $epmDispatcher = $this->createStub(KlarnaEpmDispatcher::class, ['init' => null, 'getViewConfig' => $view]);
+        $view = $this->getMockBuilder(ViewConfig::class)->setMethods(['getAmazonProperty', 'getAmazonConfigValue', 'getModuleUrl'])->getMock();
+        $view->expects($this->once())->method('getAmazonProperty')->willReturn('https://widgetUrl');
+        $view->expects($this->once())->method('getAmazonConfigValue')->willReturn('test');
+        $view->expects($this->once())->method('getModuleUrl')->willReturn('https://moduleUrl');
+        $epmDispatcher = $this->getMockBuilder(KlarnaEpmDispatcher::class)->setMethods(['init', 'getViewConfig'])->getMock();
+        $epmDispatcher->expects($this->once())->method('getViewConfig')->willReturn($view);
         $epmDispatcher->amazonLogin();
         $result = $this->getProtectedClassProperty($epmDispatcher, '_aViewData');
-
         $expected = [
             'sAmazonWidgetUrl' => 'https://widgetUrl',
             'sAmazonSellerId' => 'test',
             'sModuleUrl' => 'https://moduleUrl'
         ];
         $this->assertEquals($expected, $result);
-
     }
 }

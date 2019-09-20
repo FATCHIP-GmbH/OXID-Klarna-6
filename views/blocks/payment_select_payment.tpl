@@ -49,6 +49,50 @@
                 </dt>
             </dl>
         </div>
+    [{elseif $sPaymentID == "klarna_directdebit"}]
+    <div class="well well-sm kp-outer">
+        <dl>
+            <dt>
+                <input class="kp-radio" id="kp-dd" data-payment_id="direct_debit" type="radio"
+                       name="paymentid"
+                       value="[{$sPaymentID}]"
+                       [{if $is_checked}]checked[{/if}]>
+                <label for="kp-dd"><b>[{$oView->removeKlarnaPrefix($paymentmethod->oxpayments__oxdesc->value)}]</b></label>
+                <img src="[{$paymentmethod->getBadgeUrl()}]">
+            </dt>
+            <dt style="font-weight: normal">[{oxmultilang ident="TCKLARNA_PAY_NOW_SUBTITLE"}]</dt>
+            <dt>
+                [{if $kpError }]
+                <div class="kp-method alert alert-info"
+                     style="[{if !$is_checked}]display: none; [{/if}]max-width:700px">[{ $kpError }]</div>
+                [{else}]
+                <div id="direct_debit" class="kp-method" style="display: none;"></div>
+                [{/if}]
+            </dt>
+        </dl>
+    </div>
+    [{elseif $sPaymentID == "klarna_sofort"}]
+    <div class="well well-sm kp-outer">
+        <dl>
+            <dt>
+                <input class="kp-radio" id="kp-so" data-payment_id="direct_bank_transfer" type="radio"
+                       name="paymentid"
+                       value="[{$sPaymentID}]"
+                       [{if $is_checked}]checked[{/if}]>
+                <label for="kp-so"><b>[{$oView->removeKlarnaPrefix($paymentmethod->oxpayments__oxdesc->value)}]</b></label>
+                <img src="[{$paymentmethod->getBadgeUrl()}]">
+            </dt>
+            <dt style="font-weight: normal">[{oxmultilang ident="TCKLARNA_PAY_NOW_SUBTITLE"}]</dt>
+            <dt>
+                [{if $kpError }]
+                <div class="kp-method alert alert-info"
+                     style="[{if !$is_checked}]display: none; [{/if}]max-width:700px">[{ $kpError }]</div>
+                [{else}]
+                <div id="direct_bank_transfer" class="kp-method" style="display: none;"></div>
+                [{/if}]
+            </dt>
+        </dl>
+    </div>
     [{elseif $sPaymentID == "klarna_pay_now"}]
         <div class="well well-sm kp-outer">
             <dl>

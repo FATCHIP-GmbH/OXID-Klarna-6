@@ -78,6 +78,8 @@ class KlarnaInstaller extends ShopConfiguration
 
         $instance = self::getInstance();
 
+        $instance->checkAndUpdate();
+
         $instance->extendDbTables();
 
         $instance->addConfigVars();
@@ -85,6 +87,19 @@ class KlarnaInstaller extends ShopConfiguration
         $instance->addActions();
 
         $instance->addKlarnaPaymentsMethods();
+    }
+
+    protected function checkAndUpdate() {
+        // oxconfig.OXMODULE prefix
+        $requireUpdate = $this->db->select(
+            "SELECT `OXID` FROM `oxconfig` WHERE OXMODULE = ?;",
+            array('tcklarna')
+        );
+        if ($requireUpdate->count()) {
+            foreach($requireUpdate->fetchAll() as $row) {
+                $this->db->execute("UPDATE `oxconfig` SET OXMODULE = ? WHERE OXID = ?", array('module:tcklarna', $row['OXID']));
+            }
+        }
     }
 
     /**
@@ -150,7 +165,7 @@ class KlarnaInstaller extends ShopConfiguration
             'select' => array(),
         );
 
-        $savedConf     = $this->loadConfVars($shopId, self::KLARNA_MODULE_ID);
+        $savedConf     = $this->loadConfVars($shopId, 'module:'. self::KLARNA_MODULE_ID);
         $savedConfVars = $savedConf['vars'];
 
         foreach ($defaultConfVars as $type => $values) {
@@ -167,7 +182,7 @@ class KlarnaInstaller extends ShopConfiguration
                     $name,
                     $this->_serializeConfVar($type, $name, $data),
                     $shopId,
-                    self::KLARNA_MODULE_ID
+                    "module:" . self::KLARNA_MODULE_ID
                 );
             }
         }
@@ -191,8 +206,12 @@ class KlarnaInstaller extends ShopConfiguration
                                  array($de_prefix => 'Klarna Rechnung', $en_prefix => 'Klarna Pay Later'),
                              KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID  =>
                                  array($de_prefix => 'Klarna Ratenkauf', $en_prefix => 'Klarna Slice It'),
-                             KlarnaPayment::KLARNA_PAYMENT_PAY_NOW      =>
+                             KlarnaPayment::KLARNA_PAYMENT_PAY_NOW =>
                                  array($de_prefix => 'Sofort bezahlen', $en_prefix => 'Klarna Pay Now'),
+                             KlarnaPayment::KLARNA_DIRECTDEBIT =>
+                                 array($de_prefix => 'Klarna Pay Now Direct Debit', $en_prefix => 'Klarna Pay Now Direct Debit'),
+                             KlarnaPayment::KLARNA_SOFORT =>
+                                 array($de_prefix => 'Klarna Sofortüberweisung', $en_prefix => 'Klarna Pay Now Instant'),
         );
 
         $sort   = -350;

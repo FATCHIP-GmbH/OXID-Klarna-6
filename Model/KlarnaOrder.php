@@ -84,7 +84,7 @@ class KlarnaOrder extends KlarnaOrder_parent
                     }
                     $client->sendOxidOrderNr($this->oxorder__oxordernr->value, $klarna_id);
                 } catch (KlarnaClientException $e) {
-                    $e->debugOut();
+                    KlarnaUtils::logException($e);
                 }
             }
         }

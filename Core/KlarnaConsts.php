@@ -54,7 +54,7 @@ class KlarnaConsts
 
     const KLARNA_PREFILL_NOTIF_URL = 'https://cdn.klarna.com/1.0/shared/content/legal/terms/%s/%s/checkout';
 
-    const KLARNA_MANUAL_DOWNLOAD_LINK = 'https://www.topconcepts.de/customer/klarna/docs/klarna-module-for-oxid-%s-%s.pdf';
+    const KLARNA_MANUAL_DOWNLOAD_LINK = 'https://www.cgrd.de/customer/klarna/docs/klarna-module-for-oxid-%s-%s.pdf';
 
     /**
      * @codeCoverageIgnore

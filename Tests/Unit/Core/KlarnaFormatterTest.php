@@ -12,29 +12,27 @@ class KlarnaFormatterTest extends ModuleUnitTestCase
 {
 
     /**
-     * @dataProvider oxidtoklarnaDataprovider
+     * @dataProvider oxidtoklarnaDataProvider
      * @param $object
      * @param $expectedResult
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      * @throws \Exception
      */
     public function testOxidToKlarnaAddress($object, $expectedResult)
     {
         if ($object == null) {
-            $this->setExpectedException(\Exception::class, $expectedResult);
+            $this->expectException(\Exception::class);
+            $this->expectExceptionMessage($expectedResult);
             KlarnaFormatter::oxidToKlarnaAddress('invalid');
         } else {
             $result = KlarnaFormatter::oxidToKlarnaAddress($object);
-
-            $this->assertEquals($result, $expectedResult);
+            $this->assertEquals($expectedResult, $result);
         }
     }
 
-    public function oxidtoklarnaDataprovider()
+    public function oxidtoklarnaDataProvider()
     {
-        $addressMock = $this->createStub(Address::class, []);
-
-        $userMock = $this->getMock(User::class, ['getFieldData']);
+        $addressMock = oxNew(Address::class);
+        $userMock = oxNew(User::class);
         $userMock->oxuser__oxcountryid = new Field('a7c40f632a0804ab5.18804076', Field::T_RAW);
         $userMock->oxuser__oxstreet = new Field('street', Field::T_RAW);
         $userMock->oxuser__oxstreetnr = new Field('streetnr', Field::T_RAW);
@@ -62,12 +60,13 @@ class KlarnaFormatterTest extends ModuleUnitTestCase
     /**
      * @dataProvider klarnaToOxidAddressDataprovider
      */
-    public function testKlarnaToOxidAddress($address, $addressData, $expected)
+    public function testKlarnaToOxidAddress($sKey, $addressData, $expected)
     {
 
-        $result = KlarnaFormatter::klarnaToOxidAddress($addressData, $address);
-        $this->assertEquals($expected, $result);
-
+        $result = KlarnaFormatter::klarnaToOxidAddress($addressData, $sKey);
+        $sKey === null
+            ? $this->assertNull($result)
+            : $this->assertArraySubset($expected, $result);
     }
 
     public function klarnaToOxidAddressDataprovider()

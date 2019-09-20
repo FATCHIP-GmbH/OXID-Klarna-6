@@ -148,7 +148,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $this->getSession()->setBasket($oBasket);
         $oUser   = oxNew(User::class);
         $oBasket->setPayment($paymentId);
-        $order = $this->createStub(Order::class, ['validateDeliveryAddress' => null]);
+        $order = $this->getMockBuilder(Order::class)->setMethods(['validateDeliveryAddress'])->getMock();
         $result = $order->validateOrder($oBasket, $oUser);
 
         $this->assertEquals($expectedResult, $result);
@@ -228,7 +228,8 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $id       = 'zzz';
         $response = ['response'];
 
-        $client = $this->createStub(KlarnaOrderManagementClient::class, ['cancelOrder' => $response]);
+        $client = $this->getMockBuilder(KlarnaOrderManagementClient::class)->setMethods(['cancelOrder'])->getMock();
+        $client->expects($this->once())->method('cancelOrder')->willReturn($response);
         $order  = oxNew(Order::class);
         $result = $order->cancelKlarnaOrder($id, null, $client);
         $this->assertEquals($response, $result);
@@ -243,7 +244,8 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $uniqueId_1 = 'uid_1';
         $uniqueId_2 = 'uid_2';
 
-        $client = $this->createStub(KlarnaOrderManagementClient::class, ['updateOrderLines' => $response]);
+        $client = $this->getMockBuilder(KlarnaOrderManagementClient::class)->setMethods(['updateOrderLines'])->getMock();
+        $client->expects($this->once())->method('updateOrderLines')->willReturn($response);
 
         $order  = oxNew(Order::class);
         $order->oxorder__tcklarna_orderid = new Field($uniqueId_1);
@@ -253,7 +255,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $this->assertEquals(1, $order->oxorder__tcklarna_sync->value);
 
         // Test exception
-        $client = $this->getMock(KlarnaOrderManagementClient::class, ['updateOrderLines']);
+        $client = $this->getMockBuilder(KlarnaOrderManagementClient::class)->setMethods(['updateOrderLines'])->getMock();
         $client->expects($this->once())->method('updateOrderLines')->willThrowException(new KlarnaClientException("Test"));
 
         $order  = oxNew(Order::class);
@@ -270,16 +272,14 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $id       = 'zzz';
         $data     = ['update' => 'data'];
         $response = ['response'];
-
-        $client = $this->createStub(KlarnaOrderManagementClient::class, ['captureOrder' => $response]);
+        $client = $this->getMockBuilder(KlarnaOrderManagementClient::class)->setMethods(['captureOrder'])->getMock();
         $client->expects($this->once())->method('captureOrder')->willReturn($response);
 
         $order  = oxNew(Order::class);
         $result = $order->captureKlarnaOrder($data, $id, null, $client);
         $this->assertEquals($response, $result);
 
-
-        $client = $this->createStub(KlarnaOrderManagementClient::class, ['captureOrder' => $response]);
+        $client = $this->getMockBuilder(KlarnaOrderManagementClient::class)->setMethods(['captureOrder'])->getMock();
         $client->expects($this->once())
             ->method('captureOrder')
             ->with($this->callback(
@@ -300,7 +300,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase
     public function test_setNumber()
     {
         $id     = $this->prepareKlarnaOrder();
-        $order  = $this->getMock(Order::class, ['isKlarna', 'isKP', 'isKCO']);
+        $order  = $this->getMockBuilder(Order::class)->setMethods(['isKlarna', 'isKP', 'isKCO'])->getMock();
         $class  = new ReflectionClass(get_class($order));
         $method = $class->getMethod('_setNumber');
         $method->setAccessible(true);
@@ -314,7 +314,8 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $this->setSessionParam('klarna_last_KP_order_id', 'klarnaId');
 
         $response = ['response'];
-        $client   = $this->createStub(KlarnaOrderManagementClient::class, ['sendOxidOrderNr' => $response]);
+        $client = $this->getMockBuilder(KlarnaOrderManagementClient::class)->setMethods(['sendOxidOrderNr'])->getMock();
+        $client->expects($this->once())->method('sendOxidOrderNr')->willReturn($response);
         $client->expects($this->once())
             ->method('sendOxidOrderNr')
             ->willReturn($response);
@@ -332,16 +333,15 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $this->setSessionParam('klarna_checkout_order_id', 'klarnaId');
 
         $response = ['response'];
-        $e        = $this->getMock(KlarnaClientException::class, ['debugOut']);
-        $e->expects($this->once())->method('debugOut');
-        $client = $this->createStub(KlarnaOrderManagementClient::class, ['sendOxidOrderNr' => $response]);
+        $client = $this->getMockBuilder(KlarnaOrderManagementClient::class)->setMethods(['sendOxidOrderNr'])->getMock();
+        $client->expects($this->once())->method('sendOxidOrderNr')->willReturn($response);
         $client->expects($this->once())
             ->method('sendOxidOrderNr')
-            ->willThrowException($e);
+            ->willThrowException(new KlarnaClientException('Test'));
 
         $result = $method->invokeArgs($order, [$client]);
         $this->assertTrue($result);
-
+        $this->assertLoggedException(KlarnaClientException::class, 'Test');
         $this->removeKlarnaOrder($id);
     }
 
@@ -352,7 +352,6 @@ class KlarnaOrderTest extends ModuleUnitTestCase
     public function test_setOrderArticle()
     {
 
-//        $order = $this->getMock(Order::class, ['getOrderArticles']);
         $order   = oxNew(Order::class);
         $oBasket = $this->prepareBasketWithProduct();
 

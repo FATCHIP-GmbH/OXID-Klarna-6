@@ -97,7 +97,11 @@
                     </span>
                     </td>
                 </tr>
-
+                <tr>
+                    <td colspan="3">
+                        <div class="messagebox warn"></div>
+                    </td>
+                </tr>
                 <tr class="bg-grey">
                     <td>[{oxmultilang ident="TCKLARNA_PHONE_NUMBER_MANDATORY"}]</td>
                     <td>
@@ -377,17 +381,11 @@
                         </table>
                     </td>
                 </tr>
-                [{*<tr>*}]
-                [{*<td colspan="3">*}]
-                [{*<div class="messagebox warn">[{"TCKLARNA_EMPTY_FIELDS_WARNING"|oxmultilangassign}]</div>*}]
-                [{*</td>*}]
-                [{*</tr>*}]
                 <tr>
                     <td colspan="3">
                         <div class="messagebox info">[{"TCKLARNA_CHANGES_SAVED"|oxmultilangassign}]</div>
                     </td>
                 </tr>
-
 
                 <tr>
                     <td class="center" colspan="3">

@@ -2,7 +2,7 @@
 
 [{oxscript include=$oViewConf->getModuleUrl('tcklarna','out/src/js/tcklarna_scripts.js') priority=10 }]
 
-[{ assign var="sKlBanner" value=$oViewConf->getKlarnaHomepageBanner() }]
+[{assign var="sKlBanner" value=$oViewConf->getKlarnaHomepageBanner() }]
 
 [{*  *}]
 [{if ($sKlBanner && $oView->getClassName() === 'start') }]
@@ -24,17 +24,18 @@
             document.querySelector('#content div').after(wrapper);
         </script>
     [{else}]
-        [{ capture assign=klContentMainBanner }]
-            [{ $sKlBanner }]
+        [{capture assign=klContentMainBanner }]
+            [{$sKlBanner }]
             <div style="height:20px;"></div>
         [{/capture}]
-        [{ assign var=klContentMainBanner value=$klContentMainBanner|escape:javascript }]
-        [{ oxscript add='$(\'#content div:first\').after(\''|cat:$klContentMainBanner|cat:'\');' }]
+        [{assign var=klContentMainBanner value=$klContentMainBanner|escape:javascript }]
+        [{oxscript add='$(\'#content div:first\').after(\''|cat:$klContentMainBanner|cat:'\');' }]
     [{/if}]
 [{/if}]
 
-[{ assign var="aKlFooter" value=$oViewConf->getKlarnaFooterContent()}]
+[{assign var="aKlFooter" value=$oViewConf->getKlarnaFooterContent()}]
 [{if $aKlFooter}]
+
     [{capture assign=klFooterContent }]
         [{if $oViewConf->getActiveTheme() == 'azure' }]
             <li class="klarna-logo">
@@ -45,7 +46,7 @@
 
                 <div class="kl-logo">
                     <div class="kl-logo-inner">
-                        <img src="[{ $aKlFooter.url }]">
+                        <img src="[{$aKlFooter.url}]">
                     </div>
                 </div>
             </li>
@@ -59,7 +60,7 @@
 
                 <div class="kl-logo">
                     <div class="[{if ($aKlFooter.class === 'logoBlack' || $aKlFooter.class === 'logoWhite') }]kl-logo-inner[{/if}]">
-                        <img src="[{ $aKlFooter.url }]">
+                        <img src="[{$aKlFooter.url}]">
                     </div>
                 </div>
             </section>
@@ -72,6 +73,9 @@
             var $content = $(content)
             if(theme === 'flow'){
                 $('.footer-right-part div:first').append($content);
+            }
+            if(theme === 'wave'){
+                $('.footer-box-newsletter').append($content);
             }
             if(theme === 'azure'){
                 $('#footerCategories .list.categories').append($content);
@@ -86,8 +90,8 @@
             }
         }
     </script>
-    [{ assign var=klFooterContent value=$klFooterContent|escape:javascript }]
-    [{ oxscript add="embedKlarnaLogo('$klFooterContent');"}]
+    [{assign var=klFooterContent value=$klFooterContent|escape:javascript }]
+    [{oxscript add="embedKlarnaLogo('$klFooterContent');"}]
 [{/if}]
 
 

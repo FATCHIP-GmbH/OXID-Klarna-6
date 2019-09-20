@@ -20,11 +20,10 @@ class KlarnaStartTest extends ModuleUnitTestCase
 
     public function testGetKlarnaModuleInfo()
     {
-        $module = $this->getMock(Module::class, ['getInfo']);
-
+        $module = $this->getMockBuilder(Module::class)->setMethods(['getInfo'])->getMock();
         $module->expects($this->once())
             ->method('getInfo')
-            ->will($this->returnValue('1'));
+            ->willReturn('1');
 
         UtilsObject::setClassInstance(Module::class, $module);
         $start = oxNew(KlarnaStart::class);

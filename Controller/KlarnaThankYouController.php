@@ -52,7 +52,7 @@ class KlarnaThankYouController extends KlarnaThankYouController_parent
                 $this->client->getOrder($sKlarnaId);
 
             } catch (KlarnaClientException $e) {
-                $e->debugOut();
+                KlarnaUtils::logException($e);
             }
 
             // add klarna confirmation snippet

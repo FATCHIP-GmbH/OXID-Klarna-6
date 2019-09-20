@@ -42,8 +42,8 @@ class KlarnaBasketTest extends ModuleUnitTestCase
      */
     public function testTcklarna_calculateDeliveryCost()
     {
-        /** @var Basket $oBasket */
-        $oBasket = $this->createStub(Basket::class, ['getAdditionalServicesVatPercent' => 7.00]);
+        $oBasket = $this->getMockBuilder(Basket::class)->setMethods(['getAdditionalServicesVatPercent'])->getMock();
+        $oBasket->expects($this->once())->method('getAdditionalServicesVatPercent')->willReturn(7.00);
         $this->setConfigParam('blDeliveryVatOnTop', true);
         $oBasket->setDeliveryPrice('price already set');
 
@@ -71,7 +71,8 @@ class KlarnaBasketTest extends ModuleUnitTestCase
         $oPrice    = oxNew(Price::class);
         $oPrice->setPrice(100.00);
         $oDelivery->setDeliveryPrice($oPrice);
-        $oDeliveryList = $this->createStub(DeliveryList::class, ['getDeliveryList' => [$oDelivery]]);
+        $oDeliveryList = $this->getMockBuilder(DeliveryList::class)->setMethods(['getDeliveryList'])->getMock();
+        $oDeliveryList->expects($this->once())->method('getDeliveryList')->willReturn([$oDelivery]);
         UtilsObject::setClassInstance(DeliveryList::class, $oDeliveryList);
 
         $result = $oBasket->tcklarna_calculateDeliveryCost();
@@ -83,7 +84,7 @@ class KlarnaBasketTest extends ModuleUnitTestCase
 
     /**
      *
-     * @dataProvider testGetKlarnaPaymentDeliveryDataProvider
+     * @dataProvider KlarnaPaymentDeliveryDataProvider
      * @param $bruttoPrice
      * @param $vat
      * @param $name
@@ -92,15 +93,13 @@ class KlarnaBasketTest extends ModuleUnitTestCase
      */
     public function testGetKlarnaPaymentDelivery($bruttoPrice, $vat, $name, $order, $expectedResult)
     {
-        $oPrice       = $this->createStub(Price::class,
-            ['getBruttoPrice' => $bruttoPrice, 'getVat' => $vat]
-        );
-        $oDeliverySet = $this->createStub(DeliverySet::class, [
-                'getFieldData'      => $name,
-                'getShippingId'     => 'oxidstandard',
-                '_findDelivCountry' => 'a7c40f631fc920687.20179984',
-            ]
-        );
+        $oPrice = $this->getMockBuilder(Price::class)->setMethods(['getBruttoPrice', 'getVat'])->getMock();
+        $oPrice->expects($this->once())->method('getBruttoPrice')->willReturn($bruttoPrice);
+        $oPrice->expects($this->once())->method('getVat')->willReturn($vat);
+
+        $oDeliverySet = $this->getMockBuilder(DeliverySet::class)->setMethods(['getFieldData'])->getMock();
+        $oDeliverySet->expects($this->once())->method('getFieldData')->willReturn($name);
+
         $oOrder       = $order;
         $oBasket      = oxNew(Basket::class);
 
@@ -193,7 +192,6 @@ class KlarnaBasketTest extends ModuleUnitTestCase
 
         $this->setModuleMode('KCO');
         $this->setModuleConfVar('blKlarnaEnableAnonymization', 0, 'bool');
-        \oxTestModules::cleanAllModules();
     }
 
 
@@ -209,7 +207,7 @@ class KlarnaBasketTest extends ModuleUnitTestCase
         $oBasket = oxNew(Basket::class);
         $this->setUpBasket($oBasket, $ids);
 
-        $oOrder                      = $this->getMock(Order::class, ['load']);
+        $oOrder                      = $this->getMockBuilder(Order::class)->setMethods(['load'])->getMock();
         $oOrder->oxorder__oxdiscount = new Field(100, Field::T_RAW);
         UtilsObject::setClassInstance(Order::class, $oOrder);
 
@@ -258,8 +256,8 @@ class KlarnaBasketTest extends ModuleUnitTestCase
         /** @var Basket|KlarnaBasket $oBasket */
         $oBasket = oxNew(Basket::class);
         $this->setUpBasket($oBasket, $ids);
+        $this->expectException(KlarnaBasketTooLargeException::class);
 
-        $this->setExpectedException(KlarnaBasketTooLargeException::class);
         $oBasket->getKlarnaOrderLines();
     }
 
@@ -286,14 +284,11 @@ class KlarnaBasketTest extends ModuleUnitTestCase
         ];
     }
 
-    public function testGetKlarnaPaymentDeliveryDataProvider()
+    public function KlarnaPaymentDeliveryDataProvider()
     {
-        $oOrder = $this->createStub(Order::class,
-            [
-                'isKCO'        => true,
-                'getFieldData' => 'asdf',
-            ]
-        );
+        $oOrder = $this->getMockBuilder(Order::class)->setMethods(['isKCO', 'getFieldData'])->getMock();
+        $oOrder->expects($this->once())->method('isKCO')->willReturn(true);
+        $oOrder->expects($this->once())->method('getFieldData')->willReturn('asdf');
 
         return [
             [149.99, 7.00, 'testTitle', null,
@@ -456,7 +451,7 @@ class KlarnaBasketTest extends ModuleUnitTestCase
         $method  = $class->getMethod('sortOrderLines');
         $method->setAccessible(true);
 
-        $oBasketItem = $this->getMock(BasketItem::class, ['getArticle', 'getId']);
+        $oBasketItem = $this->getMockBuilder(BasketItem::class)->setMethods(['getArticle', 'getId'])->getMock();
         $oArticle    = oxNew(Article::class);
         $aArt        = clone $oArticle;
         $aBrt        = clone $oArticle;
@@ -483,17 +478,20 @@ class KlarnaBasketTest extends ModuleUnitTestCase
 
     public function test_addGiftWrappingCostFractionVat()
     {
-        $oWrappingCost = $this->createStub(Price::class, [
-            'getPrice'       => 100,
-            'getBruttoPrice' => 100,
-            'getVatValue'    => 10,
-            'getVat'         => 10,
-        ]);
-        $oBasket       = $this->createStub(KlarnaBasket::class,
-            [
-                'getWrappingCost'    => $oWrappingCost,
-                'getOrderVatAverage' => 7.97,
-            ]);
+        $oWrappingCost = $this->getMockBuilder(Price::class)
+            ->setMethods(['getPrice', 'getBruttoPrice', 'getVatValue', 'getVat'])
+            ->getMock();
+        $oWrappingCost->expects($this->once())->method('getPrice')->willReturn(100);
+        $oWrappingCost->expects($this->once())->method('getBruttoPrice')->willReturn(100);
+        $oWrappingCost->expects($this->once())->method('getVatValue')->willReturn(10);
+        $oWrappingCost->expects($this->once())->method('getVat')->willReturn(10);
+
+        $oBasket = $this->getMockBuilder(Basket::class)
+            ->setMethods(['getWrappingCost', 'getOrderVatAverage'])
+            ->getMock();
+        $oBasket->expects($this->once())->method('getWrappingCost')->willReturn($oWrappingCost);
+        $oBasket->expects($this->once())->method('getOrderVatAverage')->willReturn(7.97);
+
 
         $class  = new \ReflectionClass(KlarnaBasket::class);
         $method = $class->getMethod('_addGiftWrappingCost');
@@ -520,12 +518,18 @@ class KlarnaBasketTest extends ModuleUnitTestCase
     public function test_sortOrderLines()
     {
         $oBasket     = oxNew(KlarnaBasket::class);
-        $articleA    = $this->createStub(Article::class, ['getId' => 'nvuiadnrv8974ht2151']);
-        $articleB    = $this->createStub(Article::class, ['getId' => 'vnoruinpq57gh1shy26']);
-        $notArticleA = $this->createStub(BasketItem::class, ['getArticle' => $articleA]);
-        $notArticleB = $this->createStub(BasketItem::class, ['getArticle' => $articleB]);
-        $basketItemA = $this->createStub(BasketItem::class, ['getArticle' => $notArticleA]);
-        $basketItemB = $this->createStub(BasketItem::class, ['getArticle' => $notArticleB]);
+        $articleA = $this->getMockBuilder(Article::class)->setMethods(['getId'])->getMock();
+        $articleA->expects($this->once())->method('getId')->willReturn('nvuiadnrv8974ht2151');
+        $articleB = $this->getMockBuilder(Article::class)->setMethods(['getId'])->getMock();
+        $articleB->expects($this->once())->method('getId')->willReturn('vnoruinpq57gh1shy26');
+        $notArticleA = $this->getMockBuilder(BasketItem::class)->setMethods(['getArticle'])->getMock();
+        $notArticleA->expects($this->once())->method('getArticle')->willReturn($articleA);
+        $notArticleB = $this->getMockBuilder(BasketItem::class)->setMethods(['getArticle'])->getMock();
+        $notArticleB->expects($this->once())->method('getArticle')->willReturn($articleB);
+        $basketItemA = $this->getMockBuilder(BasketItem::class)->setMethods(['getArticle'])->getMock();
+        $basketItemA->expects($this->once())->method('getArticle')->willReturn($notArticleA);
+        $basketItemB = $this->getMockBuilder(BasketItem::class)->setMethods(['getArticle'])->getMock();
+        $basketItemB->expects($this->once())->method('getArticle')->willReturn($notArticleB);
 
         $class  = new \ReflectionClass(KlarnaBasket::class);
         $method = $class->getMethod('sortOrderLines');

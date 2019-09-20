@@ -88,14 +88,12 @@ class KlarnaFormatter extends Base
 
         $aUserData = array();
         foreach (self::$aFieldMapper as $oxName => $klarnaName) {
-            if (!empty($aAddressData[$klarnaName])) {
-                if ($klarnaName === 'street_address') {
-                    continue;
-                } else if ($klarnaName === 'title') {
-                    $aUserData[$sTable . $oxName] = self::formatSalutation($aAddressData[$klarnaName], strtolower($aAddressData['country']));
-                } else {
-                    $aUserData[$sTable . $oxName] = trim($aAddressData[$klarnaName]);
-                }
+            if ($klarnaName === 'street_address') {
+                continue;
+            } else if ($klarnaName === 'title') {
+                $aUserData[$sTable . $oxName] = self::formatSalutation($aAddressData[$klarnaName], strtolower($aAddressData['country']));
+            } else {
+                $aUserData[$sTable . $oxName] = trim($aAddressData[$klarnaName]);
             }
         }
 

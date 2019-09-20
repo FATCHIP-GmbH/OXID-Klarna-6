@@ -110,7 +110,9 @@ class KlarnaOrderValidatorTest extends ModuleUnitTestCase
     public function testValidateOrder($orderData, $articleErrors, $resultErrors, $eRes)
     {
         // setup article errors
-        $oArticle = $this->getMock(Article::class, ['klarna_loadByArtNum', 'checkForStock', 'isLoaded', 'isBuyable']);
+        $oArticle = $this->getMockBuilder(Article::class)
+            ->setMethods(['klarna_loadByArtNum', 'checkForStock', 'isLoaded', 'isBuyable'])
+            ->getMock();
         $oArticle->oxarticles__oxartnum = new Field('artNum', Field::T_RAW);
         $oArticle->expects($this->any())->method('checkForStock')->willReturn($articleErrors['checkForStock']);
         $oArticle->expects($this->any())->method('isLoaded')->willReturn($articleErrors['isLoaded']);

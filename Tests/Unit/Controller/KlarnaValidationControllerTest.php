@@ -41,7 +41,10 @@ class KlarnaValidationControllerTest extends ModuleUnitTestCase
     {
         \oxUtilsHelper::$iCode = null;
         $data                  = json_decode($requestBody, true);
-        $validator             = $this->getMock(KlarnaOrderValidator::class, ['validateOrder', 'isValid', 'getResultErrors'], [$data]);
+        $validator             = $this->getMockBuilder(KlarnaOrderValidator::class)
+            ->setMethods(['validateOrder', 'isValid', 'getResultErrors'])
+            ->setConstructorArgs([$data])
+            ->getMock();
         $validator->expects($this->once())
             ->method('isValid')
             ->willReturn($isValid);
@@ -49,7 +52,7 @@ class KlarnaValidationControllerTest extends ModuleUnitTestCase
             ->method('getResultErrors')
             ->willReturn($errors);
 
-        $validationController = $this->getMock(KlarnaValidationController::class, ['getRequestBody', 'logKlarnaData', 'getValidator', 'setValidResponseHeader']);
+        $validationController = $this->getMockBuilder(KlarnaValidationController::class)->setMethods(['getRequestBody', 'logKlarnaData', 'getValidator', 'setValidResponseHeader'])->getMock();
         $validationController->expects($this->once())
             ->method('getRequestBody')
             ->willReturn($requestBody);
@@ -83,17 +86,19 @@ class KlarnaValidationControllerTest extends ModuleUnitTestCase
     public function testInit_errorsAndLogs()
     {
         $errors    = ['MY_ERROR' => 33, 'CANT_BUY' => 10];
-        $validator = $this->createStub(KlarnaOrderValidator::class, [
-            'validateOrder'   => null,
-            'isValid'         => false,
-            'getResultErrors' => $errors,
-        ]);
+        $validator = $this->getMockBuilder(KlarnaOrderValidator::class)
+            ->setMethods(['validateOrder', 'isValid', 'getResultErrors',])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $validator->expects($this->once())->method('validateOrder')->willReturn(null);
+        $validator->expects($this->once())->method('isValid')->willReturn(false);
+        $validator->expects($this->any())->method('getResultErrors')->willReturn($errors);
 
         $randId      = "rand_" . rand(1, 100000);
         $requestBody = "{\"order_id\": \"$randId\", \"fake_order\": \"data\"}";
         $data        = json_decode($requestBody, true);
 
-        $validationController = $this->getMock(KlarnaValidationController::class, ['getRequestBody', 'getValidator']);
+        $validationController = $this->getMockBuilder(KlarnaValidationController::class)->setMethods(['getRequestBody', 'getValidator'])->getMock();
         $validationController->expects($this->once())
             ->method('getRequestBody')
             ->willReturn($requestBody);

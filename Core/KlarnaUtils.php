@@ -76,7 +76,7 @@ class KlarnaUtils
         $config = Registry::getConfig();
         $shopId = $config->getShopId();
 
-        return $config->getShopConfVar($name, $shopId, 'tcklarna');
+        return $config->getShopConfVar($name, $shopId, 'module:tcklarna');
     }
 
     /**
@@ -157,18 +157,18 @@ class KlarnaUtils
 
     /**
      * @param $sCountryISO
+     * @param bool $filterKcoList
      * @return bool
-     * @throws SystemComponentException
      */
-    public static function isCountryActiveInKlarnaCheckout($sCountryISO)
+    public static function isCountryActiveInKlarnaCheckout($sCountryISO, $filterKcoList = true)
     {
         if ($sCountryISO === null) {
             return true;
         }
 
         /** @var CountryList | \TopConcepts\Klarna\Model\KlarnaCountryList $activeKlarnaCountries */
-        $activeKlarnaCountries = oxNew(CountryList::class);
-        $activeKlarnaCountries->loadActiveKlarnaCheckoutCountries();
+        $activeKlarnaCountries = Registry::get(CountryList::class);
+        $activeKlarnaCountries->loadActiveKlarnaCheckoutCountries($filterKcoList);
         if (!count($activeKlarnaCountries)) {
             return false;
         }
@@ -186,7 +186,7 @@ class KlarnaUtils
      */
     public static function isNonKlarnaCountryActive()
     {
-        $activeNonKlarnaCountries = oxNew(CountryList::class);
+        $activeNonKlarnaCountries = Registry::get(CountryList::class);
         $activeNonKlarnaCountries->loadActiveNonKlarnaCheckoutCountries();
         if (count($activeNonKlarnaCountries) > 0) {
             return true;
@@ -395,5 +395,16 @@ class KlarnaUtils
         $sql = 'SELECT COUNT(*) FROM `tcklarna_ack` WHERE `tcklarna_orderid` = ?';
 
         return DatabaseProvider::getDb()->getOne($sql, array($orderId));
+    }
+
+    /**
+     * @param $e \Exception
+     */
+    public static function logException($e) {
+        if (method_exists(Registry::class, 'getLogger')) {
+            Registry::getLogger()->error($e->getMessage(), [$e]);
+        } else {
+            $e->debugOut();
+        }
     }
 }

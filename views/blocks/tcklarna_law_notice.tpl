@@ -4,7 +4,6 @@
     [{oxscript include=$oViewConf->getModuleUrl('tcklarna', 'out/src/js/azure_patch.js') priority=3}]
 [{/if}]
 [{if $oViewConf->showCheckoutTerms() }]
-    <link rel="stylesheet" type="text/css" href="[{$oViewConf->getModuleUrl('tcklarna', 'out/src/css/bootstrap.min.css')}]"/>
     [{assign var=klarnaLawNotifUrl value=$oViewConf->getLawNotificationsLinkKco()}]
     <style>
         #legalModal iframe {
@@ -95,4 +94,8 @@
             });
         }
     </script>
+[{/if}]
+
+[{if $oViewConf->getActiveTheme() === 'wave'}]
+    <link rel="stylesheet" type="text/css" href="[{$oViewConf->getModuleUrl('tcklarna', 'out/src/css/tc_klarna_style_wave.css')}]"/>
 [{/if}]

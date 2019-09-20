@@ -124,7 +124,7 @@ class KlarnaExpressController extends FrontendController
      */
     public function render()
     {
-        $oSession = $this->getSession();
+        $oSession = Registry::getSession();
         $oBasket = $oSession->getBasket();
         $this->rebuildFakeUser($oBasket);
 
@@ -204,7 +204,7 @@ class KlarnaExpressController extends FrontendController
 
             return $this->_sThisTemplate;
         } catch (StandardException $oEx) {
-            $oEx->debugOut();
+            KlarnaUtils::logException($oEx);
             KlarnaUtils::fullyResetKlarnaSession();
             Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeURL() . 'cl=KlarnaExpress', false, 302);
 
@@ -221,15 +221,11 @@ class KlarnaExpressController extends FrontendController
      */
     protected function showCountryPopup()
     {
-        $sCountryISO        = $this->getSession()->getVariable('sCountryISO');
+        $sCountryISO        = Registry::getSession()->getVariable('sCountryISO');
         $resetKlarnaCountry = $this->_oRequest->getRequestEscapedParameter('reset_klarna_country');
 
         if ($resetKlarnaCountry) {
             return true;
-        }
-
-        if (!KlarnaUtils::isNonKlarnaCountryActive()) {
-            return false;
         }
 
         if ($this->isKLUserLoggedIn()) {
@@ -359,7 +355,7 @@ class KlarnaExpressController extends FrontendController
 
         foreach ($list->getArray() as $id => $country)
         {
-            if(array_key_exists($id,KlarnaUtils::getAllActiveKCOGlobalCountryList()->getArray())){
+            if(KlarnaUtils::isCountryActiveInKlarnaCheckout($country->oxcountry__oxisoalpha2->value, false)) {
                 unset($list[$id]);
             }
         }
@@ -549,7 +545,7 @@ class KlarnaExpressController extends FrontendController
      */
     protected function resolveUser()
     {
-        $oSession = $this->getSession();
+        $oSession = Registry::getSession();
         
         /** @var KlarnaUser|User $oUser */
         $oUser = $this->getUser();
@@ -572,7 +568,7 @@ class KlarnaExpressController extends FrontendController
     protected function checkSsl($oRequest)
     {
         $blAlreadyRedirected = $oRequest->getRequestEscapedParameter('sslredirect') == 'forced';
-        $oConfig             = $this->getConfig();
+        $oConfig             = Registry::getConfig();
         $oUtils              = Registry::getUtils();
         if ($oConfig->getCurrentShopURL() != $oConfig->getSSLShopURL() && !$blAlreadyRedirected) {
             $sUrl = $oConfig->getShopSecureHomeUrl() . 'sslredirect=forced&cl=KlarnaExpress';
@@ -610,13 +606,13 @@ class KlarnaExpressController extends FrontendController
             }
 
 
-            $this->getSession()->setBasket($oBasket);
+            Registry::getSession()->setBasket($oBasket);
 
             if ($_aOrderData && isset($_aOrderData['billing_address']['email'])) {
                 $user->loadByEmail($_aOrderData['billing_address']['email']);
                 $this->_oUser = $user;
-                $this->getSession()->setVariable('klarna_checkout_order_id', $_aOrderData['order_id']);
-                $this->getSession()->setVariable(
+                Registry::getSession()->setVariable('klarna_checkout_order_id', $_aOrderData['order_id']);
+                Registry::getSession()->setVariable(
                     'klarna_checkout_user_email',
                     $_aOrderData['billing_address']['email']
                 );

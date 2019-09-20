@@ -95,7 +95,7 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
         $this->setSessionParam('amazonOrderReferenceId', $amzRef);
         $this->setSessionParam('sCountryISO', $sessionCountryISO);
         $this->setRequestParameter('non_kco_global_country', $nonKCOinRequest);
-        $oPaymentController = $this->getMock(PaymentController::class, ['getUser']);
+        $oPaymentController = $this->getMockBuilder(PaymentController::class)->setMethods(['getUser'])->getMock();
         $oPaymentController->expects($this->once())->method('getUser')->willReturn($oUser);
         $oPaymentController->init();
 
@@ -116,7 +116,7 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
     public function testIncludeKPWidget()
     {
         $oPaymentController = oxNew(PaymentController::class);
-        $oPayment           = $this->getMock(Payment::class, ['isKPPayment']);
+        $oPayment           = $this->getMockBuilder(Payment::class)->setMethods(['isKPPayment'])->getMock();
         $oPayment->expects($this->at(0))->method('isKPPayment')->willReturn(true);
         $oPayment->expects($this->at(1))->method('isKPPayment')->willReturn(false);
         $oPayment->expects($this->at(2))->method('isKPPayment')->willReturn(true);
@@ -152,14 +152,14 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
         $oUser            = oxNew(User::class);
         $sActShipSet      = 'setId';
         $aDelSetData      = [['allSets' => 'value'], 'other_value', []];
-        $oDeliverySetList = $this->getMock(DeliverySetList::class, ['getDeliverySetData']);
+        $oDeliverySetList = $this->getMockBuilder(DeliverySetList::class)->setMethods(['getDeliverySetData'])->getMock();
         $oDeliverySetList->expects($this->exactly(2))
             ->method('getDeliverySetData')
             ->with($sActShipSet, $oUser)
             ->willReturn($aDelSetData);;
 
 
-        \oxTestModules::addModuleObject(DeliverySetList::class, $oDeliverySetList);
+        Registry::set(DeliverySetList::class, $oDeliverySetList);
         $oPaymentController = oxNew(PaymentController::class);
 
         $this->setRequestParameter('sShipSet', $sActShipSet);
@@ -244,7 +244,7 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
         $this->setSessionParam('klarna_session_data', ['empty']);
         $this->setSessionParam('sSessionTimeStamp', $args['timeStamp']);
 
-        $oPaymentController = $this->getMock(PaymentController::class, ['countKPMethods', 'getUser', 'removeUnavailableKP']);
+        $oPaymentController = $this->getMockBuilder(PaymentController::class)->setMethods(['countKPMethods', 'getUser', 'removeUnavailableKP'])->getMock();
 
         // "at" method behaves incorrect here - indexes should be 0 an 1 not 2 and 5
         // possibly PHPUnit bug
@@ -261,7 +261,7 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
 
         $oPaymentController->loadKlarnaPaymentWidget = $args['loadKPWidget'];
 
-        $client = $this->getMock(KlarnaPaymentsClient::class, ['initOrder', 'createOrUpdateSession']);
+        $client = $this->getMockBuilder(KlarnaPaymentsClient::class)->setMethods(['initOrder', 'createOrUpdateSession'])->getMock();
         $client->expects($this->any())->method('initOrder')->will($this->returnSelf());
         $this->setProtectedClassProperty($oPaymentController, 'client', $client);
 
@@ -288,7 +288,7 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
         $this->setSessionParam('klarna_session_data', ['empty']);
         $this->setSessionParam('sSessionTimeStamp', (new \DateTime())->getTimestamp());
 
-        $oPaymentController = $this->getMock(PaymentController::class, ['countKPMethods', 'getUser']);
+        $oPaymentController = $this->getMockBuilder(PaymentController::class)->setMethods(['countKPMethods', 'getUser'])->getMock();
         $oPaymentController->expects($this->any())
             ->method('getUser')->willReturn($oUser);
         $oPaymentController->expects($this->any())
@@ -309,21 +309,17 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
         $this->setSessionParam('klarna_session_data', ['empty']);
         $this->setSessionParam('sSessionTimeStamp', (new \DateTime())->getTimestamp());
 
-        $oPaymentController = $this->getMock(PaymentController::class, ['countKPMethods', 'getUser']);
+        $oPaymentController = $this->getMockBuilder(PaymentController::class)->setMethods(['countKPMethods', 'getUser'])->getMock();
         $oPaymentController->expects($this->any())
             ->method('countKPMethods')->willReturn(3);
         $oPaymentController->expects($this->any())
             ->method('getUser')->willReturn($oUser);
-
-        $e = $this->getMock(KlarnaClientException::class, ['debugOut']);
-        $e->expects($this->once())->method('debugOut');
-
-        $client = $this->getMock(KlarnaPaymentsClient::class, ['initOrder']);
-        $client->expects($this->any())->method('initOrder')->willThrowException($e);
+        $client = $this->getMockBuilder(KlarnaPaymentsClient::class)->setMethods(['initOrder'])->getMock();
+        $client->expects($this->any())->method('initOrder')->willThrowException(new KlarnaClientException('Test'));
         $this->setProtectedClassProperty($oPaymentController, 'client', $client);
 
         $oPaymentController->render();
-
+        $this->assertLoggedException(KlarnaClientException::class, 'Test');
     }
 
     public function testGetPaymentList()
@@ -363,7 +359,7 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
     public function testRemoveUnavailableKP()
     {
         $oPaymentController = oxNew(PaymentController::class);
-        $oPayment           = $this->getMock(Payment::class, ['getPaymentCategoryName']);
+        $oPayment           = $this->getMockBuilder(Payment::class)->setMethods(['getPaymentCategoryName'])->getMock();
         $oPayment->expects($this->at(0))->method('getPaymentCategoryName')->willReturn('pay_later');
         $oPayment->expects($this->at(1))->method('getPaymentCategoryName')->willReturn('zzzzz');
         $oPayment->expects($this->at(2))->method('getPaymentCategoryName')->willReturn('fffff');
@@ -455,10 +451,10 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
         $this->setRequestParameter("sAuthToken", $sAuthToken);
         $oUser = oxNew(User::class);
         $oUser->oxuser__oxcountryid = new Field($countryId, Field::T_RAW);
-        $oPaymentController = $this->getMock(PaymentController::class, ['getUser']);
+        $oPaymentController = $this->getMockBuilder(PaymentController::class)->setMethods(['getUser'])->getMock();
         $oPaymentController->expects($this->any())->method('getUser')->willReturn($oUser);
         $this->setProtectedClassProperty($oPaymentController, 'oRequest', Registry::get(Request::class));
-        $oPayment = $this->getMock(Payment::class, ['isValidPayment']);
+        $oPayment = $this->getMockBuilder(Payment::class)->setMethods(['isValidPayment'])->getMock();
         $oPayment->expects($this->any())->method('isValidPayment')->willReturn(true);
         UtilsObject::setClassInstance(Payment::class, $oPayment);
 
@@ -478,9 +474,9 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
 
         $this->setRequestParameter("paymentid", "fake-id");
         $oUser = oxNew(User::class);
-        $oPaymentController = $this->getMock(PaymentController::class, ['getUser']);
+        $oPaymentController = $this->getMockBuilder(PaymentController::class)->setMethods(['getUser'])->getMock();
         $oPaymentController->expects($this->any())->method('getUser')->willReturn($oUser);$this->setProtectedClassProperty($oPaymentController, 'oRequest', Registry::get(Request::class));
-        $oPayment = $this->getMock(Payment::class, ['isValidPayment']);
+        $oPayment = $this->getMockBuilder(Payment::class)->setMethods(['isValidPayment'])->getMock();
         $oPayment->expects($this->any())->method('isValidPayment')->willReturn(true);
         UtilsObject::setClassInstance(Payment::class, $oPayment);
 

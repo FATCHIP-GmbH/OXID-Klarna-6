@@ -16,21 +16,17 @@ class KlarnaOrderManagementClientTest extends ModuleUnitTestCase
     /**
      * @dataProvider patchDataProvider
      */
-    public function testPatchOrder($method, $params)
+    public function testPatchOrder($method, $params, $httpMethod)
     {
         $body = ['test' => 'test'];
         $getResponse = new \Requests_Response();
         $getResponse->body = json_encode($body);
         $getResponse->status_code = 200;
 
-        $checkoutClient = $this->createStub(
-            KlarnaOrderManagementClient::class,
-            [
-                'patch' => $getResponse,
-                'get' => $getResponse,
-                'post' => $getResponse,
-            ]
-        );
+        $checkoutClient = $this->getMockBuilder(KlarnaOrderManagementClient::class)
+            ->setMethods([$httpMethod])
+            ->getMock();
+        $checkoutClient->expects($this->once())->method($httpMethod)->willReturn($getResponse);
 
         $result = call_user_func_array([$checkoutClient, $method], $params);
 
@@ -40,28 +36,28 @@ class KlarnaOrderManagementClientTest extends ModuleUnitTestCase
     public function patchDataProvider()
     {
         return [
-            ['getOrder', [1]],
-            ['acknowledgeOrder', [1]],
-            ['cancelOrder', [1]],
-            ['getAllCaptures', [1]],
-            ['sendOxidOrderNr', [1, 1]],
-            ['updateOrderLines', [1, 1]],
-            ['captureOrder', [1, 1]],
-            ['createOrderRefund', [1, 1]],
-            ['addShippingToCapture', [1, 1, 1]],
+            ['getOrder', [1], 'get'],
+            ['acknowledgeOrder', [1], 'post'],
+            ['cancelOrder', [1], 'post'],
+            ['getAllCaptures', [1], 'get'],
+            ['sendOxidOrderNr', [1, 1], 'patch'],
+            ['updateOrderLines', [1, 1], 'patch'],
+            ['captureOrder', [1, 1], 'post'],
+            ['createOrderRefund', [1, 1], 'post'],
+            ['addShippingToCapture', [1, 1, 1], 'post']
         ];
     }
 
     /**
      * @dataProvider handleResponseDataprovider
      */
-    public function testHandleResponse($code, $expectedException, $expectedMessage = '')
+    public function testHandleResponse($code, $expectedException)
     {
         $method = new \ReflectionMethod(KlarnaOrderManagementClient::class, 'handleResponse');
         $method->setAccessible(true);
 
-        $klarnaOrderManagementClient = $this->createStub(KlarnaOrderManagementClient::class, ['getOrder' => null]);
-
+        $klarnaOrderManagementClient = $this->getMockBuilder(KlarnaOrderManagementClient::class)
+            ->setMethods(['getOrder'])->getMock();
         $response = new \Requests_Response();
 
         if ($code !== 200) {
@@ -84,7 +80,7 @@ class KlarnaOrderManagementClientTest extends ModuleUnitTestCase
 
         $response->status_code = $code;
 
-        $this->setExpectedException($expectedException, $expectedMessage);
+        !$expectedException ?: $this->expectException($expectedException);
         $result = $method->invokeArgs($klarnaOrderManagementClient, [$response, __CLASS__, __METHOD__]);
 
         if ($code === 200) {//assert only for status code 200

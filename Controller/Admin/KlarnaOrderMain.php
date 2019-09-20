@@ -41,14 +41,14 @@ class KlarnaOrderMain extends KlarnaOrderMain_parent
             try {
                 $this->klarnaOrderData = $this->retrieveKlarnaOrder($this->getViewDataElement('sCountryISO'));
             } catch (KlarnaWrongCredentialsException $e) {
-                $this->addTplParam('sErrorMessage', Registry::getLang()->translateString("KLARNA_UNAUTHORIZED_REQUEST"));
+                $this->addTplParam('sErrorMessage', $e->getMessage());
 
                 $oOrder->oxorder__tcklarna_sync = new Field(0);
                 $oOrder->save();
 
                 return $result;
             } catch (KlarnaOrderNotFoundException $e) {
-                $this->addTplParam('sErrorMessage', Registry::getLang()->translateString("KLARNA_ORDER_NOT_FOUND"));
+                $this->addTplParam('sErrorMessage', $e->getMessage());
 
                 $oOrder->oxorder__tcklarna_sync = new Field(0);
                 $oOrder->save();
