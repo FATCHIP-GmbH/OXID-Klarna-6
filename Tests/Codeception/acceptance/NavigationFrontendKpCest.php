@@ -180,8 +180,6 @@ class NavigationFrontendKpCest
         $I->waitForPageLoad();
         $I->wait(2);
         $I->seeInCurrentUrl('thankyou');
-        $I->wait(2);
-        $I->assertKlarnaData();
     }
 
     /**
