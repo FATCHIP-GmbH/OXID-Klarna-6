@@ -26,6 +26,9 @@ class CheckoutKCOCest {
         $homePage->openMiniBasket();
         $I->click(Translator::translate('CHECKOUT'));
         $I->waitForPageLoad();
+        $I->click("//form[@id='select-country-form']//button[@value='DE']");
+        $I->wait(2);
+
         $kco = new Kco($I);
         $kco->fillKcoUserForm();
         //different delivery address
