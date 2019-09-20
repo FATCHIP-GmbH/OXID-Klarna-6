@@ -41,7 +41,7 @@ class AcceptanceTester extends \Codeception\Actor
 
     public function switchCurrency($currency)
     {
-        $this->click("css=.currencies-menu");
-        $this->click("//ul//*[text()='$currency']");
+        $this->click(".currencies-menu");
+        $this->click($currency);
     }
 }
