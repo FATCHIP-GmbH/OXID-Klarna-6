@@ -242,6 +242,7 @@ class ANavigationFrontendKpCest
         $I->waitForPageLoad();
         $I->wait(4);
         $I->seeInCurrentUrl('thankyou');
+        $I->assertKlarnaData();
     }
 
     /**
