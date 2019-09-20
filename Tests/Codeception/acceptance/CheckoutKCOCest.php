@@ -1,12 +1,10 @@
 <?php
 namespace TopConcepts\Klarna\Tests\Codeception;
 
-use Codeception\Example;
 use Codeception\Util\Fixtures;
 use Exception;
 use OxidEsales\Codeception\Module\Translation\Translator;
 use OxidEsales\Codeception\Step\Basket;
-use TopConcepts\Klarna\Core\KlarnaConsts;
 use TopConcepts\Klarna\Tests\Codeception\Page\Kco;
 
 class CheckoutKCOCest {

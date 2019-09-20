@@ -4,6 +4,7 @@
 namespace TopConcepts\Klarna\Tests\Codeception\Page;
 
 
+use Codeception\Exception\ElementNotFound;
 use Codeception\Util\Fixtures;
 use OxidEsales\Codeception\Page\Page;
 use TopConcepts\Klarna\Tests\Codeception\AcceptanceTester;
@@ -21,6 +22,7 @@ class Kco extends Page
     public function loginKlarnaWidget($country)
     {
         $I = $this->user;
+        $I->wait(2);
         $I->click("#klarnaLoginWidget");
         $I->wait(2); // for animation end
         $userLogin = "user_".strtolower($country)."@oxid-esales.com";
@@ -40,13 +42,30 @@ class Kco extends Page
         $I = $this->user;
         $I->waitForElement('#' . $this->frames['main']);
         $I->switchToIFrame($this->frames['main']);
-        $text = $I->grabTextFrom("//*[@id='title']");
-        var_dump($text);
-        $I->selectOption("//select[@id='title']", ['value' => 'frau']);
-        $I->fillField("//*[@id='date_of_birth']",$I->getKlarnaDataByName('sKCOFormDob'));
-        //$I->fillField("//input[@id='national_identification_number']", $number);
-        $I->click("//*[@id='button-primary']");
-        $I->wait(30);
+
+        try {
+            $I->grabTextFrom("//select[@id='title']");
+            $I->selectOption("//select[@id='title']", 'Mr');
+        } catch (\Exception $e) {}
+        try {
+            $I->grabTextFrom("//input[@id='phone']");
+            $I->fillField("//input[@id='phone']", $phone);
+        } catch (\Exception $exception) {}
+        try {
+            $I->grabTextFrom("//*[@id='date_of_birth']");
+            $I->wait(2);
+            foreach (str_split('14041960') as $key) {
+                $I->pressKey("//*[@id='date_of_birth']", $key);
+            }
+        } catch (\Exception $exception) {}
+        $I->wait(1);
+        try {
+            $I->grabTextFrom("//*[@id='button-primary']");
+            $I->click("//*[@id='button-primary']");
+            $I->wait(2);
+            $I->grabTextFrom("//*[@id='button-primary']");
+            $I->click("//*[@id='button-primary']");
+        } catch (\Exception $exception) {}
 
     }
     /**
