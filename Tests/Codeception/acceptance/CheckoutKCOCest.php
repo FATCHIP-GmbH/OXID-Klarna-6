@@ -2,6 +2,7 @@
 namespace TopConcepts\Klarna\Tests\Codeception;
 
 use Codeception\Util\Fixtures;
+use Exception;
 use OxidEsales\Codeception\Module\Translation\Translator;
 use OxidEsales\Codeception\Step\Basket;
 
@@ -9,9 +10,8 @@ class CheckoutKCOCest {
 
     /**
      * @group KCO_frontend
-     *
      * @param AcceptanceTester $I
-     * @throws \Exception
+     * @throws Exception
      */
     public function createAccountAndSubscribe(AcceptanceTester $I)
     {
@@ -39,7 +39,21 @@ class CheckoutKCOCest {
         $I->seeInDatabase('oxuser', ['oxusername' => $billEmail, 'oxpassword !=' => '']);
         $klarnaId = $I->grabFromDatabase('oxorder', 'TCKLARNA_ORDERID', ['OXBILLEMAIL' => $billEmail]);
         $I->assertNotEmpty($klarnaId);
-        $I->seeOrderInDb($klarnaId);
-        $I->seeInKlarnaAPI($klarnaId);
+
+        $inputDataMapper = [
+            'sKCOFormPostCode' => 'OXBILLZIP',
+            'sKCOFormGivenName' => 'OXBILLFNAME',
+            'sKCOFormFamilyName' => 'OXBILLLNAME',
+            'sKCOFormStreetName' => 'OXBILLSTREET',
+            'sKCOFormStreetNumber' => 'OXBILLSTREETNR',
+            'sKCOFormCity' => 'OXBILLCITY',
+            'sKCOFormDelPostCode' => 'OXDELZIP',
+            'sKCOFormDelStreetName' => 'OXDELSTREET',
+            'sKCOFormDelStreetNumber' => 'OXDELSTREETNR',
+            'sKCOFormDelCity' => 'OXDELCITY',
+        ];
+
+        $I->seeOrderInDb($klarnaId, $inputDataMapper);
+        $I->seeInKlarnaAPI($klarnaId, "AUTHORIZED", true);
     }
 }

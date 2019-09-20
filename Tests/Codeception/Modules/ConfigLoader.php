@@ -4,12 +4,19 @@ namespace TopConcepts\Klarna\Tests\Codeception\Modules;
 
 use Codeception\Lib\ModuleContainer;
 use Codeception\Module;
+use Exception;
 use OxidEsales\Eshop\Core\ConfigFile;
 use OxidEsales\Facts\Facts;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseHandler;
 
 class ConfigLoader extends Module
 {
+    /**
+     * ConfigLoader constructor.
+     * @param ModuleContainer $moduleContainer
+     * @param null $config
+     * @throws Exception
+     */
     public function __construct(ModuleContainer $moduleContainer, $config = null)
     {
         parent::__construct($moduleContainer, $config);
@@ -32,7 +39,7 @@ class ConfigLoader extends Module
      * @param $varName
      *
      * @return mixed|null|string
-     * @throws \Exception
+     * @throws Exception
      */
     public function getKlarnaDataByName($varName)
     {
@@ -41,7 +48,7 @@ class ConfigLoader extends Module
         }
 
         if (!$varValue) {
-            throw new \Exception('Undefined variable: ' . $varName);
+            throw new Exception('Undefined variable: ' . $varName);
         }
 
         return $varValue;
@@ -97,6 +104,8 @@ class ConfigLoader extends Module
 
         if($setB2BOption){
             $encode = "ENCODE('$setB2BOption', '$klarnaKey')";
+            $sql = "DELETE FROM `oxconfig` WHERE `oxvarname`='sKlarnaB2Option'";
+            $this->dbHandler->exec($sql);
             $sql = "INSERT INTO `oxconfig` VALUES ('f7309beb088c3437462abb18c893c755', 1, 'module:tcklarna', 'sKlarnaB2Option', 'str', {$encode}, now())";
             $this->dbHandler->exec($sql);
         }

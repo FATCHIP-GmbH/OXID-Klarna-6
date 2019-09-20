@@ -6,6 +6,7 @@ namespace TopConcepts\Klarna\Tests\Codeception\Modules;
 
 use Codeception\Module;
 use Codeception\Util\Fixtures;
+use Exception;
 use TopConcepts\Klarna\Tests\Codeception\AcceptanceTester;
 
 class FormPopulator extends Module
@@ -16,12 +17,12 @@ class FormPopulator extends Module
     ];
     /**
      * @param AcceptanceTester $I
-     * @throws \Exception
+     * @throws Exception
      */
     public function fillKcoUserForm(AcceptanceTester $I)
     {
         //generate and save email
-        $generatedEmail = rand(0, 1000) . $I->getKlarnaDataByName('sKlarnaKCOEmail');
+        $generatedEmail = time() . $I->getKlarnaDataByName('sKlarnaKCOEmail');
         Fixtures::add('gKCOEmail', $generatedEmail);
         $I->waitForElement('#' . $this->frames['main']);
         $I->switchToIFrame($this->frames['main']);
@@ -42,7 +43,7 @@ class FormPopulator extends Module
 
     /**
      * @param AcceptanceTester $I
-     * @throws \Exception
+     * @throws Exception
      */
     public function fillKcoShippingForm(AcceptanceTester $I) {
         $I->wait(4); // wait for loaders and overlays to be hidden

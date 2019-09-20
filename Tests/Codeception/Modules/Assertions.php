@@ -4,15 +4,30 @@
 namespace TopConcepts\Klarna\Tests\Codeception\Modules;
 
 
+use Codeception\Exception\ModuleException;
 use Codeception\Module;
+use Exception;
+use OxidEsales\TestingLibrary\Services\Library\DatabaseHandler;
 use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
 use TopConcepts\Klarna\Core\KlarnaUtils;
+use TopConcepts\Klarna\Core\KlarnaClientBase;
 
 class Assertions extends Module
 {
+    const NEW_ORDER_GIVEN_NAME      = "ÅåÆæØø";
+    const NEW_ORDER_FAMILY_NAME     = "St.Jäöüm'es";
+    const NEW_ORDER_STREET_ADDRESS  = "Karnapp 25";
+    const NEW_ORDER_CITY            = "Hamburg";
+    const NEW_ORDER_PHONE           = "30306900";
+    const NEW_ORDER_DATE_OF_BIRTH   = "01011980";
+    const NEW_ORDER_DISCOUNT        = "10";
+    const NEW_ORDER_TRACK_CODE      = "12345";
+    const NEW_ORDER_VOUCHER_NR      = "percent_10";
+    const NEW_ORDER_ZIP_CODE        = "21079";
+
     /**
-     * @return \OxidEsales\TestingLibrary\Services\Library\DatabaseHandler
-     * @throws \Codeception\Exception\ModuleException
+     * @return DatabaseHandler
+     * @throws ModuleException
      */
     protected function _getDbHandler() {
         /** @var ConfigLoader $configLoader */
@@ -23,7 +38,8 @@ class Assertions extends Module
     /**
      * @param $key
      * @return mixed|string|null
-     * @throws \Codeception\Exception\ModuleException
+     * @throws ModuleException
+     * @throws Exception
      */
     protected function _getInputParam($key)
     {
@@ -37,37 +53,53 @@ class Assertions extends Module
      * @return mixed
      */
     public function grabFromKlarnaAPI($orderId) {
-        /** @var KlarnaOrderManagementClient|TopConcepts\Klarna\Core\KlarnaClientBase $klarnaClient */
+        /** @var KlarnaOrderManagementClient|KlarnaClientBase $klarnaClient */
         $klarnaClient = KlarnaOrderManagementClient::getInstance();
         $orderData = $klarnaClient->getOrder($orderId);
 
         return $orderData;
     }
 
-    public function seeOrderInDb($klarnaId) {
+    /**
+     * @param string $expectedStatus
+     * @param null $inputDataMapper
+     * @throws ModuleException
+     */
+    public function assertKlarnaData($expectedStatus = "AUTHORIZED", $inputDataMapper = null)
+    {
+        $klarnaId = $this->_getDBHandler()
+            ->query("SELECT TCKLARNA_ORDERID from `oxorder` ORDER BY `oxorderdate` DESC LIMIT 1")
+            ->fetch(\PDO::FETCH_ASSOC);
+
+
+        $this->seeOrderInDb($klarnaId['TCKLARNA_ORDERID'], $inputDataMapper);
+        $this->seeInKlarnaAPI($klarnaId['TCKLARNA_ORDERID'], $expectedStatus);
+    }
+
+    /**
+     * @param $klarnaId
+     * @param null $inputDataMapper
+     * @throws ModuleException
+     */
+    public function seeOrderInDb($klarnaId, $inputDataMapper = null) {
+        if($inputDataMapper == null) {
+            return;
+        }
+
         $actualArray = $this->_getDBHandler()
             ->query("SELECT * FROM oxorder WHERE TCKLARNA_ORDERID = '$klarnaId'")
             ->fetch(\PDO::FETCH_ASSOC);
-        $inputDataMapper = [
-            'sKCOFormPostCode' => 'OXBILLZIP',
-            'sKCOFormGivenName' => 'OXBILLFNAME',
-            'sKCOFormFamilyName' => 'OXBILLLNAME',
-            'sKCOFormStreetName' => 'OXBILLSTREET',
-            'sKCOFormStreetNumber' => 'OXBILLSTREETNR',
-            'sKCOFormCity' => 'OXBILLCITY',
-            'sKCOFormDelPostCode' => 'OXDELZIP',
-            'sKCOFormDelStreetName' => 'OXDELSTREET',
-            'sKCOFormDelStreetNumber' => 'OXDELSTREETNR',
-            'sKCOFormDelCity' => 'OXDELCITY',
-        ];
+
         $this->assertInputStored($actualArray, $inputDataMapper);
     }
 
     /**
-     * @param $orderId string - klarna order id
-     * @throws \Codeception\Exception\ModuleException
+     * @param $klarnaId
+     * @param string $expectedStatus
+     * @param bool $differentDelShipping
+     * @throws ModuleException
      */
-    public function seeInKlarnaAPI($klarnaId, $expectedStatus = "AUTHORIZED")
+    public function seeInKlarnaAPI($klarnaId, $expectedStatus = "AUTHORIZED", $differentDelShipping = false)
     {
         $klarnaOrderData = $this->grabFromKlarnaAPI($klarnaId);
         $oxidOrder = $this->_getDBHandler()
@@ -91,19 +123,21 @@ class Assertions extends Module
             $billingDataMapper
         );
 
-        $shippingDataMapper = [
-            'OXDELFNAME' => 'given_name',
-            'OXDELLNAME' => 'family_name',
-            'OXDELZIP' => 'postal_code',
-            'OXDELCITY' => 'city',
-            'OXDELCOUNTRYID' => 'country',
-            'OXDELSTREET' => 'street_address',
-        ];
-        $this->assertDataEquals(
-            $oxidOrderData,
-            $klarnaOrderData['shipping_address'],
-            $shippingDataMapper
-        );
+        if($differentDelShipping === true) {
+            $shippingDataMapper = [
+                'OXDELFNAME' => 'given_name',
+                'OXDELLNAME' => 'family_name',
+                'OXDELZIP' => 'postal_code',
+                'OXDELCITY' => 'city',
+                'OXDELCOUNTRYID' => 'country',
+                'OXDELSTREET' => 'street_address',
+            ];
+            $this->assertDataEquals(
+                $oxidOrderData,
+                $klarnaOrderData['shipping_address'],
+                $shippingDataMapper
+            );
+        }
 
         $orderDataMapper = [
             'OXTOTALORDERSUM' => 'order_amount',
@@ -117,6 +151,13 @@ class Assertions extends Module
         );
     }
 
+    /**
+     * @param $oxidRow
+     * @param $expectedStatus
+     * @return mixed
+     * @throws ModuleException
+     * @throws Exception
+     */
     protected function prepareOxidData($oxidRow, $expectedStatus) {
         foreach($oxidRow as $colName => $val) {
             // replace COUNTRYID with OXISOALPHA2
@@ -149,16 +190,21 @@ class Assertions extends Module
     public function assertDataEquals($expectedArray, $actualArray, $dataMapper)
     {
         foreach ($dataMapper as $fieldName => $anotherFieldName) {
-            print_r("Compering $fieldName = $expectedArray[$fieldName] to $anotherFieldName = $actualArray[$anotherFieldName]\n");
+            print_r("Comparing $fieldName = $expectedArray[$fieldName] to $anotherFieldName = $actualArray[$anotherFieldName]\n");
             $this->assertEquals($expectedArray[$fieldName], $actualArray[$anotherFieldName]);
         }
     }
 
+    /**
+     * @param $actualArray
+     * @param $dataMapper
+     * @throws ModuleException
+     */
     public function assertInputStored($actualArray, $dataMapper)
     {
         foreach ($dataMapper as $fieldName => $anotherFieldName) {
             $expectedArray[$fieldName] = $this->_getInputParam($fieldName);
-            print_r("Compering $fieldName = $expectedArray[$fieldName] to $anotherFieldName = $actualArray[$anotherFieldName]\n");
+            print_r("Comparing $fieldName = $expectedArray[$fieldName] to $anotherFieldName = $actualArray[$anotherFieldName]\n");
             $this->assertEquals($expectedArray[$fieldName], $actualArray[$anotherFieldName]);
         }
     }
