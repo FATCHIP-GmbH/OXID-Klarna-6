@@ -34,10 +34,7 @@ class KlarnaThankYouController extends KlarnaThankYouController_parent
     public function render()
     {
         $render = parent::render();
-
-        if (Registry::getSession()->getVariable('paymentid') === 'klarna_checkout') {
-
-            $sKlarnaId = Registry::getSession()->getVariable('klarna_checkout_order_id');
+        if ($sKlarnaId = Registry::getSession()->getVariable('klarna_checkout_order_id')) {
             $oOrder = oxNew(Order::class);
             $query = $oOrder->buildSelectString(array('tcklarna_orderid' => $sKlarnaId));
             $oOrder->assignRecord($query);
@@ -54,11 +51,9 @@ class KlarnaThankYouController extends KlarnaThankYouController_parent
             } catch (KlarnaClientException $e) {
                 KlarnaUtils::logException($e);
             }
-
             // add klarna confirmation snippet
             $this->addTplParam("sKlarnaIframe", $this->client->getHtmlSnippet());
         }
-        $this->addTplParam("sPaymentId", Registry::getSession()->getVariable('paymentid'));
 
         KlarnaUtils::fullyResetKlarnaSession();
 
