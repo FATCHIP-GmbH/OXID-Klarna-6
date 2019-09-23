@@ -19,6 +19,23 @@ class Kco extends Page
         'full' => 'klarna-fullscreen-iframe'
     ];
 
+    public function fillPayment() {
+        $I = $this->user;
+        if (!$I->isElementPresent("#payment-selector-pay_later__container")) {
+            if (!$I->isElementPresent("#pgw-iframe-credit_card")) {
+                $I->click("//div[@id='payment-selector']//*[text()='Card']");
+            }
+            $I->switchToIFrame('pgw-iframe-credit_card');
+            foreach (str_split("4111111111111111") as $key) {
+                $I->pressKey("//*[@id='cardNumber']", $key);
+            }
+            $I->fillField("securityCode", "111");
+            $I->fillField("expire", "01/24");
+            $I->switchToIFrame();
+            $I->switchToIFrame('klarna-checkout-iframe');
+        }
+    }
+
     public function loginKlarnaWidget($country)
     {
         $I = $this->user;
@@ -42,7 +59,13 @@ class Kco extends Page
         $I = $this->user;
         $I->waitForElement('#' . $this->frames['main']);
         $I->switchToIFrame($this->frames['main']);
-
+        $I->wait(1);
+        // try to fill missing data
+        try {
+            $I->grabTextFrom("//input[@id='national_identification_number']");
+            $I->clearField("//input[@id='national_identification_number']");
+            $I->fillField("//input[@id='national_identification_number']", $number);
+        } catch (\Exception $e) {}
         try {
             $I->grabTextFrom("//select[@id='title']");
             $I->selectOption("//select[@id='title']", 'Mr');
@@ -53,7 +76,7 @@ class Kco extends Page
         } catch (\Exception $exception) {}
         try {
             $I->grabTextFrom("//*[@id='date_of_birth']");
-            $I->wait(2);
+            $I->clearField("//*[@id='date_of_birth']");
             foreach (str_split('14041960') as $key) {
                 $I->pressKey("//*[@id='date_of_birth']", $key);
             }
@@ -77,6 +100,7 @@ class Kco extends Page
         $I = $this->user;
         //generate and save email
         $generatedEmail = time()  . $I->getKlarnaDataByName('sKlarnaKCOEmail');
+        $I->comment("Generated email: $generatedEmail");
         Fixtures::add('gKCOEmail', $generatedEmail);
         $I->waitForElement('#' . $this->frames['main']);
         $I->switchToIFrame($this->frames['main']);

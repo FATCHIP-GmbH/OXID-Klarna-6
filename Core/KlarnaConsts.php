@@ -121,6 +121,7 @@ class KlarnaConsts
             'AT' => 'EUR',
             'GB' => 'GBP',
             'CH' => 'CHF',
+            'BE' => 'EUR'
         );
     }
 

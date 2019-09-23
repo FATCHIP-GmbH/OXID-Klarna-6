@@ -130,4 +130,21 @@ class ConfigLoader extends Module
         $sql = "INSERT INTO `oxconfig` VALUES ('efbd96702f6cead0967cd37ad2cdf49d', 1, 'module:tcklarna', 'sKlarnaPassword', 'str', {$encode}, now())";
         $this->dbHandler->exec($sql);
     }
+
+    /**
+     * Updates oxpayment record
+     * @param $id
+     * @param $values
+     */
+    public function setExternalPayment($id, $values) {
+        if (empty($values)) {
+            return; //nothing to update
+        }
+        $set = [];
+        foreach($values as $columnName => $value) {
+            $set[] = " $columnName = '$value'";
+        }
+        $sql = "UPDATE oxpayments SET ".join(',', $set)." WHERE `OXID`='$id'";
+        $this->dbHandler->exec($sql);
+    }
 }
