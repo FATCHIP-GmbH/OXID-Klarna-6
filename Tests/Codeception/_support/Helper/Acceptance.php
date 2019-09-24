@@ -12,4 +12,12 @@ namespace TopConcepts\Klarna\Tests\Codeception\_support\Helper;
 class Acceptance extends \Codeception\Module
 {
 
+    /**
+     * @param $locator WebDriver locator
+     * @return mixed
+     * @throws \Codeception\Exception\ModuleException
+     */
+    public function isElementPresent($locator) {
+        return $els = $this->getModule('WebDriver')->_findElements($locator);
+    }
 }

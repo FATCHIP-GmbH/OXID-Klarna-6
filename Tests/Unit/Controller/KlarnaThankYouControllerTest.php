@@ -59,7 +59,7 @@ class KlarnaThankYouControllerTest extends ModuleUnitTestCase
         $this->assertNull($this->getSessionParam('klarna_checkout_order_id'));
 
         // check exception
-        $this->setSessionParam('paymentid', $payId);
+        $this->setSessionParam('klarna_checkout_order_id', 'test');
         $apiClient->expects($this->once())->method('getOrder')->willThrowException(new KlarnaClientException('Test'));
         $thankYouController->render();
         $this->assertLoggedException(KlarnaClientException::class, 'Test');
@@ -69,8 +69,6 @@ class KlarnaThankYouControllerTest extends ModuleUnitTestCase
     {
         $payId = 'other';
         $klSessionId = 'fake_session';
-        $this->setSessionParam('paymentid', $payId);
-        $this->setSessionParam('klarna_checkout_order_id', $klSessionId);
 
         $oBasketItem = oxNew(BasketItem::class);
         $this->setProtectedClassProperty($oBasketItem,'_sProductId', '_testArt');
@@ -83,6 +81,6 @@ class KlarnaThankYouControllerTest extends ModuleUnitTestCase
         $this->setProtectedClassProperty($thankYouController, '_oBasket', $oBasket);
         $thankYouController->render();
 
-        $this->assertEquals(null, $this->getSessionParam('klarna_checkout_order_id'));
+        $this->assertArrayNotHasKey('sKlarnaIframe', $thankYouController->getViewData());
     }
 }

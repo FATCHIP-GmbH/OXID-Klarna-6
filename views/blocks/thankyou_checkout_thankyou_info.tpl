@@ -1,4 +1,4 @@
-[{if $sPaymentId == 'klarna_checkout'}]
+[{if $sKlarnaIframe}]
     [{oxmultilang ident="REGISTERED_YOUR_ORDER" args=$klOrder->oxorder__oxordernr->value}]
     <div class="klarna-iframe-container">
         [{$sKlarnaIframe}]

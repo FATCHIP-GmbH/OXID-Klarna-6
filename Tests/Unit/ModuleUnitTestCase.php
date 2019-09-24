@@ -104,10 +104,10 @@ class ModuleUnitTestCase extends UnitTestCase
 
     public function setModuleMode($mode)
     {
-        $this->getConfig()->saveShopConfVar(null, 'sKlarnaActiveMode', $mode, $this->getShopId(), 'module:tcklarna');
+        $this->getConfig()->saveShopConfVar('str', 'sKlarnaActiveMode', $mode, $this->getShopId(), 'module:tcklarna');
     }
 
-    public function setModuleConfVar($name, $value, $type = null)
+    public function setModuleConfVar($name, $value, $type = 'str')
     {
         $this->getConfig()->saveShopConfVar($type, $name, $value, $this->getShopId(), 'module:tcklarna');
     }

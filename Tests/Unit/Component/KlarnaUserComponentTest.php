@@ -41,7 +41,7 @@ class KlarnaUserComponentTest extends ModuleUnitTestCase
         $this->setRequestParameter('lgn_usr', 'xxx');
         $this->setRequestParameter('lgn_pwd', 'xxx');
 
-        $this->getConfig()->saveShopConfVar(null, 'sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'module:tcklarna');
+        $this->getConfig()->saveShopConfVar('str', 'sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'module:tcklarna');
 
         $cmpUser = $this->getMockBuilder(UserComponent::class)->setMethods(['klarnaRedirect'])->getMock();
         $cmpUser->expects($this->any())->method('klarnaRedirect')->willReturn($isKlarnaController);
@@ -75,7 +75,7 @@ class KlarnaUserComponentTest extends ModuleUnitTestCase
      */
     public function testChangeuser_testvalues($klMode, $showShippingAddress, $resetResult, $showShippingAddressResult, $addressIdResult)
     {
-        $this->getConfig()->saveShopConfVar(null, 'sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'module:tcklarna');
+        $this->getConfig()->saveShopConfVar('str', 'sKlarnaActiveMode', $klMode, $shopId = $this->getShopId(), $module = 'module:tcklarna');
         $this->setRequestParameter('blshowshipaddress', $showShippingAddress);
         $this->setRequestParameter('oxaddressid', $addressIdResult);
 
