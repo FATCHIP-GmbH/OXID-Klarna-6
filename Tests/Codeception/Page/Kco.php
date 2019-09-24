@@ -19,6 +19,16 @@ class Kco extends Page
         'full' => 'klarna-fullscreen-iframe'
     ];
 
+    public function submitVoucher($vNumber) {
+        $I = $this->user;
+        $I->wait(2);
+        $I->click("#klarnaVouchersWidget");
+        $I->wait(2); // for animation end
+        $I->fillField("#input_voucherNr", $vNumber);
+        $I->click("#submitVoucher");
+        $I->waitForPageLoad();
+    }
+
     public function fillPayment() {
         $I = $this->user;
         if (!$I->isElementPresent("#payment-selector-pay_later__container")) {

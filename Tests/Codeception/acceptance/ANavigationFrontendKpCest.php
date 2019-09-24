@@ -145,6 +145,7 @@ class ANavigationFrontendKpCest
             }
         }
 
+        $I->wait(3);
         $I->switchToIFrame();
         $I->waitForElementVisible(".nextStep");
         $I->wait(3);
