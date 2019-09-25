@@ -66,6 +66,7 @@ class CheckoutKCOCest {
         $homePage->openMiniBasket();
         $I->click(Translator::translate('CHECKOUT'));
         $I->waitForPageLoad();
+        $I->wait(2); // fixes issue with popup showing later
         $I->selectOption("#other-countries", $country);
         $I->wait(2);
 
