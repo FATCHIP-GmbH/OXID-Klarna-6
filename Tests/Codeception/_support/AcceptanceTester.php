@@ -8,6 +8,7 @@ namespace TopConcepts\Klarna\Tests\Codeception;
 
 use Exception;
 use OxidEsales\Codeception\Page\Home;
+use TopConcepts\Klarna\Tests\Codeception\Page\Admin;
 
 /**
  * Inherited Methods
@@ -37,6 +38,17 @@ class AcceptanceTester extends \Codeception\Actor
         $homePage = new Home($I);
         $I->amOnPage($homePage->URL);
         return $homePage;
+    }
+
+    /**
+     * Open shop first page.
+     */
+    public function openShopAdminPanel()
+    {
+        $I = $this;
+        $adminHome = new Admin($I);
+        $I->amOnPage($adminHome->URL);
+        return $adminHome;
     }
 
     public function switchCurrency($currency)

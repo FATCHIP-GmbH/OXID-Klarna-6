@@ -48,7 +48,7 @@ class CheckoutKCOCest {
     }
 
     /**
-     * @group KCO_frontend_1
+``     * @group KCO_frontend
      * @dataProvider klarnaKCOMethodsProvider
      * @param AcceptanceTester $I
      * @param Example $dataSet
@@ -63,18 +63,20 @@ class CheckoutKCOCest {
         $basket = new Basket($I);
         $basket->addProductToBasket('05848170643ab0deb9914566391c0c63', 1);
         $basket->addProductToBasket('058de8224773a1d5fd54d523f0c823e0', 1);
+        $currency = KlarnaConsts::getCountry2CurrencyArray()[$country];
+        $I->comment("Currency: $currency\n");
+        $I->switchCurrency($currency);
+        $I->waitForPageLoad();
         $homePage->openMiniBasket();
         $I->click(Translator::translate('CHECKOUT'));
         $I->waitForPageLoad();
+        $I->wait(2); // fixes issue with popup showing later
         $I->selectOption("#other-countries", $country);
         $I->wait(2);
 
         $kco = new Kco($I);
         $kco->loginKlarnaWidget($country);
-        $currency = KlarnaConsts::getCountry2CurrencyArray()[$country];
-        $I->comment("Currency: $currency\n");
         $I->waitForPageLoad();
-        $I->switchCurrency($currency);
         $kco->fillKCOLoggedInUserForm($phone, $number);
         $I->wait(7);
         $I->selectOption('#SHIPMO-container input[name=radio]', 'UPS 48');
