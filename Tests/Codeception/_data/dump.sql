@@ -820,3 +820,16 @@ INSERT INTO `oxuser` (`OXID`, `OXACTIVE`, `OXRIGHTS`, `OXSHOPID`, `OXUSERNAME`, 
 '2870103d88c4e8ed34a82fd9e2dfaaf2', '', 'Test Company', 'Jörg', 'Weiß', 'Karnapp', '25', '', 'Hamburg', 'a7c40f631fc920687.20179984', '', '21079', '', '', 'MR', 1000,
 '2011-02-01 08:41:25', '2011-02-01 08:41:25', '', '', '0000-00-00', '', '', 0, 0, now());
 
+DROP PROCEDURE IF EXISTS enterpriseedition;
+DELIMITER //
+CREATE PROCEDURE enterpriseedition()
+BEGIN
+IF (SELECT 1 FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_NAME` LIKE 'oxarticles' AND column_name='oxmapid' AND table_schema=SCHEMA())
+THEN
+REPLACE INTO `oxarticles2shop` (`OXSHOPID`, `OXMAPOBJECTID`) SELECT 1, oxmapid FROM oxarticles;
+END IF;
+END //
+DELIMITER ;
+
+CALL enterpriseedition();
+DROP PROCEDURE IF EXISTS enterpriseedition;
