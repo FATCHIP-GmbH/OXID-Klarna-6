@@ -827,6 +827,7 @@ BEGIN
 IF (SELECT 1 FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_NAME` LIKE 'oxarticles' AND column_name='oxmapid' AND table_schema=SCHEMA())
 THEN
 REPLACE INTO `oxarticles2shop` (`OXSHOPID`, `OXMAPOBJECTID`) SELECT 1, oxmapid FROM oxarticles;
+REPLACE INTO `oxvoucherseries2shop` (`OXSHOPID`, `OXMAPOBJECTID`) SELECT 1, oxmapid FROM oxvoucherseries;
 END IF;
 END //
 DELIMITER ;
