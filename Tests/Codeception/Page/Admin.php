@@ -52,7 +52,7 @@ class Admin extends Page
         $I->waitForFrame("basefrm");
         $I->waitForFrame("list");
         $I->waitForText($label);
-        $I->wait(2);
+        $I->wait(4);
         $I->click($label);
         $I->switchToIFrame();
     }
