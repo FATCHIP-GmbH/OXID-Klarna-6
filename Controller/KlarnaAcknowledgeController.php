@@ -68,6 +68,9 @@ class KlarnaAcknowledgeController extends FrontendController
 
             return;
         }
+
+        $this->setValidResponseHeader(200);
+        Registry::getUtils()->showMessageAndExit('');
     }
 
     /**
@@ -102,5 +105,17 @@ class KlarnaAcknowledgeController extends FrontendController
     protected function getKlarnaAckCount($orderId)
     {
         return KlarnaUtils::getKlarnaAckCount($orderId);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @param $responseStatus
+     * @return bool
+     */
+    protected function setValidResponseHeader($responseStatus)
+    {
+        header("", true, $responseStatus);
+
+        return true;
     }
 }
