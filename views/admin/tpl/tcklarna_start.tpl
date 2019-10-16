@@ -66,7 +66,7 @@
                         <td>
                             <h1>[{$countries.GB}]</h1>
                             <div class="">
-                                [{oxmultilang ident="TCKLARNA_EMAIL"}]: merchant@klarna.co.uk<br>
+                                [{oxmultilang ident="TCKLARNA_EMAIL"}]: merchants@klarna.co.uk<br>
                                 [{oxmultilang ident="TCKLARNA_PHONE"}]: (+358) 09-425 99 773<br>
                                 [{oxmultilang ident="TCKLARNA_BUSINESS_HOURS"}]:
                                 [{oxmultilang ident="TCKLARNA_MONDAY"}] - [{oxmultilang ident="TCKLARNA_FRIDAY"}]: 8:00 - 17:00<br>
@@ -77,7 +77,7 @@
                         <td>
                             <h1>[{$countries.AT}]</h1>
                             <div class="">
-                                [{oxmultilang ident="TCKLARNA_EMAIL"}]: merchant@klarna.at<br>
+                                [{oxmultilang ident="TCKLARNA_EMAIL"}]: merchants@klarna.at<br>
                                 [{oxmultilang ident="TCKLARNA_PHONE"}]: (+43) 720 883 820<br>
                                 [{oxmultilang ident="TCKLARNA_BUSINESS_HOURS"}]:
                                 [{oxmultilang ident="TCKLARNA_MONDAY"}] - [{oxmultilang ident="TCKLARNA_FRIDAY"}]: 8:00 - 17:00<br>
@@ -106,7 +106,7 @@
                         <td>
                             <h1>[{$countries.FI}]</h1>
                             <div class="">
-                                [{oxmultilang ident="TCKLARNA_EMAIL"}]: kauppa@klarna.fi<br>
+                                [{oxmultilang ident="TCKLARNA_EMAIL"}]: kauppa@klarna.com<br>
                                 [{oxmultilang ident="TCKLARNA_PHONE"}]: (+358) 09-425 99 773<br>
                                 [{oxmultilang ident="TCKLARNA_BUSINESS_HOURS"}]:
                                 [{oxmultilang ident="TCKLARNA_MONDAY"}] - [{oxmultilang ident="TCKLARNA_FRIDAY"}]: 8:00 - 18:00<br>
@@ -117,12 +117,21 @@
                         <td>
                             <h1>[{$countries.SE}]</h1>
                             <div class="">
-                                [{oxmultilang ident="TCKLARNA_EMAIL"}]: shop@klarna.se<br>
+                                [{oxmultilang ident="TCKLARNA_EMAIL"}]: merchant@klarna.com<br>
                                 [{oxmultilang ident="TCKLARNA_PHONE"}]: (+46) 08-120 120 30<br>
                                 [{oxmultilang ident="TCKLARNA_BUSINESS_HOURS"}]:<br>
                                 [{oxmultilang ident="TCKLARNA_MONDAY"}] - [{oxmultilang ident="TCKLARNA_THURSDAY"}]: 8:00 - 19:00<br>
                                 [{oxmultilang ident="TCKLARNA_FRIDAY"}]: 8:30 - 17:00<br>
                                 [{oxmultilang ident="TCKLARNA_SATURDAY"}] - [{oxmultilang ident="TCKLARNA_MONDAY"}]: 10:00 - 17:00
+                            </div>
+                        </td>
+                        <td style="vertical-align: baseline">
+                            <h1>[{$countries.DK}]</h1>
+                            <div class="">
+                                [{oxmultilang ident="TCKLARNA_EMAIL"}]: merchant@klarna.dk<br>
+                                [{oxmultilang ident="TCKLARNA_PHONE"}]: (+45) 69 91 88 83<br>
+                                [{oxmultilang ident="TCKLARNA_BUSINESS_HOURS"}]:<br>
+                                [{oxmultilang ident="TCKLARNA_MONDAY"}] - [{oxmultilang ident="TCKLARNA_FRIDAY"}]: 09:00 - 17:00<br>
                             </div>
                         </td>
                     </tr>
@@ -132,36 +141,24 @@
         <div class="w5">
             <div class="klarna-brands">
                 <div>
-                    <div class="w5">
-                        <img src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/img/171020_Klarna_Icons_100x100_171006_Klarna_icon_100x100_Methods_Pay_Now.svg') }]">
-                    </div>
                     <div class="w7">
                         <h4>[{oxmultilang ident="TCKLARNA_PAY_NOW."}]</h4>
                         <p>[{oxmultilang ident="TCKLARNA_PAY_NOW_START"}]</p>
                     </div>
                 </div>
                 <div>
-                    <div class="w5">
-                        <img src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/img/171020_Klarna_Icons_100x100_171006_Klarna_icon_100x100_Methods_Pay_Later.svg') }]">
-                    </div>
                     <div class="w7">
                         <h4>[{oxmultilang ident="TCKLARNA_PAY_LATER."}]</h4>
                         <p>[{oxmultilang ident="TCKLARNA_PAY_LATER_START"}]</p>
                     </div>
                 </div>
                 <div>
-                    <div class="w5">
-                        <img src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/img/171020_Klarna_Icons_100x100_171006_Klarna_icon_100x100_Methods_Pay_Slice_It.svg') }]" class="noty-pizza">
-                    </div>
                     <div class="w7">
                         <h4>[{oxmultilang ident="TCKLARNA_SLICE_IT."}]</h4>
                         <p>[{oxmultilang ident="TCKLARNA_SLICE_IT_START"}]</p>
                     </div>
                 </div>
                 <div>
-                    <div class="w5">
-                        <img src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/img/171020_Klarna_Icons_100x100_Black_171006_Klarna_icon_100x100_autofill.svg') }]">
-                    </div>
                     <div class="w7">
                         <h4>[{oxmultilang ident="TCKLARNA_CHECKOUT"}]</h4>
                         <p>[{oxmultilang ident="TCKLARNA_CHECKOUT_START"}]</p>
