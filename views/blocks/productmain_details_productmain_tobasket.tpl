@@ -9,3 +9,11 @@
     <div class="clear clearfix"></div>
     [{oxscript add='$(".klarna-express-button").KlarnaProceedAction( {sAction: "actionKlarnaExpressCheckoutFromDetailsPage"} );'}]
 [{/if}]
+
+[{assign var="aKlPromotion" value=$oViewConf->getKlarnaConfVar('sKlarnaCreditPromotionProduct')}]
+[{if $aKlPromotion}]
+    <div>
+        [{$aKlPromotion}]
+    </div>
+    <div class="clear clearfix"></div>
+[{/if}]

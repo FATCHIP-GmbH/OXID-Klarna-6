@@ -1,5 +1,10 @@
 [{$smarty.block.parent}]
 
+[{assign var="aKlFooter" value=$oViewConf->getKlarnaFooterContent()}]
+[{if $aKlFooter.script}]
+    [{$aKlFooter.script}]
+[{/if}]
+
 [{oxscript include=$oViewConf->getModuleUrl('tcklarna','out/src/js/tcklarna_scripts.js') priority=10 }]
 
 [{assign var="sKlBanner" value=$oViewConf->getKlarnaHomepageBanner() }]
@@ -33,10 +38,10 @@
     [{/if}]
 [{/if}]
 
-[{assign var="aKlFooter" value=$oViewConf->getKlarnaFooterContent()}]
 [{if $aKlFooter}]
 
     [{capture assign=klFooterContent }]
+    [{if $aKlFooter.url}]
         [{if $oViewConf->getActiveTheme() == 'azure' }]
             <li class="klarna-logo">
                 <style>
@@ -65,6 +70,14 @@
                 </div>
             </section>
         [{/if}]
+    [{/if}]
+    [{if $aKlFooter.promotion}]
+        <section>
+            <div style="margin-top: 10px">
+                [{$aKlFooter.promotion}]
+            </div>
+        </section>
+    [{/if}]
     [{/capture}]
 
     <script type="text/javascript">

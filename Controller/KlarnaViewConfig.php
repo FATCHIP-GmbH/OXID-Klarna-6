@@ -75,6 +75,8 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
             return false;
         }
 
+        $response = false;
+
         $klFooter = intval(KlarnaUtils::getShopConfVar('sKlarnaFooterDisplay'));
         if ($klFooter) {
 
@@ -89,13 +91,22 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
             $from = '/' . preg_quote('-', '/') . '/';
             $url  = preg_replace($from, '_', $url, 1);
 
-            return array(
+            $response = array(
                 'url'   => $url,
-                'class' => KlarnaUtils::getShopConfVar('sKlarnaFooterValue'),
+                'class' => KlarnaUtils::getShopConfVar('sKlarnaFooterValue')
             );
         }
 
-        return false;
+        if(KlarnaUtils::getShopConfVar('sKlarnaMessagingScript')) {
+            $response['script'] = KlarnaUtils::getShopConfVar('sKlarnaMessagingScript');
+        }
+
+        if(KlarnaUtils::getShopConfVar('sKlarnaFooterPromotion')) {
+            $response['promotion'] = KlarnaUtils::getShopConfVar('sKlarnaFooterPromotion');
+        }
+
+
+        return $response;
     }
 
     /**
@@ -117,6 +128,11 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
         }
 
         return false;
+    }
+
+    public function getKlarnaConfVar($key)
+    {
+        return KlarnaUtils::getShopConfVar($key);
     }
 
     /**

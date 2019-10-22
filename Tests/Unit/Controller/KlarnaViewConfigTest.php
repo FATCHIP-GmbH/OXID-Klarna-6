@@ -249,40 +249,46 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
     public function getKlarnaFooterContentDataProvider()
     {
         return [
-            ['KP', 0, 'longBlack', false],
-            ['KP', 1, 'logoBlack', false],
-            ['KP', 2, 'logoBlack', [
+            ['KP', 0, 'longBlack',false,false, false],
+            ['KP', 1, 'logoBlack',false,false, false],
+            ['KP', 2, 'logoBlack',false,false, [
                 'url' => '//cdn.klarna.com/1.0/shared/image/generic/logo/en_gb/basic/logo_black.png',
                 'class' => 'logoBlack'
             ]],
-            ['KP', 2, 'logoWhite', [
+            ['KP', 2, 'logoWhite',false,false, [
                 'url' => '//cdn.klarna.com/1.0/shared/image/generic/logo/en_gb/basic/logo_white.png',
                 'class' => 'logoWhite'
             ]],
-            ['KCO', 0, 'longBlack', false],
-            ['KCO', 1, 'longBlack', [
+            ['KCO', 0, 'longBlack', false,false, false],
+            ['KCO', 1, 'longBlack',false,false, [
                 'url' => '//cdn.klarna.com/1.0/shared/image/generic/badge/de_de/checkout/long-blue.png?width=440',
                 'class' => 'longBlack'
             ]],
-            ['KCO', 1, 'longWhite', [
+            ['KCO', 1, 'longWhite',false,false, [
                 'url' => '//cdn.klarna.com/1.0/shared/image/generic/badge/de_de/checkout/long-white.png?width=440',
                 'class' => 'longWhite'
             ]],
-            ['KCO', 1, 'shortBlack', [
+            ['KCO', 1, 'shortBlack',false,false, [
                 'url' => '//cdn.klarna.com/1.0/shared/image/generic/badge/de_de/checkout/short-blue.png?width=312',
                 'class' => 'shortBlack'
             ]],
-            ['KCO', 1, 'shortWhite', [
+            ['KCO', 1, 'shortWhite',false,false, [
                 'url' => '//cdn.klarna.com/1.0/shared/image/generic/badge/de_de/checkout/short-white.png?width=312',
                 'class' => 'shortWhite'
             ]],
-            ['KCO', 2, 'logoBlack', [
+            ['KCO', 2, 'logoBlack',false,false, [
                 'url' => '//cdn.klarna.com/1.0/shared/image/generic/logo/en_gb/basic/logo_black.png',
                 'class' => 'logoBlack'
             ]],
-            ['KCO', 2, 'logoWhite', [
+            ['KCO', 2, 'logoWhite',false,false, [
                 'url' => '//cdn.klarna.com/1.0/shared/image/generic/logo/en_gb/basic/logo_white.png',
                 'class' => 'logoWhite'
+            ]],
+            ['KCO', 2, 'logoWhite','script','promo', [
+                'url' => '//cdn.klarna.com/1.0/shared/image/generic/logo/en_gb/basic/logo_white.png',
+                'class' => 'logoWhite',
+                'script' => 'script',
+                'promotion' => 'promo'
             ]],
         ];
     }
@@ -301,12 +307,17 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
      * @param $mode
      * @param $klFooterType
      * @param $klFooterValue
+     * @param $klScript
+     * @param $klPromo
      * @param $expectedResult
      */
-    public function testGetKlarnaFooterContent($mode, $klFooterType, $klFooterValue, $expectedResult)
+    public function testGetKlarnaFooterContent($mode, $klFooterType, $klFooterValue, $klScript, $klPromo, $expectedResult)
     {
         $this->getConfig()->saveShopConfVar('str', 'sKlarnaFooterDisplay', $klFooterType, $this->getShopId(), 'module:tcklarna');
         $this->getConfig()->saveShopConfVar('str', 'sKlarnaFooterValue', $klFooterValue, $this->getShopId(), 'module:tcklarna');
+
+        $this->getConfig()->saveShopConfVar('str', 'sKlarnaMessagingScript', $klScript, $this->getShopId(), 'module:tcklarna');
+        $this->getConfig()->saveShopConfVar('str', 'sKlarnaFooterPromotion', $klPromo, $this->getShopId(), 'module:tcklarna');
         $this->setModuleMode($mode);
 
         $oViewConfig = oxNew(ViewConfig::class);

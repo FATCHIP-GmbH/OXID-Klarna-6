@@ -310,4 +310,22 @@ oder wenden Sie sich an den Klarna Integration Support.',
     'TCKLARNA_REACH_SUPPORT'         => 'Kontaktieren Sie Klarna‘s Merchant Support',
 
     'TCKLARNA_EU_WARNING' => '<p>Um mit der EU Geoblocking Verordnung übereinzustimmen, wird dringend empfohlen, alle europäischen Länder zu aktivieren und der Bezahlmethode Klarna Checkout zuzweisen.</p><p>Es fehlen folgende Länder: %s</p>',
+
+    'TCKLARNA_ON_SITE_MESSAGING'     => 'On site messaging',
+    'TCKLARNA_ON_SITE_MESSAGING_ADMIN_DESC'     => 'Hier können Sie die Vor-Ort-Messaging zur Verwendung mit dem Klarna Modul für den OXID eShop konfigurieren. 
+Für eine detaillierte Beschreibung der verschiedenen Einstellungen beachten Sie bitte die Tooltips 
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> 
+oder wenden Sie sich an den Klarna Integration Support.',
+    'TCKLARNA_ON_SITE_MESSAGING_SCRIPT'         => 'Script',
+    'TCKLARNA_CREDIT_PROMOTION_PRODUCT'         => 'Credit Promotion Artikeldetailseite',
+    'TCKLARNA_CREDIT_PROMOTION_BASKET'          => 'Credit Promotion Warenkorb',
+    'TCKLARNA_TOP_STRIP_PROMOTION'              => 'Top-strip Promotion',
+    'TCKLARNA_FOOTER_PROMOTION'                 => 'Footer Promotion',
+    'TCKLARNA_BANNER_PROMOTION'                 => 'Banner Promotion',
+    'TCKLARNA_ON_SITE_MESSAGING_SCRIPT_TOOLTIP' => 'Bitte fügen Sie hier den für das On-Site Messaging notwendige JavaScript Library Code Snippet ein, den Sie im Klarna Merchant Portal erhalten.',
+    'TCKLARNA_CREDIT_PROMOTION_PRODUCT_TOOLTIP' => 'Bitte fügen Sie hier den Placement Tag ein, um Finanzierung und Ratenkauf durch Credit Promotions auf der Artikeldetailseite zu promoten',
+    'TCKLARNA_CREDIT_PROMOTION_BASKET_TOOLTIP'  => 'Bitte fügen Sie hier den Placement Tag ein, um Finanzierung und Ratenkauf durch Credit Promotions auf der Warenkorb Übersicht zu promoten',
+    'TCKLARNA_TOP_STRIP_PROMOTION_TOOLTIP'      => 'Bitte fügen Sie hier den Placement Tag ein, um generische und zahlmethodenspezifische Informationen auf der Shop-Startseite zu promoten',
+    'TCKLARNA_FOOTER_PROMOTION_TOOLTIP'         => 'Bitte fügen Sie hier den Placement Tag ein, um Ihre verfügbaren Klarna Zahlungsarten im Footer des Shops anzuzeigen',
+    'TCKLARNA_BANNER_PROMOTION_TOOLTIP'         => 'Bitte fügen Sie hier den Placement Tag ein, um einen Banner auf Ihrer Shop-Startseite einzufügen',
 );

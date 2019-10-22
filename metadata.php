@@ -9,6 +9,7 @@ use TopConcepts\Klarna\Controller\Admin\KlarnaDesign;
 use TopConcepts\Klarna\Controller\Admin\KlarnaEmdAdmin;
 use TopConcepts\Klarna\Controller\Admin\KlarnaExternalPayments;
 use TopConcepts\Klarna\Controller\Admin\KlarnaGeneral;
+use TopConcepts\Klarna\Controller\Admin\KlarnaMessaging;
 use TopConcepts\Klarna\Controller\Admin\KlarnaOrderAddress;
 use TopConcepts\Klarna\Controller\Admin\KlarnaOrderArticle as KlarnaAdminOrderArticle;
 use TopConcepts\Klarna\Controller\Admin\KlarnaOrderList;
@@ -89,6 +90,7 @@ $aModule = array(
         'KlarnaExternalPayments' => KlarnaExternalPayments::class,
         'KlarnaEmdAdmin'         => KlarnaEmdAdmin::class,
         'KlarnaOrders'           => KlarnaOrders::class,
+        'KlarnaMessaging'        => KlarnaMessaging::class,
         // controllers
         'KlarnaExpress'          => KlarnaExpressController::class,
         'KlarnaAjax'             => KlarnaAjaxController::class,
@@ -146,6 +148,7 @@ $aModule = array(
         'tcklarna_external_payments.tpl'       => 'tc/tcklarna/views/admin/tpl/tcklarna_external_payments.tpl',
         'tcklarna_emd_admin.tpl'               => 'tc/tcklarna/views/admin/tpl/tcklarna_emd_admin.tpl',
         'tcklarna_orders.tpl'                  => 'tc/tcklarna/views/admin/tpl/tcklarna_orders.tpl',
+        'tcklarna_messaging.tpl'               => 'tc/tcklarna/views/admin/tpl/tcklarna_messaging.tpl',
         //admin partial
         'tcklarna_country_creds.tpl'           => 'tc/tcklarna/views/admin/tpl/tcklarna_country_creds.tpl',
         'tcklarna_header.tpl'                  => 'tc/tcklarna/views/admin/tpl/tcklarna_header.tpl',
@@ -156,6 +159,21 @@ $aModule = array(
             'template' => 'widget/minibasket/minibasket.tpl',
             'block'    => 'widget_minibasket',
             'file'     => 'views/blocks/minibasket_widget_minibasket.tpl',
+        ),
+        array(
+            'template' => 'page/shop/start.tpl',
+            'block'    => 'start_manufacturer_slider',
+            'file'     => 'views/blocks/start_widget_manufacturer.tpl',
+        ),
+        array(
+            'template' => 'layout/header.tpl',
+            'block'    => 'header_main',
+            'file'     => 'views/blocks/header_main.tpl',
+        ),
+        array(
+            'template' => 'page/details/inc/productmain.tpl',
+            'block'    => 'details_productmain_variantselections',
+            'file'     => 'views/blocks/productmain_variantselection.tpl',
         ),
         array(
             'template' => 'layout/footer.tpl',
