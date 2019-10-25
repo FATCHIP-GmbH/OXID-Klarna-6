@@ -1,6 +1,6 @@
-[{assign var="aKlPromotion" value=$oViewConf->getKlarnaConfVar('sKlarnaStripPromotion')}]
+[{assign var="aKlPromotion" value=$oViewConf->getOnSitePromotionInfo('sKlarnaStripPromotion')}]
 
-[{if $aKlPromotion}]
+[{if $aKlPromotion && $oView->getClassName() === 'start'}]
     <div>
         [{$aKlPromotion}]
     </div>

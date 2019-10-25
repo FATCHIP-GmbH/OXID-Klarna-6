@@ -1,5 +1,5 @@
 [{$smarty.block.parent}]
-[{assign var="aKlPromotion" value=$oViewConf->getKlarnaConfVar('sKlarnaBannerPromotion')}]
+[{assign var="aKlPromotion" value=$oViewConf->getOnSitePromotionInfo('sKlarnaBannerPromotion')}]
 
 [{if $aKlPromotion}]
     <div style="margin-top: 10px">

@@ -10,7 +10,7 @@
     [{oxscript add='$(".klarna-express-button").KlarnaProceedAction( {sAction: "actionKlarnaExpressCheckoutFromDetailsPage"} );'}]
 [{/if}]
 
-[{assign var="aKlPromotion" value=$oViewConf->getKlarnaConfVar('sKlarnaCreditPromotionProduct')}]
+[{assign var="aKlPromotion" value=$oViewConf->getOnSitePromotionInfo('sKlarnaCreditPromotionProduct', $oDetailsProduct)}]
 [{if $aKlPromotion}]
     <div>
         [{$aKlPromotion}]

@@ -130,8 +130,28 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
         return false;
     }
 
-    public function getKlarnaConfVar($key)
+    public function getOnSitePromotionInfo($key, $detailProduct = null)
     {
+
+        if($key == "sKlarnaCreditPromotionBasket" || $key == "sKlarnaCreditPromotionProduct") {
+
+            $promotion = KlarnaUtils::getShopConfVar($key);
+            $promotion = preg_replace('/data-purchase_amount=\"(\d*)\"/', 'data-purchase_amount="%s"', $promotion);
+            $price = 0;
+            if($key == "sKlarnaCreditPromotionProduct" && $detailProduct != null) {
+                $price = $detailProduct->getPrice()->getBruttoPrice();
+                $price = number_format((float)$price*100., 0, '.', '');
+            }
+
+            if($key == "sKlarnaCreditPromotionBasket") {
+                $price = Registry::getSession()->getBasket()->getPrice()->getNettoPrice();
+                $price = number_format((float)$price*100., 0, '.', '');
+            }
+
+            return sprintf($promotion, $price);
+
+        }
+
         return KlarnaUtils::getShopConfVar($key);
     }
 

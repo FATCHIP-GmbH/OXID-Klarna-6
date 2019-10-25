@@ -10,7 +10,7 @@
     </script>
 [{/if}]
 
-[{assign var="aKlPromotion" value=$oViewConf->getKlarnaConfVar('sKlarnaCreditPromotionBasket')}]
+[{assign var="aKlPromotion" value=$oViewConf->getOnSitePromotionInfo('sKlarnaCreditPromotionBasket')}]
 [{if $aKlPromotion}]
     <div>
         [{$aKlPromotion}]
