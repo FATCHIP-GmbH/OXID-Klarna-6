@@ -118,7 +118,7 @@ class KlarnaOrderMain extends KlarnaOrderMain_parent
      */
     public function sendorder()
     {
-        $cancelled = $this->getEditObject()->getFieldData('oxstorno') == 1;
+        $cancelled = $this->getEditObject() ? ($this->getEditObject()->getFieldData('oxstorno') == 1) : false;
 
         $result = parent::sendorder();
 
