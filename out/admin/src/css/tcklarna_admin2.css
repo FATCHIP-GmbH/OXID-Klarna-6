@@ -1990,3 +1990,12 @@ p {
 .equalHMV:nth-of-type(3n+1) {
     margin-left: 0;
 }
+
+#merchant-button {
+    padding-top: 8px;
+    text-decoration: none;
+}
+
+#merchant-button:focus {
+    color: #3E3E3E;
+}

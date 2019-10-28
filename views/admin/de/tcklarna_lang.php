@@ -328,4 +328,11 @@ oder wenden Sie sich an den Klarna Integration Support.',
     'TCKLARNA_TOP_STRIP_PROMOTION_TOOLTIP'      => 'Bitte fügen Sie hier den Placement Tag ein, um generische und zahlmethodenspezifische Informationen auf der Shop-Startseite zu promoten',
     'TCKLARNA_FOOTER_PROMOTION_TOOLTIP'         => 'Bitte fügen Sie hier den Placement Tag ein, um Ihre verfügbaren Klarna Zahlungsarten im Footer des Shops anzuzeigen',
     'TCKLARNA_BANNER_PROMOTION_TOOLTIP'         => 'Bitte fügen Sie hier den Placement Tag ein, um einen Banner auf Ihrer Shop-Startseite einzufügen',
+    'TCKLARNA_ON_SITE_MESSAGING_HEADER_TITLE'   => 'Was ist On-Site Messaging?',
+    'TCKLARNA_ON_SITE_MESSAGING_HEADER_DESC' => 'Kunden sind sich nicht immer der verschiedenen Kredit- und Finanzierungsmöglichkeiten bewusst, die ihnen zur Verfügung stehen, bevor sie die Kasse erreichen. Frühzeitig verfügbare Finanzierungsmöglichkeiten beeinflussen die Kaufentscheidung.
+
+On-Site Messaging ist einfach und problemlos zu integrieren und bietet maßgeschneiderte Informationen, die von allgemeinen Bannern über die Förderung Ihrer Partnerschaft mit Klarna und die Verfügbarkeit einer Ratenzahlung bis hin zu personalisierten Kreditaktionen auf Produkt- oder Warenkorbseiten reichen.',
+    'TCKLARNA_ON_SITE_MESSAGING_HEADER_DESC_2' => 'Weitere Informationen zu den ersten Schritten <a class="cl-pink" href="https://developers.klarna.com/documentation/on-site-messaging/getting-started/" target="_blank">finden Sie hier</a><br><br>
+Melden Sie sich im <a class="cl-pink" href="https://merchants.klarna.com/" target="_blank">Händlerportal unter</a> an, um Ihren persönlichen JavaScript- und Placement-Code zu generieren. On-Site-Messaging wird in Ihrem Shop aktiviert, sobald der JavaScript-Code gespeichert und mindestens ein Placement-Code eingegeben wurde.',
+    'TCKLARNA_ON_SITE_MESSAGING_MERCHANT_BUTTON' => 'Händlerportal',
 );

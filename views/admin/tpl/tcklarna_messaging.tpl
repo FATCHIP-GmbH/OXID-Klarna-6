@@ -23,7 +23,18 @@
     <div class="main-container">
         [{include file="tcklarna_header.tpl" title="TCKLARNA_ON_SITE_MESSAGING"|oxmultilangassign desc="TCKLARNA_ON_SITE_MESSAGING_ADMIN_DESC"|oxmultilangassign}]
         <hr>
-
+        <div class="klarna-header">
+            <div class="w12">
+                <h1>[{oxmultilang ident="TCKLARNA_ON_SITE_MESSAGING_HEADER_TITLE"}]</h1>
+                <p>[{oxmultilang ident="TCKLARNA_ON_SITE_MESSAGING_HEADER_DESC"}]</p>
+                <img src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/img/display-instant-financing_EN.png') }]" height=270px" width="350px"><img src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/img/easy-to-customise_EN.png') }]" height="270px" width="350px"><img src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/img/personalised-messaging_EN.png') }]" height="270px" width="350px">
+                <p style="margin-top: 10px;padding-top: 10px">[{oxmultilang ident="TCKLARNA_ON_SITE_MESSAGING_HEADER_DESC_2"}]</p>
+                <a href="https://merchants.klarna.com/" target="_blank" class="btn-save saveButton" id="merchant-button">
+                    [{oxmultilang ident="TCKLARNA_ON_SITE_MESSAGING_MERCHANT_BUTTON"}]
+                </a>
+            </div>
+        </div>
+        <hr>
         <form name="myedit" id="myedit" method="post" action="[{$oViewConf->getSelfLink()}]"
               enctype="multipart/form-data">
             <input type="hidden" name="MAX_FILE_SIZE" value="[{$iMaxUploadFileSize}]">
