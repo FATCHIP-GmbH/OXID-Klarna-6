@@ -311,7 +311,7 @@ oder wenden Sie sich an den Klarna Integration Support.',
 
     'TCKLARNA_EU_WARNING' => '<p>Um mit der EU Geoblocking Verordnung übereinzustimmen, wird dringend empfohlen, alle europäischen Länder zu aktivieren und der Bezahlmethode Klarna Checkout zuzweisen.</p><p>Es fehlen folgende Länder: %s</p>',
 
-    'TCKLARNA_ON_SITE_MESSAGING'     => 'On-site messaging',
+    'TCKLARNA_ON_SITE_MESSAGING'     => 'On-Site Messaging',
     'TCKLARNA_ON_SITE_MESSAGING_ADMIN_DESC'     => 'Hier können Sie das On-Site Messaging zur Verwendung mit dem Klarna Modul für den OXID eShop konfigurieren. 
 Für oder wenden Sie sich an den Klarna Integration Support.  
 <i class="fa fa-question-circle-o" aria-hidden="true"></i>, lesen Sie das <a class="cl-pink" href="%s" target="_blank">Handbuch</a> 
@@ -333,6 +333,6 @@ oder wenden Sie sich an den Klarna Integration Support.',
 
 On-Site Messaging ist einfach und problemlos zu integrieren und bietet maßgeschneiderte Informationen, die von allgemeinen Bannern über die Förderung Ihrer Partnerschaft mit Klarna und die Verfügbarkeit einer Ratenzahlung bis hin zu personalisierten Kreditaktionen auf Produkt- oder Warenkorbseiten reichen.',
     'TCKLARNA_ON_SITE_MESSAGING_HEADER_DESC_2' => 'Weitere Informationen zu den ersten Schritten <a class="cl-pink" href="https://developers.klarna.com/documentation/on-site-messaging/getting-started/" target="_blank">finden Sie hier</a><br><br>
-Melden Sie sich im <a class="cl-pink" href="https://merchants.klarna.com/" target="_blank">Händlerportal unter</a> an, um Ihren persönlichen JavaScript- und Placement-Code zu generieren. On-Site-Messaging wird in Ihrem Shop aktiviert, sobald der JavaScript-Code gespeichert und mindestens ein Placement-Code eingegeben wurde.',
+Melden Sie sich im <a class="cl-pink" href="https://merchants.klarna.com/" target="_blank">Händlerportal</a> an, um Ihren persönlichen JavaScript- und Placement-Code zu generieren. On-Site-Messaging wird in Ihrem Shop aktiviert, sobald der JavaScript-Code gespeichert und mindestens ein Placement-Code eingegeben wurde.',
     'TCKLARNA_ON_SITE_MESSAGING_MERCHANT_BUTTON' => 'Händlerportal',
 );

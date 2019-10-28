@@ -77,7 +77,7 @@ class OrderManagementCest
         $admin = $I->openShopAdminPanel();
         $admin->login();
         $admin->selectShop();
-        $admin->navigateMenu(["Klarna", "On-site messaging"]);
+        $admin->navigateMenu(["Klarna", "On-Site Messaging"]);
         $I->wait(3);
         $I->waitForFrame("basefrm");
         $I->fillField("//*[@id='klscript']","klscript");
