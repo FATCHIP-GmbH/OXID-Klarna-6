@@ -334,4 +334,6 @@ On-Site Messaging is easy and simple to integrate providing tailored messaging r
     'TCKLARNA_ON_SITE_MESSAGING_HEADER_DESC_2' => 'Find more information on <a class="cl-pink" href="https://developers.klarna.com/documentation/on-site-messaging/getting-started/" target="_blank">how to get started here</a><br><br>
 And log in to the <a class="cl-pink" href="https://merchants.klarna.com/" target="_blank">Merchant Portal</a> to generate your personal JavaScript and placement code. On-Site Messaging will be activated in your shop, as soon as the JavaScript code has been saved and at least one placement code has been entered.',
     'TCKLARNA_ON_SITE_MESSAGING_MERCHANT_BUTTON' => 'Go to Merchant Portal',
+    'TCKLARNA_INSTANT_SHIPPING_MENU' => 'Instant Shipping',
+    'TCKLARNA_INSTANT_SHIPPING_HEADER' => 'Klarna’s Instant Shopping can be used at locations further up in the funnel before Checkout to drive sales. This means that you can use Klarna’s Instant Shopping onsite, within your domain, like in a product, cart or upsell page, but also offsite, like in influencers’ blog posts, advertisements and social media.',
 );
