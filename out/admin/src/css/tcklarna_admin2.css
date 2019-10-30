@@ -735,7 +735,7 @@ button, input, optgroup, select, textarea {
     background: rgba(250, 130, 160, 0.66);
 }
 
-.no-bg { background: none; color: #fa82a0;}
+.no-bg { background: white; color: #fa82a0;}
 .no-bg:hover { color: white;}
 
 .top-button-group .btn-save { width: 100%;}
