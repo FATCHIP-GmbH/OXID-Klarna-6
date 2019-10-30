@@ -9,10 +9,13 @@
 <link rel="stylesheet" href="[{$oViewConf->getResourceUrl()}]main.css">
 <link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tcklarna_admin2.css') }]">
 <link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster.bundle.min.css') }]">
-<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster-sideTip-light.min.css') }]">
-<script type="text/javascript" src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/jquery-1.12.4.min.js') }]"></script>
+<link rel="stylesheet"
+      href="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster-sideTip-light.min.css') }]">
+<script type="text/javascript"
+        src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/jquery-1.12.4.min.js') }]"></script>
 <script type="text/javascript"
         src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/tooltipster.bundle.min.js') }]"></script>
+<script src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/jscolor/jscolor.js') }]"></script>
 
 
 <div class="[{$box|default:'box'}]" style="[{if !$box && !$bottom_buttons}]height: 100%;[{/if}]">
@@ -44,13 +47,12 @@
                                         <td class="input w460">
                                             <div class="input">
                                                 <div class="display">
-                                                    <label class="label toggle" for="FooterDisplay">
-                                                        <input type="hidden"
-                                                               name="confstrs[sKlarnaInstantDisplay]" value="0">
+                                                    <label class="label toggle" for="InstanShippingDisplay">
+                                                        <input type="hidden" name="confstrs[sKlarnaInstanShippingDisplay]" value="0">
                                                         <input type="checkbox" class="toggle_input radio_type"
-                                                               name="confstrs[sKlarnaInstantDisplay]"
-                                                               value="1" id="FooterDisplay"
-                                                               [{if ($confstrs.sKlarnaInstantDisplay === '1')}]checked[{/if}] [{ $readonly}]/>
+                                                               name="confstrs[sKlarnaInstanShippingDisplay]"
+                                                               value="1" id="InstanShippingDisplay"
+                                                               [{if ($confstrs.sKlarnaInstanShippingDisplay === '1')}]checked[{/if}] [{ $readonly}]/>
                                                         <div class="toggle-control"></div>
                                                     </label>
                                                 </div>
@@ -62,6 +64,78 @@
                                             </span>
                                         </td>
                                     </tr>
+
+                                    <tr class="no-t-border">
+                                        <td>
+                                            <div class="rows-wrapper"
+                                                 [{ if $confstrs.sKlarnaInstanShippingDisplay === '1' }]style="display: block"[{/if}]>
+                                            <table class="inner">
+                                                <tbody>
+                                                <tr class="dark">
+                                                    <td class="name-bold" colspan="3">
+                                                        [{ oxmultilang ident="TCKLARNA_FOOTER_PAYMENT_METHODS" }] [{ oxmultilang ident="TCKLARNA_DESIGN" }]
+                                                    </td>
+                                                </tr>
+                                                <tr class="dark">
+                                                    <td colspan="2">
+                                                        [{ oxmultilang ident="TCKLARNA_LONG_VERSION" }]
+                                                    </td>
+                                                </tr>
+                                                <tr class="dark">
+                                                    <td class="half">
+                                                        <input type="radio" id="long-black"
+                                                               name="confstrs[sKlarnaFooterValue]" value="longBlack"
+                                                               [{ if ($confstrs.sKlarnaFooterValue === 'longBlack') }]checked[{/if}]>
+                                                        <label class="kl-logo white" for="long-black">
+                                                            <klarna-instant-shopping />
+                                                            <div class="">
+                                                                <img src="[{ $locale|string_format:$aKlarnaFooterImgUrls.longBlack }]">
+                                                            </div>
+                                                        </label>
+                                                    </td>
+                                                    <td class="half">
+                                                        <input type="radio" id="long-white"
+                                                               name="confstrs[sKlarnaFooterValue]" value="longWhite"
+                                                               [{ if $confstrs.sKlarnaFooterValue == 'longWhite' }]checked[{/if}]>
+                                                        <label class="kl-logo black" for="long-white">
+                                                            <div class="">
+                                                                <img src="[{ $locale|string_format:$aKlarnaFooterImgUrls.longWhite }]">
+                                                            </div>
+                                                        </label>
+                                                    </td>
+                                                </tr>
+                                                <tr class="dark">
+                                                    <td colspan="2">
+                                                        [{ oxmultilang ident="TCKLARNA_SHORT_VERSION" }]
+                                                    </td>
+                                                </tr>
+                                                <tr class="dark">
+                                                    <td class="half">
+                                                        <input type="radio" id="short-black"
+                                                               name="confstrs[sKlarnaFooterValue]" value="shortBlack"
+                                                               [{ if $confstrs.sKlarnaFooterValue == 'shortBlack' }]checked[{/if}]>
+                                                        <label class="kl-logo white" for="short-black">
+                                                            <div class="">
+                                                                <img src="[{ $locale|string_format:$aKlarnaFooterImgUrls.shortBlack }]">
+                                                            </div>
+                                                        </label>
+                                                    </td>
+                                                    <td class="half">
+                                                        <input type="radio" id="short-white"
+                                                               name="confstrs[sKlarnaFooterValue]" value="shortWhite"
+                                                               [{ if $confstrs.sKlarnaFooterValue == 'shortWhite' }]checked[{/if}]>
+                                                        <label class="kl-logo black" for="short-white">
+                                                            <div class="">
+                                                                <img src="[{ $locale|string_format:$aKlarnaFooterImgUrls.shortWhite }]">
+                                                            </div>
+                                                        </label>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+
                                     </tbody>
                                 </table>
                             </td>
@@ -79,9 +153,7 @@
 
 
 
-
-
     </div>
 </div>
 <script src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_lib.js') }]"></script>
-<script src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_emd.js') }]"></script>
+<script src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_design.js') }]"></script>
