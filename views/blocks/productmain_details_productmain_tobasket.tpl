@@ -10,6 +10,8 @@
     [{oxscript add='$(".klarna-express-button").KlarnaProceedAction( {sAction: "actionKlarnaExpressCheckoutFromDetailsPage"} );'}]
 [{/if}]
 
+[{include file="tcklarna_instant_shopping_button.tpl" product=$oDetailsProduct}]
+
 [{assign var="aKlPromotion" value=$oViewConf->getOnSitePromotionInfo('sKlarnaCreditPromotionProduct', $oDetailsProduct)}]
 [{if $aKlPromotion}]
     <div>

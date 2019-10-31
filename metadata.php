@@ -156,6 +156,7 @@ $aModule = array(
         'tcklarna_country_creds.tpl'           => 'tc/tcklarna/views/admin/tpl/tcklarna_country_creds.tpl',
         'tcklarna_header.tpl'                  => 'tc/tcklarna/views/admin/tpl/tcklarna_header.tpl',
         'tcklarna_lang_spec_conf.tpl'          => 'tc/tcklarna/views/admin/tpl/tcklarna_lang_spec_conf.tpl',
+        'tcklarna_instant_shopping_button.tpl' => 'tc/tcklarna/views/blocks/inc/tcklarna_instant_shopping_button.tpl'
     ),
     'blocks'      => array(
         array(
@@ -192,6 +193,16 @@ $aModule = array(
             'template' => 'page/checkout/basket.tpl',
             'block'    => 'checkout_basket_next_step_top',
             'file'     => 'views/blocks/basket_checkout_basket_next_step_top.tpl',
+        ),
+        array(
+            'template' => 'page/checkout/basket.tpl',
+            'block' => 'basket_btn_next_top',
+            'file' => 'views/blocks/instant_shopping_checkout.tpl',
+        ),
+        array(
+            'template' => 'page/checkout/basket.tpl',
+            'block' => 'basket_btn_next_bottom',
+            'file' => 'views/blocks/instant_shopping_checkout.tpl',
         ),
         array(
             'template' => 'page/checkout/payment.tpl',

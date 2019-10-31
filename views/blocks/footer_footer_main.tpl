@@ -1,3 +1,16 @@
+[{assign var="aInstantButton" value=$oViewConf->getInstantShoppingConfiguration()}]
+
+[{if $aInstantButton}]
+    [{assign var="aButtonInstances" value=$aInstantButton->getButtonInstances()}]
+    <script>
+        window.klarnaAsyncCallback = function () {
+            [{foreach from=$aButtonInstances item=instance}]
+                Klarna.InstantShopping.load([{$aInstantButton->getConfig(null, $instance)|@json_encode}])
+            [{/foreach}]
+        };
+    </script>
+[{/if}]
+
 [{$smarty.block.parent}]
 
 [{assign var="aKlFooter" value=$oViewConf->getKlarnaFooterContent()}]
@@ -6,6 +19,7 @@
 [{/if}]
 
 [{oxscript include=$oViewConf->getModuleUrl('tcklarna','out/src/js/tcklarna_scripts.js') priority=10 }]
+<script src="https://x.klarnacdn.net/instantshopping/lib/v1/lib.js" async></script>
 
 [{assign var="sKlBanner" value=$oViewConf->getKlarnaHomepageBanner() }]
 

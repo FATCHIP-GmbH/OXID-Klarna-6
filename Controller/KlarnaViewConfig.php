@@ -19,6 +19,7 @@ namespace TopConcepts\Klarna\Controller;
 
 
 use TopConcepts\Klarna\Core\KlarnaConsts;
+use TopConcepts\Klarna\Core\KlarnaInstantShoppingButton;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Model\KlarnaUser;
 use OxidEsales\Eshop\Application\Model\CountryList;
@@ -49,6 +50,8 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
     const TCKLARNA_FOOTER_DISPLAY_NONE            = 0;
     const TCKLARNA_FOOTER_DISPLAY_PAYMENT_METHODS = 1;
     const TCKLARNA_FOOTER_DISPLAY_LOGO            = 2;
+
+    private $instanShoppingConfig = null;
 
     public function isActiveControllerKlarnaExpress()
     {
@@ -318,5 +321,19 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
     public function isPrefillIframe()
     {
         return (bool)KlarnaUtils::getShopConfVar('blKlarnaEnablePreFilling');
+    }
+
+    public function getInstantShoppingConfiguration()
+    {
+        if(KlarnaUtils::getShopConfVar('blKlarnaInstantShippingEnabled') == false) {
+            return null;
+        }
+
+        if($this->instanShoppingConfig == null) {
+            $this->instanShoppingConfig = oxNew(KlarnaInstantShoppingButton::class);
+        }
+
+        return $this->instanShoppingConfig;
+
     }
 }
