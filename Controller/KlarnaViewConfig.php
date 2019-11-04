@@ -19,7 +19,7 @@ namespace TopConcepts\Klarna\Controller;
 
 
 use TopConcepts\Klarna\Core\KlarnaConsts;
-use TopConcepts\Klarna\Core\KlarnaInstantShoppingButton;
+use TopConcepts\Klarna\Core\InstantShopping\Button;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Model\KlarnaUser;
 use OxidEsales\Eshop\Application\Model\CountryList;
@@ -51,7 +51,7 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
     const TCKLARNA_FOOTER_DISPLAY_PAYMENT_METHODS = 1;
     const TCKLARNA_FOOTER_DISPLAY_LOGO            = 2;
 
-    private $instanShoppingConfig = null;
+    protected $tcKlarnaButton;
 
     public function isActiveControllerKlarnaExpress()
     {
@@ -323,17 +323,24 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
         return (bool)KlarnaUtils::getShopConfVar('blKlarnaEnablePreFilling');
     }
 
-    public function getInstantShoppingConfiguration()
+    public function getInstantShoppingButton()
     {
-        if(KlarnaUtils::getShopConfVar('blKlarnaInstantShippingEnabled') == false) {
-            return null;
+        if ($this->tcKlarnaButton) {
+            return $this->tcKlarnaButton;
         }
 
-        if($this->instanShoppingConfig == null) {
-            $this->instanShoppingConfig = oxNew(KlarnaInstantShoppingButton::class);
+        $oConfig = Registry::getConfig();
+        $isEnabled = $oConfig->getConfigParam('blKlarnaInstantShippingEnabled');
+        if($isEnabled) {
+            $placementArray = $oConfig->getConfigParam('aarrKlarnaISButtonPlacement');
+            $viewName = $oConfig->getTopActiveView()->getClassKey();
+            $isActiveForCurrentView = isset($placementArray[$viewName]) ? (bool)$placementArray[$viewName] : false;
+            if ($isActiveForCurrentView) {
+
+                return $this->tcKlarnaButton = oxNew(Button::class);
+            }
         }
 
-        return $this->instanShoppingConfig;
-
+        return null;
     }
 }
