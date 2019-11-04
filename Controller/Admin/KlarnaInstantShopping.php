@@ -3,6 +3,7 @@
 namespace TopConcepts\Klarna\Controller\Admin;
 
 use OxidEsales\Eshop\Core\Registry;
+use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Core\InstantShopping\HttpClient;
 use TopConcepts\Klarna\Core\KlarnaConsts;
 
@@ -66,9 +67,15 @@ class KlarnaInstantShopping extends KlarnaBaseConfig {
     protected function generateAndSaveButtonKey() {
 
         $oConfig = Registry::getConfig();
-        $buttonData = $this->instantShoppingClient->createButton(
-            $this->getButtonRequestData()
-        );
+        try {
+            $buttonData = $this->instantShoppingClient->createButton(
+                $this->getButtonRequestData()
+            );
+        } catch (KlarnaClientException $exception) {
+            Registry::getUtilsView()->addErrorToDisplay($exception);
+            return;
+        }
+
         $oConfig->saveShopConfVar(
             'strs',
             'strKlarnaISButtonKey',
@@ -83,14 +90,16 @@ class KlarnaInstantShopping extends KlarnaBaseConfig {
         $defaultShopCountry = $oConfig->getConfigParam('sKlarnaDefaultCountry');
         $currencies = KlarnaConsts::getCountry2CurrencyArray();
         $currency = isset($currencies[$defaultShopCountry]) ? $currencies[$defaultShopCountry] : 'EUR';
+        $boolFilter = function ($i) { return (bool)$i; };
+
         return [
             'merchant_urls' => [
                 'place_order' => $oConfig->getSslShopUrl() . 'cl=klarnaInstantShoppingDispatcher'
             ],
             'purchase_country' => $defaultShopCountry,
             'purchase_currency' => $currency,
-            'options' => $oConfig->getConfigParam('aarrKlarnaISButtonSettings') ?: [],
-            'styling' => $oConfig->getConfigParam('aarrKlarnaISButtonStyle') ?: []
+            'options' => array_map($boolFilter, $oConfig->getConfigParam('aarrKlarnaISButtonSettings')) ?: [],
+            'styling' => ['theme' => $oConfig->getConfigParam('aarrKlarnaISButtonStyle')] ?: []
         ];
     }
 }

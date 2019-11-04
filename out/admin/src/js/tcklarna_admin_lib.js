@@ -202,7 +202,7 @@ Selector2.prototype.selectItemIndex = function (index) {
     this.choices.insertBefore(this.choices.childNodes[index], this.choices.childNodes[0]);                          // move selected to the top
 
     if (this.hiddenInput) {
-        this.hiddenInput.value = event.target.getAttribute('data-value');
+        this.hiddenInput.value = getElementA(this.choices.childNodes[index]).getAttribute('data-value');
     }
     // hide element for 100ms to force blur event on the element
     this.choices.style.display = 'none';
@@ -240,6 +240,9 @@ Selector2.prototype.selectFirst = function () {
     if (this.choices.childNodes.length == 0)
         return;
     this.choices.childNodes[0].className = 'selector__item--selected';
+    if (this.hiddenInput) {
+        this.hiddenInput.value = getElementA(this.choices.childNodes[0]).getAttribute('data-value');
+    }
 };
 
 Selector2.prototype.getSelection = function () {

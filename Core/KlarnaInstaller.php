@@ -159,9 +159,16 @@ class KlarnaInstaller extends ShopConfiguration
                 'sKlarnaB2Option' => 'B2C',
             ),
             'arr'    => array(),
-//            'aarr'   => array(
-//                'tcklarna_aKlarnaCurrencies' => $currenciesVar,
-//            ),
+            'aarr'   => array(
+                'aarrKlarnaISButtonStyle' => 'variation => klarna
+                    tagline => light
+                    type => pay',
+                'aarrKlarnaISButtonSettings' => 'allow_separate_shipping_address => 0
+                    date_of_birth_mandatory => 0
+                    national_identification_number_mandatory => 0
+                    title_mandatory => 0'
+                //                'tcklarna_aKlarnaCurrencies' => $currenciesVar,
+            ),
             'select' => array(),
         );
 
