@@ -166,7 +166,7 @@ class KlarnaInstaller extends ShopConfiguration
                 'aarrKlarnaISButtonSettings' => 'allow_separate_shipping_address => 0
                     date_of_birth_mandatory => 0
                     national_identification_number_mandatory => 0
-                    title_mandatory => 0'
+                    phone_mandatory => 0'
                 //                'tcklarna_aKlarnaCurrencies' => $currenciesVar,
             ),
             'select' => array(),

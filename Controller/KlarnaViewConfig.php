@@ -323,6 +323,12 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
         return (bool)KlarnaUtils::getShopConfVar('blKlarnaEnablePreFilling');
     }
 
+    public function getGenericInstantShoppingButton()
+    {
+        $button = oxNew(Button::class);
+        return json_encode($button->getGenericConfig());
+    }
+
     public function getInstantShoppingButton()
     {
         if ($this->tcKlarnaButton) {

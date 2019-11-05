@@ -210,6 +210,10 @@ class KlarnaConsts
             'us' => 'en-US'
         ];
 
+        if(isAdmin() && $default === true) {
+            return $locale = isset($defaultLocales[$lang]) ? $defaultLocales[$lang] : 'en-GB';
+        }
+
         $sCountryISO = Registry::getSession()->getVariable('sCountryISO');
 
         $locale = $lang.'-'.$sCountryISO;

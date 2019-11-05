@@ -56,7 +56,8 @@
                                             <td class="name">[{oxmultilang ident="TCKLARNA_IS_BUTTON_REPLACE" }]</td>
                                             <td class="input w460">
                                                 <div class="input">
-                                                    <button class="btn-save no-bg" type="button" id='replace-button-key'>[{oxmultilang ident="TCKLARNA_IS_REPLACE" }]</button>
+                                                    <button class="btn-save no-bg" type="button" id='replace-button-key'
+                                                            [{if ($confbools.blKlarnaInstantShippingEnabled === false)}]disabled[{/if}]>[{oxmultilang ident="TCKLARNA_IS_REPLACE" }]</button>
                                                 </div>
                                             </td>
                                             <td class="info-block">
@@ -83,12 +84,12 @@
                                             [{assign var="previewPath" value=""}]
                                             [{foreach from=$buttonStyleOptions key="optionName" item="options"}]
                                                 <tr class="dark">
-                                                    <td class="name">[{$optionName}]</td>
+                                                    <td class="name">[{oxmultilang ident=$options.label}]</td>
                                                     <td class="input">
                                                         <div class="selector button-style-selector" id="button-style-[{$optionName}]">
                                                             <div class="selector__menu">
                                                                 <ul class="selector__choices">
-                                                                    [{foreach from=$options item="optionValue"}]
+                                                                    [{foreach from=$options.values item="optionValue"}]
                                                                         [{if $confaarrs.aarrKlarnaISButtonStyle.$optionName === $optionValue}]
                                                                             [{assign var="selected" value="--selected"}]
                                                                             [{assign var="previewPath" value=$previewPath|cat:"-"|cat:$optionValue}]
@@ -111,7 +112,7 @@
                                                     </td>
                                                     <td class="info-block">
                                                         <span class="kl-tooltip"
-                                                              title="[{oxmultilang ident="TCKLARNA_IS_TOOLTIP"|cat:$optionName}]">
+                                                              title="[{oxmultilang ident="TCKLARNA_IS_"|cat:$optionName|upper|cat:"_TOOLTIP"}]">
                                                             <i class="fa fa-question fa-lg" aria-hidden="true"></i>
                                                         </span>
                                                     </td>
@@ -122,7 +123,10 @@
                                                     [{oxmultilang ident="TCKLARNA_IS_BUTTON_PREVIEW"}]
                                                 </td>
                                                 <td class="button-preview" colspan="2">
-                                                    <img src="[{$previewUrlBase}][{$previewPath}].jpg">
+                                                    [{assign var="oKlarnaButton" value=$oViewConf->getGenericInstantShoppingButton()}]
+                                                    [{if $oKlarnaButton}]
+                                                        <p><klarna-instant-shopping style="pointer-events: none;"/></p>
+                                                    [{/if}]
                                                 </td>
                                             </tr>
                                             [{foreach from=$buttonPlacement item="pageName"}]
@@ -148,7 +152,7 @@
                                                 </td>
                                                 <td class="info-block">
                                                     <span class="kl-tooltip"
-                                                          title="[{oxmultilang ident="TCKLARNA_IS_BUTTON_PLACEMENT_TOOLTIP_"|cat:$pageName|upper}]">
+                                                          title="[{oxmultilang ident="TCKLARNA_IS_BUTTON_PLACEMENT_"|cat:$pageName|upper|cat:"_TOOLTIP"}]">
                                                         <i class="fa fa-question fa-lg" aria-hidden="true"></i>
                                                     </span>
                                                 </td>
@@ -179,7 +183,7 @@
                                                         </div>
                                                     </td>
                                                     <td class="info-block">
-                                                        <span class="kl-tooltip" title="[{oxmultilang ident="TCKLARNA_IS_TOOLTIP_"|cat:$optionName|upper}]">
+                                                        <span class="kl-tooltip" title="[{oxmultilang ident="TCKLARNA_IS_SETTING_"|cat:$optionName|upper|cat:"_TOOLTIP"}]">
                                                             <i class="fa fa-question fa-lg" aria-hidden="true"></i>
                                                         </span>
                                                     </td>
@@ -208,14 +212,25 @@
             var $plane =  $(this).closest('.config-options').find('.rows-wrapper');
             /** radio style toggle switch */
             if(this.checked) {
-                $plane.show(400)
+                $plane.show(400);
+                $('#replace-button-key').attr('disabled', false);
             } else {
                 $plane.hide(400);
+                $('#replace-button-key').attr('disabled', true);
             }
         });
 
         // replace button key
         $('#replace-button-key').click(function(){
+
+            var enabled = $('#instant-shopping-toggle').prop('checked');
+
+            if(enabled === false) {
+                $('#replace-button-key').attr('disabled', true);
+                return null;
+            }
+
+
             $form.get(0).appendChild(
                 $('<input>')
                     .attr({name: 'replaceButton', value: '1'})
@@ -235,10 +250,31 @@
                     var $previewPath = $('[data-button-style-value]').map(function() {
                         return this.value;
                     });
-                    var previewSrc = previewUrlBase + Array.prototype.join.call($previewPath, '-') + '.jpg';
-                    $('.button-preview img').attr('src', previewSrc);
+
+                    Klarna.InstantShopping.update({
+                        "styling": {
+                            "theme": {
+                                "variation": $previewPath[0],
+                                "tagline": $previewPath[1],
+                                "type": $previewPath[2]
+                            }
+                        },
+                    })
                 }
             });
         });
     })();
 </script>
+<script>
+    window.klarnaAsyncCallback = function () {
+        Klarna.InstantShopping.load([{$oViewConf->getGenericInstantShoppingButton()}]);
+    };
+</script>
+<script src="https://x.klarnacdn.net/instantshopping/lib/v1/lib.js"></script>
+<style>
+    #replace-button-key:disabled {
+        background: #d0d0d0;
+        border-color: #d0d0;
+        color: #1a1919;
+    }
+</style>

@@ -122,4 +122,46 @@ class Button
 
         return $style;
     }
+
+    public function getGenericConfig()
+    {
+
+        return [
+            "setup"=> [
+                "key" => "45a2837c-aa16-46df-9a93-69fcddbc4810",
+                "environment" => $this->getEnvironment(),
+                "region" => "eu"
+            ],
+            "styling" => [
+                "theme" => $this->getButtonStyling()
+            ],
+            "purchase_country" => "DE",
+            "purchase_currency" => "EUR",
+            "locale" => KlarnaConsts::getLocale(true),
+            "merchant_urls" => $this->getMerchantUrls(),
+            "order_lines" => [[
+                "type" => "physical",
+                "reference" => "12345",
+                "name" => "Testprodukt",
+                "quantity" => 1,
+                "unit_price" => 125000,
+                "tax_rate" => 2500,
+                "total_amount" => 125000,
+                "total_discount_amount" => 0,
+                "total_tax_amount" => 25000,
+                "image_url" => ""
+            ]],
+            "billing_address" => [
+                "given_name" => "John",
+                "family_name" => "Doe",
+                "email" => "jane@doeklarna.com",
+                "title" => "Mr",
+                "street_address" => "Theresienhöhe 12.",
+                "postal_code" => "80339 ",
+                "city" => "Munich",
+                "phone" => "333444555",
+                "country" => "DE",
+            ],
+        ];
+    }
 }

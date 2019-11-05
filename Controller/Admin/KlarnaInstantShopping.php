@@ -15,9 +15,9 @@ class KlarnaInstantShopping extends KlarnaBaseConfig {
     protected $instantShoppingClient;
 
     protected $buttonStyleOptions = [
-        'variation' => ['klarna', 'light', 'dark'],
-        'tagline' => ['light', 'dark'],
-        'type' => ['pay', 'express', 'buy']
+        'variation' => ['label' => 'TCKLARNA_IS_BUTTON_SETTINGS_VARIATION', 'values' => ['klarna', 'light', 'dark']],
+        'tagline' => ['label' => 'TCKLARNA_IS_BUTTON_SETTINGS_TAGLINE', 'values' => ['light', 'dark']],
+        'type' => ['label' => 'TCKLARNA_IS_BUTTON_SETTINGS_TYPE', 'values' => ['pay', 'express', 'buy']]
     ];
 
     protected $buttonPlacement = ['details', 'basket'];
@@ -26,7 +26,7 @@ class KlarnaInstantShopping extends KlarnaBaseConfig {
         'allow_separate_shipping_address',
         'date_of_birth_mandatory',
         'national_identification_number_mandatory',
-        'title_mandatory'
+        'phone_mandatory'
     ];
 
     protected function isReplaceButtonRequest() {
