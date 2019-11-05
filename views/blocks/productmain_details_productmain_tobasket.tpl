@@ -9,20 +9,7 @@
     [{oxscript add='$(".klarna-express-button").KlarnaProceedAction( {sAction: "actionKlarnaExpressCheckoutFromDetailsPage"} );'}]
 [{/if}]
 
-[{assign var="oKlarnaButton" value=$oViewConf->getInstantShoppingButton()}]
-[{if $oKlarnaButton}]
-    <p><klarna-instant-shopping></p>
-    [{if $smarty.get.oxwparent === 'details'}]
-        [{* check if ajax request*}]
-        [{capture assign="updateJs"}]
-            klButtonManager.updateInstances([{$oKlarnaButton->getConfig($oDetailsProduct)|@json_encode}]);
-        [{/capture}]
-        [{oxscript add=$updateJs}]
-    [{/if}]
-[{/if}]
-
-
-
+[{include file="tcklarna_instant_shopping_button.tpl"}]
 
 [{assign var="aKlPromotion" value=$oViewConf->getOnSitePromotionInfo('sKlarnaCreditPromotionProduct', $oDetailsProduct)}]
 [{if $aKlPromotion}]
