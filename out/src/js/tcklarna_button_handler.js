@@ -20,9 +20,8 @@ function KlButtonManager (buttonConfig) {
     var buttons = document.querySelectorAll('klarna-instant-shopping');
     for(instanceIndex; instanceIndex < buttons.length; instanceIndex++) {
         buttons[instanceIndex].setAttribute('data-instance-id', instanceIndex);
-        buttonConfig.setup.instance_id = instanceIndex;
+        buttonConfig.setup.instance_id = instanceIndex.toString();
         Klarna.InstantShopping.load(buttonConfig);
-        console.log(instanceIndex, buttonConfig);
     }
 
     this.updateInstances = function(buttonConfig) {
@@ -32,7 +31,6 @@ function KlButtonManager (buttonConfig) {
             instanceIndex += i;
             buttonConfig.setup.instance_id = instanceIndex;
             Klarna.InstantShopping.load(buttonConfig);
-            console.log(instanceIndex, buttonConfig);
         }
     };
 }
