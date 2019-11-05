@@ -15,16 +15,30 @@
  * limitations under the License.
  */
 
-function klButtonManager (buttonConfig) {
+function KlButtonManager (buttonConfig) {
+    var instanceIndex = 0;
     var buttons = document.querySelectorAll('klarna-instant-shopping');
-    for(var i=0; i < buttons.length; i++) {
-        buttons[i].setAttribute('data-instance-id', i);
-        buttonConfig.setup.instance_id = i;
+    for(instanceIndex; instanceIndex < buttons.length; instanceIndex++) {
+        buttons[instanceIndex].setAttribute('data-instance-id', instanceIndex);
+        buttonConfig.setup.instance_id = instanceIndex;
         Klarna.InstantShopping.load(buttonConfig);
+        console.log(instanceIndex, buttonConfig);
     }
+
+    this.updateInstances = function(buttonConfig) {
+        buttons = document.querySelectorAll('klarna-instant-shopping');
+        instanceIndex++;
+        for(var i=0; i < buttons.length; i++) {
+            instanceIndex += i;
+            buttonConfig.setup.instance_id = instanceIndex;
+            Klarna.InstantShopping.load(buttonConfig);
+            console.log(instanceIndex, buttonConfig);
+        }
+    };
 }
+var klButtonManager = null;
 if (!window.klarnaAsyncCallback) {
     window.klarnaAsyncCallback = function () {
-        new klButtonManager(klButtonManagerConfig);
+        klButtonManager = new KlButtonManager(klButtonManagerConfig);
     };
 }

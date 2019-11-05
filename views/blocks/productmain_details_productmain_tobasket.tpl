@@ -1,5 +1,4 @@
 [{$smarty.block.parent}]
-
 [{if !$oDetailsProduct->isNotBuyable() && $oViewConf->isKlarnaCheckoutEnabled() && $oViewConf->addBuyNow()}]
     <div>
         <a class="btn btn-primary largeButton submitButton klarna-express-button [{if !$blCanBuy}]disabled[{/if}]" href="#">
@@ -12,8 +11,18 @@
 
 [{assign var="oKlarnaButton" value=$oViewConf->getInstantShoppingButton()}]
 [{if $oKlarnaButton}]
-    <p><klarna-instant-shopping/></p>
+    <p><klarna-instant-shopping></p>
+    [{if $smarty.get.oxwparent === 'details'}]
+        [{* check if ajax request*}]
+        [{capture assign="updateJs"}]
+            klButtonManager.updateInstances([{$oKlarnaButton->getConfig($oDetailsProduct)|@json_encode}]);
+        [{/capture}]
+        [{oxscript add=$updateJs}]
+    [{/if}]
 [{/if}]
+
+
+
 
 [{assign var="aKlPromotion" value=$oViewConf->getOnSitePromotionInfo('sKlarnaCreditPromotionProduct', $oDetailsProduct)}]
 [{if $aKlPromotion}]

@@ -16,7 +16,13 @@ class Button
     const ENV_TEST = 'playground';
     const ENV_LIVE = 'production';
 
-    public function getConfig(Article $product = null) {
+    public function getConfig(Article $product = null, $update = false) {
+
+        if ($update) {
+            return [
+                "order_lines" => $this->getOrderLines($product)
+            ];
+        }
         $config = [
             "setup"=> [
                 "key" => $this->getButtonKey(),
@@ -28,7 +34,20 @@ class Button
             ],
             "locale" => KlarnaConsts::getLocale(),
             "merchant_urls" => $this->getMerchantUrls(),
-            "order_lines" => $this->getOrderLines($product)
+            "order_lines" => $this->getOrderLines($product),
+
+//            "shipping_options" => [
+//                [
+//                    "id" => "oxidstandard",
+//                    "name" => "DHL",
+//                    "description" => "DHL Standard Versand",
+//                    "price" => 1250,
+//                    "tax_amount" => 250,
+//                    "tax_rate" => 2500,
+//                    "preselected" => true,
+//                    "shipping_method" => "BoxReg"
+//                ]
+//            ]
         ];
 
         return array_merge(
