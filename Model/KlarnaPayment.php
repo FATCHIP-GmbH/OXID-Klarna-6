@@ -75,6 +75,8 @@ class KlarnaPayment extends KlarnaPayment_parent
      */
     const KLARNA_SOFORT = 'klarna_sofort';
 
+    const KLARNA_INSTANT_SHOPPING = 'klarna_instant_shopping';
+
     /**
      * Get list of Klarna payments ids
      *

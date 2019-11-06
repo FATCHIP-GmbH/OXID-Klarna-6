@@ -7,14 +7,20 @@ namespace TopConcepts\Klarna\Core\InstantShopping;
 use OxidEsales\Eshop\Application\Model\Article;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\UtilsView;
+use TopConcepts\Klarna\Core\Exception\KlarnaConfigException;
 use TopConcepts\Klarna\Core\KlarnaConsts;
 use TopConcepts\Klarna\Core\KlarnaUtils;
+use TopConcepts\Klarna\Core\ShippingAdapter;
+use TopConcepts\Klarna\Model\KlarnaPayment;
 use TopConcepts\Klarna\Model\KlarnaUser;
 
 class Button
 {
     const ENV_TEST = 'playground';
     const ENV_LIVE = 'production';
+
+    protected $errors = [];
 
     public function getConfig(Article $product = null, $update = false) {
 
@@ -34,26 +40,24 @@ class Button
             ],
             "locale" => KlarnaConsts::getLocale(),
             "merchant_urls" => $this->getMerchantUrls(),
-            "order_lines" => $this->getOrderLines($product),
-
-//            "shipping_options" => [
-//                [
-//                    "id" => "oxidstandard",
-//                    "name" => "DHL",
-//                    "description" => "DHL Standard Versand",
-//                    "price" => 1250,
-//                    "tax_amount" => 250,
-//                    "tax_rate" => 2500,
-//                    "preselected" => true,
-//                    "shipping_method" => "BoxReg"
-//                ]
-//            ]
+            "order_lines" => $this->getOrderLines($product)
         ];
 
-        return array_merge(
-            $config,
-            $this->getPurchaseInfo()
-        );
+        $shippingOptions = [];
+        try {
+            $shippingOptions["shipping_options"] = $this->getShippingOptions();
+        } catch (KlarnaConfigException $e) {
+            $this->errors[] = $e->getMessage();
+        }
+
+        if (count($this->errors) === 0) {
+            return array_merge(
+                $config,
+                $this->getPurchaseInfo(),
+                $shippingOptions
+            );
+        }
+        return false;
     }
 
     public function getMerchantUrls() {
@@ -120,6 +124,22 @@ class Button
 
         return $orderLines;
 
+    }
+
+    /**
+     * @return array|null
+     * @throws KlarnaConfigException
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
+     */
+    protected function getShippingOptions() {
+        $oSession = Registry::getSession();
+        $oShippingAdapter = oxNew(
+            ShippingAdapter::class,
+            $oSession->getUser(),
+            $oSession->getBasket()
+        );
+
+        return $oShippingAdapter->getShippingOptions(KlarnaPayment::KLARNA_INSTANT_SHOPPING);
     }
 
     protected function getEnvironment() {
