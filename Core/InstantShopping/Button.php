@@ -56,7 +56,7 @@ class Button
         );
     }
 
-    public static function getMerchantUrls() {
+    public function getMerchantUrls() {
         $shopBaseUrl = Registry::getConfig()->getSslShopUrl();
         return [
             "terms"             =>  $shopBaseUrl . "?cl=terms",
@@ -65,7 +65,7 @@ class Button
             "notification"      =>  $shopBaseUrl . "?cl=notification",
             "update"            =>  $shopBaseUrl . "?cl=update",
             "country_change"    =>  $shopBaseUrl . "?cl=country_change",
-            "place_order"       =>  $shopBaseUrl . "?cl=place_order"
+            "place_order"       =>  $shopBaseUrl . "?cl=KlarnaInstantShoppingController&fnc=placeOrder"
         ];
     }
 

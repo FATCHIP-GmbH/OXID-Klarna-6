@@ -4,6 +4,7 @@ namespace TopConcepts\Klarna\Controller\Admin;
 
 use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
+use TopConcepts\Klarna\Core\InstantShopping\Button;
 use TopConcepts\Klarna\Core\InstantShopping\HttpClient;
 use TopConcepts\Klarna\Core\KlarnaConsts;
 
@@ -92,10 +93,9 @@ class KlarnaInstantShopping extends KlarnaBaseConfig {
         $currency = isset($currencies[$defaultShopCountry]) ? $currencies[$defaultShopCountry] : 'EUR';
         $boolFilter = function ($i) { return (bool)$i; };
 
+        $button = oxNew(Button::class);
         return [
-            'merchant_urls' => [
-                'place_order' => $oConfig->getSslShopUrl() . 'cl=klarnaInstantShoppingDispatcher'
-            ],
+            'merchant_urls' => $button->getMerchantUrls(),
             'purchase_country' => $defaultShopCountry,
             'purchase_currency' => $currency,
             'options' => array_map($boolFilter, $oConfig->getConfigParam('aarrKlarnaISButtonSettings')) ?: [],

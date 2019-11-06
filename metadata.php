@@ -19,6 +19,7 @@ use TopConcepts\Klarna\Controller\Admin\KlarnaOrderOverview;
 use TopConcepts\Klarna\Controller\Admin\KlarnaOrders;
 use TopConcepts\Klarna\Controller\Admin\KlarnaPaymentMain;
 use TopConcepts\Klarna\Controller\Admin\KlarnaStart;
+use TopConcepts\Klarna\Controller\KlarnaInstantShoppingController;
 use TopConcepts\Klarna\Controller\KlarnaUserController;
 use TopConcepts\Klarna\Controller\KlarnaAcknowledgeController;
 use TopConcepts\Klarna\Controller\KlarnaAjaxController;
@@ -99,6 +100,7 @@ $aModule = array(
         'KlarnaEpmDispatcher'    => KlarnaEpmDispatcher::class,
         'KlarnaAcknowledge'      => KlarnaAcknowledgeController::class,
         'KlarnaValidate'         => KlarnaValidationController::class,
+        'KlarnaInstantShoppingController' => KlarnaInstantShoppingController::class
     ),
     'extend'      => array(
         // models
