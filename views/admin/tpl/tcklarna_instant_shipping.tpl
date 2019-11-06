@@ -123,10 +123,7 @@
                                                     [{oxmultilang ident="TCKLARNA_IS_BUTTON_PREVIEW"}]
                                                 </td>
                                                 <td class="button-preview" colspan="2">
-                                                    [{assign var="oKlarnaButton" value=$oViewConf->getGenericInstantShoppingButton()}]
-                                                    [{if $oKlarnaButton}]
-                                                        <p><klarna-instant-shopping style="pointer-events: none;"/></p>
-                                                    [{/if}]
+                                                    <p><klarna-instant-shopping style="pointer-events: none;"/></p>
                                                 </td>
                                             </tr>
                                             [{foreach from=$buttonPlacement item="pageName"}]
@@ -189,6 +186,7 @@
                                                     </td>
                                                 </tr>
                                             [{/foreach}]
+                                        </tbody>
                                     </table>
                             </td>
                         </tr>
@@ -267,7 +265,7 @@
 </script>
 <script>
     window.klarnaAsyncCallback = function () {
-        Klarna.InstantShopping.load([{$oViewConf->getGenericInstantShoppingButton()}]);
+        Klarna.InstantShopping.load([{$previewButtonConfig|@json_encode}]);
     };
 </script>
 <script src="https://x.klarnacdn.net/instantshopping/lib/v1/lib.js"></script>

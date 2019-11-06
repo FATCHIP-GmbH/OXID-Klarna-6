@@ -323,12 +323,6 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
         return (bool)KlarnaUtils::getShopConfVar('blKlarnaEnablePreFilling');
     }
 
-    public function getGenericInstantShoppingButton()
-    {
-        $button = oxNew(Button::class);
-        return json_encode($button->getGenericConfig());
-    }
-
     public function getInstantShoppingButton()
     {
         if ($this->tcKlarnaButton) {
@@ -342,11 +336,10 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
             $viewName = $oConfig->getTopActiveView()->getClassKey();
             $isActiveForCurrentView = isset($placementArray[$viewName]) ? (bool)$placementArray[$viewName] : false;
             if ($isActiveForCurrentView) {
-
-                return $this->tcKlarnaButton = oxNew(Button::class);
+                $this->tcKlarnaButton = oxNew(Button::class);
             }
         }
 
-        return null;
+        return $this->tcKlarnaButton;
     }
 }

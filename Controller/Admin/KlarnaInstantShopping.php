@@ -58,9 +58,12 @@ class KlarnaInstantShopping extends KlarnaBaseConfig {
         if ($this->isReplaceButtonRequest()) {
             $this->generateAndSaveButtonKey();
         }
+        $button = oxNew(Button::class);
+
         $this->addTplParam('buttonStyleOptions', $this->buttonStyleOptions);
         $this->addTplParam('buttonPlacement', $this->buttonPlacement);
         $this->addTplParam('buttonSettings', $this->buttonSettings);
+        $this->addTplParam('previewButtonConfig', $button->getGenericConfig());
 
         return $this->_sThisTemplate;
     }
