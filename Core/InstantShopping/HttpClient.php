@@ -95,7 +95,7 @@ class HttpClient extends KlarnaClientBase
         $requestBody = json_encode($requestParams);
         $oResponse = $this->post($url, $requestBody);
         $this->logKlarnaData(
-            'GetOrder',
+            'PlaceOrder',
             $requestBody,
             $url,
             $oResponse->body,
