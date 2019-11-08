@@ -67,7 +67,7 @@ class Button
             "push"              =>  $shopBaseUrl . "?cl=push",
             "confirmation"      =>  $shopBaseUrl . "?cl=confirmation",
             "notification"      =>  $shopBaseUrl . "?cl=notification",
-            "update"            =>  $shopBaseUrl . "?cl=update",
+            "update"            =>  $shopBaseUrl . "?cl=KlarnaInstantShoppingController&fnc=updateOrder",
             "country_change"    =>  $shopBaseUrl . "?cl=country_change",
             "place_order"       =>  $shopBaseUrl . "?cl=KlarnaInstantShoppingController&fnc=placeOrder"
         ];
