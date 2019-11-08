@@ -22,6 +22,7 @@ function KlButtonManager (buttonConfig) {
         buttons[instanceIndex].setAttribute('data-instance-id', instanceIndex);
         buttonConfig.setup.instance_id = instanceIndex.toString();
         Klarna.InstantShopping.load(buttonConfig);
+        console.log(buttonConfig);
     }
 
     this.updateInstances = function(buttonConfig) {
@@ -31,6 +32,7 @@ function KlButtonManager (buttonConfig) {
             instanceIndex += i;
             buttonConfig.setup.instance_id = instanceIndex;
             Klarna.InstantShopping.load(buttonConfig);
+            console.log(buttonConfig);
         }
     };
 }
