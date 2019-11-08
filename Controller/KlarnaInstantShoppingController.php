@@ -3,17 +3,26 @@
 
 namespace TopConcepts\Klarna\Controller;
 
+use OxidEsales\Eshop\Application\Model\User;
+use OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface;
+use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Exception\ArticleInputException;
 use OxidEsales\Eshop\Core\Exception\NoArticleException;
 use OxidEsales\Eshop\Core\Exception\OutOfStockException;
 use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Core\BasketAdapter;
+use TopConcepts\Klarna\Core\Exception\InvalidShippingException;
+use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Core\InstantShopping\HttpClient;
+use TopConcepts\Klarna\Model\KlarnaPayment;
 
 class KlarnaInstantShoppingController extends BaseCallbackController
 {
     /** @var HttpClient */
     protected $httpClient;
+
+    /** @var  DatabaseInterface */
+    protected $db;
 
     protected $actionRules = [
         'placeOrder' => [
@@ -29,31 +38,52 @@ class KlarnaInstantShoppingController extends BaseCallbackController
     {
         parent::init();
         $this->httpClient = HttpClient::getInstance();
+        $this->db = DatabaseProvider::getDb();
     }
 
+    /**
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
+     */
     public function placeOrder()
     {
-        // create new basket
-        $oBasket = Registry::getSession()->getBasket();
+        $oBasket = Registry::getSession()->getBasket();        // create new basket
+        $oBasket->setPayment(KlarnaPayment::KLARNA_INSTANT_SHOPPING);
+
+        //TODO: user object will be provided by UserAdapter/UserManager
+        $oUser = oxNew(User::class);
+
+        /** @var BasketAdapter $basketAdapter */
         $basketAdapter = oxNew(
             BasketAdapter::class,
             $oBasket,
+            $oUser,
             $this->actionData['order']
         );
 
+        $this->db->startTransaction();
         try {
             $basketAdapter
-                ->fillBasketFromOrderData()
+                ->buildBasketFromOrderData()
                 ->validateItems()
-                ->validateShipping();
-
-        } catch (OutOfStockException | ArticleInputException | NoArticleException $exception) {
+                ->validateShipping()
+            ;
+        } catch (OutOfStockException | ArticleInputException | NoArticleException | InvalidShippingException $exception) {
             $this->declineOrder($exception);
+            $this->db->rollbackTransaction();
             return;
         }
 
-        $this->approveOrder();
-        return;
+        //TODO: create order with pending status
+
+        try {
+            $this->approveOrder();
+        } catch (KlarnaClientException $exception) {
+            $this->db->rollbackTransaction();
+            return;
+        }
+
+        $this->db->commitTransaction();
     }
 
     protected function approveOrder()
@@ -67,10 +97,20 @@ class KlarnaInstantShoppingController extends BaseCallbackController
 
     /**
      * @param $exception \Exception
+     * @return array|bool|mixed
      */
     protected function declineOrder($exception)
     {
-        echo $exception->getMessage();
+        $declineData = [
+            'deny_message' => $exception->getMessage(),
+            'deny_redirect_url' => '',
+            'deny_code' => ''
+        ];
+
+        return $this->httpClient->declineOrder(
+            $this->actionData['authorization_token'],
+            $declineData
+        );
     }
 
     public function updateOrder()
@@ -98,94 +138,14 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         exit;
     }
 
-//    /**
-//     * Request Mock
-//     * @return array
-//     */
-//    protected function getRequestData()
-//    {
-//        $body = '
-//{
-//  "authorization_token": "870ce23e-86e7-4b84-affa-b34feb50c63c",
-//  "button_key": "426eb5ea-7fd1-4cae-b86b-6083c6323a9c",
-//  "order": {
-//    "name": "skonhetsmagasinet",
-//    "purchase_country": "DE",
-//    "purchase_currency": "EUR",
-//    "locale": "de-DE",
-//    "billing_address": {
-//      "given_name": "JÃ¶rg",
-//      "family_name": "WeiÃ",
-//      "email": "ferreira@topconcepts.com",
-//      "title": "Herr",
-//      "street_address": "Karnapp 25/1",
-//      "postal_code": "21079",
-//      "city": "Hamburg",
-//      "phone": "+4930306900",
-//      "country": "DE"
-//    },
-//    "shipping_address": {
-//      "given_name": "JÃ¶rg",
-//      "family_name": "WeiÃ",
-//      "email": "ferreira@topconcepts.com",
-//      "title": "Herr",
-//      "street_address": "Karnapp 25/1",
-//      "postal_code": "21079",
-//      "city": "Hamburg",
-//      "phone": "+4930306900",
-//      "country": "DE"
-//    },
-//    "order_amount": 126250,
-//    "order_tax_amount": 25250,
-//    "order_lines": [
-//      {
-//        "type": "physical",
-//        "reference": "0702-85-853-6-3",
-//        "name": "Kuyichi Jeans ANNA",
-//        "quantity": 1,
-//        "unit_price": 9290,
-//        "tax_rate": 1900,
-//        "total_amount": 9290,
-//        "total_discount_amount": 0,
-//        "total_tax_amount": 1483,
-//        "image_url": "http://demohost.topconcepts.net/arek/klarna/ce_620/source/out/pictures/generated/product/1/540_340_75/front_z1(4)sb.jpg"
-//      },
-//      {
-//        "quantity": 1,
-//        "unit_price": 1250,
-//        "total_amount": 1250,
-//        "type": "shipping_fee",
-//        "reference": "oxidstandard",
-//        "name": "DHL",
-//        "tax_rate": 2500,
-//        "total_tax_amount": 250,
-//        "product_attributes": []
-//      }
-//    ],
-//    "merchant_urls": {
-//      "terms": "https://demoklarnacheckout.topconcepts.com/4_2_1/ce_4103/_terms.html",
-//      "confirmation": "http://demohost.topconcepts.net/hugo/klarna/ce_613/source/out/test.html",
-//      "place_order": "https://engu58jr2lr4p.x.pipedream.net/"
-//    },
-//    "customer": {
-//      "date_of_birth": "1980-01-01",
-//      "title": "Herr",
-//      "gender": "male"
-//    },
-//    "integrator_url": "http://demohost.topconcepts.net/hugo/klarna/ce_613/source/out/test.html",
-//    "selected_shipping_option": {
-//      "id": "oxidstandard",
-//      "name": "DHL",
-//      "price": 1250,
-//      "tax_amount": 250,
-//      "tax_rate": 2500,
-//      "preselected": false,
-//      "shipping_method": "box-reg"
-//    }
-//  }
-//}
-//';
-//        return (array)json_decode($body, true);
-//    }
+    /**
+     * Request Mock
+     * @return array
+     */
+    protected function getRequestData()
+    {
+        $body = file_get_contents(OX_BASE_PATH . '../klarna_requests/place_order.json');
+        return (array)json_decode($body, true);
+    }
 
 }

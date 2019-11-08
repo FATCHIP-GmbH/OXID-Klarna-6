@@ -49,7 +49,7 @@ abstract class BaseCallbackController extends BaseController
                 0
             );
         }
-
+        exit;
         // render response;
     }
 

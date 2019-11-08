@@ -6,16 +6,22 @@ namespace TopConcepts\Klarna\Core;
 
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\BasketItem;
+use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Exception\ArticleInputException;
 use OxidEsales\Eshop\Core\Exception\NoArticleException;
 use OxidEsales\Eshop\Core\Exception\OutOfStockException;
 use TopConcepts\Klarna\Model\KlarnaBasket;
+use TopConcepts\Klarna\Model\KlarnaUser;
 
 class BasketAdapter
 {
+    const SHIPPING_KEY = 'shipping';
 
     /** @var Basket|KlarnaBasket  */
     protected $oBasket;
+
+    /** @var User|KlarnaUser */
+    protected $oUser;
 
     /** @var array Klarna order data */
     protected $orderData;
@@ -25,34 +31,33 @@ class BasketAdapter
     /**
      * BasketAdapter constructor.
      * @param Basket|KlarnaBasket $oBasket
+     * @param User $oUser
      * @param array $orderData
      */
-    public function __construct($oBasket, $orderData = [])
+    public function __construct(Basket $oBasket, User $oUser, $orderData = [])
     {
         $this->oBasket = $oBasket;
+        $this->oUser = $oUser;
         $this->orderData = $orderData;
     }
 
     /**
-     * Converts Klarna Order Data in
+     * Builds Basket with articles
+     * Sets Shipping id on the basket
      */
-    public function fillBasketFromOrderData()
+    public function buildBasketFromOrderData()
     {
         foreach ($this->orderData['order_lines'] as $klItem) {
             /** @var BasketItemAdapter $itemAdapter */
             $itemAdapter = oxNew(BasketItemAdapter::class, $klItem);
-
             if ($itemAdapter->isArticle()) {
                 $this->addItemToBasket(
                     $itemAdapter->prepareArticleData()
                 );
-//              $itemAdapter->validateArticlePrice($basketItem); // needs to be done after basket calculation
-
             } elseif ($itemAdapter->isShipping()) {
                 $this->setShipping($itemAdapter);
             }
         }
-
         $this->oBasket->calculateBasket();
 
         return $this;
@@ -94,19 +99,20 @@ class BasketAdapter
     protected function setShipping(BasketItemAdapter $itemAdapter)
     {
         $itemData = $itemAdapter->getItemData();
+        $this->itemAdapters[static::SHIPPING_KEY] = $itemAdapter;
         $this->oBasket->setShipping($itemData['reference']);
     }
 
     public function validateItems() {
         foreach ($this->oBasket->getContents() as $itemKey => $oBasketItem) {
             $this->getItemAdapter($itemKey)
-                ->validateArticlePrice($oBasketItem);
+                ->validateItemPrice($oBasketItem);
         }
         return $this;
     }
 
     /**
-     * @param $id
+     * @param $id string
      * @return BasketItemAdapter
      */
     protected function getItemAdapter($id)
@@ -116,7 +122,14 @@ class BasketAdapter
 
     public function validateShipping()
     {
-        // delegate it to shipping adapter
-        return $this;
+        /** @var ShippingAdapter $oShippingAdapter */
+        $oShippingAdapter = oxNew(
+            ShippingAdapter::class,
+            $this->oUser,
+            $this->oBasket
+        );
+        $oShippingAdapter->validateShipping(
+            $this->getItemAdapter(static::SHIPPING_KEY)
+        );
     }
 }

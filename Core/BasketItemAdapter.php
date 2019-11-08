@@ -40,7 +40,8 @@ class BasketItemAdapter
     public function prepareArticleData() {
         $viewName = getViewName('oxarticles');
         $sSQL = "SELECT oxid FROM {$viewName} WHERE OXACTIVE=1 AND OXARTNUM = ?";
-        $id = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC)->getOne($sSQL, array($this->itemData['reference']));
+        $id = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC)
+            ->getOne($sSQL, array($this->itemData['reference']));
         if ($id == false) {
             throw new NoArticleException();
         }
@@ -54,11 +55,11 @@ class BasketItemAdapter
      * @param BasketItem $oBasketItem
      * @throws ArticleInputException
      */
-    public function validateArticlePrice(BasketItem $oBasketItem)
+    public function validateItemPrice(BasketItem $oBasketItem)
     {
         $requestedItemPrice = $this->itemData['total_amount'] / 100;
-        if ($requestedItemPrice !==  $oBasketItem->getPrice()->getBruttoPrice()) {
-            throw new ArticleInputException('INVALID_ARTICLE_PRICE');
+        if ((float)$requestedItemPrice !==  $oBasketItem->getPrice()->getBruttoPrice()) {
+            throw new ArticleInputException('INVALID_ITEM_PRICE');
         }
     }
 
