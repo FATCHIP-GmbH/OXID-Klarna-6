@@ -123,8 +123,8 @@ class BasketItemAdapter extends BaseBasketItemAdapter
             )
         );
         $this->itemData['quantity_unit'] = 'pcs';
-        $aProcessedItem['product_url'] = $oArticle->tcklarna_getArticleUrl();
-        $aProcessedItem['image_url'] = $oArticle->tcklarna_getArticleImageUrl();
+        $this->itemData['product_url'] = $oArticle->tcklarna_getArticleUrl();
+        $this->itemData['image_url'] = $oArticle->tcklarna_getArticleImageUrl();
         $this->itemData['product_identifiers'] = array(
             'category_path'            => $oArticle->tcklarna_getArticleCategoryPath(),
             'global_trade_item_number' => $oArticle->tcklarna_getArticleEAN(),

@@ -51,7 +51,7 @@ class ShippingAdapter extends BasketCostAdapter
         return $this;
     }
 
-    public function getTitle()
+    public function getName()
     {
         return html_entity_decode($this->oActiveDeliverySet->getFieldData('oxtitle'), ENT_QUOTES);
     }
