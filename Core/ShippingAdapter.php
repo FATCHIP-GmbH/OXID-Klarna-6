@@ -4,34 +4,59 @@
 namespace TopConcepts\Klarna\Core;
 
 
-use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Country;
+use OxidEsales\Eshop\Application\Model\DeliverySet;
 use OxidEsales\Eshop\Application\Model\DeliverySetList;
-use OxidEsales\Eshop\Application\Model\User;
-use OxidEsales\Eshop\Core\Price;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Request;
 use OxidEsales\Eshop\Application\Model\PaymentList;
 use TopConcepts\Klarna\Core\Exception\InvalidShippingException;
 use TopConcepts\Klarna\Core\Exception\KlarnaConfigException;
-use TopConcepts\Klarna\Model\KlarnaBasket;
-use TopConcepts\Klarna\Model\KlarnaUser;
 
-class ShippingAdapter
+class ShippingAdapter extends BasketCostAdapter
 {
-    /** @var User|KlarnaUser */
-    protected $oUser;
-
-    /** @var Basket|KlarnaBasket */
-    protected $oBasket;
-
     /** @var  */
     protected $selectedShippingSetId;
 
+    protected $oActiveDeliverySet;
 
-    public function __construct($oUser, $oBasket) {
-        $this->oUser = $oUser;
-        $this->oBasket = $oBasket;
+    public function addItemToBasket()
+    {
+        $this->oBasket->setShipping(
+            $this->itemData['reference']
+        );
+    }
+
+    /**
+     * Resolves shippingId and related shipping set for basket or order object
+     * @param $iLang
+     */
+    public function prepareItemData($iLang)
+    {
+        $this->selectedShippingSetId = $this->oBasket->getShippingId();
+        if ((bool)$this->oOrder) {
+            $this->selectedShippingSetId = $this->oOrder->getFildData('oxdeltype');
+        }
+
+        $oDeliverySet = oxNew(DeliverySet::class);
+        if ($iLang) {
+            $oDeliverySet->loadInLang($iLang, $this->selectedShippingSetId);
+        } else {
+            $oDeliverySet->load($this->selectedShippingSetId);
+        }
+        $this->oActiveDeliverySet = $oDeliverySet;
+
+        parent::prepareItemData($iLang);
+    }
+
+    public function getTitle()
+    {
+        return html_entity_decode($this->oActiveDeliverySet->getFieldData('oxtitle'), ENT_QUOTES);
+    }
+
+    public function getReference()
+    {
+        return $this->selectedShippingSetId;
     }
 
     protected function getActiveShippingSet()
@@ -127,11 +152,9 @@ class ShippingAdapter
     /**
      * Validates shipping id and shipping cost
      * Requires calculated basket object
-     * @param BasketItemAdapter $shippingItemAdapter
      * @throws InvalidShippingException
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
-    public function validateShipping(BasketItemAdapter $shippingItemAdapter) {
+    public function validateItem() {
         $isValidShippingId = $this->isShippingForPayment(
             $this->oBasket->getShippingId(),
             $this->oBasket->getPaymentId(),
@@ -141,12 +164,6 @@ class ShippingAdapter
             throw new InvalidShippingException('INVALID_SHIPPING_ID');
         }
 
-        /** @var Price $oShippingCost */
-        $oShippingCost = $this->oBasket->tcklarna_calculateDeliveryCost();
-        $itemData = $shippingItemAdapter->getItemData();
-        $requestedShippingCost = $itemData['total_amount'] / 100;
-        if ((float)$requestedShippingCost !== $oShippingCost->getBruttoPrice()) {
-            throw new InvalidShippingException('INVALID_SHIPPING_COST');
-        }
+        parent::validateItem();
     }
 }

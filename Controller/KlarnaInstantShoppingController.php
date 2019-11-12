@@ -68,7 +68,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             $basketAdapter
                 ->buildBasketFromOrderData()
                 ->validateItems()
-                ->validateShipping()
+                //TODO: basket sum validation
             ;
         } catch (OutOfStockException | ArticleInputException | NoArticleException | InvalidShippingException $exception) {
             $this->declineOrder($exception);
@@ -79,8 +79,10 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         //TODO: create order with pending status
 
         try {
-            $this->approveOrder();
+
+            $resp = $this->approveOrder();
         } catch (KlarnaClientException $exception) {
+            // handle 404 and other errors
             $this->db->rollbackTransaction();
             return;
         }
