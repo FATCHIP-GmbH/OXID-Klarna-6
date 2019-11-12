@@ -39,6 +39,7 @@ class BasketAdapter
         $this->oBasket = $oBasket;
         $this->oUser = $oUser;
         $this->orderData = $orderData;
+        $this->oBasket->setBasketUser($oUser);
     }
 
     /**

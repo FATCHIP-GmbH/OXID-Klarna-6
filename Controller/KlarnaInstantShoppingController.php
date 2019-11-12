@@ -14,6 +14,7 @@ use TopConcepts\Klarna\Core\BasketAdapter;
 use TopConcepts\Klarna\Core\Exception\InvalidShippingException;
 use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Core\InstantShopping\HttpClient;
+use TopConcepts\Klarna\Core\KlarnaUserManager;
 use TopConcepts\Klarna\Model\KlarnaPayment;
 
 class KlarnaInstantShoppingController extends BaseCallbackController
@@ -47,11 +48,12 @@ class KlarnaInstantShoppingController extends BaseCallbackController
      */
     public function placeOrder()
     {
+
         $oBasket = Registry::getSession()->getBasket();        // create new basket
         $oBasket->setPayment(KlarnaPayment::KLARNA_INSTANT_SHOPPING);
 
-        //TODO: user object will be provided by UserAdapter/UserManager
-        $oUser = oxNew(User::class);
+        $userManager = oxNew(KlarnaUserManager::class);
+        $oUser = $userManager->initUser($this->requestData);
 
         /** @var BasketAdapter $basketAdapter */
         $basketAdapter = oxNew(
