@@ -146,7 +146,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
      * Request Mock
      * @return array
      */
-    protected function getRequestData()
+    protected function __getRequestData()
     {
         $body = file_get_contents(OX_BASE_PATH . '../klarna_requests/place_order.json');
         return (array)json_decode($body, true);
