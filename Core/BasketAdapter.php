@@ -140,6 +140,9 @@ class BasketAdapter
          * @var Price $oPrice
          */
         foreach($this->oBasket->getCosts() as $costKey => $oPrice) {
+            if(empty($oPrice)) {
+                continue;
+            }
             $itemAdapter = $this->createItemAdapterForType(['type' => $costKey], $oPrice);
             $this->itemAdapters[$costKey] = $itemAdapter;
 
@@ -180,5 +183,13 @@ class BasketAdapter
             $oItemAdapter->validateItem();
         }
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOrderData()
+    {
+        return $this->orderData;
     }
 }

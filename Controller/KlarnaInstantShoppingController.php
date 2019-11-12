@@ -117,6 +117,10 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         );
     }
 
+    /**
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
+     * @throws \OxidEsales\Eshop\Core\Exception\StandardException
+     */
     public function updateOrder()
     {
         $postJson = file_get_contents("php://input");
@@ -137,6 +141,22 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             exit;
         }
 
+        if($this->requestData['update_context'] == "specifications_selected") {//Product changes
+            $this->db->commitTransaction();
+            $this->updateResponse('{"shipping_options": [{
+                        "id": "oxidstandard",
+                        "name": "DHL",
+                        "description": "DHL Standard Versand",
+                        "price": 100,
+                        "tax_amount": 10,
+                        "tax_rate": 1000,
+                        "preselected": true,
+                        "shipping_method": "BoxReg"
+                    }]}');
+
+            exit;
+        }
+
         http_response_code(304);
 
         exit;
@@ -150,6 +170,13 @@ class KlarnaInstantShoppingController extends BaseCallbackController
     {
         $body = file_get_contents(OX_BASE_PATH . '../klarna_requests/place_order.json');
         return (array)json_decode($body, true);
+    }
+
+    protected function updateResponse($json)
+    {
+        header('Content-Type: application/json');
+        echo $json;
+        exit;
     }
 
 }

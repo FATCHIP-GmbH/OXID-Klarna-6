@@ -47,6 +47,8 @@ class ShippingAdapter extends BasketCostAdapter
         $this->oActiveDeliverySet = $oDeliverySet;
 
         parent::prepareItemData($iLang);
+
+        return $this;
     }
 
     public function getTitle()

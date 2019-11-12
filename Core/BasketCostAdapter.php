@@ -35,9 +35,8 @@ abstract class BasketCostAdapter extends BaseBasketItemAdapter
             $this->itemData['total_tax_amount'] = (int)($unitPrice - round($unitPrice / ($taxRate / 10000 + 1), 0));
             $this->itemData['unit_price'] = $unitPrice;
             $this->itemData['tax_rate'] = $taxRate;
+            $this->itemData = array_merge(static::DEFAULT_ITEM_DATA, $this->itemData);
         }
-
-        $this->itemData = array_merge(static::DEFAULT_ITEM_DATA, $this->itemData);
 
         return $this;
     }
