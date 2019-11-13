@@ -70,10 +70,17 @@
     [{/if}]
     [{if $aKlFooter.promotion}]
         <section>
-            <div style="margin-top: 10px">
+            <div id="footer-promotion">
                 [{$aKlFooter.promotion}]
             </div>
         </section>
+        <style>
+            #footer-promotion {
+                margin-top: 10px;
+                width: 50%;
+                height: 50%;
+            }
+        </style>
     [{/if}]
     [{/capture}]
 
