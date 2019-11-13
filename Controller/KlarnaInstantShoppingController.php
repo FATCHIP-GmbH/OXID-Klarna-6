@@ -33,6 +33,9 @@ class KlarnaInstantShoppingController extends BaseCallbackController
                 'authorization_token' => ['required', 'notEmpty ', 'extract'],
             ],
         ],
+        'updateOrder' => [
+            'log' => true,
+        ],
     ];
 
     public function init()
@@ -48,20 +51,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
      */
     public function placeOrder()
     {
-
-        $oBasket = Registry::getSession()->getBasket();        // create new basket
-        $oBasket->setPayment(KlarnaPayment::KLARNA_INSTANT_SHOPPING);
-
-        $userManager = oxNew(KlarnaUserManager::class);
-        $oUser = $userManager->initUser($this->requestData);
-
-        /** @var BasketAdapter $basketAdapter */
-        $basketAdapter = oxNew(
-            BasketAdapter::class,
-            $oBasket,
-            $oUser,
-            $this->actionData['order']
-        );
+        $basketAdapter = $this->createBasketAdapter();
 
         $this->db->startTransaction();
         try {
@@ -123,20 +113,26 @@ class KlarnaInstantShoppingController extends BaseCallbackController
      */
     public function updateOrder()
     {
-        $postJson = file_get_contents("php://input");
-        $info = json_decode($postJson, true);
-        if($info['update_context'] == "identification_updated") {
-            header('Content-Type: application/json');
-            echo '{"shipping_options": [{
-                        "id": "oxidstandard",
-                        "name": "DHL",
-                        "description": "DHL Standard Versand",
-                        "price": 100,
-                        "tax_amount": 10,
-                        "tax_rate": 1000,
-                        "preselected": true,
-                        "shipping_method": "BoxReg"
-                    }]}';
+        $this->actionData['order'] = $this->requestData;
+        /** @var BasketAdapter $basketAdapter */
+        $basketAdapter = $this->createBasketAdapter();
+
+        $this->db->startTransaction();
+        try {
+            $basketAdapter->buildBasketFromOrderData();
+//            $basketAdapter->validateItems();
+        } catch (OutOfStockException | ArticleInputException | NoArticleException | InvalidShippingException $exception) {
+            //roll back
+            $this->db->rollbackTransaction();
+            http_response_code(304);
+            exit;
+        }
+
+        if($this->requestData['update_context'] == "identification_updated") {//User info and address change
+            $basketAdapter->buildOrderLinesFromBasket();
+            $orderLines = $basketAdapter->getOrderData();
+            $this->db->commitTransaction();
+            $this->updateResponse(json_encode($orderLines));
 
             exit;
         }
@@ -157,19 +153,36 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             exit;
         }
 
-        http_response_code(304);
 
-        exit;
     }
 
-    /**
-     * Request Mock
-     * @return array
-     */
-    protected function __getRequestData()
+//    /**
+//     * Request Mock
+//     * @return array
+//     */
+//    protected function __getRequestData()
+//    {
+//        $body = file_get_contents(OX_BASE_PATH . '../klarna_requests/place_order.json');
+//        return (array)json_decode($body, true);
+//    }
+
+    protected function createBasketAdapter()
     {
-        $body = file_get_contents(OX_BASE_PATH . '../klarna_requests/place_order.json');
-        return (array)json_decode($body, true);
+        $oBasket = Registry::getSession()->getBasket();        // create new basket
+        $oBasket->setPayment(KlarnaPayment::KLARNA_INSTANT_SHOPPING);
+
+        $userManager = oxNew(KlarnaUserManager::class);
+        $oUser = $userManager->initUser($this->requestData);
+
+        /** @var BasketAdapter $basketAdapter */
+        $basketAdapter = oxNew(
+            BasketAdapter::class,
+            $oBasket,
+            $oUser,
+            $this->actionData['order']
+        );
+
+        return $basketAdapter;
     }
 
     protected function updateResponse($json)
