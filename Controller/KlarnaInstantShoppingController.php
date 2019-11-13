@@ -30,11 +30,11 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             'validator' => [
                 'order' => ['required', 'notEmpty ', 'extract'],
                 'authorization_token' => ['required', 'notEmpty ', 'extract'],
-            ],
+            ]
         ],
         'updateOrder' => [
             'log' => true,
-        ],
+        ]
     ];
 
     public function init()

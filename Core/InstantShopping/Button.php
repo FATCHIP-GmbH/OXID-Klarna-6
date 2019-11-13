@@ -6,7 +6,9 @@ namespace TopConcepts\Klarna\Core\InstantShopping;
 
 use OxidEsales\Eshop\Application\Model\Article;
 use OxidEsales\Eshop\Application\Model\Basket;
+use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\User;
+use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Core\BasketAdapter;
 use TopConcepts\Klarna\Core\Exception\KlarnaConfigException;
@@ -22,6 +24,12 @@ class Button
     const ENV_LIVE = 'production';
 
     protected $errors = [];
+
+    /** @var User  */
+    protected $oUser;
+
+    /** @var Basket */
+    protected $oBasket;
 
     public function getConfig(Article $product = null, $update = false) {
 
@@ -40,13 +48,13 @@ class Button
                 "theme" => $this->getButtonStyling()
             ],
             "locale" => KlarnaConsts::getLocale(),
-            "merchant_urls" => $this->getMerchantUrls(),
-            "order_lines" => $this->getOrderLines($product)
+            "merchant_urls" => $this->getMerchantUrls()
         ];
 
-        $shippingOptions = [];
+        $orderData = [];
         try {
-            $shippingOptions["shipping_options"] = $this->getShippingOptions();
+            $orderData["order_lines"] = $this->getOrderLines($product);
+            $orderData["shipping_options"] = $this->getShippingOptions($product);
         } catch (KlarnaConfigException $e) {
             $this->errors[] = $e->getMessage();
         }
@@ -55,7 +63,7 @@ class Button
             return array_merge(
                 $config,
                 $this->getPurchaseInfo(),
-                $shippingOptions
+                $orderData
             );
         }
         return false;
@@ -105,21 +113,11 @@ class Button
 
     protected function getOrderLines(Article $product = null) {
 
-        $oUser = Registry::getSession()->getUser();
-        if($product !== null) {
-            $oBasket = oxNew(Basket::class);
-            $oBasket->setBasketUser($oUser);
-            $oBasket->addToBasket($product->getId(), 1);
-            $oBasket->calculateBasket(true);
-        } else {
-            $oBasket = Registry::getSession()->getBasket();
-        }
-
         /** @var BasketAdapter $basketAdapter */
         $basketAdapter = oxNew(
             BasketAdapter::class,
-            $oBasket,
-            $oUser,
+            $this->getBasket($product),
+            $this->getUser(),
             []
         );
         $basketAdapter->buildOrderLinesFromBasket();
@@ -133,13 +131,13 @@ class Button
      * @throws KlarnaConfigException
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
-    protected function getShippingOptions() {
-        $oSession = Registry::getSession();
+    protected function getShippingOptions(Article $product = null) {
         $oShippingAdapter = oxNew(
             ShippingAdapter::class,
             [],
-            $oSession->getUser(),
-            $oSession->getBasket()
+            null,
+            $this->getBasket($product),
+            $this->getuser()
         );
 
         return $oShippingAdapter->getShippingOptions(KlarnaPayment::KLARNA_INSTANT_SHOPPING);
@@ -205,5 +203,37 @@ class Button
                 "country" => "DE",
             ],
         ];
+    }
+
+    protected function getUser()
+    {
+        $oUser = Registry::getSession()->getUser();
+        if (!$oUser) {
+            $oUser = oxNew(User::class);
+            $oCountry = oxNew(Country::class);
+            $countryISO = Registry::getConfig()->getConfigParam('sKlarnaDefaultCountry');
+            // set required fields on user object, so that User::getActiveCountry will return valid countryId
+            $oUser->oxuser__oxcountryid = new Field($oCountry->getIdByCode($countryISO));
+            $oUser->setId('tmp_button_user');
+        }
+        $this->oUser = $oUser;
+
+        return $this->oUser;
+    }
+
+    protected function getBasket(Article $product = null)
+    {
+        if($product !== null) {
+            $oBasket = oxNew(Basket::class);
+            $oBasket->setBasketUser($this->oUser);
+            $oBasket->addToBasket($product->getId(), 1);
+            $oBasket->calculateBasket(true);
+        } else {
+            $oBasket = Registry::getSession()->getBasket();
+        }
+
+        $this->oBasket = $oBasket;
+
+        return $this->oBasket;
     }
 }

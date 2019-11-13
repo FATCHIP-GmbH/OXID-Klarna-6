@@ -97,8 +97,11 @@ class BasketItemAdapter extends BaseBasketItemAdapter
     public function prepareItemData($iLang)
     {
         $this->itemData = static::DEFAULT_ITEM_DATA;
+        $this->itemData['merchant_data'] = [
+            'type' => $this->oItem->isBundle() ? static::BUNDLE_TYPE : static::BASKET_ITEM_TYPE,
+        ];
+        $this->itemData['type'] = $this->getKlarnaType();
         $oArticle = $this->getArticle($iLang);
-        $this->itemData['type'] = $this->oItem->isBundle() ? static::BUNDLE_TYPE : static::BASKET_ITEM_TYPE;
         $this->itemData['reference'] = $oArticle->getFieldData('OXARTNUM');
         $this->itemData['name'] = substr($oArticle->getFieldData('OXTITLE'), 0, 64);
         $this->itemData['quantity'] = (int)$this->oItem->getAmount();

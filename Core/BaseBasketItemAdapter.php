@@ -21,6 +21,17 @@ abstract class BaseBasketItemAdapter
     const DISCOUNT_TYPE = 'discount';
     const VOUCHER_TYPE = 'voucher';
 
+    const ITEM_TYPE_MAP = [
+        self::BASKET_ITEM_TYPE => 'physical',
+        self::BUNDLE_TYPE => 'physical',
+        self::SHIPPING_TYPE => 'shipping_fee',
+        self::WRAPPING_TYPE => 'surcharge',
+        self::GIFT_CARD_TYPE => 'gift_card',
+        self::PAYMENT_TYPE => 'surcharge',
+        self::DISCOUNT_TYPE => 'discount',
+        self::VOUCHER_TYPE => 'discount'
+    ];
+
     const ITEM_ADAPTER_CLASS_MAP = [
         self::BASKET_ITEM_TYPE => BasketItemAdapter::class,
         self::BUNDLE_TYPE => BasketItemAdapter::class,
@@ -112,6 +123,8 @@ abstract class BaseBasketItemAdapter
      */
     public function getItemData()
     {
+        $this->itemData['merchant_data'] = json_encode($this->itemData['merchant_data']);                               // encode merchant data
+
         return $this->itemData;
     }
 
@@ -121,7 +134,7 @@ abstract class BaseBasketItemAdapter
      * @return string
      */
     public function getItemKey() {
-        return $this->itemData['type'];
+        return $this->getType();
     }
 
     /**
@@ -130,7 +143,7 @@ abstract class BaseBasketItemAdapter
      */
     public function getType()
     {
-        return $this->itemData['type'];
+        return $this->itemData['merchant_data']['type'];
     }
 
     /**
@@ -150,5 +163,9 @@ abstract class BaseBasketItemAdapter
     protected function isValidItemData() {
         return isset($this->itemData['name'])
             && isset($this->itemData['reference']);
+    }
+
+    protected function getKlarnaType() {
+        return self::ITEM_TYPE_MAP[$this->getType()];
     }
 }

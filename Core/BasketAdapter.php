@@ -65,8 +65,8 @@ class BasketAdapter
     protected function createItemAdapterForType(array $orderLine, $oItem = null)
     {
         $adapterClassMap = BaseBasketItemAdapter::ITEM_ADAPTER_CLASS_MAP;
-        if (isset($orderLine['type']) && isset($adapterClassMap[$orderLine['type']])) {
-            return oxNew($adapterClassMap[$orderLine['type']],
+        if (isset($orderLine['merchant_data']['type'])) {
+            return oxNew($adapterClassMap[$orderLine['merchant_data']['type']],
                 $orderLine,
                 $oItem,
                 $this->oBasket,
@@ -74,7 +74,7 @@ class BasketAdapter
                 $this->oOrder
             );
         }
-        throw new StandardException('UNRECOGNIZED_ORDER_LINE_TYPE ' . $orderLine['type']);
+        throw new StandardException('UNRECOGNIZED_ORDER_LINE_TYPE ' .$orderLine['merchant_data']['type']);
     }
 
     /**
@@ -90,6 +90,7 @@ class BasketAdapter
     public function buildBasketFromOrderData()
     {
         foreach ($this->orderData['order_lines'] as $klItem) {
+            $klItem['merchant_data'] = json_decode($klItem['merchant_data'], true);                               // decode merchant_data
             /** @var BasketItemAdapter|ShippingAdapter $itemAdapter */
             $itemAdapter = $this->createItemAdapterForType($klItem, null);
             $itemAdapter->addItemToBasket();
@@ -143,7 +144,10 @@ class BasketAdapter
             if($oPrice === null) {
                 continue;
             }
-            $itemAdapter = $this->createItemAdapterForType(['type' => $costKey], $oPrice);
+            $itemAdapter = $this->createItemAdapterForType(
+                ['merchant_data' => ['type' => $costKey]],
+                $oPrice
+            );
             $this->itemAdapters[$costKey] = $itemAdapter;
 
             yield $itemAdapter;
