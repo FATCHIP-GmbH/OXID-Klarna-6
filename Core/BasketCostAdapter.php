@@ -26,7 +26,7 @@ abstract class BasketCostAdapter extends BaseBasketItemAdapter
             $taxRate = (int)($oBasketCost->getVat() * 100);
             $unitPrice = (int)($oBasketCost->getBruttoPrice() * 100);
             $quantity = 1;
-
+            $this->itemData['type'] = $this->getReference();
             $this->itemData['reference'] = $this->getReference();
             $this->itemData['name'] = $this->getTitle();
             $this->itemData['quantity'] = $quantity;
@@ -41,7 +41,7 @@ abstract class BasketCostAdapter extends BaseBasketItemAdapter
         return $this;
     }
 
-    abstract protected function getTitle();
+    abstract protected function getName();
 
     abstract protected function getReference();
 }

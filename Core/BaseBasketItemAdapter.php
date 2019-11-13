@@ -7,8 +7,8 @@ namespace TopConcepts\Klarna\Core;
 use OxidEsales\Eshop\Application\Model\BasketItem;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Application\Model\User;
-use OxidEsales\Eshop\Core\Exception\ArticleInputException;
 use OxidEsales\Eshop\Application\Model\Basket;
+use OxidEsales\Eshop\Core\Registry;
 
 abstract class BaseBasketItemAdapter
 {
@@ -25,6 +25,8 @@ abstract class BaseBasketItemAdapter
         self::BASKET_ITEM_TYPE => BasketItemAdapter::class,
         self::BUNDLE_TYPE => BasketItemAdapter::class,
         self::SHIPPING_TYPE => ShippingAdapter::class,
+        self::GIFT_CARD_TYPE => GiftCardAdapter::class,
+        self::PAYMENT_TYPE => PaymentAdapter::class,
     ];
 
     const DEFAULT_ITEM_DATA = [
@@ -39,7 +41,7 @@ abstract class BaseBasketItemAdapter
         'total_tax_amount'      => 0,
         'image_url'             => '',
         'product_identifiers'   => [],
-        'shipping_attributes'   => []
+//        'shipping_attributes'   => []
     ];
 
     /** @var array Klarna Order Line */
@@ -82,10 +84,14 @@ abstract class BaseBasketItemAdapter
      */
     public function addItemToOrderLines(&$orderLines, $iLang)
     {
-        $orderLines[] = $this
+        $itemData = $this
             ->prepareItemData($iLang)
             ->getItemData()
         ;
+
+        if ($this->isValidItemData()) {
+            $orderLines[] = $itemData;
+        }
     }
 
     /**
@@ -125,5 +131,24 @@ abstract class BaseBasketItemAdapter
     public function getType()
     {
         return $this->itemData['type'];
+    }
+
+    /**
+     * @param $number
+     *
+     * @return int
+     */
+    public function parseFloatAsInt($number)
+    {
+        return (int)(Registry::getUtils()->fRound($number));
+    }
+
+    /**
+     * Validates itemData
+     * @return bool
+     */
+    protected function isValidItemData() {
+        return isset($this->itemData['name'])
+            && isset($this->itemData['reference']);
     }
 }

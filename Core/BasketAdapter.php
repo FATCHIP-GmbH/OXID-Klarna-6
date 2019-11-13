@@ -74,7 +74,7 @@ class BasketAdapter
                 $this->oOrder
             );
         }
-        throw new StandardException('UNRECOGNIZED_ORDER_LINE_TYPE');
+        throw new StandardException('UNRECOGNIZED_ORDER_LINE_TYPE ' . $orderLine['type']);
     }
 
     /**
@@ -140,7 +140,7 @@ class BasketAdapter
          * @var Price $oPrice
          */
         foreach($this->oBasket->getCosts() as $costKey => $oPrice) {
-            if(empty($oPrice)) {
+            if($oPrice === null) {
                 continue;
             }
             $itemAdapter = $this->createItemAdapterForType(['type' => $costKey], $oPrice);

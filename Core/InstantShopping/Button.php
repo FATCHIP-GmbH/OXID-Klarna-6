@@ -5,8 +5,10 @@ namespace TopConcepts\Klarna\Core\InstantShopping;
 
 
 use OxidEsales\Eshop\Application\Model\Article;
+use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Registry;
+use TopConcepts\Klarna\Core\BasketAdapter;
 use TopConcepts\Klarna\Core\Exception\KlarnaConfigException;
 use TopConcepts\Klarna\Core\KlarnaConsts;
 use TopConcepts\Klarna\Core\KlarnaUtils;
@@ -102,26 +104,27 @@ class Button
     }
 
     protected function getOrderLines(Article $product = null) {
+
+        $oUser = Registry::getSession()->getUser();
         if($product !== null) {
-            $taxRate = KlarnaUtils::parseFloatAsInt($product->getPrice()->getVat() * 100);
-            $totalAmount = KlarnaUtils::parseFloatAsInt($product->getPrice()->getBruttoPrice() * 100);
-            $orderLines[] = [
-                "type" => "physical",
-                "reference" => $product->tcklarna_getArtNum(),
-                "name" => $product->tcklarna_getOrderArticleName(),
-                "quantity" => 1,
-                "unit_price" => KlarnaUtils::parseFloatAsInt($product->getPrice()->getBruttoPrice() * 100),
-                "tax_rate" => $taxRate,
-                "total_amount" => $totalAmount,
-                "total_discount_amount" => 0,
-                "total_tax_amount" => KlarnaUtils::parseFloatAsInt($totalAmount - round($totalAmount / ($taxRate / 10000 + 1), 0)),
-                "image_url" => $product->tcklarna_getArticleImageUrl()
-            ];
+            $oBasket = oxNew(Basket::class);
+            $oBasket->setBasketUser($oUser);
+            $oBasket->addToBasket($product->getId(), 1);
+            $oBasket->calculateBasket(true);
         } else {
-            $orderLines = current(Registry::getSession()->getBasket()->getKlarnaOrderLines());
+            $oBasket = Registry::getSession()->getBasket();
         }
 
-        return $orderLines;
+        /** @var BasketAdapter $basketAdapter */
+        $basketAdapter = oxNew(
+            BasketAdapter::class,
+            $oBasket,
+            $oUser,
+            []
+        );
+        $basketAdapter->buildOrderLinesFromBasket();
+
+        return $basketAdapter->getOrderData()['order_lines'];
 
     }
 
@@ -134,6 +137,7 @@ class Button
         $oSession = Registry::getSession();
         $oShippingAdapter = oxNew(
             ShippingAdapter::class,
+            [],
             $oSession->getUser(),
             $oSession->getBasket()
         );
