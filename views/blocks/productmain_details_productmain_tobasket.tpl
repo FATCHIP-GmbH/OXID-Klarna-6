@@ -11,9 +11,16 @@
 [{/if}]
 
 [{assign var="aKlPromotion" value=$oViewConf->getOnSitePromotionInfo('sKlarnaCreditPromotionProduct', $oDetailsProduct)}]
-[{if $aKlPromotion}]
+[{assign var="sKlarnaMessagingScript" value=$oViewConf->getOnSitePromotionInfo('sKlarnaMessagingScript')}]
+[{if $aKlPromotion and $sKlarnaMessagingScript|trim}]
     <div>
         [{$aKlPromotion}]
     </div>
     <div class="clear clearfix"></div>
 [{/if}]
+
+<style>
+    .klarna-express-button {
+        margin-bottom: 5px;
+    }
+</style>

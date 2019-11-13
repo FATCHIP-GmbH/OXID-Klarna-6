@@ -46,8 +46,7 @@
                 <tr>
                     <td>[{oxmultilang ident="TCKLARNA_ON_SITE_MESSAGING_SCRIPT"}]:</td>
                     <td class="input">
-                        <textarea id="klscript" name="confstrs[sKlarnaMessagingScript]" class="source">[{$confstrs.sKlarnaMessagingScript}]
-                        </textarea>
+                        <textarea id="klscript" name="confstrs[sKlarnaMessagingScript]" class="source">[{$confstrs.sKlarnaMessagingScript}]</textarea>
                     </td>
                     <td>
                         <span class="kl-tooltip" title="[{oxmultilang ident="TCKLARNA_ON_SITE_MESSAGING_SCRIPT_TOOLTIP"}]">
@@ -59,8 +58,7 @@
                 <tr>
                     <td>[{oxmultilang ident="TCKLARNA_CREDIT_PROMOTION_PRODUCT"}]:</td>
                     <td class="input">
-                        <textarea id="klproduct" name="confstrs[sKlarnaCreditPromotionProduct]" class="source">[{$confstrs.sKlarnaCreditPromotionProduct}]
-                        </textarea>
+                        <textarea id="klproduct" name="confstrs[sKlarnaCreditPromotionProduct]" class="source">[{$confstrs.sKlarnaCreditPromotionProduct}]</textarea>
                     </td>
                     <td>
                         <span class="kl-tooltip" title="[{oxmultilang ident="TCKLARNA_CREDIT_PROMOTION_PRODUCT_TOOLTIP"}]">
@@ -72,8 +70,7 @@
                 <tr>
                     <td>[{oxmultilang ident="TCKLARNA_CREDIT_PROMOTION_BASKET"}]:</td>
                     <td class="input">
-                        <textarea id="klbasket" name="confstrs[sKlarnaCreditPromotionBasket]" class="source">[{$confstrs.sKlarnaCreditPromotionBasket}]
-                        </textarea>
+                        <textarea id="klbasket" name="confstrs[sKlarnaCreditPromotionBasket]" class="source">[{$confstrs.sKlarnaCreditPromotionBasket}]</textarea>
                     </td>
                     <td>
                         <span class="kl-tooltip" title="[{oxmultilang ident="TCKLARNA_CREDIT_PROMOTION_BASKET_TOOLTIP"}]">
@@ -85,8 +82,7 @@
                 <tr>
                     <td>[{oxmultilang ident="TCKLARNA_TOP_STRIP_PROMOTION"}]:</td>
                     <td class="input">
-                        <textarea id="klstrip" name="confstrs[sKlarnaStripPromotion]" class="source">[{$confstrs.sKlarnaStripPromotion}]
-                        </textarea>
+                        <textarea id="klstrip" name="confstrs[sKlarnaStripPromotion]" class="source">[{$confstrs.sKlarnaStripPromotion}]</textarea>
                     </td>
                     <td>
                         <span class="kl-tooltip" title="[{oxmultilang ident="TCKLARNA_TOP_STRIP_PROMOTION_TOOLTIP"}]">
@@ -98,8 +94,7 @@
                 <tr>
                     <td>[{oxmultilang ident="TCKLARNA_FOOTER_PROMOTION"}]:</td>
                     <td class="input">
-                        <textarea id="klfooter" name="confstrs[sKlarnaFooterPromotion]" class="source">[{$confstrs.sKlarnaFooterPromotion}]
-                        </textarea>
+                        <textarea id="klfooter" name="confstrs[sKlarnaFooterPromotion]" class="source">[{$confstrs.sKlarnaFooterPromotion}]</textarea>
                     </td>
                     <td>
                         <span class="kl-tooltip" title="[{oxmultilang ident="TCKLARNA_FOOTER_PROMOTION_TOOLTIP"}]">
@@ -110,8 +105,7 @@
                 <tr>
                     <td>[{oxmultilang ident="TCKLARNA_BANNER_PROMOTION"}]:</td>
                     <td class="input">
-                        <textarea id="klbanner" name="confstrs[sKlarnaBannerPromotion]" class="source">[{$confstrs.sKlarnaBannerPromotion}]
-                        </textarea>
+                        <textarea id="klbanner" name="confstrs[sKlarnaBannerPromotion]" class="source">[{$confstrs.sKlarnaBannerPromotion}]</textarea>
                     </td>
                     <td>
                         <span class="kl-tooltip" title="[{oxmultilang ident="TCKLARNA_BANNER_PROMOTION_TOOLTIP"}]">

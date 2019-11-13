@@ -11,7 +11,8 @@
 [{/if}]
 
 [{assign var="aKlPromotion" value=$oViewConf->getOnSitePromotionInfo('sKlarnaCreditPromotionBasket')}]
-[{if $aKlPromotion}]
+[{assign var="sKlarnaMessagingScript" value=$oViewConf->getOnSitePromotionInfo('sKlarnaMessagingScript')}]
+[{if $aKlPromotion and $sKlarnaMessagingScript|trim}]
     <div>
         [{$aKlPromotion}]
     </div>
