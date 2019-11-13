@@ -57,8 +57,8 @@ class Button
             $orderData["shipping_options"] = $this->getShippingOptions($product);
         } catch (KlarnaConfigException $e) {
             $this->errors[] = $e->getMessage();
+            Registry::getLogger()->log('info', $e->getMessage(), [__METHOD__]);
         }
-
         if (count($this->errors) === 0) {
             return array_merge(
                 $config,
