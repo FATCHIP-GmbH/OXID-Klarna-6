@@ -10,7 +10,7 @@ use OxidEsales\Eshop\Application\Model\DeliverySetList;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Request;
 use OxidEsales\Eshop\Application\Model\PaymentList;
-use TopConcepts\Klarna\Core\Exception\InvalidShippingException;
+use TopConcepts\Klarna\Core\Exception\InvalidItemException;
 use TopConcepts\Klarna\Core\Exception\KlarnaConfigException;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 
@@ -121,9 +121,9 @@ class ShippingAdapter extends BasketCostAdapter
             if ($this->isShippingForPayment($shippingId, $paymentId, $basketPrice)) {
                 $method = clone $shippingMethod;
 
-                $price             = KlarnaUtils::parseFloatAsInt($oPrice->getBruttoPrice() * 100);
-                $tax_rate          = KlarnaUtils::parseFloatAsInt($oPrice->getVat() * 100);
-                $tax_amount        = KlarnaUtils::parseFloatAsInt($price - round($price / ($tax_rate / 10000 + 1), 0));
+                $price             = $this->formatAsInt($oPrice->getBruttoPrice());
+                $tax_rate          = $this->formatAsInt($oPrice->getVat());
+                $tax_amount        = $this->calcTax($price, $tax_rate);
                 $shippingOptions[] = array(
                     "id"          => $shippingId,
                     "name"        => html_entity_decode($method->oxdeliveryset__oxtitle->value, ENT_QUOTES),
@@ -155,7 +155,7 @@ class ShippingAdapter extends BasketCostAdapter
     /**
      * Validates shipping id and shipping cost
      * Requires calculated basket object
-     * @throws InvalidShippingException
+     * @throws InvalidItemException
      */
     public function validateItem() {
         $isValidShippingId = $this->isShippingForPayment(
@@ -164,7 +164,7 @@ class ShippingAdapter extends BasketCostAdapter
             $this->oBasket->getPriceForPayment()
         );
         if ($isValidShippingId === false) {
-            throw new InvalidShippingException('INVALID_SHIPPING_ID');
+            throw new InvalidItemException('INVALID_SHIPPING_ID');
         }
 
         parent::validateItem();

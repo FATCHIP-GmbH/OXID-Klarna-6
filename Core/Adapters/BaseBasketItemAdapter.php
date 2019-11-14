@@ -147,13 +147,24 @@ abstract class BaseBasketItemAdapter
     }
 
     /**
+     * Format to Klarna value
      * @param $number
-     *
      * @return int
      */
-    public function parseFloatAsInt($number)
+    public function formatAsInt($number)
     {
-        return (int)(Registry::getUtils()->fRound($number));
+        return Registry::getUtils()->fRound($number) * 100;
+    }
+
+    /**
+     * Calculate tax on Klarna values
+     * @param int $total
+     * @param int $rate
+     * @return float
+     */
+    public function calcTax(int $total, int $rate)
+    {
+        return round($total - ($total * 10000 / (10000 + $rate)));
     }
 
     /**

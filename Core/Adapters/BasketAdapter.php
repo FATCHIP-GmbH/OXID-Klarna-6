@@ -13,7 +13,7 @@ use OxidEsales\Eshop\Core\Exception\NoArticleException;
 use OxidEsales\Eshop\Core\Exception\OutOfStockException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Price;
-use TopConcepts\Klarna\Core\Exception\InvalidShippingException;
+use TopConcepts\Klarna\Core\Exception\InvalidItemException;
 use TopConcepts\Klarna\Core\Exception\KlarnaBasketTooLargeException;
 use TopConcepts\Klarna\Model\KlarnaBasket;
 use TopConcepts\Klarna\Model\KlarnaUser;
@@ -179,7 +179,7 @@ class BasketAdapter
     /**
      * @return $this
      * @throws ArticleInputException
-     * @throws InvalidShippingException
+     * @throws InvalidItemException
      */
     public function validateItems() {
         foreach ($this->itemAdapters as $oItemAdapter) {

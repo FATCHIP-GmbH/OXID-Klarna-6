@@ -112,19 +112,13 @@ class BasketItemAdapter extends BaseBasketItemAdapter
             } else {
                 $oBasketUnitPrice = $this->oItem->getUnitPrice();
             }
-            $this->itemData['unit_price'] = (int)($this->oItem->getRegularUnitPrice()->getBruttoPrice() * 100);
-            $basketUnitPrice = (int)($oBasketUnitPrice->getBruttoPrice() * 100);
+            $this->itemData['unit_price'] = $this->formatAsInt($this->oItem->getRegularUnitPrice()->getBruttoPrice());
+            $basketUnitPrice = $this->formatAsInt($oBasketUnitPrice->getBruttoPrice());
         }
         $this->itemData['total_discount_amount'] = ($this->itemData['unit_price'] - $basketUnitPrice) * $this->itemData['quantity'];
         $this->itemData['total_amount'] = $basketUnitPrice * $this->itemData['quantity'];
-        $this->itemData['tax_rate'] = (int)($this->oItem->getUnitPrice()->getVat() * 100);
-        $this->itemData['total_tax_amount'] = (int)(
-            $this->itemData['total_amount'] -
-            round(
-                $this->itemData['total_amount'] / ($this->itemData['tax_rate'] / 10000 + 1),
-                0
-            )
-        );
+        $this->itemData['tax_rate'] = $this->formatAsInt($this->oItem->getUnitPrice()->getVat());
+        $this->itemData['total_tax_amount'] = $this->calcTax($this->itemData['total_amount'], $this->itemData['tax_rate']);
         $this->itemData['quantity_unit'] = 'pcs';
         $this->itemData['product_url'] = $oArticle->tcklarna_getArticleUrl();
         $this->itemData['image_url'] = $oArticle->tcklarna_getArticleImageUrl();
@@ -144,8 +138,8 @@ class BasketItemAdapter extends BaseBasketItemAdapter
      */
     public function validateItem()
     {
-        $requestedItemPrice = $this->itemData['total_amount'] / 100;
-        if ((float)$requestedItemPrice !== $this->oItem->getPrice()->getBruttoPrice()) {
+        $validPrice = $this->formatAsInt($this->oItem->getPrice()->getBruttoPrice());
+        if ($this->itemData['total_amount'] !== $validPrice) {
             throw new ArticleInputException('INVALID_ITEM_PRICE');
         }
     }

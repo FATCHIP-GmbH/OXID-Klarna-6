@@ -9,8 +9,8 @@ use OxidEsales\Eshop\Core\Exception\ArticleInputException;
 use OxidEsales\Eshop\Core\Exception\NoArticleException;
 use OxidEsales\Eshop\Core\Exception\OutOfStockException;
 use OxidEsales\Eshop\Core\Registry;
-use TopConcepts\Klarna\Core\BasketAdapter;
-use TopConcepts\Klarna\Core\Exception\InvalidShippingException;
+use TopConcepts\Klarna\Core\Adapters\BasketAdapter;
+use TopConcepts\Klarna\Core\Exception\InvalidItemException;
 use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Core\InstantShopping\HttpClient;
 use TopConcepts\Klarna\Core\KlarnaUserManager;
@@ -59,7 +59,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
                 ->validateItems()
                 //TODO: basket sum validation
             ;
-        } catch (OutOfStockException | ArticleInputException | NoArticleException | InvalidShippingException $exception) {
+        } catch (OutOfStockException | ArticleInputException | NoArticleException | InvalidItemException $exception) {
             $this->declineOrder($exception);
             $this->db->rollbackTransaction();
             return;
@@ -120,7 +120,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         try {
             $basketAdapter->buildBasketFromOrderData();
 //            $basketAdapter->validateItems();
-        } catch (OutOfStockException | ArticleInputException | NoArticleException | InvalidShippingException $exception) {
+        } catch (OutOfStockException | ArticleInputException | NoArticleException | InvalidItemException $exception) {
             //roll back
             $this->db->rollbackTransaction();
             http_response_code(304);
