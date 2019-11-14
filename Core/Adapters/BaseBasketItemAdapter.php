@@ -51,8 +51,8 @@ abstract class BaseBasketItemAdapter
         'total_discount_amount' => 0,
         'total_tax_amount'      => 0,
         'image_url'             => '',
-        'product_identifiers'   => [],
-//        'shipping_attributes'   => []
+        'product_identifiers'   => null,
+        'shipping_attributes'   => null
     ];
 
     /** @var array Klarna Order Line */
