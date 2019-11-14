@@ -13,6 +13,7 @@ use OxidEsales\Eshop\Core\Exception\NoArticleException;
 use OxidEsales\Eshop\Core\Exception\OutOfStockException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Price;
+use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Core\Exception\InvalidItemException;
 use TopConcepts\Klarna\Core\Exception\KlarnaBasketTooLargeException;
 use TopConcepts\Klarna\Model\KlarnaBasket;
@@ -64,17 +65,26 @@ class BasketAdapter
      */
     protected function createItemAdapterForType(array $orderLine, $oItem = null)
     {
+        $typeClass = null;
         $adapterClassMap = BaseBasketItemAdapter::ITEM_ADAPTER_CLASS_MAP;
         if (isset($orderLine['merchant_data']['type'])) {
-            return oxNew($adapterClassMap[$orderLine['merchant_data']['type']],
-                $orderLine,
-                $oItem,
-                $this->oBasket,
-                $this->oUser,
-                $this->oOrder
-            );
+            $typeClass = $adapterClassMap[$orderLine['merchant_data']['type']];
+        } elseif (isset($orderLine['type'])) {
+            $typeMap = BaseBasketItemAdapter::ITEM_TYPE_MAP;
+            $typeName = array_search($orderLine['type'], $typeMap);
+            $typeClass = $adapterClassMap[$typeName];
+        } else {
+            Registry::getLogger()->log('error', 'UNRECOGNIZED_ORDER_LINE_TYPE', $orderLine);
+//        throw new StandardException('UNRECOGNIZED_ORDER_LINE_TYPE ' . $orderLine['merchant_data']['type']);
         }
-        throw new StandardException('UNRECOGNIZED_ORDER_LINE_TYPE ' .$orderLine['merchant_data']['type']);
+
+        return oxNew($typeClass,
+            $orderLine,
+            $oItem,
+            $this->oBasket,
+            $this->oUser,
+            $this->oOrder
+        );
     }
 
     /**
