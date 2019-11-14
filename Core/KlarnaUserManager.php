@@ -19,20 +19,20 @@ class KlarnaUserManager
     public function initUser($orderData)
     {
         /** @var User | KlarnaUser $oUser */
-        $user = oxNew(User::class);
-        $user->loadByEmail($orderData['billing_address']['email']);
+        $oUser = oxNew(User::class);
+        $oUser->loadByEmail($orderData['billing_address']['email']);
 
         //Build user info
         $oCountry = oxNew(Country::class);
-        $user->oxuser__oxcountryid = new Field(
+        $oUser->oxuser__oxcountryid = new Field(
             $oCountry->getIdByCode(strtoupper($orderData['billing_address']['country'])),
             Field::T_RAW
         );
 
-        $user->assign(KlarnaFormatter::klarnaToOxidAddress($orderData['order'], 'billing_address'));
+        $oUser->assign(KlarnaFormatter::klarnaToOxidAddress($orderData['order'], 'billing_address'));
 
         Registry::getSession()->setUser($oUser);
 
-        return $user;
+        return $oUser;
     }
 }

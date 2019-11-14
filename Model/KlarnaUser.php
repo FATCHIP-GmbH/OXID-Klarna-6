@@ -272,7 +272,8 @@ class KlarnaUser extends KlarnaUser_parent
             }
         } else {
             $this->_type = self::NOT_EXISTING;
-            $this->setFakeUserId();
+            $this->setId();
+//            $this->setFakeUserId();
         }
 
         if(empty($this->oxuser__oxrights->value)){
