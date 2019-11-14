@@ -22,7 +22,7 @@ abstract class BasketCostAdapter extends BaseBasketItemAdapter
     public function prepareItemData($iLang)
     {
         $oBasketCost = $this->oBasket->getCosts($this->getType());
-        if (($oBasketCost)) {
+        if ($oBasketCost) {
             $taxRate = $this->formatAsInt($oBasketCost->getVat());
             $unitPrice = $this->formatAsInt($oBasketCost->getBruttoPrice());
             $quantity = 1;

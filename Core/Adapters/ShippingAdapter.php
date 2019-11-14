@@ -19,7 +19,7 @@ class ShippingAdapter extends BasketCostAdapter
     /** @var  */
     protected $selectedShippingSetId;
 
-    protected $oActiveDeliverySet;
+    protected $oDeliverySet;
 
     public function addItemToBasket()
     {
@@ -45,7 +45,7 @@ class ShippingAdapter extends BasketCostAdapter
         } else {
             $oDeliverySet->load($this->selectedShippingSetId);
         }
-        $this->oActiveDeliverySet = $oDeliverySet;
+        $this->oDeliverySet = $oDeliverySet;
 
         parent::prepareItemData($iLang);
 
@@ -54,7 +54,7 @@ class ShippingAdapter extends BasketCostAdapter
 
     public function getName()
     {
-        return html_entity_decode($this->oActiveDeliverySet->getFieldData('oxtitle'), ENT_QUOTES);
+        return html_entity_decode($this->oDeliverySet->getFieldData('oxtitle'), ENT_QUOTES);
     }
 
     public function getReference()
@@ -114,15 +114,14 @@ class ShippingAdapter extends BasketCostAdapter
         }
 
         $this->selectedShippingSetId = $this->oBasket->getShippingId();
-        foreach ($allSets as $shippingId => $shippingMethod) {
+        foreach ($allSets as $shippingId => $oDeliverySet) {
             $this->oBasket->setShipping($shippingId);
-            $oPrice      = $this->oBasket->tcklarna_calculateDeliveryCost();
+            $oCost = $this->oBasket->tcklarna_calculateDeliveryCost();
             $basketPrice = $this->oBasket->getPriceForPayment() / $currency->rate;
             if ($this->isShippingForPayment($shippingId, $paymentId, $basketPrice)) {
-                $method = clone $shippingMethod;
-
-                $price             = $this->formatAsInt($oPrice->getBruttoPrice());
-                $tax_rate          = $this->formatAsInt($oPrice->getVat());
+                $method = clone $oDeliverySet;
+                $price             = $this->formatAsInt($oCost->getBruttoPrice());
+                $tax_rate          = $this->formatAsInt($oCost->getVat());
                 $tax_amount        = $this->calcTax($price, $tax_rate);
                 $shippingOptions[] = array(
                     "id"          => $shippingId,

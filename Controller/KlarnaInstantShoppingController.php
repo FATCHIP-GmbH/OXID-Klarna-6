@@ -119,7 +119,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         $this->db->startTransaction();
         try {
             $basketAdapter->buildBasketFromOrderData();
-//            $basketAdapter->validateItems();
+            $basketAdapter->validateItems();
         } catch (OutOfStockException | ArticleInputException | NoArticleException | InvalidItemException $exception) {
             //roll back
             $this->db->rollbackTransaction();

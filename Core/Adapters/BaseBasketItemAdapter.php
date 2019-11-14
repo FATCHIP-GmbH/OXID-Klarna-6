@@ -77,6 +77,12 @@ abstract class BaseBasketItemAdapter
         $this->oBasket = $oBasket;
         $this->oUser = $oUser;
         $this->oOrder = $oOrder;
+
+        // if no type set match type by className
+//        if (isset($this->itemData['merchant_data']['type']) === false) {
+//            $flippedClassMap = array_flip(self::ITEM_ADAPTER_CLASS_MAP);
+//            $this->itemData['merchant_data']['type'] = $flippedClassMap[get_called_class()];
+//        }
     }
 
     /**
@@ -97,6 +103,7 @@ abstract class BaseBasketItemAdapter
     {
         $itemData = $this
             ->prepareItemData($iLang)
+            ->encodeMerchantData()
             ->getItemData()
         ;
 
@@ -118,13 +125,18 @@ abstract class BaseBasketItemAdapter
      */
     abstract protected function prepareItemData($iLang);
 
+
+    public function encodeMerchantData()
+    {
+        $this->itemData['merchant_data'] = json_encode($this->itemData['merchant_data']);
+        return $this;
+    }
+
     /**
      * @return array
      */
     public function getItemData()
     {
-        $this->itemData['merchant_data'] = json_encode($this->itemData['merchant_data']);                               // encode merchant data
-
         return $this->itemData;
     }
 
