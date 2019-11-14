@@ -1,7 +1,7 @@
 <?php
 
 
-namespace TopConcepts\Klarna\Core;
+namespace TopConcepts\Klarna\Core\Adapters;
 
 
 use OxidEsales\Eshop\Application\Model\Country;
@@ -12,6 +12,7 @@ use OxidEsales\Eshop\Core\Request;
 use OxidEsales\Eshop\Application\Model\PaymentList;
 use TopConcepts\Klarna\Core\Exception\InvalidShippingException;
 use TopConcepts\Klarna\Core\Exception\KlarnaConfigException;
+use TopConcepts\Klarna\Core\KlarnaUtils;
 
 class ShippingAdapter extends BasketCostAdapter
 {

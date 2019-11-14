@@ -1,7 +1,7 @@
 <?php
 
 
-namespace TopConcepts\Klarna\Core;
+namespace TopConcepts\Klarna\Core\Adapters;
 
 
 class PaymentAdapter extends BasketCostAdapter

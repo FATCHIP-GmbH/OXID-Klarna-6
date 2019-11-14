@@ -1,7 +1,7 @@
 <?php
 
 
-namespace TopConcepts\Klarna\Core;
+namespace TopConcepts\Klarna\Core\Adapters;
 
 
 use OxidEsales\Eshop\Application\Model\Basket;

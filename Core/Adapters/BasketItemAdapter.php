@@ -1,7 +1,7 @@
 <?php
 
 
-namespace TopConcepts\Klarna\Core;
+namespace TopConcepts\Klarna\Core\Adapters;
 
 
 use OxidEsales\Eshop\Application\Model\Article;
@@ -20,7 +20,7 @@ class BasketItemAdapter extends BaseBasketItemAdapter
 {
 
     public function isBundle() {
-        return $this->itemData['type'] === static::BUNDLE_TYPE;
+        return $this->itemData['merchant_data']['type'] === static::BUNDLE_TYPE;
     }
 
     /**

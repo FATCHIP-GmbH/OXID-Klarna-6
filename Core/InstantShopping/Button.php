@@ -10,11 +10,11 @@ use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
-use TopConcepts\Klarna\Core\BasketAdapter;
+use TopConcepts\Klarna\Core\Adapters\ShippingAdapter;
+use TopConcepts\Klarna\Core\Adapters\BasketAdapter;
 use TopConcepts\Klarna\Core\Exception\KlarnaConfigException;
 use TopConcepts\Klarna\Core\KlarnaConsts;
 use TopConcepts\Klarna\Core\KlarnaUtils;
-use TopConcepts\Klarna\Core\ShippingAdapter;
 use TopConcepts\Klarna\Model\KlarnaPayment;
 use TopConcepts\Klarna\Model\KlarnaUser;
 
