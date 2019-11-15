@@ -165,7 +165,7 @@ abstract class BaseBasketItemAdapter
      */
     public function formatAsInt($number)
     {
-        return Registry::getUtils()->fRound($number) * 100;
+        return (int)(Registry::getUtils()->fRound($number) * 100);
     }
 
     /**
