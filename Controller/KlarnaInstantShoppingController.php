@@ -60,6 +60,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
                 //TODO: basket sum validation
             ;
         } catch (OutOfStockException | ArticleInputException | NoArticleException | InvalidItemException $exception) {
+            Registry::getLogger()->log('error', $exception->getMessage());
             $this->declineOrder($exception);
             $this->db->rollbackTransaction();
             return;

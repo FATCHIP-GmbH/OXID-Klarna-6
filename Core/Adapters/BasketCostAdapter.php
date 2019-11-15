@@ -5,6 +5,7 @@ namespace TopConcepts\Klarna\Core\Adapters;
 
 
 use OxidEsales\Eshop\Core\Price;
+use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Core\Exception\InvalidItemException;
 
 abstract class BasketCostAdapter extends BaseBasketItemAdapter

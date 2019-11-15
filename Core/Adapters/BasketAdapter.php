@@ -71,6 +71,7 @@ class BasketAdapter
         } elseif (isset($orderLine['type'])) {
             $typeMap = BaseBasketItemAdapter::ITEM_TYPE_MAP;
             $typeName = array_search($orderLine['type'], $typeMap);
+            $orderLine['merchant_data']['type'] = $typeName;
             $typeClass = $adapterClassMap[$typeName];
         } else {
             Registry::getLogger()->log('error', 'UNRECOGNIZED_ORDER_LINE_TYPE', $orderLine);

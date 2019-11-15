@@ -139,8 +139,8 @@ class BasketItemAdapter extends BaseBasketItemAdapter
     public function validateItem()
     {
         $validPrice = $this->formatAsInt($this->oItem->getPrice()->getBruttoPrice());
-        if ($this->itemData['total_amount'] !== $validPrice) {
-            throw new ArticleInputException('INVALID_ITEM_PRICE');
+        if ($this->itemData['total_amount'] !== (int)$validPrice) {
+            throw new ArticleInputException("INVALID_ITEM_PRICE:\n " . json_encode(['item' => $this->itemData], JSON_PRETTY_PRINT));
         }
     }
 }
