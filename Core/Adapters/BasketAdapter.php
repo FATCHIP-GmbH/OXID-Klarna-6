@@ -43,15 +43,14 @@ class BasketAdapter
      * @param Basket|KlarnaBasket $oBasket
      * @param User $oUser
      * @param array $orderData
-     * @param null $iLang
-     * @param bool $isOrderMgmt
+     * @param Order $oOrder
      */
-    public function __construct(Basket $oBasket, User $oUser, $orderData = [], $iLang = null, $oOrder = false)
+    public function __construct(Basket $oBasket, User $oUser, $orderData = [], Order $oOrder = null)
     {
         $this->oBasket = $oBasket;
         $this->oUser = $oUser;
         $this->orderData = $orderData;
-        $this->iLang = $iLang;
+        $this->iLang = $oOrder ? $oOrder->getFieldData('oxlang') : null;
         $this->oOrder = $oOrder;
         $this->oBasket->setBasketUser($oUser);
     }
@@ -100,7 +99,7 @@ class BasketAdapter
     public function buildBasketFromOrderData()
     {
         foreach ($this->orderData['order_lines'] as $klItem) {
-            $klItem['merchant_data'] = json_decode($klItem['merchant_data'], true);                               // decode merchant_data
+            $klItem['merchant_data'] = json_decode($klItem['merchant_data'], true);  // decode merchant_data
             /** @var BasketItemAdapter|ShippingAdapter $itemAdapter */
             $itemAdapter = $this->createItemAdapterForType($klItem, null);
             $itemAdapter->addItemToBasket();

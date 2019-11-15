@@ -207,6 +207,9 @@ class Button
 
     protected function getUser()
     {
+        if ($this->oUser) {
+            return $this->oUser;
+        }
         $oUser = Registry::getSession()->getUser();
         if (!$oUser) {
             $oUser = oxNew(User::class);
@@ -216,24 +219,25 @@ class Button
             $oUser->oxuser__oxcountryid = new Field($oCountry->getIdByCode($countryISO));
             $oUser->setId('tmp_button_user');
         }
-        $this->oUser = $oUser;
 
-        return $this->oUser;
+        return  $this->oUser = $oUser;
     }
 
     protected function getBasket(Article $product = null)
     {
+        if ($this->oBasket) {
+            return $this->oBasket;
+        }
         if($product !== null) {
             $oBasket = oxNew(Basket::class);
             $oBasket->setBasketUser($this->oUser);
             $oBasket->addToBasket($product->getId(), 1);
+            Registry::getSession()->deleteVariable("blAddedNewItem"); // prevent showing notification to user
             $oBasket->calculateBasket(true);
         } else {
             $oBasket = Registry::getSession()->getBasket();
         }
 
-        $this->oBasket = $oBasket;
-
-        return $this->oBasket;
+        return $this->oBasket = $oBasket;
     }
 }
