@@ -6,14 +6,13 @@ namespace TopConcepts\Klarna\Core\InstantShopping;
 
 use OxidEsales\Eshop\Application\Model\Article;
 use OxidEsales\Eshop\Application\Model\Basket;
-use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\User;
-use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Core\Adapters\ShippingAdapter;
 use TopConcepts\Klarna\Core\Adapters\BasketAdapter;
 use TopConcepts\Klarna\Core\Exception\KlarnaConfigException;
 use TopConcepts\Klarna\Core\KlarnaConsts;
+use TopConcepts\Klarna\Core\KlarnaUserManager;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Model\KlarnaPayment;
 use TopConcepts\Klarna\Model\KlarnaUser;
@@ -96,8 +95,7 @@ class Button
 
         if($user) {
             $sCountryISO = $user->resolveCountry();
-            $oBasket = Registry::getSession()->getBasket();
-            $currencyName = $oBasket->getBasketCurrency()->name;
+            $currencyName = Registry::getConfig()->getActShopCurrencyObject()->name;
             $data = $user->getKlarnaPaymentData();
             $data['billing_address']['country'] = strtoupper($data['billing_address']['country']);
 
@@ -120,6 +118,8 @@ class Button
             $this->getUser(),
             []
         );
+
+        $basketAdapter->storeBasket();
         $basketAdapter->buildOrderLinesFromBasket();
 
         return $basketAdapter->getOrderData()['order_lines'];
@@ -207,17 +207,16 @@ class Button
 
     protected function getUser()
     {
+
         if ($this->oUser) {
             return $this->oUser;
         }
         $oUser = Registry::getSession()->getUser();
         if (!$oUser) {
-            $oUser = oxNew(User::class);
-            $oCountry = oxNew(Country::class);
-            $countryISO = Registry::getConfig()->getConfigParam('sKlarnaDefaultCountry');
-            // set required fields on user object, so that User::getActiveCountry will return valid countryId
-            $oUser->oxuser__oxcountryid = new Field($oCountry->getIdByCode($countryISO));
-            $oUser->setId('tmp_button_user');
+            $userManager = oxNew(KlarnaUserManager::class);
+            $oUser = $userManager->initUser(['billing_address' =>
+                ['country' => Registry::getConfig()->getConfigParam('sKlarnaDefaultCountry')]]);
+
         }
 
         return  $this->oUser = $oUser;

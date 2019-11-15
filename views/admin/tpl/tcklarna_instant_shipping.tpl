@@ -41,7 +41,7 @@
                                                                    name="confbools[blKlarnaInstantShippingEnabled]"
                                                                    value="1" id="instant-shopping-toggle"
                                                                    [{if ($confbools.blKlarnaInstantShippingEnabled === true)}]checked[{/if}]/>
-                                                            <div class="toggle-control"></div>
+                                                            <div class="toggle-control" id="instant-shopping-control"></div>
                                                         </label>
                                                     </div>
                                                 </div>
@@ -142,7 +142,7 @@
                                                                        name="confaarrs[aarrKlarnaISButtonPlacement][[{$pageName}]]"
                                                                        value="1" id="button-placement-[{$pageName}]"
                                                                        [{if $confaarrs.aarrKlarnaISButtonPlacement.$pageName}]checked[{/if}]/>
-                                                                <div class="toggle-control"></div>
+                                                                <div class="toggle-control" id="toggle-button-placement-[{$pageName}]"></div>
                                                             </label>
                                                         </div>
                                                     </div>

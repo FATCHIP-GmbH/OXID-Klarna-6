@@ -18,6 +18,7 @@ use TopConcepts\Klarna\Core\Exception\InvalidItemException;
 use TopConcepts\Klarna\Core\Exception\KlarnaBasketTooLargeException;
 use TopConcepts\Klarna\Model\KlarnaBasket;
 use TopConcepts\Klarna\Model\KlarnaUser;
+use TopConcepts\Klarna\Model\KlarnaInstantBasket;
 
 class BasketAdapter
 {
@@ -205,5 +206,17 @@ class BasketAdapter
     public function getOrderData()
     {
         return $this->orderData;
+    }
+
+    public function storeBasket()
+    {
+        $tempBasket = oxNew(KlarnaInstantBasket::class);
+
+        $tempBasket->loadByUser($this->oUser->getId());
+        $tempBasket->setOxuserId($this->oUser->getId());
+        $tempBasket->setBasketInfo(serialize($this->oBasket));
+
+        $tempBasket->save();
+
     }
 }

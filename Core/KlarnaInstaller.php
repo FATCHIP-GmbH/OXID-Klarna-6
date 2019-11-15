@@ -322,7 +322,16 @@ class KlarnaInstaller extends ShopConfiguration
                 )
                   ENGINE = InnoDB
                   COMMENT ='Mapping of annonymous article numbers to their oxids'
-                  DEFAULT CHARSET = utf8;";
+                  DEFAULT CHARSET = utf8;
+                  
+            CREATE TABLE IF NOT EXISTS `tcklarna_instant_basket` (
+                `OXID` VARCHAR(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+                `OXUSERID` CHAR(32) NOT NULL DEFAULT '' COMMENT 'User id (oxuser)' COLLATE 'latin1_general_ci',
+                `BASKET_INFO` MEDIUMBLOB NOT NULL DEFAULT '',
+                PRIMARY KEY (`OXID`)
+            )
+            ENGINE = InnoDB
+            DEFAULT CHARSET = utf8;";
 
         $this->db->execute($sql);
 
