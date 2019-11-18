@@ -26,7 +26,7 @@ abstract class BaseCallbackController extends BaseController
     public function init() {
         parent::init();
         $this->requestData = $this->getRequestData();
-        Registry::getLogger()->log('info', 'NEW REQUEST', $this->requestData);
+        Registry::getLogger()->log('info', $this->getFncName() . " request:\n" , $this->requestData);
         if ($this->validateRequestData() === false) {
             die('Forbidden');
         }

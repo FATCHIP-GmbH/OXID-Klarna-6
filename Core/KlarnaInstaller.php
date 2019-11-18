@@ -328,6 +328,7 @@ class KlarnaInstaller extends ShopConfiguration
                 `OXID` VARCHAR(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
                 `OXUSERID` CHAR(32) NOT NULL DEFAULT '' COMMENT 'User id (oxuser)' COLLATE 'latin1_general_ci',
                 `BASKET_INFO` MEDIUMBLOB NOT NULL DEFAULT '',
+                `STATUS`  VARCHAR(32) NOT NULL DEFAULT 'OPENED',
                 PRIMARY KEY (`OXID`)
             )
             ENGINE = InnoDB

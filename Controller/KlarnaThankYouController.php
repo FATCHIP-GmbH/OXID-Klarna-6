@@ -18,11 +18,13 @@
 namespace TopConcepts\Klarna\Controller;
 
 
+use OxidEsales\EshopCommunity\Application\Controller\FrontendController;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
+use TopConcepts\Klarna\Model\KlarnaInstantBasket;
 
 class KlarnaThankYouController extends KlarnaThankYouController_parent
 {
@@ -58,5 +60,34 @@ class KlarnaThankYouController extends KlarnaThankYouController_parent
         KlarnaUtils::fullyResetKlarnaSession();
 
         return $render;
+    }
+
+
+    public function init() {
+        $instantShoppingBasketId = Registry::getSession()->getVariable('instant_shopping_basket_id');
+        if ($instantShoppingBasketId) {
+            /** @var KlarnaInstantBasket $oInstantShoppingBasket */
+            $oInstantShoppingBasket = oxNew(KlarnaInstantBasket::class);
+            if ($oInstantShoppingBasket->load($instantShoppingBasketId) && $oInstantShoppingBasket->isFinalized()) {
+                // copying basket object
+                $this->_oBasket = clone $oInstantShoppingBasket->getBasket();
+//                $c = new FrontendController();
+                FrontendController::init();
+                $this->clearInstantShopping($oInstantShoppingBasket);
+                return;
+            }
+        }
+
+        parent::init();
+
+    }
+
+    /**
+     * @param $oInstantShoppingBasket KlarnaInstantBasket
+     */
+    protected function clearInstantShopping($oInstantShoppingBasket)
+    {
+        Registry::getSession()->deleteVariable('instant_shopping_basket_id');
+        $oInstantShoppingBasket->delete();
     }
 }

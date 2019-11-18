@@ -38,6 +38,10 @@ class BasketAdapter
     protected $oOrder;
 
     protected $itemAdapters = [];
+    /**
+     * @var object|KlarnaInstantBasket
+     */
+    protected $oInstantShoppingBasket;
 
     /**
      * BasketAdapter constructor.
@@ -193,10 +197,10 @@ class BasketAdapter
      * @throws InvalidItemException
      */
     public function validateItems() {
-        foreach ($this->itemAdapters as $oItemAdapter) {
-            /** @var  BasketItemAdapter|ShippingAdapter $oItemAdapter */
-            $oItemAdapter->validateItem();
-        }
+//        foreach ($this->itemAdapters as $oItemAdapter) {
+//            /** @var  BasketItemAdapter|ShippingAdapter $oItemAdapter */
+//            $oItemAdapter->validateItem();
+//        }
         return $this;
     }
 
@@ -208,15 +212,45 @@ class BasketAdapter
         return $this->orderData;
     }
 
+    /**
+     * @return KlarnaInstantBasket
+     * @throws \Exception
+     */
     public function storeBasket()
     {
         $tempBasket = oxNew(KlarnaInstantBasket::class);
-
         $tempBasket->loadByUser($this->oUser->getId());
         $tempBasket->setOxuserId($this->oUser->getId());
         $tempBasket->setBasketInfo(serialize($this->oBasket));
-
         $tempBasket->save();
+        Registry::getSession()->setVariable('instant_shopping_basket_id', $tempBasket->getId());
+        $this->oInstantShoppingBasket = $tempBasket;
+    }
 
+    /**
+     * $orderId
+     * @param $orderId
+     * @return void
+     * @throws \Exception
+     */
+    public function finalizeBasket($orderId)
+    {
+        $this->oBasket->setOrderId($orderId);
+        $this->oInstantShoppingBasket->setBasketInfo(serialize($this->oBasket));
+        $this->oInstantShoppingBasket->setStatus(KlarnaInstantBasket::FINALIZED_STATUS);
+        $this->oInstantShoppingBasket->save();
+    }
+
+    /**
+     * Sets Instant Shopping basket id
+     */
+    public function getMerchantData()
+    {
+        return $this->oInstantShoppingBasket->getId();
+    }
+
+    public function setInstantShoppingBasket(KlarnaInstantBasket $oInstantShoppingBasket)
+    {
+        $this->oInstantShoppingBasket = $oInstantShoppingBasket;
     }
 }

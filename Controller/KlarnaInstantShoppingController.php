@@ -14,9 +14,9 @@ use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Core\Adapters\BasketAdapter;
 use TopConcepts\Klarna\Core\Exception\InvalidItemException;
-use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Core\InstantShopping\HttpClient;
 use TopConcepts\Klarna\Core\KlarnaUserManager;
+use TopConcepts\Klarna\Model\KlarnaInstantBasket;
 use TopConcepts\Klarna\Model\KlarnaPayment;
 
 class KlarnaInstantShoppingController extends BaseCallbackController
@@ -28,6 +28,9 @@ class KlarnaInstantShoppingController extends BaseCallbackController
 
     /** @var  DatabaseInterface */
     protected $db;
+
+    /** @var KlarnaUserManager */
+    protected $userManager;
 
     protected $actionRules = [
         'placeOrder' => [
@@ -47,6 +50,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         parent::init();
         $this->httpClient = HttpClient::getInstance();
         $this->db = DatabaseProvider::getDb();
+        $this->userManager = oxNew(KlarnaUserManager::class);
     }
 
     /**
@@ -55,18 +59,14 @@ class KlarnaInstantShoppingController extends BaseCallbackController
      */
     public function placeOrder()
     {
-        $userManager = oxNew(KlarnaUserManager::class);
-        $userManager->initUser($this->requestData);
-
+        $this->userManager->initUser($this->requestData['order']);
         $basketAdapter = $this->createBasketAdapter();
         $this->db->startTransaction();
         try {
-            $basketAdapter
-                ->buildBasketFromOrderData()
-                ->validateItems()
+            $basketAdapter->validateItems()
                 //TODO: basket sum validation
             ;
-            $this->prepareOrderExecution();
+            $orderId = $this->prepareOrderExecution();
             /** @var OrderController $oOrderController */
             $oOrderController = Registry::get(OrderController::class);
             $result = $oOrderController->execute();
@@ -74,6 +74,8 @@ class KlarnaInstantShoppingController extends BaseCallbackController
                 throw new StandardException('INVALID_ORDER_EXECUTE_RESULT: ' . $result);
             }
             $this->approveOrder();
+            $basketAdapter->finalizeBasket($orderId);
+
 
         } catch (\Exception $exception) {
             Registry::getLogger()->log('error', $exception->getMessage());
@@ -107,10 +109,11 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         }
         $_GET['sDeliveryAddressMD5'] = $sDelAddress;
 
-        $oUser = $this->getUser();
-        $oUser->oxuser__oxustid = new Field('');
-        $oUser->oxuser__oxfon = new Field('');
-        $oUser->oxuser__oxfax = new Field('');
+        $orderId = Registry::getUtilsObject()->generateUID();
+        Registry::getSession()->setVariable('sess_challenge', $orderId);
+
+        return $orderId;
+
     }
 
 
@@ -139,15 +142,13 @@ class KlarnaInstantShoppingController extends BaseCallbackController
     public function updateOrder()
     {
         $this->actionData['order'] = $this->requestData;
-
-        $userManager = oxNew(KlarnaUserManager::class);
-        $userManager->initUser($this->requestData);
+        $this->userManager->initUser($this->requestData);
 
         /** @var BasketAdapter $basketAdapter */
         $basketAdapter = $this->createBasketAdapter();
         $this->db->startTransaction();
         try {
-            $basketAdapter->buildBasketFromOrderData();
+//            $basketAdapter->buildBasketFromOrderData();
             $basketAdapter->validateItems();
         } catch (OutOfStockException | ArticleInputException | NoArticleException | InvalidItemException $exception) {
             //roll back
@@ -201,9 +202,12 @@ class KlarnaInstantShoppingController extends BaseCallbackController
      */
     protected function createBasketAdapter()
     {
-        $oBasket = Registry::getSession()->getBasket();        // create new basket
-        $oBasket->setPayment(KlarnaPayment::KLARNA_INSTANT_SHOPPING);
-
+        // Fetch saved Instant Shopping basket
+        $instantShoppingBasketId = $this->actionData['order']['merchant_data'];
+        $oInstantShoppingBasket = oxNew(KlarnaInstantBasket::class);
+        $oInstantShoppingBasket->load($instantShoppingBasketId);
+        $oBasket = $oInstantShoppingBasket->getBasket();
+        Registry::getSession()->setBasket($oBasket);
         /** @var BasketAdapter $basketAdapter */
         $basketAdapter = oxNew(
             BasketAdapter::class,
@@ -211,6 +215,8 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             $this->getUser(),
             $this->actionData['order']
         );
+
+        $basketAdapter->setInstantShoppingBasket($oInstantShoppingBasket);
 
         return $basketAdapter;
     }

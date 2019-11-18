@@ -29,8 +29,19 @@ class Button
 
     /** @var Basket */
     protected $oBasket;
+    /**
+     * @var object|BasketAdapter
+     */
+    protected  $basketAdapter;
 
     public function getConfig(Article $product = null, $update = false) {
+        /** @var BasketAdapter $basketAdapter */
+        $this->basketAdapter = oxNew(
+            BasketAdapter::class,
+            $this->getBasket($product),
+            $this->getUser(),
+            []
+        );
 
         if ($update) {
             return [
@@ -54,6 +65,7 @@ class Button
         try {
             $orderData["order_lines"] = $this->getOrderLines($product);
             $orderData["shipping_options"] = $this->getShippingOptions($product);
+            $orderData["merchant_data"] = $this->basketAdapter->getMerchantData();
         } catch (KlarnaConfigException $e) {
             $this->errors[] = $e->getMessage();
             Registry::getLogger()->log('info', $e->getMessage(), [__METHOD__]);
@@ -72,8 +84,8 @@ class Button
         $shopBaseUrl = Registry::getConfig()->getSslShopUrl();
         return [
             "terms"             =>  $shopBaseUrl . "?cl=terms",
-            "push"              =>  $shopBaseUrl . "?cl=push",
-            "confirmation"      =>  $shopBaseUrl . "?cl=confirmation",
+            "push"              =>  $shopBaseUrl . "?cl=cl=KlarnaAcknowledge",
+            "confirmation"      =>  $shopBaseUrl . "?cl=thankyou",
             "notification"      =>  $shopBaseUrl . "?cl=notification",
             "update"            =>  $shopBaseUrl . "?cl=KlarnaInstantShoppingController&fnc=updateOrder",
             "country_change"    =>  $shopBaseUrl . "?cl=country_change",
@@ -110,19 +122,10 @@ class Button
     }
 
     protected function getOrderLines(Article $product = null) {
+        $this->basketAdapter->storeBasket();
+        $this->basketAdapter->buildOrderLinesFromBasket();
 
-        /** @var BasketAdapter $basketAdapter */
-        $basketAdapter = oxNew(
-            BasketAdapter::class,
-            $this->getBasket($product),
-            $this->getUser(),
-            []
-        );
-
-        $basketAdapter->storeBasket();
-        $basketAdapter->buildOrderLinesFromBasket();
-
-        return $basketAdapter->getOrderData()['order_lines'];
+        return $this->basketAdapter->getOrderData()['order_lines'];
 
     }
 
@@ -236,6 +239,7 @@ class Button
         } else {
             $oBasket = Registry::getSession()->getBasket();
         }
+        $oBasket->setPayment(KlarnaPayment::KLARNA_INSTANT_SHOPPING);
 
         return $this->oBasket = $oBasket;
     }
