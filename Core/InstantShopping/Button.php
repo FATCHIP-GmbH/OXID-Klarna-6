@@ -84,7 +84,7 @@ class Button
         $shopBaseUrl = Registry::getConfig()->getSslShopUrl();
         return [
             "terms"             =>  $shopBaseUrl . "?cl=terms",
-            "push"              =>  $shopBaseUrl . "?cl=cl=KlarnaAcknowledge",
+            "push"              =>  $shopBaseUrl . "?cl=KlarnaAcknowledge",
             "confirmation"      =>  $shopBaseUrl . "?cl=thankyou",
             "notification"      =>  $shopBaseUrl . "?cl=notification",
             "update"            =>  $shopBaseUrl . "?cl=KlarnaInstantShoppingController&fnc=updateOrder",
