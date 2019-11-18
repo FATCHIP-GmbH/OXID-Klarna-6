@@ -15,6 +15,7 @@ class KlarnaUserManager
     /**
      * @param $orderData
      * @return object|User
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      */
     public function initUser($orderData)
     {
