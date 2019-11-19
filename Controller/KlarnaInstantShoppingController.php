@@ -11,6 +11,7 @@ use OxidEsales\Eshop\Core\Exception\ArticleInputException;
 use OxidEsales\Eshop\Core\Exception\NoArticleException;
 use OxidEsales\Eshop\Core\Exception\OutOfStockException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
+use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Core\Adapters\BasketAdapter;
 use TopConcepts\Klarna\Core\Exception\InvalidItemException;
@@ -72,9 +73,11 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             /** @var OrderController $oOrderController */
             $oOrderController = Registry::get(OrderController::class);
             $result = $oOrderController->execute();
+
             if ($result !== self::EXECUTE_SUCCESS) {
                 throw new StandardException('INVALID_ORDER_EXECUTE_RESULT: ' . $result);
             }
+
             $klarnaResponse = $this->approveOrder();
             $oOrder = oxNew(Order::class);
             $oOrder->load($orderId);
@@ -82,7 +85,6 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             if($klarnaResponse['fraud_status'] == self::KLARNA_PENDING_STATUS) {
                 $oOrder->oxorder__oxtransstatus = new Field(self::NOT_FINISHED_STATUS, Field::T_RAW);
             }
-
 
             $oOrder->oxorder__tcklarna_orderid = new Field($klarnaResponse['order_id'], Field::T_RAW);
             $oOrder->save();
