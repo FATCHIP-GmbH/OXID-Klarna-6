@@ -18,6 +18,7 @@
 namespace TopConcepts\Klarna\Core;
 
 
+use Requests;
 use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Core\Exception\KlarnaOrderNotFoundException;
 use TopConcepts\Klarna\Core\Exception\KlarnaOrderReadOnlyException;
@@ -134,7 +135,7 @@ abstract class KlarnaClientBase extends Base
  */
     protected function delete($endpoint, $data = array(), $headers = array())
     {
-        return $this->session->delete($endpoint, $headers, $data);
+        return $this->session->request($endpoint, $headers, $data, Requests::DELETE, ['data_format' => 'body']);
     }
 
     /**

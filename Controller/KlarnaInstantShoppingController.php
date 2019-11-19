@@ -15,6 +15,7 @@ use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Core\Adapters\BasketAdapter;
 use TopConcepts\Klarna\Core\Exception\InvalidItemException;
+use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Core\InstantShopping\HttpClient;
 use TopConcepts\Klarna\Core\KlarnaUserManager;
 use TopConcepts\Klarna\Model\KlarnaInstantBasket;
@@ -91,7 +92,11 @@ class KlarnaInstantShoppingController extends BaseCallbackController
 
         } catch (\Exception $exception) {
             Registry::getLogger()->log('error', $exception->getMessage());
-            $this->declineOrder($exception);
+            try {
+                $this->declineOrder($exception);
+            } catch (KlarnaClientException $exception) {
+                Registry::getLogger()->log('error', 'ORDER_NOT_FOUND: ' . $exception->getMessage());
+            }
             $this->db->rollbackTransaction();
             return;
         }
