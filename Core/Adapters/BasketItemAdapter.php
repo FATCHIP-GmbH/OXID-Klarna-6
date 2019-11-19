@@ -47,11 +47,6 @@ class BasketItemAdapter extends BaseBasketItemAdapter
         $this->oItem = $oBasketItem;
     }
 
-    public function getItemKey()
-    {
-        return $this->oItem->getBasketItemKey();
-    }
-
     protected function getArticle($iLang)
     {
         /** @var Article | BasketItem | KlarnaArticle $oArt */
@@ -134,13 +129,23 @@ class BasketItemAdapter extends BaseBasketItemAdapter
 
     /**
      * Compares Klarna OrderData price to oItem  price representing oxid basket item
+     * @param $orderLine
      * @throws ArticleInputException
      */
-    public function validateItem()
+    public function validateItem($orderLine)
     {
         $validPrice = $this->formatAsInt($this->oItem->getPrice()->getBruttoPrice());
-        if ($this->itemData['total_amount'] !== (int)$validPrice) {
+        if ($orderLine['total_amount'] !== (int)$validPrice) {
             throw new ArticleInputException("INVALID_ITEM_PRICE:\n " . json_encode(['item' => $this->itemData], JSON_PRETTY_PRINT));
         }
+    }
+
+    public function getReference()
+    {
+        if(isset($this->itemData['reference'])) {
+            return $this->itemData['reference'];
+        }
+
+        return $this->getArticle(null)->getFieldData('OXARTNUM');
     }
 }

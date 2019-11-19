@@ -125,7 +125,10 @@ class BasketAdapter
         $this->orderData['order_lines'] = [];
         /** @var BaseBasketItemAdapter|ShippingAdapter|BasketCostAdapter $oItemAdapter */
         foreach($this->generateBasketItemAdapters() as $oItemAdapter) {
-            $oItemAdapter->addItemToOrderLines($this->orderData['order_lines'], $this->iLang);
+            $added = $oItemAdapter->addItemToOrderLines($this->orderData['order_lines'], $this->iLang);
+            if ($added) {
+                $this->itemAdapters[$oItemAdapter->getItemKey()] = $oItemAdapter;
+            }
         }
         $this->addOrderTotals();
     }
@@ -146,7 +149,6 @@ class BasketAdapter
                 $this->oUser,
                 $this->oOrder
             );
-            $this->itemAdapters[$itemKey] = $itemAdapter;
 
             yield $itemAdapter;
         }
@@ -163,13 +165,27 @@ class BasketAdapter
                 ['merchant_data' => ['type' => $costKey]],
                 $oPrice
             );
-            $this->itemAdapters[$costKey] = $itemAdapter;
 
             yield $itemAdapter;
         }
 
-        // voucher
-        // discount
+        foreach($this->oBasket->getVouchers() as $ref => $oVoucher) {
+            $itemAdapter = $this->createItemAdapterForType(
+                ['merchant_data' => ['type' => 'voucher']],
+                $oVoucher
+            );
+
+            yield $itemAdapter;
+        }
+
+        foreach($this->oBasket->getDiscounts() as $ref => $oDiscount) {
+            $itemAdapter = $this->createItemAdapterForType(
+                ['merchant_data' => ['type' => 'discount']],
+                $oDiscount
+            );
+
+            yield $itemAdapter;
+        }
     }
 
     /**
@@ -197,10 +213,27 @@ class BasketAdapter
      * @throws InvalidItemException
      */
     public function validateItems() {
-//        foreach ($this->itemAdapters as $oItemAdapter) {
-//            /** @var  BasketItemAdapter|ShippingAdapter $oItemAdapter */
-//            $oItemAdapter->validateItem();
-//        }
+        // copy original order data
+        $requestedOrder = $this->orderData;
+        $this->buildOrderLinesFromBasket();
+
+        $getTypeFromOrderLine = function($orderLine) {
+            if (isset($orderLine['merchant_data'])) {
+                return json_decode($orderLine['merchant_data'], true)['type'];
+            }
+
+            return array_search($orderLine['type'], BaseBasketItemAdapter::ITEM_TYPE_MAP);
+        };
+
+        foreach ($requestedOrder['order_lines'] as $orderLine) {
+            /** @var  BasketItemAdapter|ShippingAdapter $oItemAdapter */
+            $itemKey = $getTypeFromOrderLine($orderLine) . '_' . $orderLine['reference'];
+            if (isset($this->itemAdapters[$itemKey]) === false) {
+                throw new InvalidItemException("INVALID_ITEM: $itemKey");
+            }
+            $this->itemAdapters[$itemKey]->validateItem($orderLine);
+        }
+
         return $this;
     }
 

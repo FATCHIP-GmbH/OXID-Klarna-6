@@ -84,7 +84,7 @@ class Button
         $shopBaseUrl = Registry::getConfig()->getSslShopUrl();
         return [
             "terms"             =>  $shopBaseUrl . "?cl=terms",
-            "push"              =>  $shopBaseUrl . "?cl=KlarnaAcknowledge",
+//            "push"              =>  $shopBaseUrl . "?cl=KlarnaAcknowledge",
             "confirmation"      =>  $shopBaseUrl . "?cl=thankyou",
             "notification"      =>  $shopBaseUrl . "?cl=notification",
             "update"            =>  $shopBaseUrl . "?cl=KlarnaInstantShoppingController&fnc=updateOrder",
@@ -235,11 +235,11 @@ class Button
             $oBasket->setBasketUser($this->oUser);
             $oBasket->addToBasket($product->getId(), 1);
             Registry::getSession()->deleteVariable("blAddedNewItem"); // prevent showing notification to user
-            $oBasket->calculateBasket(true);
         } else {
             $oBasket = Registry::getSession()->getBasket();
         }
         $oBasket->setPayment(KlarnaPayment::KLARNA_INSTANT_SHOPPING);
+        $oBasket->calculateBasket(true);
 
         return $this->oBasket = $oBasket;
     }

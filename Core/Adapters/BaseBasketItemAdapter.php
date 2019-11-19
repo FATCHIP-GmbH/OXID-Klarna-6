@@ -38,6 +38,8 @@ abstract class BaseBasketItemAdapter
         self::SHIPPING_TYPE => ShippingAdapter::class,
         self::GIFT_CARD_TYPE => GiftCardAdapter::class,
         self::PAYMENT_TYPE => PaymentAdapter::class,
+        self::VOUCHER_TYPE => VoucherAdapter::class,
+        self::DISCOUNT_TYPE => DiscountAdapter::class,
     ];
 
     const DEFAULT_ITEM_DATA = [
@@ -50,9 +52,9 @@ abstract class BaseBasketItemAdapter
         'total_amount'          => 0,
         'total_discount_amount' => 0,
         'total_tax_amount'      => 0,
-        'image_url'             => '',
-        'product_identifiers'   => null,
-        'shipping_attributes'   => null
+//        'image_url'             => '',
+//        'product_identifiers'   => null,
+//        'shipping_attributes'   => null
     ];
 
     /** @var array Klarna Order Line */
@@ -103,33 +105,37 @@ abstract class BaseBasketItemAdapter
     {
         $itemData = $this
             ->prepareItemData($iLang)
-            ->encodeMerchantData()
-            ->getItemData()
-        ;
+            ->getItemData();
 
         if ($this->isValidItemData()) {
-            $orderLines[] = $itemData;
+            $orderLines[] = $this->encodeMerchantData($itemData);
+            return true;
         }
+        return false;
     }
 
     /**
      * Compares Klarna Order Line to oxid basket object
+     * @param $orderLine
      */
-    abstract public function validateItem();
+    abstract public function validateItem($orderLine);
 
     /**
      * Prepares item data before adding it to Order Lines
      * @param $iLang
-     * @param $isOrderMgmt
      * @return $this
      */
     abstract protected function prepareItemData($iLang);
 
 
-    public function encodeMerchantData()
+    abstract protected function getReference();
+
+
+
+    public function encodeMerchantData($itemData)
     {
-        $this->itemData['merchant_data'] = json_encode($this->itemData['merchant_data']);
-        return $this;
+        $itemData['merchant_data'] = json_encode($itemData['merchant_data']);
+        return $itemData;
     }
 
     /**
@@ -146,7 +152,7 @@ abstract class BaseBasketItemAdapter
      * @return string
      */
     public function getItemKey() {
-        return $this->getType();
+        return $this->getType() . '_' . $this->getReference();
     }
 
     /**
@@ -165,7 +171,7 @@ abstract class BaseBasketItemAdapter
      */
     public function formatAsInt($number)
     {
-        return (Registry::getUtils()->fRound($number) * 100);
+        return (int)(Registry::getUtils()->fRound($number) * 100);
     }
 
     /**

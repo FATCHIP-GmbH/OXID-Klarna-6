@@ -154,11 +154,12 @@ class ShippingAdapter extends BasketCostAdapter
     /**
      * Validates shipping id and shipping cost
      * Requires calculated basket object
+     * @param $orderLine
      * @throws InvalidItemException
      */
-    public function validateItem() {
+    public function validateItem($orderLine) {
         $isValidShippingId = $this->isShippingForPayment(
-            $this->oBasket->getShippingId(),
+            $orderLine['reference'],
             $this->oBasket->getPaymentId(),
             $this->oBasket->getPriceForPayment()
         );
@@ -166,6 +167,6 @@ class ShippingAdapter extends BasketCostAdapter
             throw new InvalidItemException('INVALID_SHIPPING_ID');
         }
 
-        parent::validateItem();
+        parent::validateItem($orderLine);
     }
 }

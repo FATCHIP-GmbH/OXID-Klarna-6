@@ -11,7 +11,6 @@ use OxidEsales\Eshop\Core\Exception\ArticleInputException;
 use OxidEsales\Eshop\Core\Exception\NoArticleException;
 use OxidEsales\Eshop\Core\Exception\OutOfStockException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
-use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Core\Adapters\BasketAdapter;
 use TopConcepts\Klarna\Core\Exception\InvalidItemException;
@@ -19,7 +18,6 @@ use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Core\InstantShopping\HttpClient;
 use TopConcepts\Klarna\Core\KlarnaUserManager;
 use TopConcepts\Klarna\Model\KlarnaInstantBasket;
-use TopConcepts\Klarna\Model\KlarnaPayment;
 
 class KlarnaInstantShoppingController extends BaseCallbackController
 {
@@ -165,7 +163,6 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         $basketAdapter = $this->createBasketAdapter();
         $this->db->startTransaction();
         try {
-//            $basketAdapter->buildBasketFromOrderData();
             $basketAdapter->validateItems();
         } catch (OutOfStockException | ArticleInputException | NoArticleException | InvalidItemException $exception) {
             //roll back
@@ -175,30 +172,30 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             exit;
         }
 
-        if($this->requestData['update_context'] == "identification_updated") {//User info and address change
-            $basketAdapter->buildOrderLinesFromBasket();
-            $orderLines = $basketAdapter->getOrderData();
-            $this->db->commitTransaction();
-            $this->updateResponse(json_encode($orderLines));
-
-            exit;
-        }
-
-        if($this->requestData['update_context'] == "specifications_selected") {//Product changes
-            $this->db->commitTransaction();
-            $this->updateResponse('{"shipping_options": [{
-                        "id": "oxidstandard",
-                        "name": "DHL",
-                        "description": "DHL Standard Versand",
-                        "price": 100,
-                        "tax_amount": 10,
-                        "tax_rate": 1000,
-                        "preselected": true,
-                        "shipping_method": "BoxReg"
-                    }]}');
-
-            exit;
-        }
+//        if($this->requestData['update_context'] == "identification_updated") {//User info and address change
+//            $basketAdapter->buildOrderLinesFromBasket();
+//            $orderLines = $basketAdapter->getOrderData();
+//            $this->db->commitTransaction();
+//            $this->updateResponse(json_encode($orderLines));
+//
+//            exit;
+//        }
+//
+//        if($this->requestData['update_context'] == "specifications_selected") {//Product changes
+//            $this->db->commitTransaction();
+//            $this->updateResponse('{"shipping_options": [{
+//                        "id": "oxidstandard",
+//                        "name": "DHL",
+//                        "description": "DHL Standard Versand",
+//                        "price": 100,
+//                        "tax_amount": 10,
+//                        "tax_rate": 1000,
+//                        "preselected": true,
+//                        "shipping_method": "BoxReg"
+//                    }]}');
+//
+//            exit;
+//        }
         http_response_code(304);
         exit;
     }

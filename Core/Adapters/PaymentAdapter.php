@@ -21,7 +21,7 @@ class PaymentAdapter extends BasketCostAdapter
 
     protected function getReference()
     {
-        return null;
+        return '';
     }
 
     public function addItemToBasket()
