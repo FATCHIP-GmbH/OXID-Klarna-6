@@ -23,6 +23,8 @@ use TopConcepts\Klarna\Model\KlarnaPayment;
 class KlarnaInstantShoppingController extends BaseCallbackController
 {
     const EXECUTE_SUCCESS = 'thankyou';
+    const KLARNA_PENDING_STATUS = 'PENDING';
+    const NOT_FINISHED_STATUS = 'NOT_FINISHED';
 
     /** @var HttpClient */
     protected $httpClient;
@@ -75,9 +77,14 @@ class KlarnaInstantShoppingController extends BaseCallbackController
                 throw new StandardException('INVALID_ORDER_EXECUTE_RESULT: ' . $result);
             }
             $klarnaResponse = $this->approveOrder();
-
             $oOrder = oxNew(Order::class);
             $oOrder->load($orderId);
+
+            if($klarnaResponse['fraud_status'] == self::KLARNA_PENDING_STATUS) {
+                $oOrder->oxorder__tcklarna_orderid = new Field(SELF::NOT_FINISHED_STATUS, Field::T_RAW);
+            }
+
+
             $oOrder->oxorder__tcklarna_orderid = new Field($klarnaResponse['order_id'], Field::T_RAW);
             $oOrder->save();
             $basketAdapter->finalizeBasket($orderId);
