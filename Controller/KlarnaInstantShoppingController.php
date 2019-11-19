@@ -4,6 +4,7 @@
 namespace TopConcepts\Klarna\Controller;
 
 use OxidEsales\Eshop\Application\Controller\OrderController;
+use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Exception\ArticleInputException;
@@ -73,9 +74,13 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             if ($result !== self::EXECUTE_SUCCESS) {
                 throw new StandardException('INVALID_ORDER_EXECUTE_RESULT: ' . $result);
             }
-            $this->approveOrder();
-            $basketAdapter->finalizeBasket($orderId);
+            $klarnaResponse = $this->approveOrder();
 
+            $oOrder = oxNew(Order::class);
+            $oOrder->load($orderId);
+            $oOrder->oxorder__tcklarna_orderid = new Field($klarnaResponse['order_id'], Field::T_RAW);
+            $oOrder->save();
+            $basketAdapter->finalizeBasket($orderId);
 
         } catch (\Exception $exception) {
             Registry::getLogger()->log('error', $exception->getMessage());

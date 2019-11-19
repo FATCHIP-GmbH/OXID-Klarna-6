@@ -36,9 +36,13 @@ class InstantShoppingCest
         $this->fillInstantShoppingForm($I);
         $I->waitForElement('//*[@id="checkout-button"]');
         $I->click('//*[@id="checkout-button"]');
+        $I->wait(2);
         $I->waitForElementClickable('//*[@id="confirmation__bottom"]');
         $I->click('//*[@id="confirmation__bottom"]');
-        $I->wait(4);
+        $I->wait(3);
+        $I->seeInCurrentUrl('thankyou');
+        $I->wait(2);
+        $I->assertKlarnaData();
 
     }
 
