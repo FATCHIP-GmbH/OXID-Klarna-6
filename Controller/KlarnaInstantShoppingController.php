@@ -81,7 +81,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             $oOrder->load($orderId);
 
             if($klarnaResponse['fraud_status'] == self::KLARNA_PENDING_STATUS) {
-                $oOrder->oxorder__tcklarna_orderid = new Field(SELF::NOT_FINISHED_STATUS, Field::T_RAW);
+                $oOrder->oxorder__tcklarna_orderid = new Field(self::NOT_FINISHED_STATUS, Field::T_RAW);
             }
 
 
