@@ -182,7 +182,7 @@ abstract class BaseBasketItemAdapter
      */
     public function calcTax(int $total, int $rate)
     {
-        return round($total - ($total * 10000 / (10000 + $rate)));
+        return (int)round($total - ($total * 10000 / (10000 + $rate)));
     }
 
     /**
