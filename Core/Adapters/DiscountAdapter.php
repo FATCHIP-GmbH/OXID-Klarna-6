@@ -22,12 +22,15 @@ class DiscountAdapter extends BaseBasketItemAdapter
     /**
      * Compares Klarna Order Line to oxid basket object
      * @param $orderLine
+     * @throws InvalidItemException
      */
     public function validateItem($orderLine)
     {
-        if ($orderLine['total_amount'] + $this->formatAsInt($this->oItem->dDiscount) !== 0) {
-            throw new InvalidItemException("INVALID_DISCOUNT_VALUE: " . $orderLine['name']);
-        }
+        $this->validateData(
+            $orderLine,
+            'total_amount',
+            - $this->formatAsInt($this->oItem->dDiscount)  // Discount is transferred to Klarna as negative value
+        );
     }
 
     /**

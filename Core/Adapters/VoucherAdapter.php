@@ -27,9 +27,11 @@ class VoucherAdapter extends BaseBasketItemAdapter
      */
     public function validateItem($orderLine)
     {
-       if ($orderLine['total_amount'] + $this->formatAsInt($this->oItem->dVoucherdiscount) !== 0) {
-            throw new InvalidItemException("INVALID_VOUCHER_VALUE: " . $orderLine['name']);
-       }
+        $this->validateData(
+            $orderLine,
+            'total_amount',
+            - $this->formatAsInt($this->oItem->dVoucherdiscount)  // Voucher is transferred to Klarna as negative value
+        );
     }
 
     /**

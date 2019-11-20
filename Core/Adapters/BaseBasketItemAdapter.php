@@ -9,6 +9,7 @@ use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Core\Registry;
+use TopConcepts\Klarna\Core\Exception\InvalidItemException;
 
 abstract class BaseBasketItemAdapter
 {
@@ -72,6 +73,9 @@ abstract class BaseBasketItemAdapter
     /** @var Order */
     protected $oOrder;
 
+    /** @var array  */
+    protected $diffData = [];
+
     public function __construct(array $itemData, $oItem = null, $oBasket = null, $oUser = null, $oOrder = null)
     {
         $this->itemData = $itemData;
@@ -86,13 +90,6 @@ abstract class BaseBasketItemAdapter
 //            $this->itemData['merchant_data']['type'] = $flippedClassMap[get_called_class()];
 //        }
     }
-
-    /**
-     * Adds Klarna Order Line to oBasket
-     *
-     * @return mixed
-     */
-    abstract public function addItemToBasket();
 
     /**
      * Adds oxid basket object to Order Lines
@@ -119,6 +116,14 @@ abstract class BaseBasketItemAdapter
      * @param $orderLine
      */
     abstract public function validateItem($orderLine);
+
+    /**
+     * Updates oBasket according to diffData property
+     * Diff data is set during validation process
+     * @param $updateData array - Update data to send to Klarna
+     * @return void
+     */
+    public function handleUpdate(&$updateData) {}
 
     /**
      * Prepares item data before adding it to Order Lines
@@ -196,5 +201,48 @@ abstract class BaseBasketItemAdapter
 
     protected function getKlarnaType() {
         return self::ITEM_TYPE_MAP[$this->getType()];
+    }
+
+    /**
+     * @param $orderLine
+     * @param $key
+     * @param $basketValue
+     * @throws InvalidItemException
+     */
+    protected function validateData($orderLine, $key, $basketValue) {
+
+        Registry::getLogger()->log('debug', 'VALIDATING: ' . print_r([
+            'type' => $this->getType(),
+            'key' => $key,
+            'requestedValue' => $orderLine[$key],
+            'basketValue' => $basketValue
+        ], true));
+
+        if ($orderLine[$key] !== $basketValue) {
+            $oEx = new InvalidItemException("INVALID_ITEM");
+            $this->setDiffData([
+                'key' => $key,
+                'requestedValue' => $orderLine[$key],
+                'basketValue' => $basketValue
+            ]);
+            $oEx->setItemAdapter($this);
+            throw $oEx;
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function getDiffData(): array
+    {
+        return $this->diffData;
+    }
+
+    /**
+     * @param array $diffData
+     */
+    public function setDiffData(array $diffData): void
+    {
+        $this->diffData = $diffData;
     }
 }

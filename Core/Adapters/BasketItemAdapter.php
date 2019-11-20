@@ -10,6 +10,8 @@ use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Exception\ArticleInputException;
 use OxidEsales\Eshop\Core\Exception\NoArticleException;
 use OxidEsales\Eshop\Core\Exception\OutOfStockException;
+use OxidEsales\Eshop\Core\Registry;
+use TopConcepts\Klarna\Core\Exception\InvalidItemException;
 use TopConcepts\Klarna\Model\KlarnaArticle;
 
 /**
@@ -25,26 +27,38 @@ class BasketItemAdapter extends BaseBasketItemAdapter
 
     /**
      * Adds Article to oBasket
-     * @return void
+     * @param $updateData
      * @throws ArticleInputException
      * @throws NoArticleException
      * @throws OutOfStockException
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \oxArticleInputException
+     * @throws \oxNoArticleException
      */
-    public function addItemToBasket()
+    public function handleUpdate(&$updateData)
     {
-        $itemData = $this->prepareArticleData()->getItemData();
-        /** @var BasketItem $oBasketItem */
-        $oBasketItem = $this->oBasket->addToBasket(
-            $itemData['id'],
-            $itemData['quantity'],
-            null,
-            null,
-            null,
-            $this->isBundle(),
-            null
-        );
-        $this->oItem = $oBasketItem;
+        // item quantity changed in the iframe
+        if ($this->diffData['key'] === 'quantity') {
+            /** @var BasketItem $oBasketItem */
+            $oBasketItem = $this->oBasket->addToBasket(
+                $this->oItem->getArticle()->getId(),
+                $this->diffData['requestedValue'] - $this->diffData['basketValue'],
+                null,
+                null,
+                null,
+                $this->oItem->isBundle(),
+                null
+            );
+            $this->oItem = $oBasketItem;
+            $this->oBasket->calculateBasket(true);
+
+            Registry::getLogger()->log('debug', 'ITEM_AMOUNT_UPDATED: ' .
+                print_r([
+                    'reference' => $this->itemData['reference'],
+                    'title' => $this->oItem->getTitle(),
+                    'amount' => $this->oItem->getAmount(),
+                ], true)
+            );
+        }
     }
 
     protected function getArticle($iLang)
@@ -130,14 +144,19 @@ class BasketItemAdapter extends BaseBasketItemAdapter
     /**
      * Compares Klarna OrderData price to oItem  price representing oxid basket item
      * @param $orderLine
-     * @throws ArticleInputException
+     * @throws InvalidItemException
      */
     public function validateItem($orderLine)
     {
-        $validPrice = $this->formatAsInt($this->oItem->getPrice()->getBruttoPrice());
-        if ($orderLine['total_amount'] !== (int)$validPrice) {
-            throw new ArticleInputException("INVALID_ITEM_PRICE:\n " . json_encode(['item' => $this->itemData], JSON_PRETTY_PRINT));
-        }
+        $this->validateData(
+            $orderLine,
+            'quantity',
+            (int)$this->oItem->getAmount()
+        );
+        $this->validateData($orderLine,
+            'total_amount',
+            $this->formatAsInt($this->oItem->getPrice()->getBruttoPrice())
+        );
     }
 
     public function getReference()

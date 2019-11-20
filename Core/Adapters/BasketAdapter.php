@@ -43,6 +43,31 @@ class BasketAdapter
      */
     protected $oInstantShoppingBasket;
 
+    /** @var  */
+    protected $requestedOrderLines;
+
+    /** @var bool  */
+    protected $handleBasketUpdates = false;
+
+    /** @var array */
+    protected $updateData = [];
+
+    /**
+     * @return array
+     */
+    public function getUpdateData(): array
+    {
+        return $this->updateData;
+    }
+
+    /**
+     * @param bool $handleBasketUpdates
+     */
+    public function setHandleBasketUpdates(bool $handleBasketUpdates): void
+    {
+        $this->handleBasketUpdates = $handleBasketUpdates;
+    }
+
     /**
      * BasketAdapter constructor.
      * @param Basket|KlarnaBasket $oBasket
@@ -58,6 +83,8 @@ class BasketAdapter
         $this->iLang = $oOrder ? $oOrder->getFieldData('oxlang') : null;
         $this->oOrder = $oOrder;
         $this->oBasket->setBasketUser($oUser);
+        // copy original order data
+        $this->requestedOrderLines = $this->orderData['order_lines'];
     }
 
     /**
@@ -209,13 +236,10 @@ class BasketAdapter
 
     /**
      * @return $this
-     * @throws ArticleInputException
+     * @throws StandardException
      * @throws InvalidItemException
      */
-    public function validateItems() {
-        // copy original order data
-        $requestedOrder = $this->orderData;
-        $this->buildOrderLinesFromBasket();
+    public function validateOrderLines() {
 
         $getTypeFromOrderLine = function($orderLine) {
             if (isset($orderLine['merchant_data'])) {
@@ -225,13 +249,21 @@ class BasketAdapter
             return array_search($orderLine['type'], BaseBasketItemAdapter::ITEM_TYPE_MAP);
         };
 
-        foreach ($requestedOrder['order_lines'] as $orderLine) {
+        foreach ($this->requestedOrderLines as $orderLine) {
             /** @var  BasketItemAdapter|ShippingAdapter $oItemAdapter */
             $itemKey = $getTypeFromOrderLine($orderLine) . '_' . $orderLine['reference'];
             if (isset($this->itemAdapters[$itemKey]) === false) {
-                throw new InvalidItemException("INVALID_ITEM: $itemKey");
+                throw new StandardException("INVALID_ITEM: $itemKey");
             }
-            $this->itemAdapters[$itemKey]->validateItem($orderLine);
+            if ($this->handleBasketUpdates) {
+                try {
+                    $this->itemAdapters[$itemKey]->validateItem($orderLine);
+                } catch (InvalidItemException $itemException) {
+                    $this->itemAdapters[$itemKey]->handleUpdate($this->updateData);
+                }
+            } else {
+                $this->itemAdapters[$itemKey]->validateItem($orderLine);
+            }
         }
 
         return $this;

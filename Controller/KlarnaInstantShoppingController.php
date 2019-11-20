@@ -7,14 +7,10 @@ use OxidEsales\Eshop\Application\Controller\OrderController;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface;
 use OxidEsales\Eshop\Core\DatabaseProvider;
-use OxidEsales\Eshop\Core\Exception\ArticleInputException;
-use OxidEsales\Eshop\Core\Exception\NoArticleException;
-use OxidEsales\Eshop\Core\Exception\OutOfStockException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Core\Adapters\BasketAdapter;
-use TopConcepts\Klarna\Core\Exception\InvalidItemException;
 use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Core\InstantShopping\HttpClient;
 use TopConcepts\Klarna\Core\KlarnaUserManager;
@@ -57,6 +53,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
     }
 
     /**
+     * @throws StandardException
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
      */
@@ -64,11 +61,13 @@ class KlarnaInstantShoppingController extends BaseCallbackController
     {
         $this->userManager->initUser($this->requestData['order']);
         $basketAdapter = $this->createBasketAdapter();
+        if ($basketAdapter === false) {
+            return;
+        }
         $this->db->startTransaction();
         try {
-            $basketAdapter->validateItems()
-                //TODO: basket sum validation
-            ;
+            $basketAdapter->buildOrderLinesFromBasket();
+            $basketAdapter->validateOrderLines();
             $orderId = $this->prepareOrderExecution();
             /** @var OrderController $oOrderController */
             $oOrderController = Registry::get(OrderController::class);
@@ -160,20 +159,27 @@ class KlarnaInstantShoppingController extends BaseCallbackController
     {
         $this->actionData['order'] = $this->requestData;
         $this->userManager->initUser($this->requestData);
-
-        /** @var BasketAdapter $basketAdapter */
         $basketAdapter = $this->createBasketAdapter();
-        $this->db->startTransaction();
+        if ($basketAdapter === false) {
+            return;
+        }
+        /** @var BasketAdapter $basketAdapter */
         try {
-            $basketAdapter->validateItems();
-        } catch (OutOfStockException | ArticleInputException | NoArticleException | InvalidItemException $exception) {
-            //roll back
+            $basketAdapter->buildOrderLinesFromBasket();
+            $basketAdapter->setHandleBasketUpdates(true);
+            $basketAdapter->validateOrderLines();
+        } catch (\Exception $exception) {
             Registry::getLogger()->log('error', $exception->getMessage());
-            $this->db->rollbackTransaction();
             http_response_code(304);
             exit;
         }
 
+        $updateData = $basketAdapter->getUpdateData();
+        if ($updateData) {
+            $this->sendResponse($updateData);
+        }
+
+//        var_dump($basketAdapter);
 //        if($this->requestData['update_context'] == "identification_updated") {//User info and address change
 //            $basketAdapter->buildOrderLinesFromBasket();
 //            $orderLines = $basketAdapter->getOrderData();
@@ -203,25 +209,16 @@ class KlarnaInstantShoppingController extends BaseCallbackController
     }
 
     /**
-     * Request Mock
-     * @return array
-     */
-    protected function __getRequestData()
-    {
-        $body = file_get_contents(OX_BASE_PATH . '../klarna_requests/place_order.json');
-        return (array)json_decode($body, true);
-    }
-
-    /**
-     * @param $oUser
-     * @return BasketAdapter
+     * @return false|BasketAdapter
      */
     protected function createBasketAdapter()
     {
         // Fetch saved Instant Shopping basket
         $instantShoppingBasketId = $this->actionData['order']['merchant_data'];
         $oInstantShoppingBasket = oxNew(KlarnaInstantBasket::class);
-        $oInstantShoppingBasket->load($instantShoppingBasketId);
+        if ($oInstantShoppingBasket->load($instantShoppingBasketId) === false) {
+            return false;
+        }
         $oBasket = $oInstantShoppingBasket->getBasket();
         Registry::getSession()->setBasket($oBasket);
         /** @var BasketAdapter $basketAdapter */
@@ -237,11 +234,39 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         return $basketAdapter;
     }
 
-    protected function updateResponse($json)
+    protected function sendResponse($data)
     {
         header('Content-Type: application/json');
-        echo $json;
+        http_response_code(304);
+        echo json_encode($data);
+        Registry::getLogger()->log('debug', 'UPDATE_SEND: ' .
+            print_r($data, true)
+        );
         exit;
     }
 
+
+    /**
+     * Request Mock
+     * @return array
+     */
+    protected function getRequestData()
+    {
+        if ($_GET['mock']) {
+            $mockType = $_GET['fnc'];
+            $body = file_get_contents(OX_BASE_PATH . "../klarna_requests/{$mockType}.json");
+            return (array)json_decode($body, true);
+        }
+        $original = parent::getRequestData();
+
+        $multiply = function(&$item, $m) {
+            $f = ['quantity', 'total_amount', 'total_tax_amount', 'total_discount_amount'];
+            foreach($f as $field) {
+                $item[$field] = $item[$field] * $m;
+            }
+        };
+        $multiply($original['order_lines'][0], 4);
+
+        return $original;
+    }
 }

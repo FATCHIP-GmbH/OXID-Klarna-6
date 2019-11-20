@@ -6,11 +6,8 @@ namespace TopConcepts\Klarna\Core\Adapters;
 
 class PaymentAdapter extends BasketCostAdapter
 {
-    protected $oCard;
-
     public function prepareItemData($iLang)
     {
-        //TODO: implement
         return $this;
     }
 

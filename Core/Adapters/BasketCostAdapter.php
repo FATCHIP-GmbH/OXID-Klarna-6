@@ -10,14 +10,19 @@ use TopConcepts\Klarna\Core\Exception\InvalidItemException;
 
 abstract class BasketCostAdapter extends BaseBasketItemAdapter
 {
+    /**
+     * @param $orderLine
+     * @throws InvalidItemException
+     */
     public function validateItem($orderLine)
     {
-        /** @var Price $oShippingCost */
+        /** @var Price $oBasketCost */
         $oBasketCost = $this->oBasket->getCosts($this->getType());
-        $requestedCost = $orderLine['total_amount'] / 100;
-        if ((float)$requestedCost !== $oBasketCost->getBruttoPrice()) {
-            throw new InvalidItemException('INVALID_ITEM_COST');
-        }
+        $this->validateData(
+            $orderLine,
+            'total_amount',
+            $this->formatAsInt($oBasketCost->getBruttoPrice())
+        );
     }
 
     public function prepareItemData($iLang)
