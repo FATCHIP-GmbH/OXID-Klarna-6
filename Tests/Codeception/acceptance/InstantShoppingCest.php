@@ -1,30 +1,45 @@
 <?php
 
 use TopConcepts\Klarna\Tests\Codeception\AcceptanceTester;
+use OxidEsales\Codeception\Module\Translation\Translator;
 use OxidEsales\Codeception\Step\ProductNavigation;
+use OxidEsales\Codeception\Step\Basket;
 use Codeception\Util\Fixtures;
 
 class InstantShoppingCest
 {
+
+    /**
+     * @group instant_shopping
+     * @param AcceptanceTester $I
+     */
+    public function visibleButton(AcceptanceTester $I)
+    {
+        $this->activateInstantShopping($I);
+        $I->openShop();
+        $I->waitForPageLoad();
+        $productNavigation = new ProductNavigation($I);
+        $productNavigation->openProductDetailsPage('05848170643ab0deb9914566391c0c63');
+        $I->waitForPageLoad();
+        $I->wait(2);
+        $I->seeElement('//*[@class="instant-shopping-button"]');
+        $basket = new Basket($I);
+        $basket->addProductToBasket('05848170643ab0deb9914566391c0c63', 1);
+        $I->waitForElement('//div[@class="btn-group minibasket-menu"]/button');
+        $I->click('//div[@class="btn-group minibasket-menu"]/button');
+        $I->click("//*[@id='header']/div/div/div/div[2]/div/div[4]/ul/li/div/div/div/p[2]/a[2]");
+        $I->waitForPageLoad();
+        $I->wait(2);
+        $I->seeElement('//*[@class="instant-shopping-button"]');
+    }
+
     /**
      * @group instant_shopping
      * @param AcceptanceTester $I
      */
     public function instantShopping(AcceptanceTester $I)
     {
-        $I->loadKlarnaAdminConfig('KCO');
-        $admin = $I->openShopAdminPanel();
-        $admin->login();
-        $admin->selectShop();
-        $admin->navigateMenu(["Klarna", "Instant Shipping"]);
-        $I->waitForFrame("basefrm");
-        $I->wait(2);
-        $I->click('//*[@id="instant-shopping-control"]');
-        $I->wait(2);
-        $I->click('//*[@id="toggle-button-placement-details"]');
-        $I->click('//*[@id="toggle-button-placement-basket"]');
-        $I->wait(2);
-        $I->click("//*[@id='form-save-button']");
+        $this->activateInstantShopping($I);
         $I->wait(3);
         $I->openShop();
         $I->wait(3);
@@ -44,6 +59,23 @@ class InstantShoppingCest
         $I->wait(2);
         $I->assertKlarnaData();
 
+    }
+
+    protected function activateInstantShopping(AcceptanceTester $I)
+    {
+        $I->loadKlarnaAdminConfig('KCO');
+        $admin = $I->openShopAdminPanel();
+        $admin->login();
+        $admin->selectShop();
+        $admin->navigateMenu(["Klarna", "Instant Shipping"]);
+        $I->waitForFrame("basefrm");
+        $I->wait(2);
+        $I->click('//*[@id="instant-shopping-control"]');
+        $I->wait(2);
+        $I->click('//*[@id="toggle-button-placement-details"]');
+        $I->click('//*[@id="toggle-button-placement-basket"]');
+        $I->wait(2);
+        $I->click("//*[@id='form-save-button']");
     }
 
     protected function fillInstantShoppingForm($I)
