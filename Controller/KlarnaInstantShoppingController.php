@@ -77,17 +77,9 @@ class KlarnaInstantShoppingController extends BaseCallbackController
                 throw new StandardException('INVALID_ORDER_EXECUTE_RESULT: ' . $result);
             }
 
-            $klarnaResponse = $this->approveOrder();
-            $oOrder = oxNew(Order::class);
-            $oOrder->load($orderId);
-
-            if($klarnaResponse['fraud_status'] == self::KLARNA_PENDING_STATUS) {
-                $oOrder->oxorder__oxtransstatus = new Field(self::NOT_FINISHED_STATUS, Field::T_RAW);
-            }
-
-            $oOrder->oxorder__tcklarna_orderid = new Field($klarnaResponse['order_id'], Field::T_RAW);
-            $oOrder->save();
-            $basketAdapter->finalizeBasket($orderId);
+            $response = $this->approveOrder();
+            $this->updateOrderObject($orderId, $response);
+            $basketAdapter->closeBasket($orderId);
 
         } catch (\Exception $exception) {
             Registry::getLogger()->log('error', $exception->getMessage());
@@ -110,7 +102,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         );
     }
 
-    public function prepareOrderExecution()
+    protected function prepareOrderExecution()
     {
         $sToken = Registry::getSession()->getVariable('sess_stoken');
         $_GET['stoken'] = $sToken;
@@ -243,6 +235,19 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             print_r($data, true)
         );
         exit;
+    }
+
+    protected function updateOrderObject($orderId, $approveResponse)
+    {
+        $oOrder = oxNew(Order::class);
+        $oOrder->load($orderId);
+
+        if($approveResponse['fraud_status'] == self::KLARNA_PENDING_STATUS) {
+            $oOrder->oxorder__oxtransstatus = new Field(self::NOT_FINISHED_STATUS, Field::T_RAW);
+        }
+
+        $oOrder->oxorder__tcklarna_orderid = new Field($approveResponse['order_id'], Field::T_RAW);
+        $oOrder->save();
     }
 
 

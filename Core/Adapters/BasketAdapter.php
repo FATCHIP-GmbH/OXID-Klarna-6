@@ -298,7 +298,7 @@ class BasketAdapter
      * @return void
      * @throws \Exception
      */
-    public function finalizeBasket($orderId)
+    public function closeBasket($orderId)
     {
         $this->oBasket->setOrderId($orderId);
         $this->oInstantShoppingBasket->setBasketInfo(serialize($this->oBasket));
