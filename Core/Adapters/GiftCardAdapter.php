@@ -4,8 +4,11 @@
 namespace TopConcepts\Klarna\Core\Adapters;
 
 
+use OxidEsales\Eshop\Application\Model\Wrapping;
+
 class GiftCardAdapter extends BasketCostAdapter
 {
+    /** @var Wrapping */
     protected $oCard;
 
     public function prepareItemData($iLang)
@@ -20,7 +23,7 @@ class GiftCardAdapter extends BasketCostAdapter
 
     protected function getName()
     {
-        return $this->oCard->getFildData('oxname');
+        return $this->oCard->getFieldData('oxname');
     }
 
     protected function getReference()
