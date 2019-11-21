@@ -28,16 +28,8 @@ abstract class BaseCallbackController extends BaseController
         $this->requestData = $this->getRequestData();
         Registry::getLogger()->log('info', $this->getFncName() . " request:\n" , $this->requestData);
         if ($this->validateRequestData() === false) {
-            die('Forbidden');
+            Registry::getUtils()->showMessageAndExit('');
         }
-    }
-
-    /**
-     * Logs callback request
-     * Sends response
-     * @return string|void
-     */
-    public function render() {
         $loggingEnabeld = Registry::getConfig()->getConfigParam('blKlarnaLoggingEnabled');
         if($loggingEnabeld && $this->getActionRules('log')) {
             $oLog = new KlarnaLogs();
@@ -50,8 +42,16 @@ abstract class BaseCallbackController extends BaseController
                 0
             );
         }
-        exit;
-        // render response;
+    }
+
+    /**
+     * Logs callback request
+     * Sends response
+     * @return string|void
+     */
+    public function render() {
+        http_response_code(304);
+        Registry::getUtils()->showMessageAndExit('');
     }
 
 
@@ -103,5 +103,14 @@ abstract class BaseCallbackController extends BaseController
             }
             return $rules;
         }
+    }
+
+    protected function sendResponse($data)
+    {
+        Registry::getLogger()->log('debug', 'CALLBACK_RESPONSE: ' .
+            print_r($data, true)
+        );
+        header('Content-Type: application/json');
+        Registry::getUtils()->showMessageAndExit(json_encode($data));
     }
 }

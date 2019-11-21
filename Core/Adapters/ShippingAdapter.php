@@ -175,6 +175,11 @@ class ShippingAdapter extends BasketCostAdapter
         parent::validateItem($orderLine);
     }
 
+    /**
+     * @param array $updateData
+     * @throws KlarnaConfigException
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
+     */
     public function handleUpdate(&$updateData) {
         $updateData['shipping_options'] = $this->getShippingOptions($this->oBasket->getPaymentId());
         Registry::getLogger()->log('debug', 'SHIPPING_OPTIONS_RECALCULATED');
