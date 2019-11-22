@@ -6,6 +6,8 @@ namespace TopConcepts\Klarna\Core\InstantShopping;
 
 use OxidEsales\Eshop\Application\Model\Article;
 use OxidEsales\Eshop\Application\Model\Basket;
+use OxidEsales\Eshop\Application\Model\CountryList;
+use OxidEsales\Eshop\Application\Model\DeliveryList;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Core\Adapters\ShippingAdapter;
@@ -14,6 +16,7 @@ use TopConcepts\Klarna\Core\Exception\KlarnaConfigException;
 use TopConcepts\Klarna\Core\KlarnaConsts;
 use TopConcepts\Klarna\Core\KlarnaUserManager;
 use TopConcepts\Klarna\Core\KlarnaUtils;
+use TopConcepts\Klarna\Model\KlarnaCountryList;
 use TopConcepts\Klarna\Model\KlarnaPayment;
 use TopConcepts\Klarna\Model\KlarnaUser;
 
@@ -21,6 +24,7 @@ class Button
 {
     const ENV_TEST = 'playground';
     const ENV_LIVE = 'production';
+    const AVAILABLE_COUNTRIES = ['SE', 'NO', 'FI', 'DE', 'NL', 'AT', 'CH', 'US', 'UK'];
 
     protected $errors = [];
 
@@ -33,6 +37,11 @@ class Button
      * @var object|BasketAdapter
      */
     protected  $basketAdapter;
+
+    protected $_klarnaCountryList;
+
+    /** @var ShippingAdapter $_oShippingAdapter */
+    protected $_oShippingAdapter;
 
     public function getConfig(Article $product = null, $update = false) {
         /** @var BasketAdapter $basketAdapter */
@@ -70,6 +79,11 @@ class Button
             $this->errors[] = $e->getMessage();
             Registry::getLogger()->log('info', $e->getMessage(), [__METHOD__]);
         }
+
+        $config["billing_countries"] = array_values($this->getKlarnaCountryList());
+        $config["shipping_countries"] = array_values($this->getShippingCountries($this->oBasket));
+
+
         if (count($this->errors) === 0) {
             return array_merge(
                 $config,
@@ -135,7 +149,7 @@ class Button
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     protected function getShippingOptions(Article $product = null) {
-        $oShippingAdapter = oxNew(
+        $this->_oShippingAdapter = oxNew(
             ShippingAdapter::class,
             [],
             null,
@@ -143,7 +157,7 @@ class Button
             $this->getuser()
         );
 
-        return $oShippingAdapter->getShippingOptions(KlarnaPayment::KLARNA_INSTANT_SHOPPING);
+        return $this->_oShippingAdapter->getShippingOptions(KlarnaPayment::KLARNA_INSTANT_SHOPPING);
     }
 
     protected function getEnvironment() {
@@ -242,5 +256,43 @@ class Button
         $oBasket->calculateBasket(true);
 
         return $this->oBasket = $oBasket;
+    }
+
+    protected function getKlarnaCountryList()
+    {
+        if ($this->_klarnaCountryList === null) {
+            $this->_klarnaCountryList = array();
+            /** @var KlarnaCountryList $oCountryList */
+            $oCountryList = oxNew(CountryList::class);
+            $oCountryList->loadActiveKlarnaCountriesByPaymentId(KlarnaPayment::KLARNA_INSTANT_SHOPPING);
+            foreach ($oCountryList as $oCountry) {
+                if(in_array($oCountry->oxcountry__oxisoalpha2->value, self::AVAILABLE_COUNTRIES)) {
+                    $this->_klarnaCountryList[$oCountry->oxcountry__oxid->value] = $oCountry->oxcountry__oxisoalpha2->value;
+                }
+            }
+        }
+
+        return $this->_klarnaCountryList;
+    }
+
+    protected function getShippingCountries($oBasket)
+    {
+        $list = $this->_oShippingAdapter->getShippingOptions(KlarnaPayment::KLARNA_INSTANT_SHOPPING);
+        $aCountries = $this->getKlarnaCountryList();
+        $oDelList = Registry::get(DeliveryList::class);
+        $shippingCountries = [];
+        foreach ($list as $l)
+        {
+            $sShipSetId = $l['id'];
+            foreach ($aCountries as $sCountryId => $alpha2) {
+                if ($oDelList->hasDeliveries($oBasket, $this->oBasket->getUser(), $sCountryId, $sShipSetId)
+                && in_array($alpha2, self::AVAILABLE_COUNTRIES)) {
+                    $shippingCountries[$alpha2] = $alpha2;
+                }
+            }
+
+        }
+
+        return $shippingCountries;
     }
 }
