@@ -16,6 +16,7 @@ use TopConcepts\Klarna\Core\Exception\KlarnaConfigException;
 use TopConcepts\Klarna\Core\KlarnaConsts;
 use TopConcepts\Klarna\Core\KlarnaUserManager;
 use TopConcepts\Klarna\Core\KlarnaUtils;
+use TopConcepts\Klarna\Model\KlarnaInstantBasket;
 use TopConcepts\Klarna\Model\KlarnaCountryList;
 use TopConcepts\Klarna\Model\KlarnaPayment;
 use TopConcepts\Klarna\Model\KlarnaUser;
@@ -136,7 +137,11 @@ class Button
     }
 
     protected function getOrderLines(Article $product = null) {
-        $this->basketAdapter->storeBasket();
+        $type = KlarnaInstantBasket::TYPE_SINGLE_PRODUCT;
+        if ($product === null) {
+            $type = KlarnaInstantBasket::TYPE_BASKET;
+        }
+        $this->basketAdapter->storeBasket($type);
         $this->basketAdapter->buildOrderLinesFromBasket();
 
         return $this->basketAdapter->getOrderData()['order_lines'];

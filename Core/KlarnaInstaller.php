@@ -327,9 +327,12 @@ class KlarnaInstaller extends ShopConfiguration
             CREATE TABLE IF NOT EXISTS `tcklarna_instant_basket` (
                 `OXID` VARCHAR(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
                 `OXUSERID` CHAR(32) NOT NULL DEFAULT '' COMMENT 'User id (oxuser)' COLLATE 'latin1_general_ci',
-                `BASKET_INFO` MEDIUMBLOB NOT NULL DEFAULT '',
+                `BASKET_INFO` MEDIUMBLOB,
                 `STATUS`  VARCHAR(32) NOT NULL DEFAULT 'OPENED',
-                PRIMARY KEY (`OXID`)
+                `TYPE` VARCHAR(32) NOT NULL DEFAULT '',
+                `TIMESTAMP` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Timestamp',
+                PRIMARY KEY (`OXID`),
+                KEY `OXUSERID` (`OXUSERID`)
             )
             ENGINE = InnoDB
             DEFAULT CHARSET = utf8;";
