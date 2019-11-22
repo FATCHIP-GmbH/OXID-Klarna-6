@@ -283,14 +283,16 @@ class BasketAdapter
     }
 
     /**
-     * @return KlarnaInstantBasket
-     * @throws \Exception
+     * @param null $type
+     * @return void
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      */
-    public function storeBasket()
+    public function storeBasket($type = null)
     {
         if ($this->oInstantShoppingBasket === null) {
             $this->oInstantShoppingBasket = oxNew(KlarnaInstantBasket::class);
             $this->oInstantShoppingBasket->loadByUser($this->oUser->getId());
+            $this->oInstantShoppingBasket->setType($type);
         }
         $this->oInstantShoppingBasket->setOxuserId($this->oUser->getId());
         $this->oInstantShoppingBasket->setBasketInfo(serialize($this->oBasket));

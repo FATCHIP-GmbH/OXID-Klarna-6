@@ -30,12 +30,18 @@ class KlarnaThankYouController extends KlarnaThankYouController_parent
 {
     /** @var KlarnaCheckoutClient */
     protected $client;
+
+    protected $instantShoppingActive = false;
     /**
      * @return mixed
      */
     public function render()
     {
         $render = parent::render();
+        if ($this->instantShoppingActive) {
+            return $render;
+        }
+
         if ($sKlarnaId = Registry::getSession()->getVariable('klarna_checkout_order_id')) {
             $oOrder = oxNew(Order::class);
             $query = $oOrder->buildSelectString(array('tcklarna_orderid' => $sKlarnaId));
@@ -69,6 +75,7 @@ class KlarnaThankYouController extends KlarnaThankYouController_parent
             /** @var KlarnaInstantBasket $oInstantShoppingBasket */
             $oInstantShoppingBasket = oxNew(KlarnaInstantBasket::class);
             if ($oInstantShoppingBasket->load($instantShoppingBasketId) && $oInstantShoppingBasket->isFinalized()) {
+                $this->instantShoppingActive = true;
                 // copying basket object
                 $this->_oBasket = clone $oInstantShoppingBasket->getBasket();
 //                $c = new FrontendController();

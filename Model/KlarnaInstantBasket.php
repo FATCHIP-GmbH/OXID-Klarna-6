@@ -13,6 +13,10 @@ class KlarnaInstantBasket extends BaseModel
     const TABLE_NAME = 'tcklarna_instant_basket';
 
     const FINALIZED_STATUS = 'FINALIZED';
+
+    const TYPE_SINGLE_PRODUCT = 'single_product';
+    const TYPE_BASKET = 'bakset';
+
     /**
      * Class constructor, initiates parent constructor.
      * @codeCoverageIgnore
@@ -62,6 +66,11 @@ class KlarnaInstantBasket extends BaseModel
     public function setStatus($newStatus)
     {
         $this->tcklarna_instant_basket__status = new Field($newStatus, Field::T_RAW);
+    }
+
+    public function setType($type)
+    {
+        $this->tcklarna_instant_basket__type = new Field($type, Field::T_RAW);
     }
 
     public function isFinalized()
