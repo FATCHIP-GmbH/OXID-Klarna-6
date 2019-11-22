@@ -36,17 +36,16 @@ class BasketItemAdapter extends BaseBasketItemAdapter
      */
     public function handleUpdate(&$updateData)
     {
-        // item quantity changed in the iframe
+        // item quantity changed in the iframe - updated basket amount
         if ($this->diffData['key'] === 'quantity') {
             /** @var BasketItem $oBasketItem */
             $oBasketItem = $this->oBasket->addToBasket(
-                $this->oItem->getArticle()->getId(),
+                $this->oItem->getProductId(),
                 $this->diffData['requestedValue'] - $this->diffData['basketValue'],
-                null,
-                null,
-                null,
-                $this->oItem->isBundle(),
-                null
+                $this->oItem->getSelList(),
+                $this->oItem->getPersParams(),
+                true,
+                $this->oItem->isBundle()
             );
             $this->oItem = $oBasketItem;
             $this->oBasket->calculateBasket(true);
