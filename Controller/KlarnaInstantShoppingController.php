@@ -37,11 +37,21 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             'validator' => [
                 'order' => ['required', 'notEmpty ', 'extract'],
                 'authorization_token' => ['required', 'notEmpty ', 'extract'],
+                'merchant_data' => ['required', 'notEmpty ', 'extract']
             ]
         ],
         'updateOrder' => [
             'log' => true,
+            'validator' => [
+                'update_context' => ['required', 'notEmpty ', 'extract'],
+                'merchant_data' => ['required', 'notEmpty ', 'extract']
+            ]
         ]
+    ];
+
+    protected $contextActionMap = [
+        'identification_updated' => 'recalculateShipping',
+        'specifications_selected' => 'recalculateBasket'
     ];
 
     public function init()
@@ -59,7 +69,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
      */
     public function placeOrder()
     {
-        $this->userManager->initUser($this->requestData['order']);
+        $this->userManager->initUser($this->actionData['order']);
         $basketAdapter = $this->createBasketAdapter();
         if ($basketAdapter === false) {
             return;
@@ -121,7 +131,6 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         Registry::getSession()->setVariable('sess_challenge', $orderId);
 
         return $orderId;
-
     }
 
 
@@ -150,54 +159,30 @@ class KlarnaInstantShoppingController extends BaseCallbackController
     public function updateOrder()
     {
         $this->actionData['order'] = $this->requestData;
-        $this->userManager->initUser($this->requestData);
+        $this->userManager->initUser($this->actionData['order']);
+        $contextAction = $this->contextActionMap[$this->actionData['update_context']];
+        if ($contextAction === false) {
+            return;
+        }
         $basketAdapter = $this->createBasketAdapter();
         if ($basketAdapter === false) {
             return;
         }
-        /** @var BasketAdapter $basketAdapter */
+
         try {
             $basketAdapter->buildOrderLinesFromBasket();
             $basketAdapter->setHandleBasketUpdates(true);
             $basketAdapter->validateOrderLines();
+            $basketAdapter->storeBasket();
         } catch (\Exception $exception) {
             Registry::getLogger()->log('error', $exception->getMessage());
-            http_response_code(304);
-            exit;
+            return;
         }
 
         $updateData = $basketAdapter->getUpdateData();
         if ($updateData) {
             $this->sendResponse($updateData);
         }
-
-//        var_dump($basketAdapter);
-//        if($this->requestData['update_context'] == "identification_updated") {//User info and address change
-//            $basketAdapter->buildOrderLinesFromBasket();
-//            $orderLines = $basketAdapter->getOrderData();
-//            $this->db->commitTransaction();
-//            $this->updateResponse(json_encode($orderLines));
-//
-//            exit;
-//        }
-//
-//        if($this->requestData['update_context'] == "specifications_selected") {//Product changes
-//            $this->db->commitTransaction();
-//            $this->updateResponse('{"shipping_options": [{
-//                        "id": "oxidstandard",
-//                        "name": "DHL",
-//                        "description": "DHL Standard Versand",
-//                        "price": 100,
-//                        "tax_amount": 10,
-//                        "tax_rate": 1000,
-//                        "preselected": true,
-//                        "shipping_method": "BoxReg"
-//                    }]}');
-//
-//            exit;
-//        }
-        http_response_code(304);
-        exit;
     }
 
     /**
@@ -224,17 +209,6 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         $basketAdapter->setInstantShoppingBasket($oInstantShoppingBasket);
 
         return $basketAdapter;
-    }
-
-    protected function sendResponse($data)
-    {
-        header('Content-Type: application/json');
-        http_response_code(304);
-        echo json_encode($data);
-        Registry::getLogger()->log('debug', 'UPDATE_SEND: ' .
-            print_r($data, true)
-        );
-        exit;
     }
 
     protected function updateOrderObject($orderId, $approveResponse)
@@ -271,6 +245,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
 //            }
 //        };
 //        $multiply($original['order_lines'][0], 4);
+//        $original['update_context'] = 'specifications_selected';
 //
 //        return $original;
 //    }

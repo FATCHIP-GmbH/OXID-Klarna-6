@@ -182,20 +182,20 @@ class BasketAdapter
 
         /**
          * @var string $costKey oxdelivery, oxwrapping, oxgifcard, oxpayment
-         * @var Price $oPrice
+         * @var Price $oCost
          */
-        foreach($this->oBasket->getCosts() as $costKey => $oPrice) {
-            if($oPrice === null) {
+        foreach($this->oBasket->getCosts() as $costKey => $oCost) {
+            if($oCost === null) {
                 continue;
             }
             $itemAdapter = $this->createItemAdapterForType(
                 ['merchant_data' => ['type' => $costKey]],
-                $oPrice
+                $oCost
             );
 
             yield $itemAdapter;
         }
-
+        /** @var \stdClass $oVoucher */
         foreach($this->oBasket->getVouchers() as $ref => $oVoucher) {
             $itemAdapter = $this->createItemAdapterForType(
                 ['merchant_data' => ['type' => 'voucher']],
@@ -204,7 +204,7 @@ class BasketAdapter
 
             yield $itemAdapter;
         }
-
+        /** @var \stdClass $oDiscount */
         foreach($this->oBasket->getDiscounts() as $ref => $oDiscount) {
             $itemAdapter = $this->createItemAdapterForType(
                 ['merchant_data' => ['type' => 'discount']],
@@ -250,19 +250,24 @@ class BasketAdapter
         };
 
         foreach ($this->requestedOrderLines as $orderLine) {
-            /** @var  BasketItemAdapter|ShippingAdapter $oItemAdapter */
             $itemKey = $getTypeFromOrderLine($orderLine) . '_' . $orderLine['reference'];
             if (isset($this->itemAdapters[$itemKey]) === false) {
                 throw new StandardException("INVALID_ITEM: $itemKey");
             }
+            /** @var  BasketItemAdapter $oItemAdapter */
+            $oItemAdapter = $this->itemAdapters[$itemKey];
             if ($this->handleBasketUpdates) {
                 try {
-                    $this->itemAdapters[$itemKey]->validateItem($orderLine);
+                    $oItemAdapter->validateItem($orderLine);
+                    // force shipping options update
+                    if ($oItemAdapter->getType() === BaseBasketItemAdapter::SHIPPING_TYPE) {
+                        $oItemAdapter->handleUpdate($this->updateData);
+                    }
                 } catch (InvalidItemException $itemException) {
-                    $this->itemAdapters[$itemKey]->handleUpdate($this->updateData);
+                    $oItemAdapter->handleUpdate($this->updateData);
                 }
             } else {
-                $this->itemAdapters[$itemKey]->validateItem($orderLine);
+                $oItemAdapter->validateItem($orderLine);
             }
         }
 
@@ -283,13 +288,14 @@ class BasketAdapter
      */
     public function storeBasket()
     {
-        $tempBasket = oxNew(KlarnaInstantBasket::class);
-        $tempBasket->loadByUser($this->oUser->getId());
-        $tempBasket->setOxuserId($this->oUser->getId());
-        $tempBasket->setBasketInfo(serialize($this->oBasket));
-        $tempBasket->save();
-        Registry::getSession()->setVariable('instant_shopping_basket_id', $tempBasket->getId());
-        $this->oInstantShoppingBasket = $tempBasket;
+        if ($this->oInstantShoppingBasket === null) {
+            $this->oInstantShoppingBasket = oxNew(KlarnaInstantBasket::class);
+            $this->oInstantShoppingBasket->loadByUser($this->oUser->getId());
+        }
+        $this->oInstantShoppingBasket->setOxuserId($this->oUser->getId());
+        $this->oInstantShoppingBasket->setBasketInfo(serialize($this->oBasket));
+        $this->oInstantShoppingBasket->save();
+        Registry::getSession()->setVariable('instant_shopping_basket_id', $this->oInstantShoppingBasket->getId());
     }
 
     /**

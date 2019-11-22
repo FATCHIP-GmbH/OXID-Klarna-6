@@ -37,6 +37,7 @@ abstract class BaseBasketItemAdapter
         self::BASKET_ITEM_TYPE => BasketItemAdapter::class,
         self::BUNDLE_TYPE => BasketItemAdapter::class,
         self::SHIPPING_TYPE => ShippingAdapter::class,
+        self::WRAPPING_TYPE => WrappingAdapter::class,
         self::GIFT_CARD_TYPE => GiftCardAdapter::class,
         self::PAYMENT_TYPE => PaymentAdapter::class,
         self::VOUCHER_TYPE => VoucherAdapter::class,
