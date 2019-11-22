@@ -327,7 +327,7 @@ or contact Klarna Integration Support.',
     'TCKLARNA_CREDIT_PROMOTION_BASKET_TOOLTIP'  => 'Please copy and paste the placement tag to promote financing and monthly payments with credit promotions on the basket overview page',
     'TCKLARNA_TOP_STRIP_PROMOTION_TOOLTIP'      => 'Please copy and paste the placement tag to promote generic and payment method specific messaging on shop home page',
     'TCKLARNA_FOOTER_PROMOTION_TOOLTIP'         => 'Please copy and paste the placement tag to show your available payment methods with Klarna on the shop footer',
-    'TCKLARNA_BANNER_PROMOTION_TOOLTIP'         => 'GPlease copy and paste the placement tag to show a banner on your shop homepage',
+    'TCKLARNA_BANNER_PROMOTION_TOOLTIP'         => 'Please copy and paste the placement tag to show a banner on your shop homepage',
     'TCKLARNA_ON_SITE_MESSAGING_HEADER_TITLE'   => 'What is On-Site Messaging?',
     'TCKLARNA_ON_SITE_MESSAGING_HEADER_DESC' => 'Consumers are not always aware of the different credit and financing options available to them before they reach the checkout. Knowing financing is available early on influences the purchase decision.
 On-Site Messaging is easy and simple to integrate providing tailored messaging ranging from generic banners to promote your partnership with Klarna and availability of financing to personalized credit promotions on product or cart pages.',
