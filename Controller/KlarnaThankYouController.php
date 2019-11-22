@@ -103,9 +103,6 @@ class KlarnaThankYouController extends KlarnaThankYouController_parent
     protected function clearInstantShopping($oInstantShoppingBasket)
     {
         Registry::getSession()->deleteVariable('instant_shopping_basket_id');
-        if ($oInstantShoppingBasket->getType() === KlarnaInstantBasket::TYPE_BASKET) {
-            Registry::getSession()->getBasket()->deleteBasket(); // remove session basket and item reservations
-        }
         $oInstantShoppingBasket->delete();
     }
 }

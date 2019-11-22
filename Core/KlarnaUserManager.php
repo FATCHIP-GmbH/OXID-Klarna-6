@@ -22,7 +22,10 @@ class KlarnaUserManager
     {
         /** @var User | KlarnaUser $oUser */
         $oUser = oxNew(User::class);
-        $oUser->loadByEmail($orderData['billing_address']['email']);
+        $loaded = $oUser->load($orderData['userId']);
+        if ($loaded === false) {
+            $oUser->setFakeUserId();
+        }
 
         //Build user info
         $oCountry = oxNew(Country::class);

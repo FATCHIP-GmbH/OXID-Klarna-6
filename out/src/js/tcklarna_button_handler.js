@@ -23,6 +23,14 @@ function KlButtonManager (buttonConfig) {
         buttonConfig.setup.instance_id = instanceIndex.toString();
         Klarna.InstantShopping.load(buttonConfig);
         console.log(buttonConfig);
+
+        Klarna.InstantShopping.on(
+            'confirmation_displayed',
+            function (event) {
+                $.ajax('?cl=KlarnaInstantShoppingController&fnc=successAjax');
+            },
+            {setup: {instance_id: buttonConfig.setup.instance_id}}
+        );
     }
 
     this.updateInstances = function(buttonConfig) {

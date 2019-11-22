@@ -291,10 +291,17 @@ class BasketAdapter
     {
         if ($this->oInstantShoppingBasket === null) {
             $this->oInstantShoppingBasket = oxNew(KlarnaInstantBasket::class);
-            $this->oInstantShoppingBasket->loadByUser($this->oUser->getId());
+            $instant_shopping_basket_id = Registry::getSession()->getVariable('instant_shopping_basket_id');
+            if ($instant_shopping_basket_id) {
+                $this->oInstantShoppingBasket->load($instant_shopping_basket_id);
+            } else {
+                $this->oInstantShoppingBasket->loadByUser($this->oUser->getId());
+            }
+            $this->oInstantShoppingBasket->setOxuserId($this->oUser->getId());
             $this->oInstantShoppingBasket->setType($type);
+            $this->oInstantShoppingBasket->setStatus(KlarnaInstantBasket::OPENED_STATUS);
         }
-        $this->oInstantShoppingBasket->setOxuserId($this->oUser->getId());
+
         $this->oInstantShoppingBasket->setBasketInfo(serialize($this->oBasket));
         $this->oInstantShoppingBasket->save();
         Registry::getSession()->setVariable('instant_shopping_basket_id', $this->oInstantShoppingBasket->getId());

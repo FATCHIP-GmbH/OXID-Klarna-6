@@ -13,6 +13,7 @@ class KlarnaInstantBasket extends BaseModel
     const TABLE_NAME = 'tcklarna_instant_basket';
 
     const FINALIZED_STATUS = 'FINALIZED';
+    const OPENED_STATUS = 'OPENED';
 
     const TYPE_SINGLE_PRODUCT = 'single_product';
     const TYPE_BASKET = 'bakset';

@@ -4,6 +4,7 @@
 namespace TopConcepts\Klarna\Controller;
 
 use OxidEsales\Eshop\Application\Controller\OrderController;
+use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface;
 use OxidEsales\Eshop\Core\DatabaseProvider;
@@ -46,6 +47,9 @@ class KlarnaInstantShoppingController extends BaseCallbackController
                 'update_context' => ['required', 'notEmpty ', 'extract'],
                 'merchant_data' => ['required', 'notEmpty ', 'extract']
             ]
+        ],
+        'successAjax' => [
+            'log' => false
         ]
     ];
 
@@ -69,7 +73,6 @@ class KlarnaInstantShoppingController extends BaseCallbackController
      */
     public function placeOrder()
     {
-        $this->userManager->initUser($this->actionData['order']);
         $basketAdapter = $this->createBasketAdapter();
         if ($basketAdapter === false) {
             return;
@@ -196,7 +199,15 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         if ($oInstantShoppingBasket->load($instantShoppingBasketId) === false) {
             return false;
         }
+        $oInstantShoppingBasket->getOxuserId();
+        $this->actionData['order']['userId'] = $oInstantShoppingBasket->getOxuserId();
+        $this->userManager->initUser($this->actionData['order']);
+
+        /** @var Basket $oBasket */
         $oBasket = $oInstantShoppingBasket->getBasket();
+
+        Registry::getLogger()->info(print_r($oBasket->getBasketUser(), true));
+
         Registry::getSession()->setBasket($oBasket);
         /** @var BasketAdapter $basketAdapter */
         $basketAdapter = oxNew(
@@ -222,6 +233,23 @@ class KlarnaInstantShoppingController extends BaseCallbackController
 
         $oOrder->oxorder__tcklarna_orderid = new Field($approveResponse['order_id'], Field::T_RAW);
         $oOrder->save();
+    }
+
+    public function successAjax()
+    {
+        $result = false;
+        $instantShoppingBasketId = Registry::getSession()->getVariable('instant_shopping_basket_id');
+        if ($instantShoppingBasketId) {
+            /** @var KlarnaInstantBasket $oInstantShoppingBasket */
+            $oInstantShoppingBasket = oxNew(KlarnaInstantBasket::class);
+            if ($oInstantShoppingBasket->load($instantShoppingBasketId) && $oInstantShoppingBasket->isFinalized()) {
+                if ($oInstantShoppingBasket->getType() === KlarnaInstantBasket::TYPE_BASKET) {
+                    $result = true;
+                    Registry::getSession()->getBasket()->deleteBasket(); // remove session basket and item reservations
+                }
+            }
+        }
+        $this->sendResponse(['result' => (int)$result]);
     }
 
 

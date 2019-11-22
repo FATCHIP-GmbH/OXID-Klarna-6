@@ -285,7 +285,7 @@ class KlarnaUser extends KlarnaUser_parent
     /**
      *
      */
-    protected function setFakeUserId()
+    public function setFakeUserId()
     {
         if (Registry::getSession()->hasVariable('sFakeUserId')) {
             $this->setId(Registry::getSession()->getVariable('sFakeUserId'));
