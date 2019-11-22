@@ -73,6 +73,13 @@ class KlarnaInstantBasket extends BaseModel
         $this->tcklarna_instant_basket__type = new Field($type, Field::T_RAW);
     }
 
+    public function getType()
+    {
+        return $this->tcklarna_instant_basket__type->value;
+    }
+
+
+
     public function isFinalized()
     {
         return $this->tcklarna_instant_basket__status->value === self::FINALIZED_STATUS;
@@ -80,21 +87,27 @@ class KlarnaInstantBasket extends BaseModel
 
     /**
      * @param $userId
-     * @return $this
+     * @return bool
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      */
     public function loadByUser($userId)
     {
-        $sql = "SELECT * FROM tcklarna_instant_basket ib WHERE ib.OXUSERID = ".
-            DatabaseProvider::getDb()->quote($userId);
+        $query = $this->buildSelectString([$this->getViewName() . '.OXUSERID' => $userId]);
+        $this->_isLoaded = $this->assignRecord($query);
 
-        $this->assignRecord($sql);
-
-        return $this;
+        return $this->_isLoaded;
     }
 
     public function getBasket()
     {
         return unserialize($this->tcklarna_instant_basket__basket_info->rawValue);
+    }
+
+    public function save()
+    {
+        $now = date('Y-m-d H:i:s', \OxidEsales\Eshop\Core\Registry::getUtilsDate()->getTime());
+        $this->tcklarna_instant_basket__timestamp = new Field($now, Field::T_RAW);
+
+        return parent::save();
     }
 }
