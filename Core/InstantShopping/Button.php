@@ -44,6 +44,12 @@ class Button
     /** @var ShippingAdapter $_oShippingAdapter */
     protected $_oShippingAdapter;
 
+    /**
+     * @param Article|null $product
+     * @param bool $update
+     * @return array|bool
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
+     */
     public function getConfig(Article $product = null, $update = false) {
         /** @var BasketAdapter $basketAdapter */
         $this->basketAdapter = oxNew(
@@ -53,11 +59,6 @@ class Button
             []
         );
 
-        if ($update) {
-            return [
-                "order_lines" => $this->getOrderLines($product)
-            ];
-        }
         $config = [
             "setup"=> [
                 "key" => $this->getButtonKey(),
@@ -252,7 +253,12 @@ class Button
         if($product !== null) {
             $oBasket = oxNew(Basket::class);
             $oBasket->setBasketUser($this->oUser);
-            $oBasket->addToBasket($product->getId(), 1);
+            try {
+                $oBasket->addToBasket($product->getId(), 1);
+            } catch (\Exception $e) {
+                Registry::getLogger()->log('error', print_r($e->getMessage(), true));
+            }
+
             Registry::getSession()->deleteVariable("blAddedNewItem"); // prevent showing notification to user
         } else {
             $oBasket = Registry::getSession()->getBasket();
