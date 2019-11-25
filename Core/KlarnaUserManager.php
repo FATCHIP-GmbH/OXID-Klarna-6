@@ -15,15 +15,17 @@ class KlarnaUserManager
 
     /**
      * @param $orderData
+     * @param null $oUser
      * @return object|User
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      */
-    public function initUser($orderData)
+    public function initUser($orderData, $oUser = null)
     {
         /** @var User | KlarnaUser $oUser */
-        $oUser = oxNew(User::class);
-        $loaded = $oUser->load($orderData['userId']);
-        if ($loaded === false) {
+        if ($oUser === null) {
+            $oUser = oxNew(User::class);
+            $oUser->load($orderData['userId']);
+        }
+        if ($oUser->isLoaded() === false) {
             $oUser->setFakeUserId();
         }
 
@@ -34,7 +36,15 @@ class KlarnaUserManager
             Field::T_RAW
         );
         //TODO: this part requires update after merging paypal fixes - KlarnaFormatter is updated in that branch
-        $oUser->assign(KlarnaFormatter::klarnaToOxidAddress($orderData, 'billing_address'));
+        $aUserData = KlarnaFormatter::klarnaToOxidAddress($orderData, 'billing_address');
+        $nonEmptyFields = array_filter(
+            $aUserData,
+            function($value, $name) {
+                return $value !== '';
+            },
+            ARRAY_FILTER_USE_BOTH
+        );
+        $oUser->assign($nonEmptyFields);
         $this->setEmptyFields($oUser);
 
         Registry::getSession()->setUser($oUser);

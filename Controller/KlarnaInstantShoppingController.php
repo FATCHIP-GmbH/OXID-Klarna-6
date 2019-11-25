@@ -191,7 +191,6 @@ class KlarnaInstantShoppingController extends BaseCallbackController
     public function updateOrder()
     {
         $this->actionData['order'] = $this->requestData;
-        $this->userManager->initUser($this->actionData['order']);
         $contextAction = $this->contextActionMap[$this->actionData['update_context']];
         if ($contextAction === false) {
             return;
@@ -228,12 +227,15 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         if ($oInstantShoppingBasket->load($instantShoppingBasketId) === false) {
             return false;
         }
-        $oInstantShoppingBasket->getOxuserId();
-        $this->actionData['order']['userId'] = $oInstantShoppingBasket->getOxuserId();
-        $this->userManager->initUser($this->actionData['order']);
+//        $oInstantShoppingBasket->getOxuserId();
+//        $this->actionData['order']['userId'] = $oInstantShoppingBasket->getOxuserId();
+//        $this->userManager->initUser($this->actionData['order']);
+
 
         /** @var Basket $oBasket */
         $oBasket = $oInstantShoppingBasket->getBasket();
+        $this->userManager->initUser($this->actionData['order'], $oBasket->getBasketUser());
+
         Registry::getSession()->setBasket($oBasket);
         /** @var BasketAdapter $basketAdapter */
         $basketAdapter = oxNew(
