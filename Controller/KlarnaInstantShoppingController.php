@@ -14,6 +14,8 @@ use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Core\Adapters\BasketAdapter;
 use TopConcepts\Klarna\Core\Exception\InvalidOrderExecuteResult;
+use TopConcepts\Klarna\Core\Exception\InvalidItemException;
+use TopConcepts\Klarna\Core\Exception\KlarnaBasketTooLargeException;
 use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Core\InstantShopping\HttpClient;
 use TopConcepts\Klarna\Core\KlarnaUserManager;
@@ -75,6 +77,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
      */
     public function placeOrder()
     {
+        /** @var BasketAdapter $basketAdapter */
         $basketAdapter = $this->createBasketAdapter();
         if ($basketAdapter === false) {
             return;
@@ -144,10 +147,35 @@ class KlarnaInstantShoppingController extends BaseCallbackController
      */
     protected function declineOrder($exception)
     {
+        $code = 'other';
+        $messageId = 'TCKLARNA_IS_ERROR_DEFAULT';
+
+        if ($exception instanceof KlarnaBasketTooLargeException) {
+            $messageId = $exception->getMessage();
+        }
+
+        if ($exception instanceof InvalidItemException) {
+            $oItemAdapter = $exception->getItemAdapter();
+            $code = $oItemAdapter->getErrorCode();
+        }
+
+        if ($exception instanceof InvalidOrderExecuteResult) {
+            $type = $exception->getType();
+            if ($type !== null) {
+                // oxOutOfStockException
+                // oxArticleInputException
+                $code = 'item_out_of_stock';
+            }
+        }
+
+        // address_error
+        // consumer_underaged
+
+        $iLang = $this->getLangId();
         $declineData = [
-            'deny_message' => $exception->getMessage(),
+            'deny_message' => Registry::getLang()->translateString($messageId, $iLang),
             'deny_redirect_url' => '',
-            'deny_code' => ''
+            'deny_code' => $code
         ];
 
         return $this->httpClient->declineOrder(
@@ -260,14 +288,25 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             foreach ($serializedExceptions as $serializedException) {
                 /** @var  ExceptionToDisplay $oException */
                 $oException = unserialize($serializedException);
-                // oxOutOfStockException
-                // oxArticleInputException
                 $orderException->setType($oException->getErrorClassType());
                 $orderException->setValues($oException->getValues());
                 break;
             }
         }
         return $orderException;
+    }
+
+    /**
+     * Return language id
+     * @return int
+     */
+    protected function getLangId()
+    {
+        $locale = $this->actionData['order']['locale'];
+        $langAbbr = reset(explode('-', $locale));
+        $langIds = Registry::getLang()->getLanguageIds();
+
+        return  array_search($langAbbr, $langIds) ?: 0;
     }
 
 

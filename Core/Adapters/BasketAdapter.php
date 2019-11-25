@@ -107,7 +107,7 @@ class BasketAdapter
             $typeClass = $adapterClassMap[$typeName];
         } else {
             Registry::getLogger()->log('error', 'UNRECOGNIZED_ORDER_LINE_TYPE', $orderLine);
-//        throw new StandardException('UNRECOGNIZED_ORDER_LINE_TYPE ' . $orderLine['merchant_data']['type']);
+            throw new StandardException('UNRECOGNIZED_ORDER_LINE_TYPE ' . $orderLine['merchant_data']['type']);
         }
 
         return oxNew($typeClass,
@@ -124,9 +124,6 @@ class BasketAdapter
      * Sets Shipping id on the basket
      *
      * @return $this
-     * @throws ArticleInputException
-     * @throws NoArticleException
-     * @throws OutOfStockException
      * @throws StandardException
      */
     public function buildBasketFromOrderData()

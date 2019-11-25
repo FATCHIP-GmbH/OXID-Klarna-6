@@ -168,6 +168,7 @@ class ShippingAdapter extends BasketCostAdapter
             ], true));
         if ($isValidShippingId === false) {
             $oEx = new InvalidItemException("INVALID_SHIPPING_ID");
+            $this->errorCode = 'unsupported_shipping_address';
             $oEx->setItemAdapter($this);
             throw $oEx;
         }

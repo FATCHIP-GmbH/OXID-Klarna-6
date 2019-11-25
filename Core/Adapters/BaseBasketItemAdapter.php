@@ -77,6 +77,8 @@ abstract class BaseBasketItemAdapter
     /** @var array  */
     protected $diffData = [];
 
+    protected $errorCode = 'other';
+
     public function __construct(array $itemData, $oItem = null, $oBasket = null, $oUser = null, $oOrder = null)
     {
         $this->itemData = $itemData;
@@ -220,7 +222,7 @@ abstract class BaseBasketItemAdapter
         ], true));
 
         if ($orderLine[$key] !== $basketValue) {
-            $oEx = new InvalidItemException("INVALID_ITEM");
+            $oEx = new InvalidItemException("TCKLARNA_INVALID_ITEM");
             $this->setDiffData([
                 'key' => $key,
                 'requestedValue' => $orderLine[$key],
@@ -245,5 +247,10 @@ abstract class BaseBasketItemAdapter
     public function setDiffData(array $diffData): void
     {
         $this->diffData = $diffData;
+    }
+
+    public function getErrorCode()
+    {
+        return $this->errorCode;
     }
 }
