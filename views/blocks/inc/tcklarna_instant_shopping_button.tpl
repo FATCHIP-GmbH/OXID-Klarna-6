@@ -1,4 +1,4 @@
-[{if !$oDetailsProduct->isNotBuyable()}]
+[{if $oDetailsProduct === null || ($oDetailsProduct && !$oDetailsProduct->isNotBuyable())}]
     [{assign var="oKlarnaButton" value=$oViewConf->getInstantShoppingButton()}]
     [{if $oKlarnaButton}]
         <p class="instant-shopping-button"><klarna-instant-shopping [{if $blCanBuy === false}]style="pointer-events: none;"[{/if}]></p>

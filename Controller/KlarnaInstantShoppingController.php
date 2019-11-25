@@ -8,10 +8,12 @@ use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface;
 use OxidEsales\Eshop\Core\DatabaseProvider;
+use OxidEsales\Eshop\Core\Exception\ExceptionToDisplay;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Core\Adapters\BasketAdapter;
+use TopConcepts\Klarna\Core\Exception\InvalidOrderExecuteResult;
 use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Core\InstantShopping\HttpClient;
 use TopConcepts\Klarna\Core\KlarnaUserManager;
@@ -85,9 +87,8 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             /** @var OrderController $oOrderController */
             $oOrderController = Registry::get(OrderController::class);
             $result = $oOrderController->execute();
-
             if ($result !== self::EXECUTE_SUCCESS) {
-                throw new StandardException('INVALID_ORDER_EXECUTE_RESULT: ' . $result);
+                throw $this->extractOrderException();
             }
 
             $response = $this->approveOrder();
@@ -205,9 +206,6 @@ class KlarnaInstantShoppingController extends BaseCallbackController
 
         /** @var Basket $oBasket */
         $oBasket = $oInstantShoppingBasket->getBasket();
-
-        Registry::getLogger()->info(print_r($oBasket->getBasketUser(), true));
-
         Registry::getSession()->setBasket($oBasket);
         /** @var BasketAdapter $basketAdapter */
         $basketAdapter = oxNew(
@@ -250,6 +248,26 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             }
         }
         $this->sendResponse(['result' => (int)$result]);
+    }
+
+    /**
+     * @return InvalidOrderExecuteResult
+     */
+    protected function extractOrderException() {
+        $orderException = new InvalidOrderExecuteResult('INVALID_ORDER_EXECUTE_RESULT');
+        $errors = Registry::getSession()->getVariable('Errors');
+        foreach ($errors as $location => $serializedExceptions) {
+            foreach ($serializedExceptions as $serializedException) {
+                /** @var  ExceptionToDisplay $oException */
+                $oException = unserialize($serializedException);
+                // oxOutOfStockException
+                // oxArticleInputException
+                $orderException->setType($oException->getErrorClassType());
+                $orderException->setValues($oException->getValues());
+                break;
+            }
+        }
+        return $orderException;
     }
 
 

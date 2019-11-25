@@ -253,6 +253,8 @@ class Button
         if($product !== null) {
             $oBasket = oxNew(Basket::class);
             $oBasket->setBasketUser($this->oUser);
+            $oBasket->enableSaveToDataBase(false);
+            $oBasket->setStockCheckMode(false);
             try {
                 $oBasket->addToBasket($product->getId(), 1);
             } catch (\Exception $e) {
