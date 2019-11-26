@@ -58,12 +58,29 @@ class KlarnaUserManager
         return $oUser;
     }
 
+    /**
+     * Fixes all falsy fields cloned to the order object later,
+     * replaces with empty oxid Field to avoid error while cloning.
+     * @param User $oUser
+     */
     protected function setEmptyFields($oUser)
     {
         $required = [
+            'oxuser__oxcompany',
+            'oxuser__oxusername',
+            'oxuser__oxfname',
+            'oxuser__oxlname',
+            'oxuser__oxstreet',
+            'oxuser__oxstreetnr',
+            'oxuser__oxaddinfo',
             'oxuser__oxustid',
+            'oxuser__oxcity',
+            'oxuser__oxcountryid',
+            'oxuser__oxstateid',
+            'oxuser__oxzip',
             'oxuser__oxfon',
-            'oxuser__oxfax'
+            'oxuser__oxfax',
+            'oxuser__oxsal'
         ];
         foreach ($required as $fieldName) {
             if ($oUser->{$fieldName} === false) {

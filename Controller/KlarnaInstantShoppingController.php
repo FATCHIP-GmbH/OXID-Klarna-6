@@ -235,6 +235,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         /** @var Basket $oBasket */
         $oBasket = $oInstantShoppingBasket->getBasket();
         $this->userManager->initUser($this->actionData['order'], $oBasket->getBasketUser());
+        $oBasket->calculateBasket(true);
 
         Registry::getSession()->setBasket($oBasket);
         /** @var BasketAdapter $basketAdapter */
