@@ -26,8 +26,8 @@ abstract class BaseBasketItemAdapter
         self::BASKET_ITEM_TYPE => 'physical',
         self::BUNDLE_TYPE => 'physical',
         self::SHIPPING_TYPE => 'shipping_fee',
-        self::WRAPPING_TYPE => 'surcharge',
-        self::GIFT_CARD_TYPE => 'gift_card',
+        self::WRAPPING_TYPE => 'physical',
+        self::GIFT_CARD_TYPE => 'physical',
         self::PAYMENT_TYPE => 'surcharge',
         self::DISCOUNT_TYPE => 'discount',
         self::VOUCHER_TYPE => 'discount'
