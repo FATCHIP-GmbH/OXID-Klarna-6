@@ -4,11 +4,16 @@
 namespace TopConcepts\Klarna\Core\Adapters;
 
 
+use DateInterval;
+use DateTime;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\BasketItem;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Application\Model\User;
+use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Exception\ArticleInputException;
+use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
+use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Exception\NoArticleException;
 use OxidEsales\Eshop\Core\Exception\OutOfStockException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
@@ -282,7 +287,7 @@ class BasketAdapter
     /**
      * @param null $type
      * @return void
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws DatabaseConnectionException
      */
     public function storeBasket($type = null)
     {
@@ -316,6 +321,8 @@ class BasketAdapter
         $this->oInstantShoppingBasket->setBasketInfo(serialize($this->oBasket));
         $this->oInstantShoppingBasket->setStatus(KlarnaInstantBasket::FINALIZED_STATUS);
         $this->oInstantShoppingBasket->save();
+
+        $this->removeOldBaskets();
     }
 
     /**
@@ -330,4 +337,20 @@ class BasketAdapter
     {
         $this->oInstantShoppingBasket = $oInstantShoppingBasket;
     }
+
+    /**
+     * Remove Temporary baskets that might been left out.(24h)
+     * @throws DatabaseConnectionException
+     * @throws DatabaseErrorException
+     */
+    protected function removeOldBaskets()
+    {
+        $db   = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
+        $sql  = 'DELETE FROM tcklarna_instant_basket WHERE TIMESTAMP < ?';
+        $date = new DateTime();
+        $date->add(DateInterval::createFromDateString('yesterday'));
+        $date = $date->format('Y-m-d H:i:s');
+        $db->execute($sql, [$date]);
+    }
+
 }
