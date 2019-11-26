@@ -261,6 +261,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         }
 
         $oOrder->oxorder__tcklarna_orderid = new Field($approveResponse['order_id'], Field::T_RAW);
+        $oOrder->saveMerchantIdAndServerMode();
         $oOrder->save();
     }
 

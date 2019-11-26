@@ -96,7 +96,7 @@ class KlarnaOrder extends KlarnaOrder_parent
      *
      * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      */
-    protected function saveMerchantIdAndServerMode()
+    public function saveMerchantIdAndServerMode()
     {
         $sCountryISO = KlarnaUtils::getCountryISO($this->getFieldData('oxbillcountryid'));
 

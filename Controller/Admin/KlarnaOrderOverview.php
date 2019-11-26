@@ -251,12 +251,15 @@ class KlarnaOrderOverview extends KlarnaOrderOverview_parent
      */
     public function isCredentialsValid()
     {
-        $this->addTplParam('sMid', $this->getEditObject()->getFieldData('tcklarna_merchantid'));
-        $this->addTplParam('sCountryISO', KlarnaUtils::getCountryISO($this->getEditObject()->getFieldData('oxbillcountryid')));
-        $currentMid = KlarnaUtils::getAPICredentials($this->getViewDataElement('sCountryISO'));
-        $this->addTplParam('currentMid', $currentMid['mid']);
+        $orderMID = $this->getEditObject()->getFieldData('tcklarna_merchantid');
+        $orderCountryISO = KlarnaUtils::getCountryISO($this->getEditObject()->getFieldData('oxbillcountryid'));
+        $currentMid = KlarnaUtils::getAPICredentials($orderCountryISO)['mid'];
 
-        if (strstr($this->getViewDataElement('currentMid'), $this->getViewDataElement('sMid'))) {
+        $this->addTplParam('sMid', $orderMID);
+        $this->addTplParam('sCountryISO', $orderCountryISO);
+        $this->addTplParam('currentMid', $currentMid);
+
+        if (strpos($currentMid, $orderMID) !== false) {
             return true;
         }
 
