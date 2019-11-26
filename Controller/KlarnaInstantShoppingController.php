@@ -234,6 +234,9 @@ class KlarnaInstantShoppingController extends BaseCallbackController
 
         /** @var Basket $oBasket */
         $oBasket = $oInstantShoppingBasket->getBasket();
+        if(!empty($this->actionData['order']['selected_shipping_option']['id'])) {
+            $oBasket->setShipping($this->actionData['order']['selected_shipping_option']['id']);
+        }
         $this->userManager->initUser($this->actionData['order'], $oBasket->getBasketUser());
         $oBasket->calculateBasket(true);
 
