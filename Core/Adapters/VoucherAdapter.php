@@ -30,7 +30,11 @@ class VoucherAdapter extends BaseBasketItemAdapter
         $this->validateData(
             $orderLine,
             'total_amount',
-            - $this->formatAsInt($this->oItem->dVoucherdiscount)  // Voucher is transferred to Klarna as negative value
+            - $this->formatAsInt(   // Voucher is transferred to Klarna as negative value
+                $this->formatPrice(
+                    $this->oItem->dVoucherdiscount
+                )
+            )
         );
     }
 
@@ -43,7 +47,11 @@ class VoucherAdapter extends BaseBasketItemAdapter
     {
         $quantity = 1;
         $taxRate = $this->formatAsInt($this->oBasket->getAdditionalServicesVatPercent());
-        $unitPrice = - $this->formatAsInt($this->oItem->dVoucherdiscount);
+        $unitPrice = - $this->formatAsInt(
+            $this->formatPrice(
+                $this->oItem->dVoucherdiscount
+            )
+        );
         $this->itemData['type'] = $this->getKlarnaType();
         $this->itemData['reference'] =  $this->oItem->sVoucherId;
         $this->itemData['name'] = $this->oItem->sVoucherNr;

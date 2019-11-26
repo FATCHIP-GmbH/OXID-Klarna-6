@@ -4,6 +4,7 @@
 namespace TopConcepts\Klarna\Core\Adapters;
 
 
+use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Core\Exception\InvalidItemException;
 
 class DiscountAdapter extends BaseBasketItemAdapter
@@ -29,7 +30,10 @@ class DiscountAdapter extends BaseBasketItemAdapter
         $this->validateData(
             $orderLine,
             'total_amount',
-            - $this->formatAsInt($this->oItem->dDiscount)  // Discount is transferred to Klarna as negative value
+            - $this->formatAsInt( // Discount is transferred to Klarna as negative value
+                $this->formatPrice(
+                    $this->oItem->dDiscount)
+            )
         );
     }
 
@@ -42,7 +46,10 @@ class DiscountAdapter extends BaseBasketItemAdapter
     {
         $quantity = 1;
         $taxRate = $this->formatAsInt($this->oBasket->getAdditionalServicesVatPercent());
-        $unitPrice = - $this->formatAsInt($this->oItem->dDiscount);
+        $unitPrice = - $this->formatAsInt(
+            $this->formatPrice(
+                $this->oItem->dDiscount)
+        );
         $this->itemData['type'] = $this->getKlarnaType();
         $this->itemData['reference'] =  $this->oItem->sOXID;
         $this->itemData['name'] = $this->oItem->sDiscount;

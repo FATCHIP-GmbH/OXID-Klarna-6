@@ -179,7 +179,16 @@ abstract class BaseBasketItemAdapter
      */
     public function formatAsInt($number)
     {
-        return (int)(Registry::getUtils()->fRound($number) * 100);
+        return (int)Registry::getUtils()->fRound($number * 100);
+    }
+
+    /**
+     * @param $value
+     * @return float
+     */
+    protected function formatPrice($value)
+    {
+        return Registry::getUtils()->fRound($value);
     }
 
     /**
