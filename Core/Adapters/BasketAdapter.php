@@ -88,6 +88,7 @@ class BasketAdapter
         $this->iLang = $oOrder ? $oOrder->getFieldData('oxlang') : null;
         $this->oOrder = $oOrder;
         $this->oBasket->setBasketUser($oUser);
+        $oBasket->calculateBasket(true);
         // copy original order data
         $this->requestedOrderLines = $this->orderData['order_lines'];
     }

@@ -266,7 +266,6 @@ class Button
             $oBasket = Registry::getSession()->getBasket();
         }
         $oBasket->setPayment(KlarnaPayment::KLARNA_INSTANT_SHOPPING);
-        $oBasket->calculateBasket(true);
 
         return $this->oBasket = $oBasket;
     }
