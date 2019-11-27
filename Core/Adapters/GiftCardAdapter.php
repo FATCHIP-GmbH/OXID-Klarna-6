@@ -31,11 +31,4 @@ class GiftCardAdapter extends BasketCostAdapter
         return $this->oCard->getId();
     }
 
-    public function addItemToBasket()
-    {
-        $this->oBasket->setCardId(
-            $this->itemData['reference']
-        );
-    }
-
 }

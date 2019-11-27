@@ -20,13 +20,6 @@ class ShippingAdapter extends BasketCostAdapter
 
     protected $oDeliverySet;
 
-    public function addItemToBasket()
-    {
-        $this->oBasket->setShipping(
-            $this->itemData['reference']
-        );
-    }
-
     /**
      * Resolves shippingId and related shipping set for basket or order object
      * @param $iLang

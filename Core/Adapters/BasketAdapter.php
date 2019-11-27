@@ -126,27 +126,6 @@ class BasketAdapter
     }
 
     /**
-     * Builds Basket with articles form order data
-     * Sets Shipping id on the basket
-     *
-     * @return $this
-     * @throws StandardException
-     */
-    public function buildBasketFromOrderData()
-    {
-        foreach ($this->orderData['order_lines'] as $klItem) {
-            $klItem['merchant_data'] = json_decode($klItem['merchant_data'], true);  // decode merchant_data
-            /** @var BasketItemAdapter|ShippingAdapter $itemAdapter */
-            $itemAdapter = $this->createItemAdapterForType($klItem, null);
-            $itemAdapter->addItemToBasket();
-            $this->itemAdapters[$itemAdapter->getItemKey()] = $itemAdapter;
-        }
-        $this->oBasket->calculateBasket();
-
-        return $this;
-    }
-
-    /**
      * @throws KlarnaBasketTooLargeException
      * @throws StandardException
      */

@@ -9,17 +9,6 @@ use TopConcepts\Klarna\Core\Exception\InvalidItemException;
 
 class DiscountAdapter extends BaseBasketItemAdapter
 {
-
-    /**
-     * Adds Klarna Order Line to oBasket
-     *
-     * @return mixed
-     */
-    public function addItemToBasket()
-    {
-        // TODO: Implement addItemToBasket() method.
-    }
-
     /**
      * Compares Klarna Order Line to oxid basket object
      * @param $orderLine
