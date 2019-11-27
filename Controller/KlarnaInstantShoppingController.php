@@ -6,6 +6,7 @@ namespace TopConcepts\Klarna\Controller;
 use OxidEsales\Eshop\Application\Controller\OrderController;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Order;
+use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Exception\ExceptionToDisplay;
@@ -237,6 +238,14 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         if(!empty($this->actionData['order']['selected_shipping_option']['id'])) {
             $oBasket->setShipping($this->actionData['order']['selected_shipping_option']['id']);
         }
+
+        $userEmail = $this->actionData['order']['billing_address']['email'];
+        if(!empty($userEmail)) {
+            $user = oxNew(User::class);
+            $user->loadByEmail($userEmail);
+            $oBasket->setBasketUser($user);
+        }
+
         $this->userManager->initUser($this->actionData['order'], $oBasket->getBasketUser());
         $oBasket->calculateBasket(true);
 
