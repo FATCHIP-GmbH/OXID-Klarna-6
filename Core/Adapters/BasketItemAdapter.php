@@ -29,9 +29,6 @@ class BasketItemAdapter extends BaseBasketItemAdapter
      * Adds Article to oBasket
      * @param $updateData
      * @return array
-     * @throws ArticleInputException
-     * @throws NoArticleException
-     * @throws OutOfStockException
      */
     public function handleUpdate(&$updateData)
     {
@@ -50,13 +47,17 @@ class BasketItemAdapter extends BaseBasketItemAdapter
                     true,
                     $this->oItem->isBundle()
                 );
-            } catch (\Exception $changeAmountException) {
+                $this->oItem = $oBasketItem;
+                $recalculateBasket = true;
+                $updateOrderLines = true;
 
+            } catch (\Exception $changeBasketException) {
+                // ArticleInputException
+                // NoArticleException
+                // OutOfStockException
+                // Currently there is no proper way to handle it in update callback request
+                Registry::getLogger()->log('error', $changeBasketException->getMessage());
             }
-
-            $this->oItem = $oBasketItem;
-            $recalculateBasket = true;
-            $updateOrderLines = true;
         }
 
         // item price is changed
