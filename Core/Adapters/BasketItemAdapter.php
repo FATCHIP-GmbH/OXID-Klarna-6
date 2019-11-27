@@ -41,7 +41,7 @@ class BasketItemAdapter extends BaseBasketItemAdapter
             try {
                 $oBasketItem = $this->oBasket->addToBasket(
                     $this->oItem->getProductId(),
-                    $this->diffData['requestedValue'] - $this->diffData['basketValue'],
+                    $this->diffData['requestedValue'],
                     $this->oItem->getSelList(),
                     $this->oItem->getPersParams(),
                     true,
