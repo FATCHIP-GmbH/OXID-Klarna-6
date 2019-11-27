@@ -252,7 +252,9 @@ class BasketAdapter
             return array_search($orderLine['type'], BaseBasketItemAdapter::ITEM_TYPE_MAP);
         };
 
+        // recalculateBasket updateOrderLines
         $globalFlags = '00';
+        $oShippingAdapter = null;
         foreach ($this->requestedOrderLines as $orderLine) {
             $itemKey = $getTypeFromOrderLine($orderLine) . '_' . $orderLine['reference'];
             if (isset($this->itemAdapters[$itemKey]) === false) {
@@ -261,12 +263,13 @@ class BasketAdapter
             /** @var  BasketItemAdapter $oItemAdapter */
             $oItemAdapter = $this->itemAdapters[$itemKey];
             if ($this->handleBasketUpdates) {
+                // capture shipping adapter
+                if ($oItemAdapter->getType() === BaseBasketItemAdapter::SHIPPING_TYPE) {
+                    $oShippingAdapter = $oItemAdapter;
+                    continue;
+                }
                 try {
                     $oItemAdapter->validateItem($orderLine);
-                    // force shipping options update
-                    if ($oItemAdapter->getType() === BaseBasketItemAdapter::SHIPPING_TYPE) {
-                        $oItemAdapter->handleUpdate($this->updateData);
-                    }
                 } catch (InvalidItemException $itemException) {
                     $globalFlags |= $oItemAdapter->handleUpdate($this->updateData);
                 }
@@ -285,8 +288,12 @@ class BasketAdapter
             if ($updateOrderLines) {
                 $this->updateData['order_lines'] = $this->orderData['order_lines'];
             }
-        }
 
+            // make sure that shipping is calculated at the end
+            if ($oShippingAdapter) {
+                $oShippingAdapter->handleUpdate($this->updateData);
+            }
+        }
 
         return $this;
     }
