@@ -252,6 +252,7 @@ class BasketAdapter
             return array_search($orderLine['type'], BaseBasketItemAdapter::ITEM_TYPE_MAP);
         };
 
+        $globalFlags = '00';
         foreach ($this->requestedOrderLines as $orderLine) {
             $itemKey = $getTypeFromOrderLine($orderLine) . '_' . $orderLine['reference'];
             if (isset($this->itemAdapters[$itemKey]) === false) {
@@ -267,12 +268,25 @@ class BasketAdapter
                         $oItemAdapter->handleUpdate($this->updateData);
                     }
                 } catch (InvalidItemException $itemException) {
-                    $oItemAdapter->handleUpdate($this->updateData);
+                    $globalFlags |= $oItemAdapter->handleUpdate($this->updateData);
                 }
             } else {
                 $oItemAdapter->validateItem($orderLine);
             }
         }
+
+        if ($this->handleBasketUpdates) {
+            [$recalculateBasket, $updateOrderLines] = str_split($globalFlags);
+            if($recalculateBasket) {
+                $this->oBasket->calculateBasket(true);
+                $this->buildOrderLinesFromBasket();
+            }
+
+            if ($updateOrderLines) {
+                $this->updateData['order_lines'] = $this->orderData['order_lines'];
+            }
+        }
+
 
         return $this;
     }

@@ -28,36 +28,53 @@ class BasketItemAdapter extends BaseBasketItemAdapter
     /**
      * Adds Article to oBasket
      * @param $updateData
+     * @return array
      * @throws ArticleInputException
      * @throws NoArticleException
      * @throws OutOfStockException
-     * @throws \oxArticleInputException
-     * @throws \oxNoArticleException
      */
     public function handleUpdate(&$updateData)
     {
+        $recalculateBasket = false;
+        $updateOrderLines = false;
+
         // item quantity changed in the iframe - updated basket amount
         if ($this->diffData['key'] === 'quantity') {
             /** @var BasketItem $oBasketItem */
-            $oBasketItem = $this->oBasket->addToBasket(
-                $this->oItem->getProductId(),
-                $this->diffData['requestedValue'] - $this->diffData['basketValue'],
-                $this->oItem->getSelList(),
-                $this->oItem->getPersParams(),
-                true,
-                $this->oItem->isBundle()
-            );
-            $this->oItem = $oBasketItem;
-            $this->oBasket->calculateBasket(true);
+            try {
+                $oBasketItem = $this->oBasket->addToBasket(
+                    $this->oItem->getProductId(),
+                    $this->diffData['requestedValue'] - $this->diffData['basketValue'],
+                    $this->oItem->getSelList(),
+                    $this->oItem->getPersParams(),
+                    true,
+                    $this->oItem->isBundle()
+                );
+            } catch (\Exception $changeAmountException) {
 
-            Registry::getLogger()->log('debug', 'ITEM_AMOUNT_UPDATED: ' .
-                print_r([
-                    'reference' => $this->itemData['reference'],
-                    'title' => $this->oItem->getTitle(),
-                    'amount' => $this->oItem->getAmount(),
-                ], true)
-            );
+            }
+
+            $this->oItem = $oBasketItem;
+            $recalculateBasket = true;
+            $updateOrderLines = true;
         }
+
+        // item price is changed
+        // example: item discount assigned to particular country
+        // conclusion: country change in the iframe should trigger order_lines update
+        if ($this->diffData['key'] === 'total_amount') {
+            $updateOrderLines = true;
+        }
+
+        Registry::getLogger()->log('debug', 'ITEM_UPDATED: ' .
+            print_r([
+                'reference' => $this->itemData['reference'],
+                'title' => $this->oItem->getTitle(),
+                'diff' => $this->diffData
+            ], true)
+        );
+
+        return join([(int)$recalculateBasket, (int)$updateOrderLines]);
     }
 
     protected function getArticle($iLang)
