@@ -1,6 +1,6 @@
 <?php
 
-namespace TopConcepts\Klarna\Core\Adapters;
+namespace TopConcepts\Klarna\Tests\Unit\Core\Adapters;
 
 use OxidEsales\Eshop\Application\Model\Article;
 use OxidEsales\Eshop\Application\Model\Basket;

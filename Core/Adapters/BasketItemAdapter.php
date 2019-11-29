@@ -93,26 +93,6 @@ class BasketItemAdapter extends BaseBasketItemAdapter
     }
 
     /**
-     * Gets Article oxid
-     * @return $this
-     * @throws NoArticleException
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
-     */
-    public function prepareArticleData()
-    {
-        $viewName = getViewName('oxarticles');
-        $sSQL = "SELECT oxid FROM {$viewName} WHERE OXACTIVE=1 AND OXARTNUM = ?";
-        $id = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC)
-            ->getOne($sSQL, array($this->itemData['reference']));
-        if ($id == false) {
-            throw new NoArticleException();
-        }
-        $this->itemData['id'] = $id;
-
-        return $this;
-    }
-
-    /**
      * Collects BasketItem data
      * @param $iLang
      * @param $isOrderMgmt
