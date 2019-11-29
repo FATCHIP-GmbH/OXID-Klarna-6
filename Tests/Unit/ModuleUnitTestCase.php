@@ -16,6 +16,7 @@ use OxidEsales\Eshop\Core\ConfigFile;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseHandler;
 use OxidEsales\TestingLibrary\TestConfig;
 use OxidEsales\TestingLibrary\UnitTestCase;
+use ReflectionClass;
 
 /** Load test helpers on top oxid core classes */
 require_once __DIR__ . '/oxUtilsHelper.php';
@@ -188,6 +189,14 @@ class ModuleUnitTestCase extends UnitTestCase
         $db = UnitTestCase::getDb();
         $db->execute("DELETE FROM `oxorder` WHERE `oxid` = '$id'");
         $db->execute("DELETE FROM `oxorderarticles` WHERE `oxorderid` = '$id'");
+    }
+
+    protected static function getMethod($name, $className)
+    {
+        $class = new ReflectionClass($className);
+        $method = $class->getMethod($name);
+        $method->setAccessible(true);
+        return $method;
     }
 
 }

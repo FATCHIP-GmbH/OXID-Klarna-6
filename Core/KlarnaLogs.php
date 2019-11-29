@@ -21,6 +21,7 @@ namespace TopConcepts\Klarna\Core;
 use OxidEsales\Eshop\Core\Model\BaseModel;
 
 /**
+ * @codeIgnoreCoverage
  * Klarna model class for table 'tcklarna_logs'
  */
 class KlarnaLogs extends BaseModel
