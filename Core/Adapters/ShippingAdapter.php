@@ -20,6 +20,8 @@ class ShippingAdapter extends BasketCostAdapter
 
     protected $oDeliverySet;
 
+    protected $shippingOptions;
+
     /**
      * Resolves shippingId and related shipping set for basket or order object
      * @param $iLang
@@ -98,11 +100,15 @@ class ShippingAdapter extends BasketCostAdapter
      */
     public function getShippingOptions($paymentId)
     {
+        if ($this->shippingOptions !== null) {
+            return $this->shippingOptions;
+        };
+
         $allSets  = $this->getShippingSets();
         $currency = Registry::getConfig()->getActShopCurrencyObject();
-        $shippingOptions = [];
+        $this->shippingOptions = [];
         if (!is_array($allSets)) {
-            return $shippingOptions;
+            return $this->shippingOptions;
         }
 
         $this->selectedShippingSetId = $this->oBasket->getShippingId();
@@ -115,7 +121,7 @@ class ShippingAdapter extends BasketCostAdapter
                 $price             = $this->formatAsInt($oCost->getBruttoPrice());
                 $tax_rate          = $this->formatAsInt($oCost->getVat());
                 $tax_amount        = $this->calcTax($price, $tax_rate);
-                $shippingOptions[] = array(
+                $this->shippingOptions[] = array(
                     "id"          => $shippingId,
                     "name"        => html_entity_decode($method->oxdeliveryset__oxtitle->value, ENT_QUOTES),
                     "description" => '',
@@ -130,17 +136,16 @@ class ShippingAdapter extends BasketCostAdapter
         // set basket back to selected shipping option
         $this->oBasket->setShipping($this->selectedShippingSetId);
 
-        if (empty($shippingOptions)) {
+        if (empty($this->shippingOptions)) {
             $oCountry = oxNew(Country::class);
             $oCountry->load($this->oUser->getActiveCountry());
-
             throw new KlarnaConfigException(sprintf(
                 Registry::getLang()->translateString('TCKLARNA_ERROR_NO_SHIPPING_METHODS_SET_UP'),
                 $oCountry->oxcountry__oxtitle->value
             ));
         }
 
-        return empty($shippingOptions) ? null : $shippingOptions;
+        return empty($this->shippingOptions) ? null : $this->shippingOptions;
     }
 
     /**
