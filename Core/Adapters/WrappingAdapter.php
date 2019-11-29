@@ -8,14 +8,16 @@ use Monolog\Registry;
 
 class WrappingAdapter extends BasketCostAdapter
 {
+    const REFERENCE = 'wrap';
+    const NAME = 'Wrapping';
 
     protected function getReference()
     {
-        return 'wrap';
+        return self::REFERENCE;
     }
 
     protected function getName()
     {
-        return 'Wrapping';
+        return self::NAME;
     }
 }

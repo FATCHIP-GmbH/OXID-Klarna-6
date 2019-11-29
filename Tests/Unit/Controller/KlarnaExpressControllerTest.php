@@ -188,7 +188,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase {
      * @param $getCurrentShopURL
      *
      * @param $expectedResult
-     * @dataProvider testCheckSslDataProvider
+     * @dataProvider checkSslDataProvider
      */
     public function testCheckSsl($sslredirect, $getCurrentShopURL, $expectedResult) {
         $oRequest = $this->getMockBuilder(Request::class)->setMethods(['getRequestEscapedParameter'])->getMock();
@@ -205,7 +205,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase {
         $this->assertEquals($expectedResult, \oxUtilsHelper::$sRedirectUrl);
     }
 
-    public function testCheckSslDataProvider() {
+    public function checkSslDataProvider() {
         $forceSslUrl = $this->getConfig()->getSSLShopURL() . 'index.php?sslredirect=forced&cl=KlarnaExpress';
 
         return [
@@ -343,11 +343,12 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase {
         $keController->expects($this->any())->method('getKlarnaClient')->willReturn($checkoutClient);
         $keController->expects($this->any())->method('rebuildFakeUser')->willReturn(true);
         $keController->init();
-        $keController->render();
+        $template = $keController->render();
+        $this->assertSame('tcklarna_checkout.tpl', $template);
     }
 
     /**
-     * @dataProvider testLastResortRenderRedirectDataProvider
+     * @dataProvider lastResortRenderRedirectDataProvider
      * @param $sCountryISO
      * @param $expectedResult
      */
@@ -370,7 +371,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase {
         $this->assertEquals($expectedResult, \oxUtilsHelper::$sRedirectUrl);
     }
 
-    public function testLastResortRenderRedirectDataProvider() {
+    public function lastResortRenderRedirectDataProvider() {
         return [
             ['AF', Registry::getConfig()->getShopUrl() . 'index.php?cl=user'],
             ['DE', null],
@@ -378,7 +379,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase {
     }
 
     /**
-     * @dataProvider testHandleLoggedInUserWithNonKlarnaCountryDataProvider
+     * @dataProvider handleLoggedInUserWithNonKlarnaCountryDataProvider
      * @param $resetCountry
      * @param $expectedResult
      */
@@ -402,7 +403,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase {
     /**
      * @return array
      */
-    public function testHandleLoggedInUserWithNonKlarnaCountryDataProvider() {
+    public function handleLoggedInUserWithNonKlarnaCountryDataProvider() {
         return [
             [1, null],
             [null, 'cl=user&non_kco_global_country=AF'],

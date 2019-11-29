@@ -26,7 +26,7 @@ class KlarnaBasketTest extends ModuleUnitTestCase
 {
     /**
      * @param $iLang
-     * @dataProvider testSetKlarnaOrderLangDataProvider
+     * @dataProvider setKlarnaOrderLangDataProvider
      */
     public function testSetKlarnaOrderLang($iLang)
     {
@@ -276,7 +276,7 @@ class KlarnaBasketTest extends ModuleUnitTestCase
         return $oBasket;
     }
 
-    public function testSetKlarnaOrderLangDataProvider()
+    public function setKlarnaOrderLangDataProvider()
     {
         return [
             [0],

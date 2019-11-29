@@ -12,11 +12,17 @@ namespace TopConcepts\Klarna\Core\Adapters;
  */
 class PaymentAdapter extends BasketCostAdapter
 {
+    /**
+     * @codeCoverageIgnore
+     */
     protected function getName()
     {
         return null;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     protected function getReference()
     {
         return '';
