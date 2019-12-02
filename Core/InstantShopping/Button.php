@@ -52,12 +52,7 @@ class Button
      */
     public function getConfig(Article $product = null, $update = false) {
         /** @var BasketAdapter $basketAdapter */
-        $this->basketAdapter = oxNew(
-            BasketAdapter::class,
-            $this->getBasket($product),
-            $this->getUser(),
-            []
-        );
+        $this->basketAdapter = $this->instantiateBasketAdapter($product);
 
         $config = [
             "setup"=> [
@@ -155,13 +150,7 @@ class Button
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     protected function getShippingOptions(Article $product = null) {
-        $this->_oShippingAdapter = oxNew(
-            ShippingAdapter::class,
-            [],
-            null,
-            $this->getBasket($product),
-            $this->getuser()
-        );
+        $this->_oShippingAdapter = $this->instantiateShippingAdapter($product);
 
         return $this->_oShippingAdapter->getShippingOptions(KlarnaPayment::KLARNA_INSTANT_SHOPPING);
     }
@@ -306,5 +295,32 @@ class Button
         }
 
         return $shippingCountries;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    protected function instantiateBasketAdapter(Article $product = null)
+    {
+        return oxNew(
+            BasketAdapter::class,
+            $this->getBasket($product),
+            $this->getUser(),
+            []
+        );
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    protected function instantiateShippingAdapter(Article $product = null)
+    {
+        return oxNew(
+            ShippingAdapter::class,
+            [],
+            null,
+            $this->getBasket($product),
+            $this->getuser()
+        );
     }
 }
