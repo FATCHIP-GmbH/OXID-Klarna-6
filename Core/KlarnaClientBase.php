@@ -18,7 +18,6 @@
 namespace TopConcepts\Klarna\Core;
 
 
-use Requests;
 use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Core\Exception\KlarnaOrderNotFoundException;
 use TopConcepts\Klarna\Core\Exception\KlarnaOrderReadOnlyException;
@@ -31,7 +30,6 @@ use OxidEsales\Eshop\Core\UtilsView;
 abstract class KlarnaClientBase extends Base
 {
     const TEST_API_URL = 'https://api.playground.klarna.com/';
-//    const TEST_API_URL = 'https://enl5x5ltqd79.x.pipedream.net/';
     const LIVE_API_URL = 'https://api.klarna.com/';
 
     /**
@@ -135,7 +133,7 @@ abstract class KlarnaClientBase extends Base
  */
     protected function delete($endpoint, $data = array(), $headers = array())
     {
-        return $this->session->request($endpoint, $headers, $data, Requests::DELETE, ['data_format' => 'body']);
+        return $this->session->delete($endpoint, $headers, $data);
     }
 
     /**

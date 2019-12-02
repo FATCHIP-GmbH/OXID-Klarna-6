@@ -13,23 +13,6 @@ use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 class KlarnaClientBaseTest extends ModuleUnitTestCase
 {
 
-    public function testLoadHttpHandler()
-    {
-        $method = new \ReflectionMethod(KlarnaClientBase::class, 'loadHttpHandler');
-        $method->setAccessible(true);
-        $klarnaClientBase = $this->getMockForAbstractClass(KlarnaClientBase::class);
-
-        $sessionRequest = new \Requests_Session('test');
-
-        $result = $this->getProtectedClassProperty($klarnaClientBase, 'session');
-
-        $this->assertNull($result);
-        $method->invokeArgs($klarnaClientBase, [$sessionRequest]);
-
-        $result = $this->getProtectedClassProperty($klarnaClientBase, 'session');
-        $this->assertEquals($sessionRequest, $result);
-    }
-
     /**
      * @dataProvider sessionDataProvider
      */

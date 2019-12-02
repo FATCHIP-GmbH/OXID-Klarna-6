@@ -2,6 +2,7 @@
 namespace TopConcepts\Klarna\Core\InstantShopping;
 
 
+use Requests;
 use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Core\KlarnaClientBase;
 use TopConcepts\Klarna\Core\KlarnaUtils;
@@ -135,5 +136,10 @@ class HttpClient extends KlarnaClientBase
         }
 
         throw new KlarnaClientException($oResponse->body, $oResponse->status_code);
+    }
+
+    protected function delete($endpoint, $data = array(), $headers = array())
+    {
+        return $this->session->request($endpoint, $headers, $data, Requests::DELETE, ['data_format' => 'body']);
     }
 }

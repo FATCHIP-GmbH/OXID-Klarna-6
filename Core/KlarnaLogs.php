@@ -21,7 +21,6 @@ namespace TopConcepts\Klarna\Core;
 use OxidEsales\Eshop\Core\Model\BaseModel;
 
 /**
- * @codeIgnoreCoverage
  * Klarna model class for table 'tcklarna_logs'
  */
 class KlarnaLogs extends BaseModel
@@ -54,6 +53,9 @@ class KlarnaLogs extends BaseModel
         return false;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function logData($action, $requestBody, $url, $object_id, $response, $statusCode, $mid = '')
     {
         if ($object_id === null) {
@@ -82,6 +84,9 @@ class KlarnaLogs extends BaseModel
         $this->save();
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     protected function resolveObjectId($data) {
         if (is_string($data)) {
             $data = (array)json_decode($data, true);
