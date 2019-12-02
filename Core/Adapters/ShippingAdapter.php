@@ -30,11 +30,11 @@ class ShippingAdapter extends BasketCostAdapter
     {
         $this->selectedShippingSetId = $this->oBasket->getShippingId();
         if ((bool)$this->oOrder) {
-            $this->selectedShippingSetId = $this->oOrder->getFildData('oxdeltype');
+            $this->selectedShippingSetId = $this->oOrder->getFieldData('oxdeltype');
         }
 
         $oDeliverySet = oxNew(DeliverySet::class);
-        if ($iLang) {
+        if ($iLang !== null) {
             $oDeliverySet->loadInLang($iLang, $this->selectedShippingSetId);
         } else {
             $oDeliverySet->load($this->selectedShippingSetId);
@@ -66,6 +66,9 @@ class ShippingAdapter extends BasketCostAdapter
         return $sActShipSet;
     }
 
+    /**
+     *@codeCoverageIgnore  oxid method wrapper, nothing to test here
+     */
     protected function getShippingSets()
     {
         list($aAllSets) = Registry::get(DeliverySetList::class)
