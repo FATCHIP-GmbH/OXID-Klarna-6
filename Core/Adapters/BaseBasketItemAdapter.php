@@ -258,6 +258,10 @@ abstract class BaseBasketItemAdapter
         $this->diffData = $diffData;
     }
 
+    /**
+     * @codeCoverageIgnore
+     * @return string
+     */
     public function getErrorCode()
     {
         return $this->errorCode;

@@ -334,6 +334,9 @@ class BasketAdapter
         return $this->oInstantShoppingBasket->getId();
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function setInstantShoppingBasket(KlarnaInstantBasket $oInstantShoppingBasket)
     {
         $this->oInstantShoppingBasket = $oInstantShoppingBasket;

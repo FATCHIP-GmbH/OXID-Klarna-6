@@ -20,7 +20,7 @@ class WrappingAdapterTest extends ModuleUnitTestCase
         $this->assertSame(WrappingAdapter::NAME, $result);
     }
 
-    public function getReference()
+    public function testGetReference()
     {
         $adapter = $this->getMockBuilder(WrappingAdapter::class)->disableOriginalConstructor()->setMethods(
             ['getKlarnaType']

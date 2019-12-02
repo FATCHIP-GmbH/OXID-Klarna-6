@@ -8,6 +8,7 @@ use OxidEsales\Eshop\Application\Model\BasketItem;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Price;
+use TopConcepts\Klarna\Core\Adapters\BaseBasketItemAdapter;
 use TopConcepts\Klarna\Core\Adapters\BasketAdapter;
 use TopConcepts\Klarna\Core\Adapters\BasketItemAdapter;
 use TopConcepts\Klarna\Core\Adapters\DiscountAdapter;
@@ -221,9 +222,8 @@ class BasketAdapterTest extends ModuleUnitTestCase
         $orderId = 'id';
         $oSUT = $this->getMockBuilder(BasketAdapter::class)
             ->disableOriginalConstructor()
-            ->setMethods(['removeOldBaskets'])
+            ->setMethods(['storeBasket'])
             ->getMock();
-        $oSUT->expects($this->once())->method('removeOldBaskets');
         $oFakeBasket = $this->getMockBuilder(Basket::class)
             ->setMethods(['setOrderId'])
             ->getMock();
@@ -439,5 +439,42 @@ class BasketAdapterTest extends ModuleUnitTestCase
             $this->assertArrayHasKey('order_lines', $oSUT->getUpdateData());
         }
         $this->assertEquals($updateData, $oSUT->getUpdateData());
+    }
+
+    public function testGetMerchantData()
+    {
+        $oInstantShoppingBasketMock = $this->getMockBuilder(KlarnaInstantBasket::class)
+        ->disableOriginalConstructor()
+        ->setMethods(['getId'])
+        ->getMock();
+        $oInstantShoppingBasketMock->expects($this->once())->method('getId')->willReturn("testId");
+
+        $oSUT = $this->getMockBuilder(BasketAdapter::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['generateBasketItemAdapters'])->getMock();
+
+        $this->setProtectedClassProperty($oSUT, "oInstantShoppingBasket", $oInstantShoppingBasketMock);
+        $id = $oSUT->getMerchantData();
+
+        $this->assertSame($id, "testId");
+    }
+
+    public function testIsValidItemData()
+    {
+        $oSUT = $this->getMockBuilder(BaseBasketItemAdapter::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['addItemToOrderLines'])->getMockForAbstractClass();
+
+        $prepareItemData = self::getMethod('isValidItemData', BaseBasketItemAdapter::class);
+        $result = $prepareItemData->invokeArgs($oSUT, []);
+
+        $this->assertFalse($result);
+
+        $itemData = ['name' => 'testName', 'reference' => 'testreference'];
+        $this->setProtectedClassProperty($oSUT, "itemData", $itemData);
+
+        $prepareItemData = self::getMethod('isValidItemData', BaseBasketItemAdapter::class);
+        $result = $prepareItemData->invokeArgs($oSUT, []);
+        $this->assertTrue($result);
     }
 }
