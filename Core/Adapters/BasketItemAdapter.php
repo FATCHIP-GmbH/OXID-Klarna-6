@@ -28,7 +28,7 @@ class BasketItemAdapter extends BaseBasketItemAdapter
     /**
      * Adds Article to oBasket
      * @param $updateData
-     * @return array
+     * @return string
      */
     public function handleUpdate(&$updateData)
     {
@@ -56,7 +56,7 @@ class BasketItemAdapter extends BaseBasketItemAdapter
                 // NoArticleException
                 // OutOfStockException
                 // Currently there is no proper way to handle it in update callback request
-                Registry::getLogger()->log('error', $changeBasketException->getMessage());
+                Registry::getLogger()->error($changeBasketException->getMessage(), $changeBasketException->getTrace());
             }
         }
 
