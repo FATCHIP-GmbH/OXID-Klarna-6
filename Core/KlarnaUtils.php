@@ -210,6 +210,7 @@ class KlarnaUtils
 
     /**
      * @return array
+     * @codeCoverageIgnore
      *
      */
     public static function getKlarnaGlobalActiveShopCountryISOs($iLang = null)
@@ -368,6 +369,7 @@ class KlarnaUtils
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $orderId
      * @return Order
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
@@ -390,6 +392,9 @@ class KlarnaUtils
         );
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public static function getKlarnaAckCount($orderId)
     {
         $sql = 'SELECT COUNT(*) FROM `tcklarna_ack` WHERE `tcklarna_orderid` = ?';

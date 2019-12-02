@@ -138,6 +138,9 @@ class HttpClient extends KlarnaClientBase
         throw new KlarnaClientException($oResponse->body, $oResponse->status_code);
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     protected function delete($endpoint, $data = array(), $headers = array())
     {
         return $this->session->request($endpoint, $headers, $data, Requests::DELETE, ['data_format' => 'body']);
