@@ -46,14 +46,12 @@ class Button
 
     /**
      * @param Article|null $product
-     * @param bool $update
      * @return array|bool
      * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
-    public function getConfig(Article $product = null, $update = false) {
+    public function getConfig(Article $product = null) {
         /** @var BasketAdapter $basketAdapter */
         $this->basketAdapter = $this->instantiateBasketAdapter($product);
-
         $config = [
             "setup"=> [
                 "key" => $this->getButtonKey(),
@@ -105,6 +103,8 @@ class Button
     }
 
     public function getButtonKey() {
+        Registry::getLogger()->log('info', KlarnaUtils::getShopConfVar('strKlarnaISButtonKey'));
+
         return KlarnaUtils::getShopConfVar('strKlarnaISButtonKey');
     }
 
