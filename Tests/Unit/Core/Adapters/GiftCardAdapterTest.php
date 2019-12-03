@@ -5,7 +5,9 @@ namespace TopConcepts\Klarna\Tests\Unit\Core\Adapters;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Wrapping;
 use OxidEsales\Eshop\Core\Price;
+use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Core\Adapters\GiftCardAdapter;
+use TopConcepts\Klarna\Core\Exception\InvalidItemException;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class GiftCardAdapterTest extends ModuleUnitTestCase
@@ -70,7 +72,7 @@ class GiftCardAdapterTest extends ModuleUnitTestCase
         $prepareItemData = self::getMethod('getName', GiftCardAdapter::class);
         $result = $prepareItemData->invokeArgs($adapter, []);
 
-        $this->assertSame('testname', $result);
+        $this->assertSame(Registry::getLang()->translateString("GREETING_CARD").' "testname"', $result);
     }
 
     public function testGetReference()
@@ -90,4 +92,18 @@ class GiftCardAdapterTest extends ModuleUnitTestCase
         $this->assertSame('testreference', $result);
     }
 
+    public function testValidateItem()
+    {
+        $adapter = $this->getMockBuilder(GiftCardAdapter::class)->disableOriginalConstructor()
+            ->setMethods(['getReference'])->getMock();
+
+        $this->prepareBasket($adapter);
+        $orderLine = ["total_amount" => 1000];
+
+        $adapter->validateItem($orderLine);
+
+        $this->expectException(InvalidItemException::class);
+        $orderLine = ["total_amount" => 0];
+        $adapter->validateItem($orderLine);
+    }
 }

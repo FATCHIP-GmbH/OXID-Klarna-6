@@ -167,7 +167,7 @@ class BasketAdapter
          * @var Price $oCost
          */
         foreach($this->oBasket->getCosts() as $costKey => $oCost) {
-            if($oCost === null) {
+            if($oCost === null || $costKey == "oxwrapping") {
                 continue;
             }
             $itemAdapter = $this->createItemAdapterForType(
@@ -191,6 +191,24 @@ class BasketAdapter
             $itemAdapter = $this->createItemAdapterForType(
                 ['merchant_data' => ['type' => 'discount']],
                 $oDiscount
+            );
+
+            yield $itemAdapter;
+        }
+
+        /**
+         * @var  $itemKey
+         * @var BasketItem $oItem
+         */
+        foreach ($this->oBasket->getContents() as $itemKey =>  $oItem) {
+
+            if(!$oItem->getWrapping()) {
+                continue;
+            }
+
+            $itemAdapter = $this->createItemAdapterForType(
+                ['merchant_data' => ['type' => 'oxwrapping']],
+                $oItem
             );
 
             yield $itemAdapter;

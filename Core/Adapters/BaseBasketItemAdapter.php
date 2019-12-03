@@ -8,7 +8,9 @@ use OxidEsales\Eshop\Application\Model\BasketItem;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Application\Model\Basket;
+use OxidEsales\Eshop\Core\Price;
 use OxidEsales\Eshop\Core\Registry;
+use stdClass;
 use TopConcepts\Klarna\Core\Exception\InvalidItemException;
 
 abstract class BaseBasketItemAdapter
@@ -62,7 +64,7 @@ abstract class BaseBasketItemAdapter
     /** @var array Klarna Order Line */
     protected $itemData;
 
-    /** @var BasketItem */
+    /** @var BasketItem|Price|stdClass */
     protected $oItem;
 
     /** @var Basket */
