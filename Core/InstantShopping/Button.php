@@ -128,6 +128,10 @@ class Button
                 $data['billing_address']['country'] = strtoupper($data['billing_address']['country']);
                 $result['billing_address'] = $data['billing_address'];
             }
+            $attachment = $user->getAttachmentsData();
+            if($attachment) {
+                $result['attachment'] = $user->getAttachmentsData();
+            }
         }
 
         return $result;
