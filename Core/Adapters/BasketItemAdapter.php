@@ -109,7 +109,8 @@ class BasketItemAdapter extends BaseBasketItemAdapter
         $this->itemData['type'] = $this->getKlarnaType();
         $oArticle = $this->getArticle($iLang);
         $this->itemData['reference'] = $oArticle->getFieldData('OXARTNUM');
-        $this->itemData['name'] = substr($oArticle->getFieldData('OXTITLE'), 0, 64);
+        $name = $oArticle->getFieldData('OXTITLE') . ' ' . $oArticle->getFieldData('OXVARSELECT');
+        $this->itemData['name'] = substr($name, 0, 64);
         $this->itemData['quantity'] = (int)$this->oItem->getAmount();
         $basketUnitPrice = 0;
         if (!$this->oItem->isBundle()) {
