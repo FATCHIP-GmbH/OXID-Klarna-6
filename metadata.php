@@ -143,6 +143,7 @@ $aModule = array(
         'tcklarna_country_select_popup.tpl'    => 'tc/tcklarna/views/tpl/checkout/inc/tcklarna_country_select_popup.tpl',
         'tcklarna_checkout_login_box.tpl'      => 'tc/tcklarna/views/tpl/checkout/inc/tcklarna_checkout_login_box.tpl',
         'tcklarna_checkout_address_box.tpl'    => 'tc/tcklarna/views/tpl/checkout/inc/tcklarna_checkout_address_box.tpl',
+        'tcklarna_instant_shopping_button.tpl' => 'tc/tcklarna/views/tpl/instant_shopping/tcklarna_instant_shopping_button.tpl',
         //admin
         'tcklarna_general.tpl'                 => 'tc/tcklarna/views/admin/tpl/tcklarna_general.tpl',
         'tcklarna_design.tpl'                  => 'tc/tcklarna/views/admin/tpl/tcklarna_design.tpl',
@@ -158,7 +159,6 @@ $aModule = array(
         'tcklarna_country_creds.tpl'           => 'tc/tcklarna/views/admin/tpl/tcklarna_country_creds.tpl',
         'tcklarna_header.tpl'                  => 'tc/tcklarna/views/admin/tpl/tcklarna_header.tpl',
         'tcklarna_lang_spec_conf.tpl'          => 'tc/tcklarna/views/admin/tpl/tcklarna_lang_spec_conf.tpl',
-        'tcklarna_instant_shopping_button.tpl' => 'tc/tcklarna/views/blocks/inc/tcklarna_instant_shopping_button.tpl'
     ),
     'blocks'      => array(
         array(
