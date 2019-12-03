@@ -94,9 +94,10 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             if ($result !== self::EXECUTE_SUCCESS) {
                 throw $this->extractOrderException();
             }
-
-            $response = $this->approveOrder();
-            $this->updateOrderObject($orderId, $response);
+            $oOrder = oxNew(Order::class);
+            $oOrder->load($orderId);
+            $response = $this->approveOrder($oOrder);
+            $this->updateOrderObject($oOrder, $response);
             $basketAdapter->closeBasket($orderId);
 
         } catch (\Exception $exception) {
@@ -112,8 +113,13 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         $this->db->commitTransaction();
     }
 
-    protected function approveOrder()
+    /**
+     * @param Order $oOrder
+     * @return array|bool|mixed
+     */
+    protected function approveOrder(Order $oOrder)
     {
+        $this->actionData['order']['merchant_reference1'] = $oOrder->oxorder__oxordernr->value;
         return $this->httpClient->approveOrder(
             $this->actionData['authorization_token'],
             $this->actionData['order']
@@ -262,11 +268,8 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         return $basketAdapter;
     }
 
-    protected function updateOrderObject($orderId, $approveResponse)
+    protected function updateOrderObject(Order $oOrder, $approveResponse)
     {
-        $oOrder = oxNew(Order::class);
-        $oOrder->load($orderId);
-
         if($approveResponse['fraud_status'] == self::KLARNA_PENDING_STATUS) {
             $oOrder->oxorder__oxtransstatus = new Field(self::NOT_FINISHED_STATUS, Field::T_RAW);
         }
