@@ -16,7 +16,7 @@ class KlarnaInstantBasket extends BaseModel
     const OPENED_STATUS = 'OPENED';
 
     const TYPE_SINGLE_PRODUCT = 'single_product';
-    const TYPE_BASKET = 'bakset';
+    const TYPE_BASKET = 'basket';
 
     /**
      * Class constructor, initiates parent constructor.
