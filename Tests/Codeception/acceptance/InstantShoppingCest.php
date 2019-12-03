@@ -67,7 +67,7 @@ class InstantShoppingCest
         $admin = $I->openShopAdminPanel();
         $admin->login();
         $admin->selectShop();
-        $admin->navigateMenu(["Klarna", "Instant Shipping"]);
+        $admin->navigateMenu(["Klarna", "Instant Shopping"]);
         $I->waitForFrame("basefrm");
         $I->wait(2);
         $I->click('//*[@id="instant-shopping-control"]');

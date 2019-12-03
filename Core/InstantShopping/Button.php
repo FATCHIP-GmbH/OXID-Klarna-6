@@ -120,13 +120,14 @@ class Button
             $sCountryISO = $user->resolveCountry();
             $currencyName = Registry::getConfig()->getActShopCurrencyObject()->name;
             $data = $user->getKlarnaPaymentData();
-            $data['billing_address']['country'] = strtoupper($data['billing_address']['country']);
-
             $result = [
                 'purchase_country'  => $sCountryISO,
                 'purchase_currency' => $currencyName,
-                'billing_address' => $data['billing_address']
             ];
+            if(!empty(trim($data['billing_address']['street_address']))) {
+                $data['billing_address']['country'] = strtoupper($data['billing_address']['country']);
+                $result['billing_address'] = $data['billing_address'];
+            }
         }
 
         return $result;

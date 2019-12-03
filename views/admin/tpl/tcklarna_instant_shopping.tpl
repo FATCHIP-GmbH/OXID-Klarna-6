@@ -12,7 +12,7 @@
 
 <div class="[{$box|default:'box'}]" style="[{if !$box && !$bottom_buttons}]height: 100%;[{/if}]">
     <div class="main-container">
-        [{include file="tcklarna_header.tpl" title="TCKLARNA_INSTANT_SHIPPING_MENU"|oxmultilangassign desc="TCKLARNA_INSTANT_SHIPPING_HEADER"|oxmultilangassign}]
+        [{include file="tcklarna_header.tpl" title="TCKLARNA_INSTANT_SHOPPING_MENU"|oxmultilangassign desc="TCKLARNA_INSTANT_SHOPPING_HEADER"|oxmultilangassign}]
         <hr>
         <div class="klarna-row">
             <form name="myedit" id="myedit" method="post" action="[{$oViewConf->getSelfLink()}]"
@@ -36,11 +36,11 @@
                                                 <div class="input">
                                                     <div class="display">
                                                         <label class="label toggle" for="instant-shopping-toggle">
-                                                            <input type="hidden" name="confbools[blKlarnaInstantShippingEnabled]" value="0">
+                                                            <input type="hidden" name="confbools[blKlarnaInstantShoppingEnabled]" value="0">
                                                             <input type="checkbox" class="toggle_input radio_type"
-                                                                   name="confbools[blKlarnaInstantShippingEnabled]"
+                                                                   name="confbools[blKlarnaInstantShoppingEnabled]"
                                                                    value="1" id="instant-shopping-toggle"
-                                                                   [{if ($confbools.blKlarnaInstantShippingEnabled === true)}]checked[{/if}]/>
+                                                                   [{if ($confbools.blKlarnaInstantShoppingEnabled === true)}]checked[{/if}]/>
                                                             <div class="toggle-control" id="instant-shopping-control"></div>
                                                         </label>
                                                     </div>
@@ -57,7 +57,7 @@
                                             <td class="input w460">
                                                 <div class="input">
                                                     <button class="btn-save no-bg" type="button" id='replace-button-key'
-                                                            [{if ($confbools.blKlarnaInstantShippingEnabled === false)}]disabled[{/if}]>[{oxmultilang ident="TCKLARNA_IS_REPLACE" }]</button>
+                                                            [{if ($confbools.blKlarnaInstantShoppingEnabled === false)}]disabled[{/if}]>[{oxmultilang ident="TCKLARNA_IS_REPLACE" }]</button>
                                                 </div>
                                             </td>
                                             <td class="info-block">
@@ -73,7 +73,7 @@
                         <tr class="no-t-border">
                             <td>
                                 <div class="rows-wrapper"
-                                     [{if $confbools.blKlarnaInstantShippingEnabled === true }]style="display: block"[{/if}]>
+                                     [{if $confbools.blKlarnaInstantShoppingEnabled === true }]style="display: block"[{/if}]>
                                     <table class="inner">
                                         <tbody>
                                             <tr class="dark">

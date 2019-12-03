@@ -10,7 +10,7 @@ use TopConcepts\Klarna\Core\KlarnaConsts;
 
 class KlarnaInstantShopping extends KlarnaBaseConfig {
 
-    protected $_sThisTemplate = 'tcklarna_instant_shipping.tpl';
+    protected $_sThisTemplate = 'tcklarna_instant_shopping.tpl';
 
     /** @var HttpClient */
     protected $instantShoppingClient;
@@ -48,8 +48,8 @@ class KlarnaInstantShopping extends KlarnaBaseConfig {
         parent::render();
 
 
-        $instantShippingEnabled = $oConfig->getConfigParam('blKlarnaInstantShippingEnabled');
-        if ($instantShippingEnabled) {
+        $instantShoppingEnabled = $oConfig->getConfigParam('blKlarnaInstantShoppingEnabled');
+        if ($instantShoppingEnabled) {
             $buttonKey = $oConfig->getConfigParam('strKlarnaISButtonKey');
             if (empty($buttonKey)) {
                 $this->generateAndSaveButtonKey();

@@ -153,7 +153,7 @@ $aModule = array(
         'tcklarna_emd_admin.tpl'               => 'tc/tcklarna/views/admin/tpl/tcklarna_emd_admin.tpl',
         'tcklarna_orders.tpl'                  => 'tc/tcklarna/views/admin/tpl/tcklarna_orders.tpl',
         'tcklarna_messaging.tpl'               => 'tc/tcklarna/views/admin/tpl/tcklarna_messaging.tpl',
-        'tcklarna_instant_shipping.tpl'        => 'tc/tcklarna/views/admin/tpl/tcklarna_instant_shipping.tpl',
+        'tcklarna_instant_shopping.tpl'        => 'tc/tcklarna/views/admin/tpl/tcklarna_instant_shopping.tpl',
         //admin partial
         'tcklarna_country_creds.tpl'           => 'tc/tcklarna/views/admin/tpl/tcklarna_country_creds.tpl',
         'tcklarna_header.tpl'                  => 'tc/tcklarna/views/admin/tpl/tcklarna_header.tpl',

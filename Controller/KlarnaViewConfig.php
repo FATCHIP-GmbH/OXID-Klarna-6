@@ -330,7 +330,7 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
         }
 
         $oConfig = Registry::getConfig();
-        $isEnabled = $oConfig->getConfigParam('blKlarnaInstantShippingEnabled');
+        $isEnabled = $oConfig->getConfigParam('blKlarnaInstantShoppingEnabled');
         if($isEnabled) {
             $placementArray = $oConfig->getConfigParam('aarrKlarnaISButtonPlacement');
             $viewName = $oConfig->getTopActiveView()->getClassKey();
