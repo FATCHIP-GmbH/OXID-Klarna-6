@@ -8,3 +8,13 @@
         </div>
     </div>
 </div>
+<div>
+    [{if $Errors|is_array && $Errors.default|is_array && !empty($Errors.default)}]
+        [{foreach from=$Errors.default item=oEr key=key}]
+            <div class="messagebox danger" style="display:block;">[{$oEr->getOxMessage()}]</div>
+        [{/foreach}]
+    [{/if}]
+    [{if $Errors.popup|is_array && !empty($Errors.popup)}]
+        [{include file="message/errors_modal.tpl"}]
+    [{/if}]
+</div>
