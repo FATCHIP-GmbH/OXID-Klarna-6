@@ -105,4 +105,10 @@ class KlarnaInstantShopping extends KlarnaBaseConfig {
             'styling' => ['theme' => $oConfig->getConfigParam('aarrKlarnaISButtonStyle')] ?: []
         ];
     }
+
+    public function save()
+    {
+        parent::save();
+        $this->generateAndSaveButtonKey();
+    }
 }
