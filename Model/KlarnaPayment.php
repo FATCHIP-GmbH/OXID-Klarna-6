@@ -87,6 +87,7 @@ class KlarnaPayment extends KlarnaPayment_parent
     {
         if (!$filter) {
             return array(
+                self::KLARNA_INSTANT_SHOPPING,
                 self::KLARNA_PAYMENT_CHECKOUT_ID,
                 self::KLARNA_PAYMENT_SLICE_IT_ID,
                 self::KLARNA_PAYMENT_PAY_LATER_ID,
