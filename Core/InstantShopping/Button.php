@@ -103,8 +103,6 @@ class Button
     }
 
     public function getButtonKey() {
-        Registry::getLogger()->log('info', KlarnaUtils::getShopConfVar('strKlarnaISButtonKey'));
-
         return KlarnaUtils::getShopConfVar('strKlarnaISButtonKey');
     }
 
