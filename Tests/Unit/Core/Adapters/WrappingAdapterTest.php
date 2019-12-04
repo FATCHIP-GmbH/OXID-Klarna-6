@@ -6,6 +6,7 @@ use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\BasketItem;
 use OxidEsales\Eshop\Application\Model\Wrapping;
 use OxidEsales\Eshop\Core\Price;
+use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Core\Adapters\WrappingAdapter;
 use TopConcepts\Klarna\Core\Exception\InvalidItemException;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
@@ -22,7 +23,8 @@ class WrappingAdapterTest extends ModuleUnitTestCase
         $prepareItemData = self::getMethod('getName', WrappingAdapter::class);
         $result = $prepareItemData->invokeArgs($adapter, []);
 
-        $this->assertSame(WrappingAdapter::NAME, $result);
+        $this->assertSame(
+            Registry::getLang()->translateString(WrappingAdapter::NAME), $result);
     }
 
     public function testGetReference()

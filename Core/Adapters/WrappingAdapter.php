@@ -1,15 +1,13 @@
 <?php
 
-
 namespace TopConcepts\Klarna\Core\Adapters;
 
-
-use Monolog\Registry;
+use OxidEsales\Eshop\Core\Registry;
 
 class WrappingAdapter extends BaseBasketItemAdapter
 {
     const REFERENCE = 'wrap';
-    const NAME = 'Wrapping';
+    const NAME = 'GIFT_WRAPPING';
 
     protected function getReference()
     {
@@ -18,9 +16,8 @@ class WrappingAdapter extends BaseBasketItemAdapter
 
     protected function getName()
     {
-        return self::NAME;
+        return Registry::getLang()->translateString(self::NAME);
     }
-
 
     public function validateItem($orderLine)
     {
