@@ -222,6 +222,9 @@ class Button
         ];
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     protected function getUser()
     {
 

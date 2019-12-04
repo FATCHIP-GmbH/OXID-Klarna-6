@@ -4,7 +4,9 @@
 namespace TopConcepts\Klarna\Core\Exception;
 
 
-
+/**
+ * @codeCoverageIgnore
+ */
 class InvalidOrderExecuteResult extends \Exception
 {
     /** @var string */

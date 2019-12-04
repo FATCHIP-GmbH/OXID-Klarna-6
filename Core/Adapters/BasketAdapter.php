@@ -11,11 +11,8 @@ use OxidEsales\Eshop\Application\Model\BasketItem;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\DatabaseProvider;
-use OxidEsales\Eshop\Core\Exception\ArticleInputException;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
-use OxidEsales\Eshop\Core\Exception\NoArticleException;
-use OxidEsales\Eshop\Core\Exception\OutOfStockException;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Price;
 use OxidEsales\Eshop\Core\Registry;
@@ -202,7 +199,7 @@ class BasketAdapter
          */
         foreach ($this->oBasket->getContents() as $itemKey =>  $oItem) {
 
-            if(!$oItem->getWrapping()) {
+            if(!($oItem instanceof BasketItem) || !$oItem->getWrapping()) {
                 continue;
             }
 

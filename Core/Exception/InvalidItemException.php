@@ -7,6 +7,9 @@ namespace TopConcepts\Klarna\Core\Exception;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use TopConcepts\Klarna\Core\Adapters\BaseBasketItemAdapter;
 
+/**
+ * @codeCoverageIgnore
+ */
 class InvalidItemException extends StandardException
 {
     /** @var BaseBasketItemAdapter */

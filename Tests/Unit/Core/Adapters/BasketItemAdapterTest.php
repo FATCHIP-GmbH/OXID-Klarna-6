@@ -94,7 +94,7 @@ class BasketItemAdapterTest extends ModuleUnitTestCase
         $expectedItemData = [
             'type' => 'physical',
             'reference' => NULL,
-            'name' => '',
+            'name' => ' ',
             'quantity' => 0,
             'unit_price' => 0,
             'total_amount' => 0,
