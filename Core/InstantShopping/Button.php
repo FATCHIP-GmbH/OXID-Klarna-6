@@ -69,7 +69,7 @@ class Button
         try {
             $orderData["order_lines"] = $this->getOrderLines($product);
             $orderData["shipping_options"] = $this->getShippingOptions($product);
-            $orderData["merchant_data"] = $this->basketAdapter->getMerchantData();
+            $orderData["merchant_reference2"] = $this->basketAdapter->getMerchantData();
         } catch (KlarnaConfigException $e) {
             $this->errors[] = $e->getMessage();
             Registry::getLogger()->log('info', $e->getMessage(), [__METHOD__]);

@@ -43,14 +43,14 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             'validator' => [
                 'order' => ['required', 'notEmpty ', 'extract'],
                 'authorization_token' => ['required', 'notEmpty ', 'extract'],
-                'merchant_data' => ['required', 'notEmpty ', 'extract']
+                'merchant_reference2' => ['required', 'notEmpty ', 'extract']
             ]
         ],
         'updateOrder' => [
             'log' => true,
             'validator' => [
                 'update_context' => ['required', 'notEmpty ', 'extract'],
-                'merchant_data' => ['required', 'notEmpty ', 'extract']
+                'merchant_reference2' => ['required', 'notEmpty ', 'extract']
             ]
         ],
         'successAjax' => [
@@ -120,6 +120,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
     protected function approveOrder(Order $oOrder)
     {
         $this->actionData['order']['merchant_reference1'] = $oOrder->oxorder__oxordernr->value;
+        $this->actionData['order']['merchant_reference2'] = "";
         return $this->httpClient->approveOrder(
             $this->actionData['authorization_token'],
             $this->actionData['order']
@@ -229,7 +230,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
     protected function createBasketAdapter()
     {
         // Fetch saved Instant Shopping basket
-        $instantShoppingBasketId = $this->actionData['order']['merchant_data'];
+        $instantShoppingBasketId = $this->actionData['order']['merchant_reference2'];
         $oInstantShoppingBasket = oxNew(KlarnaInstantBasket::class);
         if ($oInstantShoppingBasket->load($instantShoppingBasketId) === false) {
             return false;
