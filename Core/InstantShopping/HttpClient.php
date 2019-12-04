@@ -135,7 +135,7 @@ class HttpClient extends KlarnaClientBase
             return true;
         }
 
-        throw new KlarnaClientException($oResponse->body, $oResponse->status_code);
+        throw new KlarnaClientException($method . $oResponse->body, $oResponse->status_code);
     }
 
     /**

@@ -92,20 +92,21 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             $oOrderController = Registry::get(OrderController::class);
             $result = $oOrderController->execute();
             if ($result !== self::EXECUTE_SUCCESS) {
-                throw $this->extractOrderException();
+                throw $this->extractOrderException($result);
+
             }
             $oOrder = oxNew(Order::class);
             $oOrder->load($orderId);
             $response = $this->approveOrder($oOrder);
             $this->updateOrderObject($oOrder, $response);
             $basketAdapter->closeBasket($orderId);
-
+        } catch (KlarnaClientException $approveOrderException) {
+            Registry::getLogger()->log('error', 'ORDER_NOT_FOUND: ' . $approveOrderException->getMessage());
         } catch (\Exception $exception) {
-            Registry::getLogger()->log('error', $exception->getMessage());
             try {
                 $this->declineOrder($exception);
-            } catch (KlarnaClientException $exception) {
-                Registry::getLogger()->log('error', 'ORDER_NOT_FOUND: ' . $exception->getMessage());
+            } catch (KlarnaClientException $declineOrderException) {
+                Registry::getLogger()->log('error', 'ORDER_NOT_FOUND: ' . $declineOrderException->getMessage());
             }
             $this->db->rollbackTransaction();
             return;
@@ -144,6 +145,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
 
         $orderId = Registry::getUtilsObject()->generateUID();
         Registry::getSession()->setVariable('sess_challenge', $orderId);
+        Registry::getConfig()->setConfigParam('blConfirmAGB', 0);
 
         return $orderId;
     }
@@ -298,10 +300,11 @@ class KlarnaInstantShoppingController extends BaseCallbackController
     }
 
     /**
+     * @param $result
      * @return InvalidOrderExecuteResult
      */
-    protected function extractOrderException() {
-        $orderException = new InvalidOrderExecuteResult('INVALID_ORDER_EXECUTE_RESULT');
+    protected function extractOrderException($result) {
+        $orderException = new InvalidOrderExecuteResult('INVALID_ORDER_EXECUTE_RESULT: ' . print_r($result, true));
         $errors = Registry::getSession()->getVariable('Errors');
         foreach ($errors as $location => $serializedExceptions) {
             foreach ($serializedExceptions as $serializedException) {
