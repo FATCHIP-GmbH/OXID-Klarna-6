@@ -58,9 +58,9 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         ]
     ];
 
-    protected $contextActionMap = [
-        'identification_updated' => 'recalculateShipping',
-        'specifications_selected' => 'recalculateBasket'
+    protected $validContextList = [
+        'identification_updated',
+        'specifications_selected'
     ];
 
     public function init()
@@ -201,8 +201,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
     public function updateOrder()
     {
         $this->actionData['order'] = $this->requestData;
-        $contextAction = $this->contextActionMap[$this->actionData['update_context']];
-        if ($contextAction === false) {
+        if (in_array($this->actionData['update_context'], $this->validContextList) === false) {
             return;
         }
         $basketAdapter = $this->createBasketAdapter();
@@ -216,7 +215,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             $basketAdapter->validateOrderLines();
             $basketAdapter->storeBasket();
         } catch (\Exception $exception) {
-            Registry::getLogger()->log('error', $exception->getMessage());
+            Registry::getLogger()->error($exception->getMessage(), [$exception]);
             return;
         }
 
