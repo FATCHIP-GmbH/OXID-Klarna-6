@@ -31,6 +31,7 @@ use TopConcepts\Klarna\Controller\KlarnaPaymentController;
 use TopConcepts\Klarna\Controller\KlarnaThankYouController;
 use TopConcepts\Klarna\Controller\KlarnaValidationController;
 use TopConcepts\Klarna\Controller\KlarnaViewConfig;
+use TopConcepts\Klarna\Core\Config;
 use TopConcepts\Klarna\Model\KlarnaAddress;
 use TopConcepts\Klarna\Model\KlarnaArticle;
 use TopConcepts\Klarna\Model\KlarnaBasket;
@@ -131,6 +132,8 @@ $aModule = array(
         BasketComponent::class    => KlarnaBasketComponent::class,
         UserComponent::class      => KlarnaUserComponent::class,
         ServiceMenu::class        => KlarnaServiceMenu::class,
+
+        OxidEsales\Eshop\Core\Config::class => Config::class
     ),
     'templates'   => array(
 
