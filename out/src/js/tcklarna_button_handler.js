@@ -31,6 +31,19 @@ function KlButtonManager (buttonConfig) {
             },
             {setup: {instance_id: buttonConfig.setup.instance_id}}
         );
+
+        Klarna.InstantShopping.on(
+            'buy_button_clicked',
+            function () {
+                $.ajax({
+                    method: 'POST',
+                    contentType: "application/json",
+                    url: '?cl=KlarnaInstantShoppingController&fnc=startSessionAjax',
+                    data: JSON.stringify(buttonConfig)
+                });
+            },
+            {setup: {instance_id: buttonConfig.setup.instance_id}}
+        );
     }
 
     this.updateInstances = function(buttonConfig) {

@@ -10,7 +10,7 @@ class Config extends Config_parent
     {
         parent::_setDefaults();
         $sessionStartRules = $this->getConfigParam('aRequireSessionWithParams');
-        $sessionStartRules['cl']['details'] = true;
+        $sessionStartRules['fnc']['startSessionAjax'] = true;
         $this->setConfigParam('aRequireSessionWithParams', $sessionStartRules);
     }
 }
