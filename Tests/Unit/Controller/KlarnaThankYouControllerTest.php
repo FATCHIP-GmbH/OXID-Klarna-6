@@ -4,10 +4,14 @@ namespace TopConcepts\Klarna\Testes\Unit\Controllers;
 
 
 use OxidEsales\Eshop\Application\Controller\ThankYouController;
+use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\BasketItem;
+use OxidEsales\Eshop\Core\Registry;
+use TopConcepts\Klarna\Controller\KlarnaThankYouController;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
 use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
+use TopConcepts\Klarna\Model\KlarnaInstantBasket;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 /**
@@ -29,9 +33,6 @@ class KlarnaThankYouControllerTest extends ModuleUnitTestCase
 
         $this->setSessionParam('paymentid', $payId);
         $this->setSessionParam('klarna_checkout_order_id', $klSessionId);
-
-
-
 
         $apiClient = $this->getMockBuilder(KlarnaCheckoutClient::class)->setMethods(['getOrder', 'getHtmlSnippet'])->getMock();
         $apiClient->expects($this->once())->method('getOrder')->willReturn([]);
@@ -72,7 +73,7 @@ class KlarnaThankYouControllerTest extends ModuleUnitTestCase
 
         $oBasketItem = oxNew(BasketItem::class);
         $this->setProtectedClassProperty($oBasketItem,'_sProductId', '_testArt');
-        $oBasket = $this->getMockBuilder(\OxidEsales\Eshop\Application\Model\Basket::class)->setMethods(['getContents', 'getProductsCount', 'getOrderId'])->getMock();
+        $oBasket = $this->getMockBuilder(Basket::class)->setMethods(['getContents', 'getProductsCount', 'getOrderId'])->getMock();
         $oBasket->expects($this->once())->method('getContents')->will($this->returnValue(array($oBasketItem)));
         $oBasket->expects($this->once())->method('getProductsCount')->will($this->returnValue(1));
         $oBasket->expects($this->once())->method('getOrderId')->will($this->returnValue(1));
@@ -82,5 +83,59 @@ class KlarnaThankYouControllerTest extends ModuleUnitTestCase
         $thankYouController->render();
 
         $this->assertArrayNotHasKey('sKlarnaIframe', $thankYouController->getViewData());
+    }
+
+    public function testSimpleRender()
+    {
+        $oBasketItem = oxNew(BasketItem::class);
+        $this->setProtectedClassProperty($oBasketItem,'_sProductId', '_testArt');
+        $oBasket = $this->getMockBuilder(Basket::class)->setMethods(['getContents', 'getProductsCount', 'getOrderId'])->getMock();
+        $oBasket->expects($this->once())->method('getContents')->will($this->returnValue(array($oBasketItem)));
+        $oBasket->expects($this->once())->method('getProductsCount')->will($this->returnValue(1));
+        $oBasket->expects($this->once())->method('getOrderId')->will($this->returnValue(1));
+
+        $controller = $this->getMockBuilder(KlarnaThankYouController::class)->
+        setMethods(['getNewKlarnaInstantBasket'])->getMock();
+
+        $this->setProtectedClassProperty($controller, '_oBasket', $oBasket);
+        $this->setProtectedClassProperty($controller,'instantShoppingActive', true);
+
+        $result = $controller->render();
+
+        $expected = $this->getProtectedClassProperty($controller, '_sThisTemplate');
+
+        $this->assertSame($expected, $result);
+    }
+
+    public function testInit()
+    {
+        $controller = $this->getMockBuilder(KlarnaThankYouController::class)->
+            setMethods(['getNewKlarnaInstantBasket'])->getMock();
+
+        $controller->init();
+
+        Registry::getSession()->setVariable('instant_shopping_basket_id', 'id');
+
+        $this->assertSame(Registry::getSession()->getVariable('instant_shopping_basket_id'), 'id');
+
+        $instantShopping = $this->getMockBuilder(KlarnaInstantBasket::class)->
+            setMethods(['load', 'isFinalized', 'getBasket', 'delete'])->getMock();
+
+        $instantShopping->expects($this->once())->method('load')->willReturn(true);
+        $instantShopping->expects($this->once())->method('isFinalized')->willReturn(true);
+        $instantShopping->expects($this->once())->method('delete')->willReturn(true);
+
+        $basket = $this->getMockBuilder(Basket::class)->
+        setMethods(['getOrder'])->getMock();
+
+        $instantShopping->expects($this->once())->method('getBasket')->willReturn($basket);
+
+        $controller->expects($this->once())->method('getNewKlarnaInstantBasket')->willReturn($instantShopping);
+
+        $this->assertFalse($this->getProtectedClassProperty($controller,'instantShoppingActive'));
+
+        $controller->init();
+        $this->assertTrue($this->getProtectedClassProperty($controller,'instantShoppingActive'));
+        $this->assertNull(Registry::getSession()->getVariable('instant_shopping_basket_id'));
     }
 }

@@ -81,7 +81,7 @@ class KlarnaThankYouController extends KlarnaThankYouController_parent
         $instantShoppingBasketId = Registry::getSession()->getVariable('instant_shopping_basket_id');
         if ($instantShoppingBasketId) {
             /** @var KlarnaInstantBasket $oInstantShoppingBasket */
-            $oInstantShoppingBasket = oxNew(KlarnaInstantBasket::class);
+            $oInstantShoppingBasket = $this->getNewKlarnaInstantBasket();
             if ($oInstantShoppingBasket->load($instantShoppingBasketId) && $oInstantShoppingBasket->isFinalized()) {
                 $this->instantShoppingActive = true;
                 // copying basket object
@@ -95,6 +95,14 @@ class KlarnaThankYouController extends KlarnaThankYouController_parent
 
         parent::init();
 
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    protected function getNewKlarnaInstantBasket()
+    {
+        return oxNew(KlarnaInstantBasket::class);
     }
 
     /**
