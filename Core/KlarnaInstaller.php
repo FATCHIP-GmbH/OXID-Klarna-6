@@ -212,7 +212,7 @@ class KlarnaInstaller extends ShopConfiguration
                              KlarnaPayment::KLARNA_PAYMENT_PAY_LATER_ID =>
                                  array($de_prefix => 'Klarna Rechnung', $en_prefix => 'Klarna Pay Later'),
                              KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID  =>
-                                 array($de_prefix => 'Klarna Ratenkauf', $en_prefix => 'Klarna Slice It'),
+                                 array($de_prefix => 'Klarna Ratenkauf', $en_prefix => 'Klarna Financing'),
                              KlarnaPayment::KLARNA_PAYMENT_PAY_NOW =>
                                  array($de_prefix => 'Sofort bezahlen', $en_prefix => 'Klarna Pay Now'),
                              KlarnaPayment::KLARNA_DIRECTDEBIT =>

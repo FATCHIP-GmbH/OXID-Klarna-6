@@ -35,7 +35,7 @@
                 <label class="kp-option equalHM eq" for="pay_later">
                     <div class="kp-option__top">
                         <div class="kp-option__top-img">
-                            <img src="https://cdn.klarna.com/1.0/shared/image/generic/badge/en_gb/pay_later/standard/pink.svg">
+                            <img src="https://x.klarnacdn.net/payment-method/assets/badges/generic/klarna.svg">
                         </div>
                     </div>
                     <div class="kp-option__bottom">
@@ -53,7 +53,7 @@
                 <label class="kp-option equalHM eq" for="slice_it">
                     <div class="kp-option__top">
                         <div class="kp-option__top-img">
-                            <img src="https://cdn.klarna.com/1.0/shared/image/generic/badge/en_gb/slice_it/standard/pink.svg">
+                            <img src="https://x.klarnacdn.net/payment-method/assets/badges/generic/klarna.svg">
                         </div>
                     </div>
                     <div class="kp-option__bottom">
@@ -72,7 +72,7 @@
 
                     <div class="kp-option__top">
                         <div class="kp-option__top-img">
-                            <img src="https://cdn.klarna.com/1.0/shared/image/generic/badge/en_gb/pay_now/standard/pink.svg">
+                            <img src="https://x.klarnacdn.net/payment-method/assets/badges/generic/klarna.svg">
                         </div>
 
                     </div>

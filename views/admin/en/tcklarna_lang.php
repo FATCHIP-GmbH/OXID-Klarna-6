@@ -71,7 +71,7 @@ $aLang = array(
     your site simply with their email and zip, and pay with the major payment methods. 
     All available in one integration.',
 
-    'TCKLARNA_PAYMENTS_DESC' => 'Klarna offers three payment solutions. Pay now, Pay later and Slice it. This allows your consumers to try before they buy, finance purchases in your store, or make use of other payment options made available by Klarna.',
+    'TCKLARNA_PAYMENTS_DESC' => 'Klarna offers three payment solutions. Pay now, Pay later and Financing. This allows your consumers to try before they buy, finance purchases in your store, or make use of other payment options made available by Klarna.',
 
     'TCKLARNA_EASY_AND_SECURE_SHOPPING' => 'Preferred payment methods with Klarna. Smoooth, guaranteed and easy to integrate.',
     'TCKLARNA_WELCOME_TO_CONFIGURATION' => 'Welcome to the configuration settings page of Klarna Checkout and Klarna Payments. Here you can find everything you need to get started. Please choose from the left menu the Klarna sub-menu options to complete the setup for this extension.',
@@ -140,8 +140,8 @@ $aLang = array(
     'TCKLARNA_PAY_LATER.'        => 'Pay later.',
     'TCKLARNA_PAY_LATER_START'   => 'Provides consumer an invoice, for those who want to buy now, but pay later.',
     'TCKLARNA_PAY_LATER_TEXT'    => 'The option to pay later makes buying quicker and easier for customers: no need to fill out lengthy personal details or card number online.',
-    'TCKLARNA_SLICE_IT'          => 'Slice it',
-    'TCKLARNA_SLICE_IT.'          => 'Slice it.',
+    'TCKLARNA_SLICE_IT'          => 'Financing',
+    'TCKLARNA_SLICE_IT.'         => 'Financing.',
     'TCKLARNA_SLICE_IT_START'    => 'Empower your customers to pay over time.',
     'TCKLARNA_SLICE_IT_TEXT'     => 'Your customers can spread the cost of their purchases at a low interest rate, giving them flexibility and increased purchasing power. Our unique credit application requires minimal information and takes just seconds to complete.',
     'TCKLARNA_PAY_NOW'           => 'Pay Now',
