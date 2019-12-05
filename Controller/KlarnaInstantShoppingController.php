@@ -55,12 +55,18 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         ],
         'successAjax' => [
             'log' => false
+        ],
+        'startSessionAjax' => [
+            'log' => false,
+            'validator' => [
+                'merchant_reference2' => ['required', 'notEmpty ', 'extract'],
+            ]
         ]
     ];
 
-    protected $contextActionMap = [
-        'identification_updated' => 'recalculateShipping',
-        'specifications_selected' => 'recalculateBasket'
+    protected $validContextList = [
+        'identification_updated',
+        'specifications_selected'
     ];
 
     public function init()
@@ -201,8 +207,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
     public function updateOrder()
     {
         $this->actionData['order'] = $this->requestData;
-        $contextAction = $this->contextActionMap[$this->actionData['update_context']];
-        if ($contextAction === false) {
+        if (in_array($this->actionData['update_context'], $this->validContextList) === false) {
             return;
         }
         $basketAdapter = $this->createBasketAdapter();
@@ -216,7 +221,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             $basketAdapter->validateOrderLines();
             $basketAdapter->storeBasket();
         } catch (\Exception $exception) {
-            Registry::getLogger()->log('error', $exception->getMessage());
+            Registry::getLogger()->error($exception->getMessage(), [$exception]);
             return;
         }
 
@@ -331,29 +336,8 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         return  array_search($langAbbr, $langIds) ?: 0;
     }
 
-
-    /**
-     * Request Mock
-     * @return array
-     */
-//    protected function getRequestData()
-//    {
-//        if ($_GET['mock']) {
-//            $mockType = $_GET['fnc'];
-//            $body = file_get_contents(OX_BASE_PATH . "../klarna_requests/{$mockType}.json");
-//            return (array)json_decode($body, true);
-//        }
-//        $original = parent::getRequestData();
-//
-//        $multiply = function(&$item, $m) {
-//            $f = ['quantity', 'total_amount', 'total_tax_amount', 'total_discount_amount'];
-//            foreach($f as $field) {
-//                $item[$field] = $item[$field] * $m;
-//            }
-//        };
-//        $multiply($original['order_lines'][0], 4);
-//        $original['update_context'] = 'specifications_selected';
-//
-//        return $original;
-//    }
+    public function startSessionAjax()
+    {
+        Registry::getSession()->setVariable('instant_shopping_basket_id', $this->actionData['merchant_reference2']);
+    }
 }
