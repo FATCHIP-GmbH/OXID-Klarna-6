@@ -62,6 +62,10 @@ class KlarnaOrder extends KlarnaOrder_parent
 
                 $session = Registry::getSession();
 
+                if ($this->isKIS()) {
+                    return $blUpdate;
+                }
+
                 if ($this->isKP()) {
                     $klarna_id = $session->getVariable('klarna_last_KP_order_id');
                     $session->deleteVariable('klarna_last_KP_order_id');
@@ -125,6 +129,11 @@ class KlarnaOrder extends KlarnaOrder_parent
     public function isKCO()
     {
         return $this->oxorder__oxpaymenttype->value === KlarnaPayment::KLARNA_PAYMENT_CHECKOUT_ID;
+    }
+
+    public function isKIS()
+    {
+        return $this->oxorder__oxpaymenttype->value === KlarnaPayment::KLARNA_INSTANT_SHOPPING;
     }
 
     /**

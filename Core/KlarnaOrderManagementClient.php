@@ -305,7 +305,10 @@ class KlarnaOrderManagementClient extends KlarnaClientBase
             throw new KlarnaClientException(sprintf($message, $this->formatAndShowErrorMessage($oResponse)), $oResponse->status_code);
         }
 
-        throw new KlarnaClientException(sprintf($message, 'Unknown error.'), $oResponse->status_code);
+        throw new KlarnaClientException(
+            join(' | ', ['status: '.$oResponse->status_code, 'body: '.$oResponse->body]),
+            $oResponse->status_code
+        );
     }
 
     /**
