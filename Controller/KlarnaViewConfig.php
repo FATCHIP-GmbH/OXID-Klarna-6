@@ -329,7 +329,7 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
             return $this->tcKlarnaButton;
         }
 
-        $oConfig = Registry::getConfig();
+        $oConfig = $this->getConfig();
         $isEnabled = $oConfig->getConfigParam('blKlarnaInstantShoppingEnabled');
         if($isEnabled) {
             $placementArray = $oConfig->getConfigParam('aarrKlarnaISButtonPlacement');
