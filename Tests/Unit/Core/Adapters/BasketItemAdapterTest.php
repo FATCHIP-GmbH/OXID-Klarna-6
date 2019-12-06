@@ -7,6 +7,7 @@ use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\BasketItem;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Price;
+use TopConcepts\Klarna\Core\Adapters\BaseBasketItemAdapter;
 use TopConcepts\Klarna\Core\Adapters\BasketItemAdapter;
 use TopConcepts\Klarna\Core\Exception\InvalidItemException;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
@@ -293,5 +294,35 @@ class BasketItemAdapterTest extends ModuleUnitTestCase
             ->getMock();
         $result = $oSUT->getReference();
         $this->assertEquals('ref1', $result);
+    }
+
+    public function testEncodeMerchantData()
+    {
+        $oSUT = $this->getMockBuilder(BaseBasketItemAdapter::class)
+            ->disableOriginalConstructor()
+            ->getMockForAbstractClass();
+
+        $itemData['merchant_data'] = ["test" => "data"];
+
+        $result = $oSUT->encodeMerchantData($itemData);
+        $this->assertSame(json_encode(["test" => "data"]), $result['merchant_data']);
+    }
+
+    public function testGetItemKey()
+    {
+        $oSUT = $this->getMockBuilder(BaseBasketItemAdapter::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getType', 'getReference'])
+            ->getMockForAbstractClass();
+
+        $oSUT->expects($this->once())->method('getType')
+            ->willReturn("test");
+
+        $oSUT->expects($this->once())->method('getReference')
+            ->willReturn("data");
+
+
+        $result = $oSUT->getItemKey();
+        $this->assertSame("test_data", $result);
     }
 }

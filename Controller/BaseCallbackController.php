@@ -45,6 +45,7 @@ abstract class BaseCallbackController extends BaseController
     }
 
     /**
+     * @codeCoverageIgnore
      * Logs callback request
      * Sends response
      * @return string|void
@@ -110,7 +111,7 @@ abstract class BaseCallbackController extends BaseController
         Registry::getLogger()->log('debug', 'CALLBACK_RESPONSE: ' .
             print_r($data, true)
         );
-        header('Content-Type: application/json');
+        Registry::getUtils()->setHeader('Content-Type: application/json');
         Registry::getUtils()->showMessageAndExit(json_encode($data));
     }
 }

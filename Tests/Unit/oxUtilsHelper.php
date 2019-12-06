@@ -41,6 +41,10 @@ class oxUtilsHelper extends \OxidEsales\Eshop\Core\Utils
         self::$iCode = $iHeaderCode;
     }
 
+    public function setHeader($sHeader)
+    {
+    }
+
     /**
      * Rewrites parent::seoIsActive method.
      *
