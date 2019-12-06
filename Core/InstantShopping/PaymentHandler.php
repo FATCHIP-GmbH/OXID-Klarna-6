@@ -39,7 +39,6 @@ class PaymentHandler implements PaymentHandlerInterface
      */
     public function execute(Order $oOrder): bool
     {
-        $this->context['order']['merchant_reference1'] = $oOrder->oxorder__oxordernr->value;
         $this->context['order']['merchant_reference2'] = "";
         $approveResponse = $this->httpClient->approveOrder(
             $this->context['authorization_token'],
@@ -47,7 +46,12 @@ class PaymentHandler implements PaymentHandlerInterface
         );
         Registry::getLogger()->debug(__METHOD__, $approveResponse);
 
-        return  $this->checkFraudStatus($approveResponse, $oOrder);
+        $result = $this->checkFraudStatus($approveResponse, $oOrder);
+        if ($result) {
+            $this->updateOrder($oOrder, $approveResponse);
+            Registry::getConfig()->setConfigParam('kis_order_id', $approveResponse['order_id']);
+        }
+        return $result;
     }
 
 
@@ -70,18 +74,20 @@ class PaymentHandler implements PaymentHandlerInterface
         throw new StandardException($msg);
     }
 
-    protected function checkFraudStatus(array $approveResponse, Order $oOrder)
+    protected function checkFraudStatus(array $approveResponse)
     {
-        $approveResponse['fraud_status'] = 'PENDING';
         if($approveResponse['fraud_status'] !== 'ACCEPTED') {
             $this->error = 'fraud_status=' . $approveResponse['fraud_status'];
             return false;
         }
 
-        $oOrder->oxorder__tcklarna_orderid = new Field($approveResponse['order_id'], Field::T_RAW);
+        return true;
+    }
+
+    protected function updateOrder(Order $oOrder, $response)
+    {
+        $oOrder->oxorder__tcklarna_orderid = new Field($response['order_id'], Field::T_RAW);
         $oOrder->saveMerchantIdAndServerMode();
         $oOrder->save();
-
-        return true;
     }
 }

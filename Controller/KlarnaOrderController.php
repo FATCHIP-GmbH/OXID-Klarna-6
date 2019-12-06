@@ -311,53 +311,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     }
 
     /**
-     * Runs before oxid execute in KP mode
-     * Saves authorization token
-     * Runs final validation
-     * Creates order on Klarna side
-     *
-     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
-     * @throws \oxSystemComponentException
-     */
-    public function kpBeforeExecute()
-    {
-
-        // downloadable product validation for sofort
-        if (!$termsValid = $this->_validateTermsAndConditions()) {
-            Registry::get(UtilsView::class)->addErrorToDisplay('TCKLARNA_PLEASE_AGREE_TO_TERMS');
-            Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=order', false, 302);
-
-            return;
-        }
-
-        if ($sAuthToken = Registry::get(Request::class)->getRequestEscapedParameter('sAuthToken')) {
-            Registry::getSession()->setVariable('sAuthToken', $sAuthToken);
-            $dt = new \DateTime();
-            Registry::getSession()->setVariable('sTokenTimeStamp', $dt->getTimestamp());
-        }
-
-        if ($sAuthToken || Registry::getSession()->hasVariable('sAuthToken')) {
-
-            $oBasket        = Registry::getSession()->getBasket();
-            $oKlarnaPayment = oxNew(KlarnaPayment::class, $oBasket, $this->getUser());
-
-            $created = false;
-            $oKlarnaPayment->validateOrder();
-
-            $valid = $this->validatePayment($created, $oKlarnaPayment, $termsValid);
-
-            if (!$valid || !$created) {
-                Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=order', false, 302);
-
-                return;
-            }
-
-            Registry::getSession()->setVariable('klarna_last_KP_order_id', $created['order_id']);
-            Registry::getUtils()->redirect($created['redirect_url'], false, 302);
-        }
-    }
-
-    /**
      * @param $created
      * @param KlarnaPayment $oKlarnaPayment
      * @param $termsValid

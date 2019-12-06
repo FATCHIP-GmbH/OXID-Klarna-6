@@ -334,7 +334,6 @@ class KlarnaUtils
     {
         Registry::getSession()->deleteVariable('paymentid');
         Registry::getSession()->deleteVariable('klarna_checkout_order_id');
-        Registry::getSession()->deleteVariable('kp_order_id');
         Registry::getSession()->deleteVariable('amazonOrderReferenceId');
         Registry::getSession()->deleteVariable('klarna_checkout_user_email');
         Registry::getSession()->deleteVariable('externalCheckout');

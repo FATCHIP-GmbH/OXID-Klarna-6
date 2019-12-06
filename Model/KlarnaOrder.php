@@ -58,28 +58,25 @@ class KlarnaOrder extends KlarnaOrder_parent
     {
         if ($blUpdate = parent::_setNumber()) {
 
-            if ($this->isKlarna() && empty($this->oxorder__tcklarna_orderid->value)) {
+            if ($this->isKlarna()) {
 
                 $session = Registry::getSession();
+                $oConfig = Registry::getConfig();
 
                 if ($this->isKIS()) {
-                    return $blUpdate;
+                    $klarna_id = $oConfig->getConfigParam('kis_order_id');
                 }
 
                 if ($this->isKP()) {
-                    $klarna_id = $session->getVariable('klarna_last_KP_order_id');
-                    $session->deleteVariable('klarna_last_KP_order_id');
+                    $klarna_id = $oConfig->getConfigParam('kp_order_id');
                 }
 
                 if ($this->isKCO()) {
                     $klarna_id = $session->getVariable('klarna_checkout_order_id');
+                    $this->oxorder__tcklarna_orderid = new Field($klarna_id, Field::T_RAW);
+                    $this->saveMerchantIdAndServerMode();
+                    $this->save();
                 }
-
-                $this->oxorder__tcklarna_orderid = new Field($klarna_id, Field::T_RAW);
-
-                $this->saveMerchantIdAndServerMode();
-
-                $this->save();
 
                 try {
                     $sCountryISO = KlarnaUtils::getCountryISO($this->getFieldData('oxbillcountryid'));
