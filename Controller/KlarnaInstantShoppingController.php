@@ -4,6 +4,7 @@
 namespace TopConcepts\Klarna\Controller;
 
 use OxidEsales\Eshop\Application\Controller\OrderController;
+use OxidEsales\Eshop\Application\Model\Address;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Application\Model\User;
@@ -102,7 +103,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             $basketAdapter->closeBasket($orderId);
 
         } catch (\Exception $exception) {
-            Registry::getLogger()->error($exception->getMessage(), [$exception]);
+            $this->logError($exception);
             try {
                 $this->declineOrder($exception);
             } catch (KlarnaClientException $declineOrderException) {
@@ -114,6 +115,14 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         $this->db->commitTransaction();
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
+    protected function logError($exception)
+    {
+        Registry::getLogger()->error($exception->getMessage(), [$exception]);
+    }
+
     protected function prepareOrderExecution()
     {
         $sToken = Registry::getSession()->getVariable('sess_stoken');
@@ -121,12 +130,10 @@ class KlarnaInstantShoppingController extends BaseCallbackController
 
         $sDelAddress = $this->getUser()->getEncodedDeliveryAddress();
         // delivery address
-        if (\OxidEsales\Eshop\Core\Registry::getSession()->getVariable('deladrid')) {
-            $oDelAddress = oxNew(\OxidEsales\Eshop\Application\Model\Address::class);
-            $oDelAddress->load(\OxidEsales\Eshop\Core\Registry::getSession()->getVariable('deladrid'));
-
-            $sDelAddress .= $oDelAddress->getEncodedDeliveryAddress();
+        if (Registry::getSession()->getVariable('deladrid')) {
+            $sDelAddress .= $this->getDelAddress();
         }
+
         $_GET['sDeliveryAddressMD5'] = $sDelAddress;
 
         $orderId = Registry::getUtilsObject()->generateUID();
@@ -138,6 +145,17 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         Registry::getConfig()->setConfigParam(PaymentHandler::ORDER_CONTEXT_KEY, $this->actionData);
 
         return $orderId;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    protected function getDelAddress()
+    {
+        $oDelAddress = oxNew(Address::class);
+        $oDelAddress->load(Registry::getSession()->getVariable('deladrid'));
+
+        return $oDelAddress->getEncodedDeliveryAddress();
     }
 
 

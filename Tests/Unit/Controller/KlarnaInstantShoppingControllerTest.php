@@ -2,13 +2,42 @@
 
 namespace TopConcepts\Klarna\Tests\Unit\Controller;
 
+use Exception;
+use OxidEsales\Eshop\Application\Controller\OrderController;
+use OxidEsales\Eshop\Application\Model\User;
+use OxidEsales\Eshop\Core\Database\Adapter\Doctrine\Database;
 use OxidEsales\Eshop\Core\Exception\StandardException;
+use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Controller\KlarnaInstantShoppingController;
 use TopConcepts\Klarna\Core\Adapters\BasketAdapter;
+use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
+use TopConcepts\Klarna\Core\InstantShopping\PaymentHandler;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaInstantShoppingControllerTest extends ModuleUnitTestCase
 {
+    public function testInit()
+    {
+        $controller = $this->getMockBuilder(KlarnaInstantShoppingController ::class)
+            ->disableOriginalConstructor()
+            ->setMethods([
+                'buildOrderLinesFromBasket',
+
+            ])
+            ->getMock();
+
+        $this->assertNull($this->getProtectedClassProperty($controller, "httpClient"));
+        $this->assertNull($this->getProtectedClassProperty($controller, "db"));
+        $this->assertNull($this->getProtectedClassProperty($controller, "userManager"));
+
+        $controller->init();
+
+        $this->assertNotNull($this->getProtectedClassProperty($controller, "httpClient"));
+        $this->assertNotNull($this->getProtectedClassProperty($controller, "db"));
+        $this->assertNotNull($this->getProtectedClassProperty($controller, "userManager"));
+
+    }
+
     public function updateOrderDP()
     {
         $requestData1 = [
@@ -136,6 +165,108 @@ class KlarnaInstantShoppingControllerTest extends ModuleUnitTestCase
     }
 
     public function testPlaceOrder()
+    {
+        $oSUT = $this->getMockBuilder(KlarnaInstantShoppingController::class)
+            ->setMethods(['createBasketAdapter'])
+            ->getMock();
+
+        $oSUT->expects($this->any())
+            ->method('createBasketAdapter')->willReturn(false);
+
+        $result = $oSUT->placeOrder();
+
+        $this->assertEmpty($result);
+
+        $oSUT = $this->getMockBuilder(KlarnaInstantShoppingController::class)
+            ->disableOriginalConstructor()
+            ->setMethods(
+                [
+                    'createBasketAdapter',
+                    'approveOrder',
+                    'updateOrderObject',
+                    'prepareOrderExecution',
+                    'extractOrderException',
+                    'declineOrder',
+                    'logError'
+                ]
+            )
+            ->getMock();
+
+        $oSUT->expects($this->any())
+            ->method('logError');
+
+        $oSUT->expects($this->any())
+            ->method('extractOrderException')->willReturn(new Exception('Exception'));
+
+        $oSUT->expects($this->at(1))
+            ->method('declineOrder')->willReturn(true);
+
+        $oSUT->expects($this->at(2))
+            ->method('declineOrder')->willThrowException(new KlarnaClientException('klarnaexception'));
+
+        $oSUT->expects($this->any())->method('approveOrder')->willReturn(true);
+        $oSUT->expects($this->any())->method('updateOrderObject')->willReturn(true);
+        $oSUT->expects($this->any())->method('prepareOrderExecution')->willReturn(1);
+
+        $adapter = $this->getMockBuilder(BasketAdapter::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['buildOrderLinesFromBasket', 'validateOrderLines', 'closeBasket'])
+            ->getMock();
+
+        $adapter->expects($this->any())->method('buildOrderLinesFromBasket')->willReturn(true);
+        $adapter->expects($this->any())->method('validateOrderLines')->willReturn(true);
+        $adapter->expects($this->any())->method('closeBasket')->willReturn(true);
+
+        $orderController = $this->getMockBuilder(OrderController::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['execute', 'validateOrderLines'])
+            ->getMock();
+
+        $orderController->expects($this->at(0))->method('execute')->willReturn(KlarnaInstantShoppingController::EXECUTE_SUCCESS);
+        $orderController->expects($this->at(1))->method('execute')->willReturn("error");
+        $orderController->expects($this->at(2))->method('execute')->willReturn("error");
+        $oSUT->expects($this->any())->method('createBasketAdapter')->willReturn($adapter);
+
+        $db = $this->getMockBuilder(Database::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['startTransaction', 'rollbackTransaction', 'commitTransaction'])
+            ->getMock();
+
+        $db->expects($this->any())->method('startTransaction');
+        $db->expects($this->any())->method('commitTransaction');
+        $db->expects($this->any())->method('rollbackTransaction')->willReturn(true);
+
+        $this->setProtectedClassProperty($oSUT, 'db', $db);
+        Registry::set(OrderController::class, $orderController);
+        $oSUT->placeOrder();
+        $oSUT->placeOrder();
+        $oSUT->placeOrder();
+
+    }
+
+    public function testPrepareOrderExecution()
+    {
+        Registry::getSession()->setVariable("sess_stoken", "token");
+        Registry::getSession()->setVariable("deladrid", "id");
+        $oSUT = $this->getMockBuilder(KlarnaInstantShoppingController::class)
+            ->setMethods(['getUser', 'getDelAddress'])
+            ->getMock();
+        $user = $this->getMockBuilder(User::class)->setMethods(['getEncodedDeliveryAddress'])->getMock();
+        $user->expects($this->any())->method('getEncodedDeliveryAddress')->willReturn("test");
+
+        $oSUT->expects($this->any())->method('getUser')->willReturn($user);
+        $oSUT->expects($this->any())->method('getDelAddress')->willReturn("address");
+
+        $this->setProtectedClassProperty($oSUT,'actionData','actiondata');
+        $return = $oSUT->prepareOrderExecution();
+
+        $this->assertSame("testaddress", $_GET['sDeliveryAddressMD5']);
+        $this->assertNotEmpty($return);
+        $actionData = $this->getConfigParam(PaymentHandler::ORDER_CONTEXT_KEY);
+        $this->assertSame('actiondata', $actionData);
+    }
+
+    public function declineOrder()
     {
 
     }
