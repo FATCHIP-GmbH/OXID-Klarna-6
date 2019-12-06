@@ -298,6 +298,19 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                 return $this->_getNextStep($iSuccess);
             }
 
+            if ($sAuthToken = Registry::get(Request::class)->getRequestEscapedParameter('sAuthToken')) {
+                // finalize flow - save authorization token
+                Registry::getSession()->setVariable('sAuthToken', $sAuthToken);
+                $dt = new \DateTime();
+                Registry::getSession()->setVariable('sTokenTimeStamp', $dt->getTimestamp());
+            }
+
+            if (in_array($paymentId,  KlarnaPaymentModel::getKlarnaPaymentsIds('KP'))) {
+                // ignore agreements
+                $oConfig = Registry::getConfig();
+                $oConfig->setConfigParam('blConfirmAGB', false);
+                $oConfig->setConfigParam('blEnableIntangibleProdAgreement', false);
+            }
         }
 
         // if user is not logged in set the user
@@ -1161,6 +1174,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     /**
      * @param $oBasket
      * @return KlarnaOrder
+     * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      */
     protected function initKlarnaOrder($oBasket)

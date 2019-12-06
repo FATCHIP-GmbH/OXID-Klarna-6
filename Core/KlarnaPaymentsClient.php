@@ -223,7 +223,7 @@ class KlarnaPaymentsClient extends KlarnaClientBase
     protected function handleNewOrderResponse(\Requests_Response $oResponse, $class, $method)
     {
         $successCodes = array(200, 201, 204);
-        $errorCodes   = array(400, 409);
+        $errorCodes   = array(400, 405, 409);
         $result = false;
         try {
             if (in_array($oResponse->status_code, $successCodes)) {
@@ -232,7 +232,10 @@ class KlarnaPaymentsClient extends KlarnaClientBase
                 return $result;
             }
 
-            Registry::getLogger()->error($class::$method, (array)$result);
+            Registry::getLogger()->error(
+                join(' | ', [ "$class::$method ", $oResponse->status_code, $oResponse->body]),
+                (array)$result
+            );
 
             if ($oResponse->status_code == 403) {
                 throw new KlarnaWrongCredentialsException($oResponse->body, 403);

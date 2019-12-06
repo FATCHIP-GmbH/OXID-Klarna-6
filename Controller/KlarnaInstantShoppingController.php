@@ -138,7 +138,8 @@ class KlarnaInstantShoppingController extends BaseCallbackController
 
         $orderId = Registry::getUtilsObject()->generateUID();
         Registry::getSession()->setVariable('sess_challenge', $orderId);
-        Registry::getConfig()->setConfigParam('blConfirmAGB', 0);
+        Registry::getConfig()->setConfigParam('blConfirmAGB', false);
+        Registry::getConfig()->setConfigParam('blEnableIntangibleProdAgreement', false);
 
         // store order details, we will need that later inside
         // Order::execute > PaymentGateway::executePayment > PaymentHandler::executePayment
