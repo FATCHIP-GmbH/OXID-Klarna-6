@@ -376,7 +376,6 @@ class KlarnaOrderTest extends ModuleUnitTestCase
         $client->expects($this->once())
             ->method('sendOxidOrderNr')
             ->willReturn($response);
-
         $result = $method->invokeArgs($order, [$client]);
         $this->assertTrue($result);
     }
