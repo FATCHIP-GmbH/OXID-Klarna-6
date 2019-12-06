@@ -19,14 +19,13 @@ use TopConcepts\Klarna\Core\Exception\InvalidItemException;
 use TopConcepts\Klarna\Core\Exception\KlarnaBasketTooLargeException;
 use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Core\InstantShopping\HttpClient;
+use TopConcepts\Klarna\Core\InstantShopping\PaymentHandler;
 use TopConcepts\Klarna\Core\KlarnaUserManager;
 use TopConcepts\Klarna\Model\KlarnaInstantBasket;
 
 class KlarnaInstantShoppingController extends BaseCallbackController
 {
     const EXECUTE_SUCCESS = 'thankyou';
-    const KLARNA_PENDING_STATUS = 'PENDING';
-    const NOT_FINISHED_STATUS = 'NOT_FINISHED';
 
     /** @var HttpClient */
     protected $httpClient;
@@ -99,16 +98,11 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             $result = $oOrderController->execute();
             if ($result !== self::EXECUTE_SUCCESS) {
                 throw $this->extractOrderException($result);
-
             }
-            $oOrder = oxNew(Order::class);
-            $oOrder->load($orderId);
-            $response = $this->approveOrder($oOrder);
-            $this->updateOrderObject($oOrder, $response);
             $basketAdapter->closeBasket($orderId);
-        } catch (KlarnaClientException $approveOrderException) {
-            Registry::getLogger()->log('error', 'ORDER_NOT_FOUND: ' . $approveOrderException->getMessage());
+
         } catch (\Exception $exception) {
+            Registry::getLogger()->error($exception->getMessage(), [$exception]);
             try {
                 $this->declineOrder($exception);
             } catch (KlarnaClientException $declineOrderException) {
@@ -118,20 +112,6 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             return;
         }
         $this->db->commitTransaction();
-    }
-
-    /**
-     * @param Order $oOrder
-     * @return array|bool|mixed
-     */
-    protected function approveOrder(Order $oOrder)
-    {
-        $this->actionData['order']['merchant_reference1'] = $oOrder->oxorder__oxordernr->value;
-        $this->actionData['order']['merchant_reference2'] = "";
-        return $this->httpClient->approveOrder(
-            $this->actionData['authorization_token'],
-            $this->actionData['order']
-        );
     }
 
     protected function prepareOrderExecution()
@@ -152,6 +132,10 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         $orderId = Registry::getUtilsObject()->generateUID();
         Registry::getSession()->setVariable('sess_challenge', $orderId);
         Registry::getConfig()->setConfigParam('blConfirmAGB', 0);
+
+        // store order details, we will need that later inside
+        // Order::execute > PaymentGateway::executePayment > PaymentHandler::executePayment
+        Registry::getConfig()->setConfigParam(PaymentHandler::ORDER_CONTEXT_KEY, $this->actionData);
 
         return $orderId;
     }
@@ -176,10 +160,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         }
 
         if ($exception instanceof InvalidOrderExecuteResult) {
-            $type = $exception->getType();
-            if ($type !== null) {
-                // oxOutOfStockException
-                // oxArticleInputException
+            if (in_array($exception->getType(), ['oxOutOfStockException', 'oxArticleInputException'])) {
                 $code = 'item_out_of_stock';
             }
         }
@@ -242,10 +223,6 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         if ($oInstantShoppingBasket->load($instantShoppingBasketId) === false) {
             return false;
         }
-//        $oInstantShoppingBasket->getOxuserId();
-//        $this->actionData['order']['userId'] = $oInstantShoppingBasket->getOxuserId();
-//        $this->userManager->initUser($this->actionData['order']);
-
 
         /** @var Basket $oBasket */
         $oBasket = $oInstantShoppingBasket->getBasket();
@@ -276,17 +253,6 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         return $basketAdapter;
     }
 
-    protected function updateOrderObject(Order $oOrder, $approveResponse)
-    {
-        if($approveResponse['fraud_status'] == self::KLARNA_PENDING_STATUS) {
-            $oOrder->oxorder__oxtransstatus = new Field(self::NOT_FINISHED_STATUS, Field::T_RAW);
-        }
-
-        $oOrder->oxorder__tcklarna_orderid = new Field($approveResponse['order_id'], Field::T_RAW);
-        $oOrder->saveMerchantIdAndServerMode();
-        $oOrder->save();
-    }
-
     public function successAjax()
     {
         $result = false;
@@ -311,15 +277,25 @@ class KlarnaInstantShoppingController extends BaseCallbackController
     protected function extractOrderException($result) {
         $orderException = new InvalidOrderExecuteResult('INVALID_ORDER_EXECUTE_RESULT: ' . print_r($result, true));
         $errors = Registry::getSession()->getVariable('Errors');
-        foreach ($errors as $location => $serializedExceptions) {
-            foreach ($serializedExceptions as $serializedException) {
-                /** @var  ExceptionToDisplay $oException */
-                $oException = unserialize($serializedException);
-                $orderException->setType($oException->getErrorClassType());
-                $orderException->setValues($oException->getValues());
-                break;
+        if (count($errors) > 0) {
+            foreach ($errors as $location => $serializedExceptions) {
+                foreach ($serializedExceptions as $serializedException) {
+                    /** @var  ExceptionToDisplay $oException */
+                    $oException = unserialize($serializedException);
+                    $orderException->setType($oException->getErrorClassType());
+                    $orderException->setValues($oException->getValues());
+                    break;
+                }
             }
+            return $orderException;
         }
+
+        $values = [];
+        $aUrl = parse_url($result);
+        parse_str((string)$aUrl['query'], $values);
+        $orderException->setType((string)$aUrl['path']);
+        $orderException->setValues($values);
+
         return $orderException;
     }
 

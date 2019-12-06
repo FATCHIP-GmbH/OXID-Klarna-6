@@ -65,6 +65,7 @@ use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Article;
 use OxidEsales\Eshop\Application\Model\UserPayment;
 use OxidEsales\Eshop\Core\ViewConfig;
+use TopConcepts\Klarna\Model\PaymentGateway;
 
 /**
  * Metadata version
@@ -133,7 +134,8 @@ $aModule = array(
         UserComponent::class      => KlarnaUserComponent::class,
         ServiceMenu::class        => KlarnaServiceMenu::class,
 
-        OxidEsales\Eshop\Core\Config::class => Config::class
+        OxidEsales\Eshop\Core\Config::class                      => Config::class,
+        OxidEsales\Eshop\Application\Model\PaymentGateway::class => PaymentGateway::class,
     ),
     'templates'   => array(
 

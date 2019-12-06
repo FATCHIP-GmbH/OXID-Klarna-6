@@ -10,10 +10,10 @@ namespace TopConcepts\Klarna\Core\Exception;
 class InvalidOrderExecuteResult extends \Exception
 {
     /** @var string */
-    protected $type;
+    protected $type = '';
 
     /** @var array */
-    protected $values;
+    protected $values = [];
 
     /**
      * @return array

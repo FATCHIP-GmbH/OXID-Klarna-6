@@ -91,6 +91,16 @@ class HttpClient extends KlarnaClientBase
         return $this->handleResponse($oResponse, __CLASS__, __METHOD__);
     }
 
+    /**
+     * @param $token
+     * @param $requestParams
+     * @return array|bool|mixed
+     * @throws KlarnaClientException
+     * @throws \OxidEsales\Eshop\Core\Exception\StandardException
+     * @throws \TopConcepts\Klarna\Core\Exception\KlarnaOrderNotFoundException
+     * @throws \TopConcepts\Klarna\Core\Exception\KlarnaOrderReadOnlyException
+     * @throws \TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException
+     */
     public function approveOrder($token, $requestParams) {
         $url = self::INSTANT_SHOPPING_ENDPOINT . "/authorizations/$token/orders";
         $requestBody = json_encode($requestParams);
