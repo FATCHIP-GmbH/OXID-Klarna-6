@@ -238,7 +238,8 @@ class KlarnaInstantShoppingController extends BaseCallbackController
     {
         // Fetch saved Instant Shopping basket
         $instantShoppingBasketId = $this->actionData['order']['merchant_reference2'];
-        $oInstantShoppingBasket = oxNew(KlarnaInstantBasket::class);
+        /** @var  KlarnaInstantBasket $oInstantShoppingBasket */
+        $oInstantShoppingBasket = Registry::get(KlarnaInstantBasket::class);
         if ($oInstantShoppingBasket->load($instantShoppingBasketId) === false) {
             return false;
         }
