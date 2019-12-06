@@ -232,7 +232,7 @@ class KlarnaPaymentsClient extends KlarnaClientBase
                 return $result;
             }
 
-            Registry::getLogger()->error(
+            Registry::getLogger()->warning(
                 join(' | ', [ "$class::$method ", $oResponse->status_code, $oResponse->body]),
                 (array)$result
             );

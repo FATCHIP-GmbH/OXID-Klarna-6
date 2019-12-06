@@ -414,49 +414,6 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $this->assertFalse($result);
     }
 
-    public function testKpBeforeExecute()
-    {
-        $sut = $this->getMockBuilder(KlarnaOrderController::class)->setMethods(['_validateTermsAndConditions'])->getMock();
-        $sut->expects($this->once())->method('_validateTermsAndConditions')->willReturn(false);
-        $sut->kpBeforeExecute();
-        $errors = unserialize($this->getSessionParam('Errors')['default'][0]);
-        $this->assertInstanceOf(DisplayError::class, $errors);
-        $errorMessage = $errors->getOxMessage();
-        $this->assertEquals('Bitte stimmen Sie den AGB und den Widerrufsbedingungen für digitale Inhalte zu.', $errorMessage);
-        $this->assertEquals(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=order', \oxUtilsHelper::$sRedirectUrl);
-
-        $oKlarnaPayment = $this->getMockBuilder(KlarnaPayment::class)->disableOriginalConstructor()->setMethods(['validateOrder', 'isError'])->getMock();
-        $oKlarnaPayment->expects($this->once())->method('validateOrder')->willReturn(true);
-        $oKlarnaPayment->expects($this->once())->method('isError')->willReturn(false);
-        $client = $this->getMockBuilder(KlarnaPaymentsClient::class)->setMethods(['createNewOrder', 'initOrder'])->getMock();
-        $client->expects($this->once())->method('createNewOrder')->willReturn(['order_id' => 'orderId', 'redirect_url' => 'testUrl']);
-        $client->expects($this->once())->method('initOrder')->willReturn($client);
-        $sut = $this->getMockBuilder(KlarnaOrderController::class)->setMethods(['_validateTermsAndConditions', 'getKlarnaPaymentsClient'])->getMock();
-        $sut->expects($this->once())->method('_validateTermsAndConditions')->willReturn(true);
-        $sut->expects($this->once())->method('getKlarnaPaymentsClient')->willReturn($client);
-
-        UtilsObject::setClassInstance(KlarnaPayment::class, $oKlarnaPayment);
-        $this->setRequestParameter('sAuthToken', 'testToken');
-        $sut->kpBeforeExecute();
-        $this->assertEquals('testToken', $this->getSessionParam('sAuthToken'));
-        $this->assertEquals('orderId', $this->getSessionParam('klarna_last_KP_order_id'));
-        $this->assertEquals('testUrl', \oxUtilsHelper::$sRedirectUrl);
-
-
-        $oKlarnaPayment = $this->getMockBuilder(KlarnaPayment::class)
-            ->disableOriginalConstructor()->setMethods(['validateOrder', 'isError', 'displayErrors'])->getMock();
-        $oKlarnaPayment->expects($this->once())->method('validateOrder')->willReturn(true);
-        $oKlarnaPayment->expects($this->once())->method('isError')->willReturn(true);
-        $oKlarnaPayment->expects($this->once())->method('displayErrors')->willReturn(true);
-        $sut = $this->getMockBuilder(KlarnaOrderController::class)->setMethods(['_validateTermsAndConditions', 'getKlarnaPaymentsClient'])->getMock();
-        $sut->expects($this->once())->method('_validateTermsAndConditions')->willReturn(true);
-        $sut->expects($this->once())->method('getKlarnaPaymentsClient')->willReturn($client);
-        UtilsObject::setClassInstance(KlarnaPayment::class, $oKlarnaPayment);
-        $sut->kpBeforeExecute();
-        $this->assertEquals(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=order', \oxUtilsHelper::$sRedirectUrl);
-
-    }
-
     public function initDP()
     {
         $userClassName = User::class;
