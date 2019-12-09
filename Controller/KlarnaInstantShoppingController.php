@@ -107,7 +107,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             try {
                 $this->declineOrder($exception);
             } catch (KlarnaClientException $declineOrderException) {
-                Registry::getLogger()->log('error', 'ORDER_NOT_FOUND: ' . $declineOrderException->getMessage());
+                $this->logOrderNotFound($declineOrderException);
             }
             $this->db->rollbackTransaction();
             return;
@@ -121,6 +121,14 @@ class KlarnaInstantShoppingController extends BaseCallbackController
     protected function logError($exception)
     {
         Registry::getLogger()->error($exception->getMessage(), [$exception]);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    protected function logOrderNotFound($declineOrderException)
+    {
+        Registry::getLogger()->log('error', 'ORDER_NOT_FOUND: ' . $declineOrderException->getMessage());
     }
 
     protected function prepareOrderExecution()
@@ -279,7 +287,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         $instantShoppingBasketId = Registry::getSession()->getVariable('instant_shopping_basket_id');
         if ($instantShoppingBasketId) {
             /** @var KlarnaInstantBasket $oInstantShoppingBasket */
-            $oInstantShoppingBasket = oxNew(KlarnaInstantBasket::class);
+            $oInstantShoppingBasket = Registry::get(KlarnaInstantBasket::class);
             if ($oInstantShoppingBasket->load($instantShoppingBasketId) && $oInstantShoppingBasket->isFinalized()) {
                 if ($oInstantShoppingBasket->getType() === KlarnaInstantBasket::TYPE_BASKET) {
                     $result = true;
