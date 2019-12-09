@@ -4,6 +4,7 @@ namespace TopConcepts\Klarna\Tests\Unit\Controller;
 
 use Exception;
 use OxidEsales\Eshop\Application\Controller\OrderController;
+use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Database\Adapter\Doctrine\Database;
 use OxidEsales\Eshop\Core\Exception\StandardException;
@@ -12,6 +13,8 @@ use TopConcepts\Klarna\Controller\KlarnaInstantShoppingController;
 use TopConcepts\Klarna\Core\Adapters\BasketAdapter;
 use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Core\InstantShopping\PaymentHandler;
+use TopConcepts\Klarna\Core\KlarnaUserManager;
+use TopConcepts\Klarna\Model\KlarnaInstantBasket;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaInstantShoppingControllerTest extends ModuleUnitTestCase
@@ -269,5 +272,68 @@ class KlarnaInstantShoppingControllerTest extends ModuleUnitTestCase
     public function declineOrder()
     {
 
+    }
+
+    public function creatBasketAdapterDP()
+    {
+        $oInstantBasketMock = function($loaded, $oBasketMock) {
+            $oMock = $this->getMockBuilder(KlarnaInstantBasket::class)
+                ->setMethods(['load', 'getBasket'])
+                ->getMock();
+
+            $oMock->expects($this->once())
+                ->method('load')
+                ->willReturn($loaded);
+            if ($loaded) {
+                $oMock->expects($this->once())
+                    ->method('getBasket')
+                    ->willReturn($oBasketMock);
+
+            }
+
+            return $oMock;
+        };
+
+        $oBasketMock = $this->getMockBuilder(Basket::class)
+            ->setMethods(['setShipping', 'setBasketUser'])
+            ->getMock();
+        $oBasketMock->expects($this->once())
+            ->method('setShipping')
+            ->with('shpId');
+        $oBasketMock->expects($this->once())
+            ->method('setBasketUser');
+
+        return  [
+            [$oInstantBasketMock(false, null), false],
+            [$oInstantBasketMock(true, $oBasketMock), false],
+        ];
+    }
+
+    /**
+     * @dataProvider creatBasketAdapterDP
+     * @param $oInstantBasket
+     * @param $expectedAdapter
+     * @throws \ReflectionException
+     */
+    public function testCreatBasketAdapter($oInstantBasket, $expectedAdapter)
+    {
+        $actionData = [];
+        $actionData['order']['selected_shipping_option']['id'] = 'shpId';
+        $actionData['order']['billing_address']['email'] = 'fake@mail';
+
+        $methodReflection = new \ReflectionMethod(KlarnaInstantShoppingController::class, 'createBasketAdapter');
+        $methodReflection->setAccessible(true);
+        $oSUT = $this->getMockBuilder(KlarnaInstantShoppingController::class)
+            ->setMethods(['getUser'])
+            ->getMock();
+        $oSUT->expects($this->any())
+            ->method('getUser')
+            ->willReturn(oxNew(User::class));
+        Registry::set(KlarnaInstantBasket::class, $oInstantBasket);
+        $this->setProtectedClassProperty($oSUT, 'actionData', $actionData);
+        $this->setProtectedClassProperty($oSUT, 'userManager', $this->getMockBuilder(KlarnaUserManager::class)->getMock());
+
+        $basketAdapter = $methodReflection->invoke($oSUT);
+        $this->assertSame($expectedAdapter, $basketAdapter);
     }
 }
