@@ -6,3 +6,49 @@
 .container.klarna-outside-forms {
     max-width: 640px;
 }
+
+@media (max-width: 768px) {
+    .cart-buttons .btn,
+    .cart-buttons form {
+        width: 100%;
+    }
+}
+
+@media (min-width: 768px) {
+    .cart-buttons .btn {
+        width:         auto;
+        margin-bottom: 0;
+        font-size:     0.95em;
+    }
+}
+
+#banner-promotion iframe {
+    width:  100% !important;
+    height: auto !important;
+}
+
+#instant {
+    width: 210px;
+}
+
+#instant iframe {
+    width: 100%;
+}
+
+@media (max-width: 992px) {
+    #instant {
+        width:         auto;
+        height:        50px;
+        margin-top:    10px !important;
+        margin-right:  0 !important;
+        padding-right: 0 !important;
+        border:        none;
+    }
+
+}
+
+@media (max-width: 768px) {
+    #instant {
+        width: 100%;
+    }
+}
