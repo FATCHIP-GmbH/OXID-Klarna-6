@@ -44,6 +44,7 @@ class PaymentHandler implements PaymentHandlerInterface
         return $result;
     }
 
+    /** @codeCoverageIgnore */
     public function getError()
     {
         return $this->error;
@@ -67,7 +68,6 @@ class PaymentHandler implements PaymentHandlerInterface
     }
 
     /**
-     * @codeCoverageIgnore
      * KlarnaPayment factory function
      */
     protected function getContext()
