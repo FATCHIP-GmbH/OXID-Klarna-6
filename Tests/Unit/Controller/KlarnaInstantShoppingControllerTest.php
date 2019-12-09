@@ -7,6 +7,7 @@ use OxidEsales\Eshop\Application\Controller\OrderController;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Database\Adapter\Doctrine\Database;
+use OxidEsales\Eshop\Core\Exception\ExceptionToDisplay;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Registry;
 use oxUtilsHelper;
@@ -196,7 +197,8 @@ class KlarnaInstantShoppingControllerTest extends ModuleUnitTestCase
                     'prepareOrderExecution',
                     'extractOrderException',
                     'declineOrder',
-                    'logError'
+                    'logError',
+                    'logOrderNotFound'
                 ]
             )
             ->getMock();
@@ -205,12 +207,12 @@ class KlarnaInstantShoppingControllerTest extends ModuleUnitTestCase
             ->method('logError');
 
         $oSUT->expects($this->any())
+            ->method('logOrderNotFound');
+
+        $oSUT->expects($this->any())
             ->method('extractOrderException')->willReturn(new Exception('Exception'));
 
-        $oSUT->expects($this->at(1))
-            ->method('declineOrder')->willReturn(true);
-
-        $oSUT->expects($this->at(2))
+        $oSUT->expects($this->any())
             ->method('declineOrder')->willThrowException(new KlarnaClientException('klarnaexception'));
 
         $oSUT->expects($this->any())->method('approveOrder')->willReturn(true);
@@ -233,7 +235,6 @@ class KlarnaInstantShoppingControllerTest extends ModuleUnitTestCase
 
         $orderController->expects($this->at(0))->method('execute')->willReturn(KlarnaInstantShoppingController::EXECUTE_SUCCESS);
         $orderController->expects($this->at(1))->method('execute')->willReturn("error");
-        $orderController->expects($this->at(2))->method('execute')->willReturn("error");
         $oSUT->expects($this->any())->method('createBasketAdapter')->willReturn($adapter);
 
         $db = $this->getMockBuilder(Database::class)
@@ -247,7 +248,6 @@ class KlarnaInstantShoppingControllerTest extends ModuleUnitTestCase
 
         $this->setProtectedClassProperty($oSUT, 'db', $db);
         Registry::set(OrderController::class, $orderController);
-        $oSUT->placeOrder();
         $oSUT->placeOrder();
         $oSUT->placeOrder();
 
@@ -403,6 +403,48 @@ class KlarnaInstantShoppingControllerTest extends ModuleUnitTestCase
         } else {
             $this->assertFalse($basketAdapter);
         }
+    }
+
+    public function testStartSessionAjax()
+    {
+        $oSUT = $this->getMockBuilder(KlarnaInstantShoppingController::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getUser'])
+            ->getMock();
+
+        $data['merchant_reference2'] = 'merchant_reference2_test';
+        $this->setProtectedClassProperty($oSUT, 'actionData', $data);
+        $oSUT->startSessionAjax();
+        $result = Registry::getSession()->getVariable('instant_shopping_basket_id');
+
+        $this->assertSame('merchant_reference2_test', $result);
+    }
+
+    public function testExtractOrderException()
+    {
+        $oSUT = $this->getMockBuilder(KlarnaInstantShoppingController::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getUser'])
+            ->getMock();
+
+        $result = $oSUT->extractOrderException('testresult');
+
+        $this->assertSame('testresult', $result->getType());
+
+        $exceptionStub = $this->getMockBuilder(ExceptionToDisplay::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getErrorClassType', 'getValues'])
+            ->getMock();
+
+        $exceptionStub->expects($this->any())->method('getErrorClassType')->willReturn('testresult');
+        $exceptionStub->expects($this->any())->method('getValues')->willReturn(['testvalues']);
+
+        Registry::getSession()->setVariable('Errors', ['test' => [serialize($exceptionStub)]]);
+
+        $result = $oSUT->extractOrderException('testresult');
+
+        $this->assertSame('testresult', $result->getType());
+        $this->assertSame(['testvalues'], $result->getValues());
     }
 
     public function testSuccessAjax()
