@@ -106,6 +106,9 @@ class KlarnaInstantShopping extends KlarnaBaseConfig {
         ];
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function save()
     {
         parent::save();

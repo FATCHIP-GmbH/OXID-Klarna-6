@@ -8,6 +8,9 @@ class KlarnaMessaging extends KlarnaBaseConfig
 {
     protected $_sThisTemplate = 'tcklarna_messaging.tpl';
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function render()
     {
         // force shopid as parameter
