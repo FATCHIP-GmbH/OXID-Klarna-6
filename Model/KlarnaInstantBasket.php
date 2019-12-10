@@ -46,6 +46,7 @@ class KlarnaInstantBasket extends BaseModel
     }
 
     /**
+     * @codeCoverageIgnore
      * @return string
      */
     public function getBasketInfo()
@@ -79,8 +80,10 @@ class KlarnaInstantBasket extends BaseModel
         return $this->tcklarna_instant_basket__type->value;
     }
 
-
-
+    /**
+     * @codeCoverageIgnore
+     * @return bool
+     */
     public function isFinalized()
     {
         return $this->tcklarna_instant_basket__status->value === self::FINALIZED_STATUS;

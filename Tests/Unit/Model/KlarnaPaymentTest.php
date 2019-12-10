@@ -171,6 +171,9 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
     {
         $result = KlarnaPayment::getKlarnaPaymentsIds($filter);
         $this->assertEquals($expectedResult, $result);
+
+        $result = KlarnaPaymentHelper::getKlarnaPaymentsIds($filter);
+        $this->assertEquals($expectedResult, $result);
     }
 
     /**
