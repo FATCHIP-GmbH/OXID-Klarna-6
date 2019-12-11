@@ -1,3 +1,8 @@
+### 5.1.0
+* On-Site Message Implementation
+* PaymentGateway implementation for KP
+* Preperation for Klarna Instant Shopping
+
 ### 5.0.2
 * Acknowledge bug fix
 * Acknowledge Add proper http response

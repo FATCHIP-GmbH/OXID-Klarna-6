@@ -20,11 +20,6 @@ use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 class KlarnaPaymentTest extends ModuleUnitTestCase
 {
 
-    public function testValidateToken()
-    {
-
-    }
-
     protected function getArgs()
     {
         $oBasket = oxNew(Basket::class);

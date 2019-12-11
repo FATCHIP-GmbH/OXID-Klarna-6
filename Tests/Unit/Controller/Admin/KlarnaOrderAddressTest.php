@@ -12,7 +12,7 @@ class KlarnaOrderAddressTest extends ModuleUnitTestCase
 {
 
     /**
-     * @dataProvider testRenderDataProvider
+     * @dataProvider renderDataProvider
      * @param $paymentId
      * @param $expectedResult
      */
@@ -29,7 +29,7 @@ class KlarnaOrderAddressTest extends ModuleUnitTestCase
         $this->assertEquals($expectedResult, $orderAddress->getViewDataElement('readonly'));
     }
 
-    public function testRenderDataProvider()
+    public function renderDataProvider()
     {
         return [
             ['klarna_checkout', true],

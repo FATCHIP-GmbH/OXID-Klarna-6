@@ -25,6 +25,11 @@ use OxidEsales\Eshop\Core\Model\BaseModel;
  */
 class KlarnaLogs extends BaseModel
 {
+    protected $validObjectIds = [
+        'order_id',
+//        'authorization_token'
+    ];
+
     /**
      * Class constructor, initiates parent constructor.
      * @codeCoverageIgnore
@@ -46,5 +51,51 @@ class KlarnaLogs extends BaseModel
             return parent::save();
         }
         return false;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function logData($action, $requestBody, $url, $object_id, $response, $statusCode, $mid = '')
+    {
+        if ($object_id === null) {
+            $object_id = $this->resolveObjectId($response);
+        }
+
+        if (is_array($response)) {
+            $response = json_encode($response);
+        }
+
+        if (is_array($requestBody)) {
+            $requestBody = json_encode($requestBody);
+        }
+
+        $aData      = array(
+            'tcklarna_logs__tcklarna_method'      => $action,
+            'tcklarna_logs__tcklarna_url'         => $url,
+            'tcklarna_logs__tcklarna_orderid'     => $object_id,
+            'tcklarna_logs__tcklarna_mid'         => $mid,
+            'tcklarna_logs__tcklarna_statuscode'  => $statusCode,
+            'tcklarna_logs__tcklarna_requestraw'  => $requestBody,
+            'tcklarna_logs__tcklarna_responseraw' => $response,
+            'tcklarna_logs__tcklarna_date'        => date("Y-m-d H:i:s"),
+        );
+        $this->assign($aData);
+        $this->save();
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    protected function resolveObjectId($data) {
+        if (is_string($data)) {
+            $data = (array)json_decode($data, true);
+        }
+        foreach($this->validObjectIds as $key) {
+            if (isset($data[$key])) {
+                return $data[$key];
+            }
+        }
+        return '';
     }
 }

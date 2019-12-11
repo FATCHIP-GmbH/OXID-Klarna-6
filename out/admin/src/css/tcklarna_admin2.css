@@ -735,7 +735,7 @@ button, input, optgroup, select, textarea {
     background: rgba(250, 130, 160, 0.66);
 }
 
-.no-bg { background: none; color: #fa82a0;}
+.no-bg { background: white; color: #fa82a0;}
 .no-bg:hover { color: white;}
 
 .top-button-group .btn-save { width: 100%;}
@@ -1989,4 +1989,13 @@ p {
 
 .equalHMV:nth-of-type(3n+1) {
     margin-left: 0;
+}
+
+#merchant-button {
+    padding-top: 8px;
+    text-decoration: none;
+}
+
+#merchant-button:focus {
+    color: #3E3E3E;
 }

@@ -19,6 +19,7 @@ namespace TopConcepts\Klarna\Controller;
 
 
 use TopConcepts\Klarna\Core\KlarnaConsts;
+use TopConcepts\Klarna\Core\InstantShopping\Button;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Model\KlarnaUser;
 use OxidEsales\Eshop\Application\Model\CountryList;
@@ -50,6 +51,8 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
     const TCKLARNA_FOOTER_DISPLAY_PAYMENT_METHODS = 1;
     const TCKLARNA_FOOTER_DISPLAY_LOGO            = 2;
 
+    protected $tcKlarnaButton;
+
     public function isActiveControllerKlarnaExpress()
     {
         return strcasecmp($this->getActiveClassName(), self::CONTROLLER_CLASSNAME_KLARNA_EXPRESS) === 0;
@@ -75,6 +78,8 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
             return false;
         }
 
+        $response = false;
+
         $klFooter = intval(KlarnaUtils::getShopConfVar('sKlarnaFooterDisplay'));
         if ($klFooter) {
 
@@ -89,13 +94,22 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
             $from = '/' . preg_quote('-', '/') . '/';
             $url  = preg_replace($from, '_', $url, 1);
 
-            return array(
+            $response = array(
                 'url'   => $url,
-                'class' => KlarnaUtils::getShopConfVar('sKlarnaFooterValue'),
+                'class' => KlarnaUtils::getShopConfVar('sKlarnaFooterValue')
             );
         }
 
-        return false;
+        if(KlarnaUtils::getShopConfVar('sKlarnaMessagingScript')) {
+            $response['script'] = KlarnaUtils::getShopConfVar('sKlarnaMessagingScript');
+        }
+
+        if(KlarnaUtils::getShopConfVar('sKlarnaFooterPromotion')) {
+            $response['promotion'] = KlarnaUtils::getShopConfVar('sKlarnaFooterPromotion');
+        }
+
+
+        return $response;
     }
 
     /**
@@ -117,6 +131,31 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
         }
 
         return false;
+    }
+
+    public function getOnSitePromotionInfo($key, $detailProduct = null)
+    {
+
+        if($key == "sKlarnaCreditPromotionBasket" || $key == "sKlarnaCreditPromotionProduct") {
+
+            $promotion = KlarnaUtils::getShopConfVar($key);
+            $promotion = preg_replace('/data-purchase_amount=\"(\d*)\"/', 'data-purchase_amount="%s"', $promotion);
+            $price = 0;
+            if($key == "sKlarnaCreditPromotionProduct" && $detailProduct != null) {
+                $price = $detailProduct->getPrice()->getBruttoPrice();
+                $price = number_format((float)$price*100., 0, '.', '');
+            }
+
+            if($key == "sKlarnaCreditPromotionBasket") {
+                $price = Registry::getSession()->getBasket()->getPrice()->getNettoPrice();
+                $price = number_format((float)$price*100., 0, '.', '');
+            }
+
+            return sprintf($promotion, $price);
+
+        }
+
+        return KlarnaUtils::getShopConfVar($key);
     }
 
     /**
@@ -282,5 +321,25 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
     public function isPrefillIframe()
     {
         return (bool)KlarnaUtils::getShopConfVar('blKlarnaEnablePreFilling');
+    }
+
+    public function getInstantShoppingButton()
+    {
+        if ($this->tcKlarnaButton) {
+            return $this->tcKlarnaButton;
+        }
+
+        $oConfig = $this->getConfig();
+        $isEnabled = $oConfig->getConfigParam('blKlarnaInstantShoppingEnabled');
+        if($isEnabled) {
+            $placementArray = $oConfig->getConfigParam('aarrKlarnaISButtonPlacement');
+            $viewName = $oConfig->getTopActiveView()->getClassKey();
+            $isActiveForCurrentView = isset($placementArray[$viewName]) ? (bool)$placementArray[$viewName] : false;
+            if ($isActiveForCurrentView) {
+                $this->tcKlarnaButton = oxNew(Button::class);
+            }
+        }
+
+        return $this->tcKlarnaButton;
     }
 }

@@ -1,9 +1,11 @@
 [{$smarty.block.parent}]
 
+[{assign var="aKlFooter" value=$oViewConf->getKlarnaFooterContent()}]
+[{if $aKlFooter.script}]
+    [{$aKlFooter.script}]
+[{/if}]
 [{oxscript include=$oViewConf->getModuleUrl('tcklarna','out/src/js/tcklarna_scripts.js') priority=10 }]
-
 [{assign var="sKlBanner" value=$oViewConf->getKlarnaHomepageBanner() }]
-
 [{*  *}]
 [{if ($sKlBanner && $oView->getClassName() === 'start') }]
     [{if $oViewConf->getActiveTheme() == 'azure' }]
@@ -33,10 +35,10 @@
     [{/if}]
 [{/if}]
 
-[{assign var="aKlFooter" value=$oViewConf->getKlarnaFooterContent()}]
 [{if $aKlFooter}]
 
     [{capture assign=klFooterContent }]
+    [{if $aKlFooter.url}]
         [{if $oViewConf->getActiveTheme() == 'azure' }]
             <li class="klarna-logo">
                 <style>
@@ -65,6 +67,21 @@
                 </div>
             </section>
         [{/if}]
+    [{/if}]
+    [{if $aKlFooter.promotion}]
+        <section>
+            <div id="footer-promotion">
+                [{$aKlFooter.promotion}]
+            </div>
+        </section>
+        <style>
+            #footer-promotion {
+                margin-top: 10px;
+                width: 50%;
+                height: 50%;
+            }
+        </style>
+    [{/if}]
     [{/capture}]
 
     <script type="text/javascript">
@@ -94,5 +111,13 @@
     [{oxscript add="embedKlarnaLogo('$klFooterContent');"}]
 [{/if}]
 
+[{assign var="oKlarnaButton" value=$oViewConf->getInstantShoppingButton()}]
+[{if $oKlarnaButton}]
+    <script>
+        var klButtonManagerConfig = [{$oKlarnaButton->getConfig($oDetailsProduct)|@json_encode}];
+    </script>
+    [{oxscript include=$oViewConf->getModuleUrl('tcklarna','out/src/js/tcklarna_button_handler.js')}]
+    [{oxscript include="https://x.klarnacdn.net/instantshopping/lib/v1/lib.js"}]
+[{/if}]
 
 

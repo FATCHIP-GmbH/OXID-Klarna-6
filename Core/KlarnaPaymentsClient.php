@@ -223,16 +223,20 @@ class KlarnaPaymentsClient extends KlarnaClientBase
     protected function handleNewOrderResponse(\Requests_Response $oResponse, $class, $method)
     {
         $successCodes = array(200, 201, 204);
-        $errorCodes   = array(400, 500, 503);
-        $message      = "%s";
+        $errorCodes   = array(400, 405, 409);
+        $result = false;
         try {
             if (in_array($oResponse->status_code, $successCodes)) {
                 KlarnaPayment::cleanUpSession();
                 $result = json_decode($oResponse->body, true);
-                Registry::getSession()->setVariable('kp_order_id', $result['order_id']);
-
                 return $result;
             }
+
+            Registry::getLogger()->warning(
+                join(' | ', [ "$class::$method ", $oResponse->status_code, $oResponse->body]),
+                (array)$result
+            );
+
             if ($oResponse->status_code == 403) {
                 throw new KlarnaWrongCredentialsException($oResponse->body, 403);
             }
@@ -242,12 +246,12 @@ class KlarnaPaymentsClient extends KlarnaClientBase
             if (in_array($oResponse->status_code, $errorCodes)) {
                 throw new KlarnaClientException($oResponse->body, $oResponse->status_code);
             } else {
-                throw new KlarnaClientException(sprintf($message, 'Unknown error.'), $oResponse->status_code);
+                throw new KlarnaClientException('Unknown error.', $oResponse->status_code);
             }
         } catch (KlarnaClientException $e) {
             $this->formatAndShowErrorMessage($oResponse);
 
-            return false;
+            return $result;
         }
     }
 

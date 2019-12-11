@@ -177,6 +177,11 @@ class KlarnaArticle extends KlarnaArticle_parent
         return $mpn ?: null;
     }
 
+    public function tcklarna_getArtNum()
+    {
+        return $this->getFieldData('oxartnum');
+    }
+
     /**
      * @return string
      */

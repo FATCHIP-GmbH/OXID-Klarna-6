@@ -40,12 +40,10 @@ class KlarnaPaymentsClientTest extends ModuleUnitTestCase
     {
         $body = ['order_id' => 1];
 
-        $checkoutClient = $this->prepareNewOrderTestStub($body, 200);
-        $result = $checkoutClient->createNewOrder();
+        $client = $this->prepareNewOrderTestStub($body, 200);
+        $result = $client->createNewOrder();
 
         $this->assertEquals($result, $body);
-        $this->assertEquals($this->getSessionParam('kp_order_id'), 1);
-
     }
 
     /**

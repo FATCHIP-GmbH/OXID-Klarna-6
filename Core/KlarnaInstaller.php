@@ -159,9 +159,16 @@ class KlarnaInstaller extends ShopConfiguration
                 'sKlarnaB2Option' => 'B2C',
             ),
             'arr'    => array(),
-//            'aarr'   => array(
-//                'tcklarna_aKlarnaCurrencies' => $currenciesVar,
-//            ),
+            'aarr'   => array(
+                'aarrKlarnaISButtonStyle' => 'variation => klarna
+                    tagline => light
+                    type => pay',
+                'aarrKlarnaISButtonSettings' => 'allow_separate_shipping_address => 0
+                    date_of_birth_mandatory => 0
+                    national_identification_number_mandatory => 0
+                    phone_mandatory => 0'
+                //                'tcklarna_aKlarnaCurrencies' => $currenciesVar,
+            ),
             'select' => array(),
         );
 
@@ -205,13 +212,15 @@ class KlarnaInstaller extends ShopConfiguration
                              KlarnaPayment::KLARNA_PAYMENT_PAY_LATER_ID =>
                                  array($de_prefix => 'Klarna Rechnung', $en_prefix => 'Klarna Pay Later'),
                              KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID  =>
-                                 array($de_prefix => 'Klarna Ratenkauf', $en_prefix => 'Klarna Slice It'),
+                                 array($de_prefix => 'Klarna Ratenkauf', $en_prefix => 'Klarna Financing'),
                              KlarnaPayment::KLARNA_PAYMENT_PAY_NOW =>
                                  array($de_prefix => 'Sofort bezahlen', $en_prefix => 'Klarna Pay Now'),
                              KlarnaPayment::KLARNA_DIRECTDEBIT =>
                                  array($de_prefix => 'Klarna Pay Now Direct Debit', $en_prefix => 'Klarna Pay Now Direct Debit'),
                              KlarnaPayment::KLARNA_SOFORT =>
                                  array($de_prefix => 'Klarna Sofortüberweisung', $en_prefix => 'Klarna Pay Now Instant'),
+//                             KlarnaPayment::KLARNA_INSTANT_SHOPPING =>
+//                                 array($de_prefix => 'Klarna Instant Shopping', $en_prefix => 'Klarna Instant Shopping'),
         );
 
         $sort   = -350;
@@ -225,6 +234,7 @@ class KlarnaInstaller extends ShopConfiguration
                 if ($oPayment->isLoaded()) {
                     $oPayment->oxpayments__oxactive = new Field(1, Field::T_RAW);
                     $oPayment->save();
+
                     continue;
                 }
                 $oPayment->setEnableMultilang(false);
@@ -312,7 +322,20 @@ class KlarnaInstaller extends ShopConfiguration
                 )
                   ENGINE = InnoDB
                   COMMENT ='Mapping of annonymous article numbers to their oxids'
-                  DEFAULT CHARSET = utf8;";
+                  DEFAULT CHARSET = utf8;
+                  
+            CREATE TABLE IF NOT EXISTS `tcklarna_instant_basket` (
+                `OXID` VARCHAR(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+                `OXUSERID` CHAR(32) NOT NULL DEFAULT '' COMMENT 'User id (oxuser)' COLLATE 'latin1_general_ci',
+                `BASKET_INFO` MEDIUMBLOB,
+                `STATUS`  VARCHAR(32) NOT NULL DEFAULT 'OPENED',
+                `TYPE` VARCHAR(32) NOT NULL DEFAULT '',
+                `TIMESTAMP` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Timestamp',
+                PRIMARY KEY (`OXID`),
+                KEY `OXUSERID` (`OXUSERID`)
+            )
+            ENGINE = InnoDB
+            DEFAULT CHARSET = utf8;";
 
         $this->db->execute($sql);
 
@@ -456,5 +479,19 @@ class KlarnaInstaller extends ShopConfiguration
             }
         }
         $oActionKlarnaTeaser->save();
+    }
+
+    public static function onDeactivate()
+    {
+        $tempDirectory = Registry::getConfig()->getConfigParam("sCompileDir");
+        $mask = $tempDirectory . '/smarty/*';
+        $files = glob($mask);
+        if (is_array($files)) {
+            foreach ($files as $file) {
+                if (is_file($file)) {
+                    @unlink($file);
+                }
+            }
+        }
     }
 }

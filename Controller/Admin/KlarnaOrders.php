@@ -17,8 +17,8 @@ use TopConcepts\Klarna\Model\KlarnaOrder;
 
 class KlarnaOrders extends AdminDetailsController
 {
-    const KLARNA_PORTAL_PLAYGROUND_URL = 'https://orders.playground.eu.portal.klarna.com/merchants/%s/orders/%s';
-    const KLARNA_PORTAL_LIVE_URL       = 'https://orders.eu.portal.klarna.com/merchants/%s/orders/%s';
+    const KLARNA_PORTAL_PLAYGROUND_URL = 'https://playground.eu.portal.klarna.com/orders/merchants/%s/orders/%s';
+    const KLARNA_PORTAL_LIVE_URL       = 'https://eu.portal.klarna.com/orders/merchants/%s/orders/%s';
 
     protected $_sThisTemplate = 'tcklarna_orders.tpl';
 

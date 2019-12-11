@@ -152,13 +152,11 @@ class KlarnaPayment extends BaseModel
             $this->currencyToCountryMatch = false;
         }
 
-        $oSession          = Registry::getSession();
-        $sToken            = $oSession->getSessionChallengeToken();
         $this->_aOrderData = array(
             "purchase_country"  => $sCountryISO,
             "purchase_currency" => $currencyISO,
             "merchant_urls"     => array(
-                "confirmation" => Registry::getConfig()->getSslShopUrl() . "?cl=order&oxdownloadableproductsagreement=1&ord_agb=1&fnc=execute&stoken=" . $sToken . $shopUrlParam,
+                "confirmation" => Registry::getConfig()->getSslShopUrl() . '?cl=thankyou' . $shopUrlParam,
             ),
         );
 

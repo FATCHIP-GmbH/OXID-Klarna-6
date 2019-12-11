@@ -266,7 +266,7 @@ class KlarnaOrdersTest extends ModuleUnitTestCase {
     }
 
     /**
-     * @dataProvider testCancelOrderDataProvider
+     * @dataProvider cancelOrderDataProvider
      */
     public function testCancelOrder($data, $expectedResult) {
         $cancelKlarnaOrder = $data['cancelKlarnaOrder'];
@@ -299,7 +299,7 @@ class KlarnaOrdersTest extends ModuleUnitTestCase {
     /**
      * @return array
      */
-    public function testCancelOrderDataProvider() {
+    public function cancelOrderDataProvider() {
         return [
             [
                 ['isLoaded' => true, 'isKlarnaOrder' => true, 'getFieldData' => false, 'cancelKlarnaOrder' => true],
@@ -321,7 +321,7 @@ class KlarnaOrdersTest extends ModuleUnitTestCase {
     }
 
     /**
-     * @dataProvider testIsOrderCancellationInSyncDataProvider
+     * @dataProvider isOrderCancellationInSyncDataProvider
      * @param $oxstorno
      * @param $expectedResult
      */
@@ -338,7 +338,7 @@ class KlarnaOrdersTest extends ModuleUnitTestCase {
     /**
      * @return array
      */
-    public function testIsOrderCancellationInSyncDataProvider() {
+    public function isOrderCancellationInSyncDataProvider() {
         return [
             [1, false],
             [0, true],

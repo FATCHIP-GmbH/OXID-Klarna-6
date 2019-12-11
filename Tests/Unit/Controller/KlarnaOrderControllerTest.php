@@ -59,58 +59,67 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
      */
     public function testKlarnaExternalPayment($paymentId, $moduleId)
     {
-        if($paymentId == 'test' || Registry::get(ViewConfig::class)->isModuleActive($moduleId)) {
-            $payment = $this->getMockBuilder(Payment::class)->setMethods(['load'])->getMock();
-            $payment->expects($this->once())->method('load')->willReturn(true);
-            $payment->oxpayments__oxactive = new Field(true);
-            $oBasket = $this->getMockBuilder(KlarnaBasket::class)->setMethods(['onUpdate'])->getMock();
-            $oBasket->expects($this->once())->method('onUpdate')->willReturn(true);
-            $user = $this->getMockBuilder(KlarnaUser::class)->setMethods(['isCreatable', 'save', 'onOrderExecute'])->getMock();
-            $user->expects($this->once())->method('isCreatable')->willReturn(true);
-            $user->expects($this->any())->method('save')->willReturn(true);
-            $user->expects($this->any())->method('onOrderExecute')->willReturn(true);
-            $sut = $this->getMockBuilder(KlarnaOrderController::class)->setMethods(['klarnaExternalCheckout', '_createUser'])->getMock();
-            $sut->expects($this->once())->method('klarnaExternalCheckout')->willReturn(true);
-            $sut->expects($this->once())->method('_createUser')->willReturn(true);
+        $payment = $this->getMockBuilder(Payment::class)->setMethods(['load'])->getMock();
+        $payment->expects($this->once())->method('load')->willReturn(true);
+        $payment->oxpayments__oxactive = new Field(true);
+        $oBasket = $this->getMockBuilder(KlarnaBasket::class)->setMethods(['onUpdate'])->getMock();
+        $oBasket->expects($this->once())->method('onUpdate')->willReturn(true);
+        $user = $this->getMockBuilder(KlarnaUser::class)->setMethods(['isCreatable', 'save', 'onOrderExecute'])->getMock();
+        $user->expects($this->once())->method('isCreatable')->willReturn(true);
+        $user->expects($this->any())->method('save')->willReturn(true);
+        $user->expects($this->any())->method('onOrderExecute')->willReturn(true);
+        $sut = $this->getMockBuilder(KlarnaOrderController::class)->setMethods(['klarnaExternalCheckout', '_createUser'])->getMock();
+        $sut->expects($this->once())->method('klarnaExternalCheckout')->willReturn(true);
+        $sut->expects($this->once())->method('_createUser')->willReturn(true);
 
-            UtilsObject::setClassInstance(Payment::class, $payment);
-            $this->getSession()->setBasket($oBasket);
-            $this->setSessionParam('klarna_checkout_order_id', '1');
-            $this->setRequestParameter('payment_id', $paymentId);
+        UtilsObject::setClassInstance(Payment::class, $payment);
+        $this->getSession()->setBasket($oBasket);
+        $this->setSessionParam('klarna_checkout_order_id', '1');
+        $this->setRequestParameter('payment_id', $paymentId);
 
-            $this->setProtectedClassProperty($sut, 'isExternalCheckout', true);
-            $this->setProtectedClassProperty($sut, '_oUser', $user);
-            $this->setProtectedClassProperty(
-                $sut,
-                '_aOrderData',
-                ['selected_shipping_option' => ['id' => 'shippingOption']]
+        $this->setProtectedClassProperty($sut, 'isExternalCheckout', true);
+        $this->setProtectedClassProperty($sut, '_oUser', $user);
+        $this->setProtectedClassProperty(
+            $sut,
+            '_aOrderData',
+            ['selected_shipping_option' => ['id' => 'shippingOption']]
+        );
+
+        $result = $sut->klarnaExternalPayment();
+
+        if ($paymentId == 'bestitamazon') {
+            $this->assertEquals(
+                Registry::getConfig()->getShopSecureHomeUrl()."cl=KlarnaEpmDispatcher&fnc=amazonLogin",
+                \oxUtilsHelper::$sRedirectUrl
             );
-
-            $result = $sut->klarnaExternalPayment();
-
-            if ($paymentId == 'bestitamazon') {
-                $this->assertEquals(
-                    Registry::getConfig()->getShopSecureHomeUrl()."cl=KlarnaEpmDispatcher&fnc=amazonLogin",
-                    \oxUtilsHelper::$sRedirectUrl
-                );
-            } elseif ($paymentId == 'oxidpaypal') {
-                $this->assertEquals('basket', $result);
-            } else {
-                $this->assertEquals(null, $result);
-            }
-
-            $this->assertEquals($paymentId, $this->getProtectedClassProperty($oBasket, '_sPaymentId'));
+        } elseif ($paymentId == 'oxidpaypal') {
+            $this->assertEquals('basket', $result);
+        } else {
+            $this->assertEquals(null, $result);
         }
+
+        $this->assertEquals($paymentId, $this->getProtectedClassProperty($oBasket, '_sPaymentId'));
 
     }
 
     public function externalPaymentDataProvider()
     {
-        return [
-            ['test', null],
-            ['bestitamazon', 'bestitamazonpay4oxid'],
-            ['oxidpaypal', 'oepaypal'],
+        $amazonModule = Registry::get(ViewConfig::class)->isModuleActive('bestitamazonpay4oxid');
+        $paypalModule = Registry::get(ViewConfig::class)->isModuleActive('oepaypal');
+
+        $data = [
+            ['test', null]
         ];
+
+        if($amazonModule == true) {
+            $data[1] = ['bestitamazon', 'bestitamazonpay4oxid'];
+        }
+
+        if($paypalModule == true) {
+            $data[2] = ['oxidpaypal', 'oepaypal'];
+        }
+
+        return $data;
     }
 
     public function testExecute()
@@ -403,49 +412,6 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $oUser->oxuser__oxcountryid = new Field(self::COUNTRIES['AF'], Field::T_RAW);
         $result = $oOrderController->isCountryHasKlarnaPaymentsAvailable($oUser);
         $this->assertFalse($result);
-    }
-
-    public function testKpBeforeExecute()
-    {
-        $sut = $this->getMockBuilder(KlarnaOrderController::class)->setMethods(['_validateTermsAndConditions'])->getMock();
-        $sut->expects($this->once())->method('_validateTermsAndConditions')->willReturn(false);
-        $sut->kpBeforeExecute();
-        $errors = unserialize($this->getSessionParam('Errors')['default'][0]);
-        $this->assertInstanceOf(DisplayError::class, $errors);
-        $errorMessage = $errors->getOxMessage();
-        $this->assertEquals('Bitte stimmen Sie den AGB und den Widerrufsbedingungen für digitale Inhalte zu.', $errorMessage);
-        $this->assertEquals(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=order', \oxUtilsHelper::$sRedirectUrl);
-
-        $oKlarnaPayment = $this->getMockBuilder(KlarnaPayment::class)->disableOriginalConstructor()->setMethods(['validateOrder', 'isError'])->getMock();
-        $oKlarnaPayment->expects($this->once())->method('validateOrder')->willReturn(true);
-        $oKlarnaPayment->expects($this->once())->method('isError')->willReturn(false);
-        $client = $this->getMockBuilder(KlarnaPaymentsClient::class)->setMethods(['createNewOrder', 'initOrder'])->getMock();
-        $client->expects($this->once())->method('createNewOrder')->willReturn(['order_id' => 'orderId', 'redirect_url' => 'testUrl']);
-        $client->expects($this->once())->method('initOrder')->willReturn($client);
-        $sut = $this->getMockBuilder(KlarnaOrderController::class)->setMethods(['_validateTermsAndConditions', 'getKlarnaPaymentsClient'])->getMock();
-        $sut->expects($this->once())->method('_validateTermsAndConditions')->willReturn(true);
-        $sut->expects($this->once())->method('getKlarnaPaymentsClient')->willReturn($client);
-
-        UtilsObject::setClassInstance(KlarnaPayment::class, $oKlarnaPayment);
-        $this->setRequestParameter('sAuthToken', 'testToken');
-        $sut->kpBeforeExecute();
-        $this->assertEquals('testToken', $this->getSessionParam('sAuthToken'));
-        $this->assertEquals('orderId', $this->getSessionParam('klarna_last_KP_order_id'));
-        $this->assertEquals('testUrl', \oxUtilsHelper::$sRedirectUrl);
-
-
-        $oKlarnaPayment = $this->getMockBuilder(KlarnaPayment::class)
-            ->disableOriginalConstructor()->setMethods(['validateOrder', 'isError', 'displayErrors'])->getMock();
-        $oKlarnaPayment->expects($this->once())->method('validateOrder')->willReturn(true);
-        $oKlarnaPayment->expects($this->once())->method('isError')->willReturn(true);
-        $oKlarnaPayment->expects($this->once())->method('displayErrors')->willReturn(true);
-        $sut = $this->getMockBuilder(KlarnaOrderController::class)->setMethods(['_validateTermsAndConditions', 'getKlarnaPaymentsClient'])->getMock();
-        $sut->expects($this->once())->method('_validateTermsAndConditions')->willReturn(true);
-        $sut->expects($this->once())->method('getKlarnaPaymentsClient')->willReturn($client);
-        UtilsObject::setClassInstance(KlarnaPayment::class, $oKlarnaPayment);
-        $sut->kpBeforeExecute();
-        $this->assertEquals(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=order', \oxUtilsHelper::$sRedirectUrl);
-
     }
 
     public function initDP()

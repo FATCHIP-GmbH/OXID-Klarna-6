@@ -251,6 +251,9 @@ INSERT INTO `oxobject2payment` (`OXID`,`OXPAYMENTID`,`OXOBJECTID`,`OXTYPE`,`OXTI
 ('98892d14be53b1af1dfe75c1ebdc98ab', 'klarna_directdebit', 'a7c40f632848c5217.53322339', 'oxcountry', '2019-09-20 16:09:52'),
 ('c25f8ba6ff7cb84dba409f936f183321', 'klarna_directdebit', '8f241f11096176795.61257067', 'oxcountry', '2019-09-20 16:09:52'),
 ('f874471bc1875400ba380eec6efefc2e', 'klarna_directdebit', 'a7c40f632e04633c9.47194042', 'oxcountry', '2019-09-20 16:09:52'),
+('49ce68c6deaad77d16508f5cae7007b1', 'klarna_instant_shopping', 'a7c40f6320aeb2ec2.72885259', 'oxcountry', '2019-11-14 14:26:54'),
+('4c1148a77ec62a2b62f7d32d52652e67', 'klarna_instant_shopping', 'a7c40f631fc920687.20179984', 'oxcountry', '2019-11-14 14:26:50'),
+('bd2baec2e49607e518cb996e8797b048', 'klarna_instant_shopping', 'oxidstandard', 'oxdelset', '2019-11-14 14:30:28'),
 ('0096e42bcdb0abed2ce097a0c6d427ef', 'klarna_sofort', 'a7c40f632848c5217.53322339', 'oxcountry', '2019-09-20 16:09:57'),
 ('1054b3194690c327d6822c0d64aa0262', 'klarna_sofort', 'a7c40f6321c6f6109.43859248', 'oxcountry', '2019-09-20 16:09:57'),
 ('28dde85f7d1539ee124ec056b72a83ab', 'klarna_sofort', '8f241f11096877ac0.98748826', 'oxcountry', '2019-09-20 16:09:57'),
@@ -819,6 +822,8 @@ INSERT INTO `oxuser` (`OXID`, `OXACTIVE`, `OXRIGHTS`, `OXSHOPID`, `OXUSERNAME`, 
 'user_de_b2b@oxid-esales.com', 'a6fb5a064996bc08357c37d99adb70a916d8bbc295a02afe19fae7b0bb7f933b7d4c2bea2a8c77c86e2980184e328d2f156e0597a19d47791e3ba2dc3b4aff16',
 '2870103d88c4e8ed34a82fd9e2dfaaf2', '', 'Test Company', 'Jörg', 'Weiß', 'Karnapp', '25', '', 'Hamburg', 'a7c40f631fc920687.20179984', '', '21079', '', '', 'MR', 1000,
 '2011-02-01 08:41:25', '2011-02-01 08:41:25', '', '', '0000-00-00', '', '', 0, 0, now());
+
+UPDATE `oxshops` SET `OXINFOEMAIL`='noreply@cgrd.de', `OXORDEREMAIL`=' noreply@cgrd.de', `OXOWNEREMAIL`=' noreply@cgrd.de';
 
 DROP PROCEDURE IF EXISTS enterpriseedition;
 DELIMITER //

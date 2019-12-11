@@ -210,6 +210,7 @@ class KlarnaUtils
 
     /**
      * @return array
+     * @codeCoverageIgnore
      *
      */
     public static function getKlarnaGlobalActiveShopCountryISOs($iLang = null)
@@ -333,7 +334,6 @@ class KlarnaUtils
     {
         Registry::getSession()->deleteVariable('paymentid');
         Registry::getSession()->deleteVariable('klarna_checkout_order_id');
-        Registry::getSession()->deleteVariable('kp_order_id');
         Registry::getSession()->deleteVariable('amazonOrderReferenceId');
         Registry::getSession()->deleteVariable('klarna_checkout_user_email');
         Registry::getSession()->deleteVariable('externalCheckout');
@@ -368,6 +368,7 @@ class KlarnaUtils
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $orderId
      * @return Order
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
@@ -390,6 +391,9 @@ class KlarnaUtils
         );
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public static function getKlarnaAckCount($orderId)
     {
         $sql = 'SELECT COUNT(*) FROM `tcklarna_ack` WHERE `tcklarna_orderid` = ?';

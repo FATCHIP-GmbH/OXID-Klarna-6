@@ -40,7 +40,7 @@ abstract class KlarnaClientBase extends Base
     /**
      * @var Base | KlarnaClientBase
      */
-    private static $instance;
+    protected static $instance;
 
     /**
      * @var KlarnaOrder
@@ -59,32 +59,38 @@ abstract class KlarnaClientBase extends Base
     static function getInstance($sCountryISO = null)
     {
         $calledClass = get_called_class();
-        if (self::$instance === null || !self::$instance instanceof $calledClass) {
+        if (static::$instance === null || !static::$instance instanceof $calledClass) {
 
-            self::$instance               = new $calledClass();
-            $aKlarnaCredentials           = KlarnaUtils::getAPICredentials($sCountryISO);
-            self::$instance->aCredentials = $aKlarnaCredentials;
-            $test                         = KlarnaUtils::getShopConfVar('blIsKlarnaTestMode');
-            $apiUrl                       = $test ? self::TEST_API_URL : self::LIVE_API_URL;
-            $headers                      = array('Authorization' => 'Basic ' . base64_encode("{$aKlarnaCredentials['mid']}:{$aKlarnaCredentials['password']}"), 'Content-Type' => 'application/json');
-            $headers                      = array_merge($headers, self::$instance->getApiClientHeader());
-            self::$instance->loadHttpHandler(new \Requests_Session($apiUrl, $headers));
+            static::$instance = new $calledClass();
+            static::$instance->resolveCredentials($sCountryISO);
+            static::$instance->initHttpHandler();
         }
 
-        return self::$instance;
+        return static::$instance;
+    }
+
+    public function resolveCredentials($sCountryISO)
+    {
+        $this->aCredentials = KlarnaUtils::getAPICredentials($sCountryISO);
+    }
+
+    public function isTest()
+    {
+        return KlarnaUtils::getShopConfVar('blIsKlarnaTestMode');
     }
 
     static function resetInstance()
     {
-        self::$instance = null;
+        static::$instance = null;
     }
 
     /**
      * @param \Requests_Session $session
      */
-    protected function loadHttpHandler(\Requests_Session $session)
+    protected function initHttpHandler()
     {
-        $this->session = $session;
+        $apiUrl = $this->isTest() ? self::TEST_API_URL : self::LIVE_API_URL;
+        $this->session = new \Requests_Session($apiUrl, $this->getApiClientHeader());
     }
 
     /**
@@ -120,14 +126,25 @@ abstract class KlarnaClientBase extends Base
     }
 
     /**
+ * @param $endpoint
+ * @param array $data
+ * @param array $headers
+ * @return \Requests_Response
+ */
+    protected function delete($endpoint, $data = array(), $headers = array())
+    {
+        return $this->session->delete($endpoint, $headers, $data);
+    }
+
+    /**
      * @param $endpoint
      * @param array $data
      * @param array $headers
      * @return \Requests_Response
      */
-    protected function delete($endpoint, $data = array(), $headers = array())
+    protected function put($endpoint, $data = array(), $headers = array())
     {
-        return $this->session->delete($endpoint, $headers, $data);
+        return $this->session->put($endpoint, $headers, $data);
     }
 
     /**
@@ -145,7 +162,6 @@ abstract class KlarnaClientBase extends Base
     {
         $successCodes = array(200, 201, 204);
         $errorCodes   = array(400, 422, 500);
-        $message      = "%s";
 
         if (in_array($oResponse->status_code, $successCodes)) {
             if ($oResponse->body) {
@@ -155,7 +171,7 @@ abstract class KlarnaClientBase extends Base
             return true;
         }
         if ($oResponse->status_code == 401) {
-            throw new KlarnaWrongCredentialsException(sprintf($message, 'Unauthorized request'), $oResponse->status_code);
+            throw new KlarnaWrongCredentialsException('Unauthorized request', $oResponse->status_code);
         }
         if ($oResponse->status_code == 404) {
             throw new KlarnaOrderNotFoundException($oResponse->body, 404);
@@ -167,7 +183,7 @@ abstract class KlarnaClientBase extends Base
             $this->formatAndShowErrorMessage($oResponse);
             throw new KlarnaClientException($oResponse->body, $oResponse->status_code);
         }
-        throw new KlarnaClientException(sprintf($message, 'Unknown error.'), $oResponse->status_code);
+        throw new KlarnaClientException('Unknown error.', $oResponse->status_code);
     }
 
     /**
@@ -206,13 +222,17 @@ abstract class KlarnaClientBase extends Base
         $os .= "_" . php_uname('r');
         $os .= "_" . php_uname('m');
 
-        return array('User-Agent' => 'OS/' . $os . ' Language/' . $phpVer . ' Cart/' . $shopVer . '-' . $shopName . ' Plugin/' . $moduleInfo);
+        return array(
+            'Authorization' => 'Basic ' . base64_encode("{$this->aCredentials['mid']}:{$this->aCredentials['password']}"),
+            'Content-Type' => 'application/json',
+            'User-Agent' => 'OS/' . $os . ' Language/' . $phpVer . ' Cart/' . $shopVer . '-' . $shopName . ' Plugin/' . $moduleInfo
+        );
     }
 
     /**
      * Logging push state message to database
      * @param $action
-     * @param string $requestBody
+     * @param string|array $requestBody
      * @param $url
      * @param $responseRaw
      * @param string $order_id

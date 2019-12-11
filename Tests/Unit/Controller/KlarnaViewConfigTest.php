@@ -3,11 +3,18 @@
 namespace TopConcepts\Klarna\Testes\Unit\Controllers;
 
 
+use OxidEsales\Eshop\Application\Controller\FrontendController;
+use OxidEsales\Eshop\Application\Model\Article;
+use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\CountryList;
 use OxidEsales\Eshop\Application\Model\User;
+use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Field;
+use OxidEsales\Eshop\Core\Price;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\ViewConfig;
+use TopConcepts\Klarna\Controller\KlarnaViewConfig;
+use TopConcepts\Klarna\Core\InstantShopping\Button;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 /**
@@ -249,40 +256,46 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
     public function getKlarnaFooterContentDataProvider()
     {
         return [
-            ['KP', 0, 'longBlack', false],
-            ['KP', 1, 'logoBlack', false],
-            ['KP', 2, 'logoBlack', [
+            ['KP', 0, 'longBlack',false,false, false],
+            ['KP', 1, 'logoBlack',false,false, false],
+            ['KP', 2, 'logoBlack',false,false, [
                 'url' => '//cdn.klarna.com/1.0/shared/image/generic/logo/en_gb/basic/logo_black.png',
                 'class' => 'logoBlack'
             ]],
-            ['KP', 2, 'logoWhite', [
+            ['KP', 2, 'logoWhite',false,false, [
                 'url' => '//cdn.klarna.com/1.0/shared/image/generic/logo/en_gb/basic/logo_white.png',
                 'class' => 'logoWhite'
             ]],
-            ['KCO', 0, 'longBlack', false],
-            ['KCO', 1, 'longBlack', [
+            ['KCO', 0, 'longBlack', false,false, false],
+            ['KCO', 1, 'longBlack',false,false, [
                 'url' => '//cdn.klarna.com/1.0/shared/image/generic/badge/de_de/checkout/long-blue.png?width=440',
                 'class' => 'longBlack'
             ]],
-            ['KCO', 1, 'longWhite', [
+            ['KCO', 1, 'longWhite',false,false, [
                 'url' => '//cdn.klarna.com/1.0/shared/image/generic/badge/de_de/checkout/long-white.png?width=440',
                 'class' => 'longWhite'
             ]],
-            ['KCO', 1, 'shortBlack', [
+            ['KCO', 1, 'shortBlack',false,false, [
                 'url' => '//cdn.klarna.com/1.0/shared/image/generic/badge/de_de/checkout/short-blue.png?width=312',
                 'class' => 'shortBlack'
             ]],
-            ['KCO', 1, 'shortWhite', [
+            ['KCO', 1, 'shortWhite',false,false, [
                 'url' => '//cdn.klarna.com/1.0/shared/image/generic/badge/de_de/checkout/short-white.png?width=312',
                 'class' => 'shortWhite'
             ]],
-            ['KCO', 2, 'logoBlack', [
+            ['KCO', 2, 'logoBlack',false,false, [
                 'url' => '//cdn.klarna.com/1.0/shared/image/generic/logo/en_gb/basic/logo_black.png',
                 'class' => 'logoBlack'
             ]],
-            ['KCO', 2, 'logoWhite', [
+            ['KCO', 2, 'logoWhite',false,false, [
                 'url' => '//cdn.klarna.com/1.0/shared/image/generic/logo/en_gb/basic/logo_white.png',
                 'class' => 'logoWhite'
+            ]],
+            ['KCO', 2, 'logoWhite','script','promo', [
+                'url' => '//cdn.klarna.com/1.0/shared/image/generic/logo/en_gb/basic/logo_white.png',
+                'class' => 'logoWhite',
+                'script' => 'script',
+                'promotion' => 'promo'
             ]],
         ];
     }
@@ -301,12 +314,17 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
      * @param $mode
      * @param $klFooterType
      * @param $klFooterValue
+     * @param $klScript
+     * @param $klPromo
      * @param $expectedResult
      */
-    public function testGetKlarnaFooterContent($mode, $klFooterType, $klFooterValue, $expectedResult)
+    public function testGetKlarnaFooterContent($mode, $klFooterType, $klFooterValue, $klScript, $klPromo, $expectedResult)
     {
         $this->getConfig()->saveShopConfVar('str', 'sKlarnaFooterDisplay', $klFooterType, $this->getShopId(), 'module:tcklarna');
         $this->getConfig()->saveShopConfVar('str', 'sKlarnaFooterValue', $klFooterValue, $this->getShopId(), 'module:tcklarna');
+
+        $this->getConfig()->saveShopConfVar('str', 'sKlarnaMessagingScript', $klScript, $this->getShopId(), 'module:tcklarna');
+        $this->getConfig()->saveShopConfVar('str', 'sKlarnaFooterPromotion', $klPromo, $this->getShopId(), 'module:tcklarna');
         $this->setModuleMode($mode);
 
         $oViewConfig = oxNew(ViewConfig::class);
@@ -354,6 +372,7 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
     {
         return [
             ['DE', 'fakeMID_someSuffix', 'https://cdn.klarna.com/1.0/shared/content/legal/terms/fakeMID/de/checkout'],
+            [null, 'fakeMID_someSuffix', 'https://cdn.klarna.com/1.0/shared/content/legal/terms/fakeMID/de/checkout'],
             ['AT', 'F4k3MID_someSuffix', 'https://cdn.klarna.com/1.0/shared/content/legal/terms/F4k3MID/de/checkout'],
         ];
     }
@@ -367,7 +386,12 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
      */
     public function testGetLawNotificationsLinkKco($iso, $mid, $expectedResult)
     {
-        $this->setSessionParam('sCountryISO', $iso);
+        if(!$iso) {
+            $this->setModuleConfVar('sKlarnaDefaultCountry', 'DE');
+        } else {
+            $this->setSessionParam('sCountryISO', $iso);
+        }
+
         $this->setModuleConfVar('sKlarnaMerchantId', $mid);
         $oViewConfig = oxNew(ViewConfig::class);
         $result = $oViewConfig->getLawNotificationsLinkKco();
@@ -492,6 +516,75 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
             ['flow', true],
             ['Flow', true]
         ];
+    }
+
+    public function testGetOnSitePromotionInfo()
+    {
+        //Non promotion key
+        $this->getConfig()->saveShopConfVar('bool', 'blKlarnaDisplayBuyNow', true, null, 'module:tcklarna');
+
+        $oViewConfig = $this->getMockBuilder(KlarnaViewConfig::class)->setMethods(['getActiveClassName'])->getMock();
+        $result = $oViewConfig->getOnSitePromotionInfo('blKlarnaDisplayBuyNow');
+
+        $this->assertEquals($result, $this->getConfigParam('blKlarnaDisplayBuyNow'));
+
+        $price = $this->getMockBuilder(Price::class)
+            ->setMethods(['getBruttoPrice', 'getVat'])
+            ->getMock();
+
+        $price->expects($this->any())->method('getBruttoPrice')->willReturn(10);
+        $price->expects($this->any())->method('getVat')->willReturn(0.23);
+
+        //promotion basket key
+        $this->getConfig()->saveShopConfVar('str', 'sKlarnaCreditPromotionBasket', 'data-purchase_amount="%s"', null, 'module:tcklarna');
+
+        $basket = $this->getMockBuilder(Basket::class)->setMethods(['getPrice'])->getMock();
+
+        $basket->expects($this->any())->method('getPrice')->willReturn($price);
+
+        Registry::getSession()->setBasket($basket);
+
+        $result = $oViewConfig->getOnSitePromotionInfo('sKlarnaCreditPromotionBasket');
+
+        $this->assertSame('data-purchase_amount="998"', $result);
+
+        //promotion product key
+        $this->getConfig()->saveShopConfVar('str', 'sKlarnaCreditPromotionProduct', 'data-purchase_amount="%s"', null, 'module:tcklarna');
+        $product = $this->getMockBuilder(Article::class)->setMethods(['getPrice'])->getMock();
+
+        $product->expects($this->any())->method('getPrice')->willReturn($price);
+
+        $result = $oViewConfig->getOnSitePromotionInfo('sKlarnaCreditPromotionProduct', $product);
+
+        $this->assertSame('data-purchase_amount="1000"', $result);
+
+    }
+
+    public function testGetInstantShoppingButton()
+    {
+        $oViewConfig = $this->getMockBuilder(KlarnaViewConfig::class)->setMethods(['getActiveClassName'])->getMock();
+        $this->setConfigParam("blKlarnaInstantShoppingEnabled", false);
+        $result = $oViewConfig->getInstantShoppingButton();
+        $this->assertNull($result);
+
+        $oViewConfig = $this->getMockBuilder(KlarnaViewConfig::class)->setMethods(['getConfig'])->getMock();
+        $topViewAny = $this->getMockBuilder(FrontendController::class)->setMethods(['getClassKey'])->getMock();
+        $topViewAny->expects($this->once())->method('getClassKey')->willReturn('basket');
+        $config = $this->getMockBuilder(Config::class)->setMethods(['getTopActiveView', 'getConfigParam'])->getMock();
+        $config->expects($this->any())->method('getTopActiveView')->willReturn($topViewAny);
+        $config->expects($this->at(0))->method('getConfigParam')
+            ->with($this->equalTo('blKlarnaInstantShoppingEnabled'))->willReturn(true);
+        $config->expects($this->at(1))->method('getConfigParam')
+            ->with($this->equalTo('aarrKlarnaISButtonPlacement'))->willReturn(['basket' => 1]);
+
+        $oViewConfig->expects($this->any())->method('getConfig')->willReturn($config);
+        $result = $oViewConfig->getInstantShoppingButton();
+        $this->assertInstanceOf(Button::class, $result);
+
+        $this->setProtectedClassProperty($oViewConfig,'tcKlarnaButton', 'test');
+        $result = $oViewConfig->getInstantShoppingButton();
+
+        $this->assertSame('test', $result);
     }
 
 

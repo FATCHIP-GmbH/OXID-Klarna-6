@@ -31,7 +31,7 @@ class KlarnaDesignTest extends ModuleUnitTestCase
     }
 
     /**
-     * @dataProvider testSaveDataProvider
+     * @dataProvider saveDataProvider
      */
     public function testSave($input)
     {
@@ -47,7 +47,7 @@ class KlarnaDesignTest extends ModuleUnitTestCase
         $this->assertEquals($input, $result);
     }
 
-    public function testSaveDataProvider()
+    public function saveDataProvider()
     {
         return [
             [1],

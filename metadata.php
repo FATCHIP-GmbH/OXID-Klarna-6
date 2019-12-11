@@ -9,6 +9,8 @@ use TopConcepts\Klarna\Controller\Admin\KlarnaDesign;
 use TopConcepts\Klarna\Controller\Admin\KlarnaEmdAdmin;
 use TopConcepts\Klarna\Controller\Admin\KlarnaExternalPayments;
 use TopConcepts\Klarna\Controller\Admin\KlarnaGeneral;
+use TopConcepts\Klarna\Controller\Admin\KlarnaInstantShopping;
+use TopConcepts\Klarna\Controller\Admin\KlarnaMessaging;
 use TopConcepts\Klarna\Controller\Admin\KlarnaOrderAddress;
 use TopConcepts\Klarna\Controller\Admin\KlarnaOrderArticle as KlarnaAdminOrderArticle;
 use TopConcepts\Klarna\Controller\Admin\KlarnaOrderList;
@@ -17,6 +19,7 @@ use TopConcepts\Klarna\Controller\Admin\KlarnaOrderOverview;
 use TopConcepts\Klarna\Controller\Admin\KlarnaOrders;
 use TopConcepts\Klarna\Controller\Admin\KlarnaPaymentMain;
 use TopConcepts\Klarna\Controller\Admin\KlarnaStart;
+use TopConcepts\Klarna\Controller\KlarnaInstantShoppingController;
 use TopConcepts\Klarna\Controller\KlarnaUserController;
 use TopConcepts\Klarna\Controller\KlarnaAcknowledgeController;
 use TopConcepts\Klarna\Controller\KlarnaAjaxController;
@@ -28,6 +31,7 @@ use TopConcepts\Klarna\Controller\KlarnaPaymentController;
 use TopConcepts\Klarna\Controller\KlarnaThankYouController;
 use TopConcepts\Klarna\Controller\KlarnaValidationController;
 use TopConcepts\Klarna\Controller\KlarnaViewConfig;
+use TopConcepts\Klarna\Core\Config;
 use TopConcepts\Klarna\Model\KlarnaAddress;
 use TopConcepts\Klarna\Model\KlarnaArticle;
 use TopConcepts\Klarna\Model\KlarnaBasket;
@@ -61,6 +65,7 @@ use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Article;
 use OxidEsales\Eshop\Application\Model\UserPayment;
 use OxidEsales\Eshop\Core\ViewConfig;
+use TopConcepts\Klarna\Model\PaymentGateway;
 
 /**
  * Metadata version
@@ -74,7 +79,7 @@ $aModule = array(
         'de' => 'Egal was Sie verkaufen, unsere Produkte sind dafür gemacht, Ihren Kunden das beste Erlebnis zu bereiten. Das gefällt nicht nur Ihnen, sondern auch uns! Die Klarna Plugins werden stets auf Herz und Nieren geprüft und können ganz einfach durch Sie oder Ihre technischen Ansprechpartner aktiviert werden. Das nennen wir smoooth. Hier können Sie sowohl Klarna Payments aktivieren und anschließend genau die Zahlarten auswählen, die Sie wünschen oder mit der Komplettlösung, dem Klarna Checkout, Ihre Customer Journey optimieren. Erfahren Sie hier mehr zu Klarna für OXID: <a href="https://www.klarna.com/de/verkaeufer/oxid/">https://www.klarna.com/de/verkaeufer/oxid/</a> Und so einfach ist die Integration: <a href="https://hello.klarna.com/rs/778-XGY-327/images/How_to_OXID.mp4" target="_blank">Zum Video</a>',
         'en' => 'No matter what you sell, our products are made to give your customers the best purchase experience. This is not only smoooth for you - it is smoooth for us, too! Klarna plugins are always tested and can be activated by you or your technical contact with just a few clicks. That is smoooth. Here you can activate Klarna Payments and then select exactly the payment methods you want or optimize your customer journey with the complete Klarna Checkout solution. Find out more about Klarna for OXID: <a href="https://www.klarna.com/de/verkaeufer/oxid/" target="_blank">https://www.klarna.com/de/verkaeufer/oxid/</a> Integrating Klarna at OXID is easy as pie: <a href="https://hello.klarna.com/rs/778-XGY-327/images/How_to_OXID.mp4" target="_blank">to the video (click)</a>'
     ),
-    'version'     => '5.0.2',
+    'version'     => '5.1.0',
     'author'      => '<a href="https://www.cgrd.de/oxid-eshop" target="_blank">https://www.cgrd.de/oxid-eshop</a>',
     'thumbnail'   => '/out/admin/src/img/klarna_lockup_black.jpg',
     'url'         => 'http://integration.klarna.com',
@@ -89,12 +94,15 @@ $aModule = array(
         'KlarnaExternalPayments' => KlarnaExternalPayments::class,
         'KlarnaEmdAdmin'         => KlarnaEmdAdmin::class,
         'KlarnaOrders'           => KlarnaOrders::class,
+        'KlarnaMessaging'        => KlarnaMessaging::class,
+        'KlarnaInstantShopping'  => KlarnaInstantShopping::class,
         // controllers
         'KlarnaExpress'          => KlarnaExpressController::class,
         'KlarnaAjax'             => KlarnaAjaxController::class,
         'KlarnaEpmDispatcher'    => KlarnaEpmDispatcher::class,
         'KlarnaAcknowledge'      => KlarnaAcknowledgeController::class,
         'KlarnaValidate'         => KlarnaValidationController::class,
+        'KlarnaInstantShoppingController' => KlarnaInstantShoppingController::class
     ),
     'extend'      => array(
         // models
@@ -125,6 +133,9 @@ $aModule = array(
         BasketComponent::class    => KlarnaBasketComponent::class,
         UserComponent::class      => KlarnaUserComponent::class,
         ServiceMenu::class        => KlarnaServiceMenu::class,
+
+        OxidEsales\Eshop\Core\Config::class                      => Config::class,
+        OxidEsales\Eshop\Application\Model\PaymentGateway::class => PaymentGateway::class,
     ),
     'templates'   => array(
 
@@ -137,6 +148,7 @@ $aModule = array(
         'tcklarna_country_select_popup.tpl'    => 'tc/tcklarna/views/tpl/checkout/inc/tcklarna_country_select_popup.tpl',
         'tcklarna_checkout_login_box.tpl'      => 'tc/tcklarna/views/tpl/checkout/inc/tcklarna_checkout_login_box.tpl',
         'tcklarna_checkout_address_box.tpl'    => 'tc/tcklarna/views/tpl/checkout/inc/tcklarna_checkout_address_box.tpl',
+        'tcklarna_instant_shopping_button.tpl' => 'tc/tcklarna/views/tpl/instant_shopping/tcklarna_instant_shopping_button.tpl',
         //admin
         'tcklarna_general.tpl'                 => 'tc/tcklarna/views/admin/tpl/tcklarna_general.tpl',
         'tcklarna_design.tpl'                  => 'tc/tcklarna/views/admin/tpl/tcklarna_design.tpl',
@@ -146,6 +158,8 @@ $aModule = array(
         'tcklarna_external_payments.tpl'       => 'tc/tcklarna/views/admin/tpl/tcklarna_external_payments.tpl',
         'tcklarna_emd_admin.tpl'               => 'tc/tcklarna/views/admin/tpl/tcklarna_emd_admin.tpl',
         'tcklarna_orders.tpl'                  => 'tc/tcklarna/views/admin/tpl/tcklarna_orders.tpl',
+        'tcklarna_messaging.tpl'               => 'tc/tcklarna/views/admin/tpl/tcklarna_messaging.tpl',
+        'tcklarna_instant_shopping.tpl'        => 'tc/tcklarna/views/admin/tpl/tcklarna_instant_shopping.tpl',
         //admin partial
         'tcklarna_country_creds.tpl'           => 'tc/tcklarna/views/admin/tpl/tcklarna_country_creds.tpl',
         'tcklarna_header.tpl'                  => 'tc/tcklarna/views/admin/tpl/tcklarna_header.tpl',
@@ -156,6 +170,21 @@ $aModule = array(
             'template' => 'widget/minibasket/minibasket.tpl',
             'block'    => 'widget_minibasket',
             'file'     => 'views/blocks/minibasket_widget_minibasket.tpl',
+        ),
+        array(
+            'template' => 'page/shop/start.tpl',
+            'block'    => 'start_manufacturer_slider',
+            'file'     => 'views/blocks/start_widget_manufacturer.tpl',
+        ),
+        array(
+            'template' => 'layout/header.tpl',
+            'block'    => 'header_main',
+            'file'     => 'views/blocks/header_main.tpl',
+        ),
+        array(
+            'template' => 'page/details/inc/productmain.tpl',
+            'block'    => 'details_productmain_variantselections',
+            'file'     => 'views/blocks/productmain_variantselection.tpl',
         ),
         array(
             'template' => 'layout/footer.tpl',
@@ -171,6 +200,16 @@ $aModule = array(
             'template' => 'page/checkout/basket.tpl',
             'block'    => 'checkout_basket_next_step_top',
             'file'     => 'views/blocks/basket_checkout_basket_next_step_top.tpl',
+        ),
+        array(
+            'template' => 'page/checkout/basket.tpl',
+            'block' => 'basket_btn_next_top',
+            'file' => 'views/blocks/instant_shopping_checkout.tpl',
+        ),
+        array(
+            'template' => 'page/checkout/basket.tpl',
+            'block' => 'basket_btn_next_bottom',
+            'file' => 'views/blocks/instant_shopping_checkout.tpl',
         ),
         array(
             'template' => 'page/checkout/payment.tpl',
@@ -256,5 +295,6 @@ $aModule = array(
     'settings'    => array(),
     'events'      => array(
         'onActivate'   => '\TopConcepts\Klarna\Core\KlarnaInstaller::onActivate',
+        'onDeactivate'   => '\TopConcepts\Klarna\Core\KlarnaInstaller::onDeactivate',
     ),
 );

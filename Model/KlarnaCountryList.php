@@ -18,6 +18,7 @@
 namespace TopConcepts\Klarna\Model;
 
 
+use OxidEsales\Eshop\Core\DatabaseProvider;
 use TopConcepts\Klarna\Core\KlarnaConsts;
 
 class KlarnaCountryList extends KlarnaCountryList_parent
@@ -97,4 +98,21 @@ class KlarnaCountryList extends KlarnaCountryList_parent
         return $result;
     }
 
+    public function loadActiveKlarnaCountriesByPaymentId($paymentId)
+    {
+        $paymentId = DatabaseProvider::getDb()->quote($paymentId);
+        $sViewName = getViewName('oxcountry');
+        $isoList   = KlarnaConsts::getKlarnaGlobalCountries();
+        $isoList   = implode("','", $isoList);
+        $sSelect   = "SELECT {$sViewName}.oxid, {$sViewName}.oxtitle, {$sViewName}.oxisoalpha2 FROM {$sViewName}
+                      JOIN oxobject2payment 
+                      ON oxobject2payment.oxobjectid = {$sViewName}.oxid
+                      WHERE oxobject2payment.oxpaymentid = {$paymentId}
+                      AND oxobject2payment.oxtype = 'oxcountry'
+                      AND {$sViewName}.oxactive=1";
+
+        $sSelect.= " AND {$sViewName}.oxisoalpha2 IN ('{$isoList}')";
+
+        $this->selectString($sSelect);
+    }
 }
