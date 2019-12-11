@@ -324,26 +324,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     }
 
     /**
-     * @param $created
-     * @param KlarnaPayment $oKlarnaPayment
-     * @param $termsValid
-     * @throws \oxSystemComponentException
-     * @return bool
-     */
-    protected function validatePayment(&$created, KlarnaPayment $oKlarnaPayment, $termsValid)
-    {
-        $oClient = $this->getKlarnaPaymentsClient();
-        $valid   = !$oKlarnaPayment->isError() && $termsValid;
-        if ($valid) {
-            $created = $oClient->initOrder($oKlarnaPayment)->createNewOrder();
-        } else {
-            $oKlarnaPayment->displayErrors();
-        }
-
-        return $valid;
-    }
-
-    /**
      *
      * @throws StandardException
      */
