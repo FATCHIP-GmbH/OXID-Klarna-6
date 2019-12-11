@@ -116,11 +116,6 @@ class KlarnaFormatter extends Base
 
         self::compileUserData($aUserData, $oxObject, $sTable, $sCountryISO);
 
-        if (is_null($aUserData['phone'])) {
-            $value              = $oxObject->{$sTable . 'oxfon'}->value;
-            $aUserData['phone'] = !empty($value) ? $value : null;
-        }
-
         //clean up
         foreach ($aUserData as $key => $value) {
             $aUserData[$key] = html_entity_decode($aUserData[$key], ENT_QUOTES);
@@ -156,6 +151,13 @@ class KlarnaFormatter extends Base
                         $aUserData[$klarnaName] = $sTitle;
                     }
                     break;
+                case 'phone':
+                    if (empty($aUserData[$klarnaName])) {
+                        $value = $oxObject->{$sTable.$oxName}->value;
+                        $aUserData[$klarnaName] = !empty($value) ? $value : null;
+                    }
+                    break;
+
                 default:
                     $value = $oxObject->{$sTable.$oxName}->value;
                     $aUserData[$klarnaName] = null;
