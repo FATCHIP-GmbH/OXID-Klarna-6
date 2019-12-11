@@ -162,6 +162,24 @@
                                             <tr class="dark">
                                                 <td class="name-bold" colspan="3">[{oxmultilang ident="TCKLARNA_IS_BUTTON_SETTINGS_HEADLINE" }]</td>
                                             </tr>
+                                            <tr class="dark">
+                                                <td class="conf-label-2">[{ oxmultilang ident="TCKLARNA_SET_TAC_URI" }]</td>
+                                                <td class="lang-input">
+                                                    [{assign var="confVarName" value="sKlarnaInstantTermsConditionsURI_"|cat:$lang_tag}]
+                                                    <div class="input">
+                                                        <input type="text" class="url-input m-lang"
+                                                               name="confstrs[sKlarnaInstantTermsConditionsURI_[{$lang_tag}]]"
+                                                               value="[{$confstrs.$confVarName}]"
+                                                               pattern="^(https://)?([a-zA-Z0-9]([a-zA-ZäöüÄÖÜ0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}.*" required>
+                                                    </div>
+                                                </td>
+                                                <td class="info-block">
+                                                <span class="kl-tooltip"
+                                                      title="[{oxmultilang ident="TCKLARNA_SET_TAC_URI"}]">
+                                                    <i class="fa fa-question fa-lg" aria-hidden="true"></i>
+                                                </span>
+                                                </td>
+                                            </tr>
                                             [{foreach from=$buttonSettings item="optionName"}]
                                                 <tr class="dark">
                                                     <td class="name">[{oxmultilang ident="TCKLARNA_IS_SETTING_"|cat:$optionName|upper}]</td>

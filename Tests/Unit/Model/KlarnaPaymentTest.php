@@ -169,11 +169,16 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
      */
     public function testGetKlarnaPaymentsIds($filter, $expectedResult)
     {
+        $result = KlarnaPaymentHelper::getKlarnaPaymentsIds($filter);
+        $this->assertEquals($expectedResult, $result);
+
+        if($expectedResult == []){
+            $expectedResult = null;
+        }
+
         $result = KlarnaPayment::getKlarnaPaymentsIds($filter);
         $this->assertEquals($expectedResult, $result);
 
-        $result = KlarnaPaymentHelper::getKlarnaPaymentsIds($filter);
-        $this->assertEquals($expectedResult, $result);
     }
 
     /**
@@ -201,7 +206,7 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
         return [
             [null, $expectedResult_1],
             ['KP', $expectedResult_2],
-            ['noResult', null],
+            ['noResult', []],
         ];
     }
 

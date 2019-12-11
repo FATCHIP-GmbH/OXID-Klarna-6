@@ -68,11 +68,9 @@ class ButtonTest extends ModuleUnitTestCase
 
         $shopBaseUrl = Registry::getConfig()->getSslShopUrl();
         $expected =  [
-            "terms"             =>  $shopBaseUrl . "?cl=terms",
+            "terms"             =>  null,
             "confirmation"      =>  $shopBaseUrl . "?cl=thankyou",
-            "notification"      =>  $shopBaseUrl . "?cl=notification",
             "update"            =>  $shopBaseUrl . "?cl=KlarnaInstantShoppingController&fnc=updateOrder",
-            "country_change"    =>  $shopBaseUrl . "?cl=country_change",
             "place_order"       =>  $shopBaseUrl . "?cl=KlarnaInstantShoppingController&fnc=placeOrder"
         ];
 

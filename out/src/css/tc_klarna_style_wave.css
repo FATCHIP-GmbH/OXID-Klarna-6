@@ -23,12 +23,23 @@
 }
 
 #banner-promotion iframe {
-    width:  100% !important;
-    height: auto !important;
+    width:         100% !important;
+    height:        auto !important;
+    margin-bottom: 30px;
+}
+
+.kl-basket-rate-note > * {
+    max-width: 100% !important;
+    margin-bottom: 20px;
 }
 
 #instant {
     width: 210px;
+    height: 50px;
+}
+
+#instant p {
+    margin-bottom: 0;
 }
 
 #instant iframe {
@@ -38,7 +49,6 @@
 @media (max-width: 992px) {
     #instant {
         width:         auto;
-        height:        50px;
         margin-top:    10px !important;
         margin-right:  0 !important;
         padding-right: 0 !important;
@@ -51,4 +61,8 @@
     #instant {
         width: 100%;
     }
+}
+
+.is-logged-in #instant {
+    height: auto;
 }
