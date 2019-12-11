@@ -261,7 +261,9 @@ class KlarnaUser extends KlarnaUser_parent
                 $sQ .= " AND `oxshopid` = " . $oDb->quote(Registry::getConfig()->getShopId());
             }
             $sId    = $oDb->getOne($sQ);
-            $exists = $this->load($sId);
+            if ($sId) {
+                $exists = $this->load($sId);
+            }
         }
 
         if ($exists) {
@@ -347,12 +349,9 @@ class KlarnaUser extends KlarnaUser_parent
         $oAddress = $this->buildAddress($aDelAddress);
 
         if ($oAddress->isValid()) {
-            // save only unique address for 
+            // save only unique address for
             if (!$sAddressOxid = $oAddress->klExists()) {
                 $sAddressOxid = $oAddress->save();
-                if ($this->isFake()) {
-                    $oAddress->oxaddress__tcklarna_temporary = new Field(1, Field::T_RAW);
-                }
             }
             $this->updateSessionDeliveryAddressId($sAddressOxid);
         }
@@ -371,6 +370,9 @@ class KlarnaUser extends KlarnaUser_parent
 
         $oAddress->oxaddress__oxuserid  = new Field($this->getId(), Field::T_RAW);
         $oAddress->oxaddress__oxcountry = $this->getUserCountry($oAddress->oxaddress__oxcountryid->value);
+        if ($this->isFake()) {
+            $oAddress->oxaddress__tcklarna_temporary = new Field(1, Field::T_RAW);
+        }
 
         return $oAddress;
     }
@@ -403,9 +405,6 @@ class KlarnaUser extends KlarnaUser_parent
         $oAddress->load(Registry::getSession()->getVariable('deladrid'));
         Registry::getSession()->setVariable('deladrid', null);
         Registry::getSession()->setVariable('blshowshipaddress', 0);
-        if ($oAddress->isTemporary()) {
-            $oAddress->delete();
-        }
     }
 
     /**
@@ -542,5 +541,27 @@ class KlarnaUser extends KlarnaUser_parent
         }
 
         return $this->_type = self::NOT_REGISTERED;
+    }
+
+    public function tcklrnaHasValidInfo()
+    {
+        $checkFields = array(
+            'oxusername',
+            'oxfname',
+            'oxlname',
+            'oxstreet',
+            'oxstreetnr',
+            'oxcity',
+            'oxcountryid',
+            'oxzip'
+        );
+
+        foreach($checkFields as $fieldName) {
+            $value = $this->getFieldData($fieldName);
+            if (empty($value)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

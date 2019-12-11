@@ -43,6 +43,7 @@ class KlarnaFormatter extends Base
         'oxcity'        => 'city',
         'oxstateid'     => 'region',
         'oxmobfon'      => 'phone',
+        'oxfon'         => 'phone',
         'oxcountryid'   => 'country',
         'oxsal'         => 'title',
         'oxcompany'     => 'organization_name',
