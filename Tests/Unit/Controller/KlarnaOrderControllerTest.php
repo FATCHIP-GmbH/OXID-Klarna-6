@@ -19,6 +19,7 @@ use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\ViewConfig;
 use OxidEsales\Eshop\Core\Email;
 use OxidEsales\PayPalModule\Controller\ExpressCheckoutDispatcher;
+use OxidEsales\PayPalModule\Controller\StandardDispatcher;
 use TopConcepts\Klarna\Controller\KlarnaOrderController;
 use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
@@ -65,12 +66,15 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $oBasket = $this->getMockBuilder(KlarnaBasket::class)->setMethods(['onUpdate'])->getMock();
         $oBasket->expects($this->once())->method('onUpdate')->willReturn(true);
         $user = $this->getMockBuilder(KlarnaUser::class)->setMethods(['isCreatable', 'save', 'onOrderExecute'])->getMock();
-        $user->expects($this->once())->method('isCreatable')->willReturn(true);
         $user->expects($this->any())->method('save')->willReturn(true);
         $user->expects($this->any())->method('onOrderExecute')->willReturn(true);
         $sut = $this->getMockBuilder(KlarnaOrderController::class)->setMethods(['klarnaExternalCheckout', '_createUser'])->getMock();
         $sut->expects($this->once())->method('klarnaExternalCheckout')->willReturn(true);
-        $sut->expects($this->once())->method('_createUser')->willReturn(true);
+
+        if($paymentId === 'bestitamazon') {
+            $user->expects($this->once())->method('isCreatable')->willReturn(true);
+            $sut->expects($this->once())->method('_createUser')->willReturn(true);
+        }
 
         UtilsObject::setClassInstance(Payment::class, $payment);
         $this->getSession()->setBasket($oBasket);
@@ -424,10 +428,10 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
             ['KCO', 'klarna_checkout', 'DE', null, $userClassName, $kcoExternalPayments],
             ['KCO', 'klarna_checkout', 'AT', null, $userClassName, $kcoExternalPayments],
             ['KCO', 'klarna_checkout', 'AT', null, $userClassName, $kcoExternalPayments],
-            ['KCO', 'klarna_checkout', 'DE', 1, false, $kcoExternalPayments],
+            ['KCO', 'klarna_checkout', 'DE', null, $userClassName, $kcoExternalPayments],
             ['KCO', 'klarna_checkout', 'AF', null, $userClassName, $kcoExternalPayments],
             ['KCO', 'bestitamazon', 'DE', null, false, $kcoExternalPayments],
-            ['KCO', 'oxidpaypal', 'DE', null, false, $kcoExternalPayments],
+            ['KCO', 'oxidpaypal', 'DE', null, $userClassName, $kcoExternalPayments],
             ['KCO', 'oxidpaypal', 'AF', null, false, $kcoExternalPayments],
         ];
     }
@@ -543,10 +547,28 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
      */
     public function testKlarnaExternalCheckout($paymentId, $dispatcherCallsCount, $rUrl)
     {
-        $dispatcher = $this->getMockBuilder(BaseController::class)->setMethods(['setExpressCheckout'])->getMock();
+        $dispatcher = $this->getMockBuilder(BaseController::class)
+            ->setMethods(['setExpressCheckout'])
+            ->getMock();
         $dispatcher->expects($this->exactly($dispatcherCallsCount))->method('setExpressCheckout');
+        Registry::set(StandardDispatcher::class, $dispatcher);
         Registry::set(ExpressCheckoutDispatcher::class, $dispatcher);
-        $oOrderController = oxNew(OrderController::class);
+
+        $oUserMock = $this->getMockBuilder(User::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['tcklrnaHasValidInfo'])
+            ->getMock();
+        $oUserMock->expects($this->any())
+            ->method('tcklrnaHasValidInfo')
+            ->willReturn(true);
+
+        $oOrderController = $this->getMockBuilder(OrderController::class)
+            ->setMethods(['getUser'])
+            ->getMock();
+        $oOrderController->expects($this->any())
+            ->method('getUser')
+            ->willReturn($oUserMock);
+
         $this->setProtectedClassProperty($oOrderController, 'selfUrl', $rUrl);
         $oOrderController->klarnaExternalCheckout($paymentId);
         $this->assertEquals($rUrl, \oxUtilsHelper::$sRedirectUrl);
@@ -1140,8 +1162,8 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
     public function initUserDataProvider()
     {
         return [
-            [KlarnaUser::LOGGED_IN, true],
-            [KlarnaUser::NOT_REGISTERED, false],
+            [KlarnaUser::LOGGED_IN,  true],
+            [null, false]
         ];
     }
 
