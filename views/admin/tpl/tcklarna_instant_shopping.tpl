@@ -193,6 +193,30 @@
                                     <table class="inner">
                                         <tbody>
                                         <tr class="dark">
+                                            <td>
+                                                [{oxmultilang ident="TCKLARNA_DEFAULT_SHOP_COUNTRY"}]:
+                                            </td>
+                                            <td>
+                                                <div class="selector" id="defaultCountry">
+                                                    <div class="selector__menu">
+                                                        <ul class="selector__choices">
+                                                            [{foreach from=$activeCountries item="oxCountry" name="activeCountris" }]
+                                                            <li class="selector__item[{if $confstrs.sKlarnaDefaultCountry === $oxCountry->oxcountry__oxisoalpha2->value }]--selected[{/if}]">
+                                                                <a href="#" data-value=[{ $oxCountry->oxcountry__oxisoalpha2->value }]>
+                                                                    [{ $oxCountry->oxcountry__oxtitle->value }]
+                                                                </a>
+                                                            </li>
+                                                            [{/foreach }]
+                                                        </ul>
+                                                        <input type="hidden" name="confstrs[sKlarnaDefaultCountry]"
+                                                               value="[{$confstrs.sKlarnaDefaultCountry}]">
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr class="dark">
                                             <td class="saveinnewlangtext">
                                                 [{ oxmultilang ident="GENERAL_LANGUAGE" }]
                                             </td>
@@ -256,6 +280,11 @@
 </div>
 <script type="text/javascript" src="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_lib.js') }]"></script>
 <script>
+    var defaultCountrySelector = new Selector2({
+        id: 'defaultCountry',
+        fromOptions: false
+    });
+
     var multiLangForm = Object.create(MultiLangWidget);
 
     multiLangForm.submitFormData = function(event) {

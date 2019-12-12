@@ -8,6 +8,7 @@ use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Core\Adapters\BasketAdapter;
 use TopConcepts\Klarna\Core\Adapters\ShippingAdapter;
 use TopConcepts\Klarna\Core\InstantShopping\Button;
+use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Model\KlarnaPayment;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
@@ -67,8 +68,10 @@ class ButtonTest extends ModuleUnitTestCase
             ['instantiateBasketAdapter'])->getMock();
 
         $shopBaseUrl = Registry::getConfig()->getSslShopUrl();
+        $lang = strtoupper(Registry::getLang()->getLanguageAbbr());
+        $terms = KlarnaUtils::getShopConfVar('sKlarnaTermsConditionsURI_' . $lang);
         $expected =  [
-            "terms"             =>  null,
+            "terms"             =>  $terms,
             "confirmation"      =>  $shopBaseUrl . "?cl=thankyou",
             "update"            =>  $shopBaseUrl . "?cl=KlarnaInstantShoppingController&fnc=updateOrder",
             "place_order"       =>  $shopBaseUrl . "?cl=KlarnaInstantShoppingController&fnc=placeOrder"

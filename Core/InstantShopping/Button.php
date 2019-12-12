@@ -183,6 +183,9 @@ class Button
         if(!$this->getButtonKey()){
             return [];
         }
+        $defaultShopCountry = Registry::getConfig()->getConfigParam('sKlarnaDefaultCountry');
+        $currencies = KlarnaConsts::getCountry2CurrencyArray();
+        $currency = isset($currencies[$defaultShopCountry]) ? $currencies[$defaultShopCountry] : 'EUR';
 
         return [
             "setup"=> [
@@ -193,8 +196,8 @@ class Button
             "styling" => [
                 "theme" => $this->getButtonStyling()
             ],
-            "purchase_country" => "DE",
-            "purchase_currency" => "EUR",
+            "purchase_country" => Registry::getConfig()->getConfigParam('sKlarnaDefaultCountry'),
+            "purchase_currency" => $currency,
             "locale" => KlarnaConsts::getLocale(true),
             "merchant_urls" => $this->getMerchantUrls(),
             "order_lines" => [[

@@ -74,6 +74,7 @@ class KlarnaInstantShopping extends KlarnaBaseConfig {
         $this->addTplParam('buttonPlacement', $this->buttonPlacement);
         $this->addTplParam('buttonSettings', $this->buttonSettings);
         $this->addTplParam('previewButtonConfig', $button->getGenericConfig());
+        $this->addTplParam('activeCountries', KlarnaUtils::getAllActiveKCOGlobalCountryList($this->getViewDataElement('adminlang')));
 
         return $this->_sThisTemplate;
     }
