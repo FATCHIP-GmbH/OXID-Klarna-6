@@ -7,6 +7,7 @@ use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Core\InstantShopping\Button;
 use TopConcepts\Klarna\Core\InstantShopping\HttpClient;
 use TopConcepts\Klarna\Core\KlarnaConsts;
+use TopConcepts\Klarna\Core\KlarnaUtils;
 
 class KlarnaInstantShopping extends KlarnaBaseConfig {
 
@@ -30,6 +31,9 @@ class KlarnaInstantShopping extends KlarnaBaseConfig {
         'phone_mandatory'
     ];
 
+    /** @inheritdoc */
+    protected $MLVars = ['sKlarnaTermsConditionsURI_'];
+
     protected function isReplaceButtonRequest() {
         return $this->_oRequest->getRequestParameter('replaceButton') === '1';
     }
@@ -40,13 +44,19 @@ class KlarnaInstantShopping extends KlarnaBaseConfig {
     }
 
     public function render() {
+        parent::render();
+
         // force shopid as parameter
         // Pass shop OXID so that shop object could be loaded
         $oConfig = Registry::getConfig();
         $sShopOXID = Registry::getConfig()->getShopId();
         $this->setEditObjectId($sShopOXID);
-        parent::render();
 
+        if (KlarnaUtils::is_ajax()) {
+            $output = $this->getMultiLangData();
+
+            return Registry::getUtils()->showMessageAndExit(json_encode($output));
+        }
 
         $instantShoppingEnabled = $oConfig->getConfigParam('blKlarnaInstantShoppingEnabled');
         if ($instantShoppingEnabled) {
@@ -66,6 +76,14 @@ class KlarnaInstantShopping extends KlarnaBaseConfig {
         $this->addTplParam('previewButtonConfig', $button->getGenericConfig());
 
         return $this->_sThisTemplate;
+    }
+
+    public function getErrorMessages()
+    {
+        return htmlentities(json_encode(array(
+            'valueMissing'    => Registry::getLang()->translateString('TCKLARNA_EXTERNAL_IMAGE_URL_EMPTY'),
+            'patternMismatch' => Registry::getLang()->translateString('TCKLARNA_EXTERNAL_IMAGE_URL_INVALID'),
+        )));
     }
 
     protected function generateAndSaveButtonKey() {

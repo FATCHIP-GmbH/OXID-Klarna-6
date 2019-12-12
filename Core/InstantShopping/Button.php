@@ -92,7 +92,7 @@ class Button
     public function getMerchantUrls() {
         $shopBaseUrl = Registry::getConfig()->getSslShopUrl();
         $lang = strtoupper(Registry::getLang()->getLanguageAbbr());
-        $terms = KlarnaUtils::getShopConfVar('sKlarnaInstantTermsConditionsURI_' . $lang);
+        $terms = KlarnaUtils::getShopConfVar('sKlarnaTermsConditionsURI_' . $lang);
         return [
             "terms"             =>  $terms,
             "confirmation"      =>  $shopBaseUrl . "?cl=thankyou",
