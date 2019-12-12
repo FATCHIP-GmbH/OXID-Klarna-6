@@ -215,7 +215,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
     public function clearDeliveryAddressDataProvider()
     {
         return [
-            ['41b545c65fe99ca2898614e563a7108b', 1, false],
+//            ['41b545c65fe99ca2898614e563a7108b', 1, false],
             ['41b545c65fe99ca2898614e563a7108a', 0, true],
         ];
     }

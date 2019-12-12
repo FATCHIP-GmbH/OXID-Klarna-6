@@ -76,6 +76,7 @@ class KlarnaAddressTest extends ModuleUnitTestCase
         $address->oxaddress__oxzip = new Field('21079', Field::T_RAW);
         $address->oxaddress__oxcity = new Field('Hamburg', Field::T_RAW);
         $address->oxaddress__oxcountryid = new Field('a7c40f631fc920687.20179984', Field::T_RAW);
+        $address->oxaddress__oxsal = new Field('MR', Field::T_RAW);
 
         return $address;
     }

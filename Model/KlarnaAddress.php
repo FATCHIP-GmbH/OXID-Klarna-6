@@ -86,9 +86,12 @@ class KlarnaAddress extends KlarnaAddress_parent
         $sDelAddress .= $this->oxaddress__oxlname;
         $sDelAddress .= $this->oxaddress__oxstreet;
         $sDelAddress .= $this->oxaddress__oxstreetnr;
-        $sDelAddress .= $this->oxaddress__oxcity;
-        $sDelAddress .= $this->oxaddress__oxcountryid;
         $sDelAddress .= $this->oxaddress__oxzip;
+        $sDelAddress .= $this->oxaddress__oxcity;
+        $sDelAddress .= $this->oxaddress__oxfon;
+        $sDelAddress .= $this->oxaddress__oxcountryid;
+        $sDelAddress .= $this->oxaddress__oxsal;
+        $sDelAddress .= $this->oxaddress__oxaddinfo;
 
         return $sDelAddress;
     }

@@ -43,6 +43,7 @@ class KlarnaFormatter extends Base
         'oxcity'        => 'city',
         'oxstateid'     => 'region',
         'oxmobfon'      => 'phone',
+        'oxfon'         => 'phone',
         'oxcountryid'   => 'country',
         'oxsal'         => 'title',
         'oxcompany'     => 'organization_name',
@@ -84,14 +85,15 @@ class KlarnaFormatter extends Base
         $aAddressData['street_number'] = str_replace($aAddressData['street_name'], '', $aAddressData['street_address']);
 
         $oCountry                = oxNew(Country::class);
-        $aAddressData['country'] = $oCountry->getIdByCode(strtoupper($aAddressData['country']));
+        $countryISO = $aAddressData['country'];
+        $aAddressData['country'] = $oCountry->getIdByCode(strtoupper($countryISO));
 
         $aUserData = array();
         foreach (self::$aFieldMapper as $oxName => $klarnaName) {
             if ($klarnaName === 'street_address') {
                 continue;
             } else if ($klarnaName === 'title') {
-                $aUserData[$sTable . $oxName] = self::formatSalutation($aAddressData[$klarnaName], strtolower($aAddressData['country']));
+                $aUserData[$sTable . $oxName] = self::formatSalutation($aAddressData[$klarnaName], strtolower($countryISO));
             } else {
                 $aUserData[$sTable . $oxName] = trim($aAddressData[$klarnaName]);
             }
@@ -113,11 +115,6 @@ class KlarnaFormatter extends Base
         $sCountryISO = strtolower(KlarnaUtils::getCountryISO($oxObject->{$sTable . 'oxcountryid'}->value));
 
         self::compileUserData($aUserData, $oxObject, $sTable, $sCountryISO);
-
-        if (is_null($aUserData['phone'])) {
-            $value              = $oxObject->{$sTable . 'oxfon'}->value;
-            $aUserData['phone'] = !empty($value) ? $value : null;
-        }
 
         //clean up
         foreach ($aUserData as $key => $value) {
@@ -154,6 +151,13 @@ class KlarnaFormatter extends Base
                         $aUserData[$klarnaName] = $sTitle;
                     }
                     break;
+                case 'phone':
+                    if (empty($aUserData[$klarnaName])) {
+                        $value = $oxObject->{$sTable.$oxName}->value;
+                        $aUserData[$klarnaName] = !empty($value) ? $value : null;
+                    }
+                    break;
+
                 default:
                     $value = $oxObject->{$sTable.$oxName}->value;
                     $aUserData[$klarnaName] = null;

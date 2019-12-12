@@ -38,6 +38,7 @@ class KlarnaFormatterTest extends ModuleUnitTestCase
         $userMock->oxuser__oxstreetnr = new Field('streetnr', Field::T_RAW);
         $userMock->oxuser__oxsal = new Field('Mr', Field::T_RAW);
         $userMock->oxuser__oxmobfon = new Field('000', Field::T_RAW);
+        $userMock->oxuser__oxfon = new Field('111', Field::T_RAW);
 
         $expectedResultUser = [
             'street_address' => "street streetnr",
@@ -45,13 +46,23 @@ class KlarnaFormatterTest extends ModuleUnitTestCase
             'title' => "Mr",
             'country' => "gb",
         ];
-
+        $expectedResultUser1 = $expectedResultUser;
+        $expectedResultUser1['phone'] = '111';
         $expectedResultAddress = ['street_address' => ' '];
 
         $expectedExceptionMessage = 'Argument must be instance of User|Address.';
 
+        $userMockMobEmpty = clone $userMock;
+        $userMockMobEmpty->oxuser__oxmobfon = new Field('', Field::T_RAW);
+
+        $userMockFonEmpty = clone $userMock;
+        $userMockFonEmpty->oxuser__oxfon = new Field('', Field::T_RAW);
+
+
         return [
             [$userMock, $expectedResultUser],
+            [$userMockMobEmpty, $expectedResultUser1],
+            [$userMockFonEmpty, $expectedResultUser],
             [$addressMock, $expectedResultAddress],
             [null, $expectedExceptionMessage],
         ];
