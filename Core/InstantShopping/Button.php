@@ -93,8 +93,9 @@ class Button
         $shopBaseUrl = Registry::getConfig()->getSslShopUrl();
         $lang = strtoupper(Registry::getLang()->getLanguageAbbr());
         $terms = KlarnaUtils::getShopConfVar('sKlarnaTermsConditionsURI_' . $lang);
+
         return [
-            "terms"             =>  $terms,
+            "terms"             =>  $terms??$shopBaseUrl . "?cl=terms",
             "confirmation"      =>  $shopBaseUrl . "?cl=thankyou",
             "update"            =>  $shopBaseUrl . "?cl=KlarnaInstantShoppingController&fnc=updateOrder",
             "place_order"       =>  $shopBaseUrl . "?cl=KlarnaInstantShoppingController&fnc=placeOrder"
@@ -179,10 +180,13 @@ class Button
 
     public function getGenericConfig()
     {
+        if(!$this->getButtonKey()){
+            return [];
+        }
 
         return [
             "setup"=> [
-                "key" => "45a2837c-aa16-46df-9a93-69fcddbc4810",
+                "key" => $this->getButtonKey(),
                 "environment" => $this->getEnvironment(),
                 "region" => "eu"
             ],

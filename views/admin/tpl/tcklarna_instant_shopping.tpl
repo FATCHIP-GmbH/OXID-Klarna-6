@@ -226,7 +226,7 @@
                                             <td class="lang-input">
                                                 [{assign var="confVarName" value="sKlarnaTermsConditionsURI_"|cat:$lang_tag}]
                                                 <div class="input">
-                                                    <input type="text" class="url-input m-lang"
+                                                    <input type="text" id="conditionURI" class="url-input m-lang"
                                                            name="confstrs[sKlarnaTermsConditionsURI_[{$lang_tag}]]"
                                                            value="[{$confstrs.$confVarName}]"
                                                            pattern="^(https://)?([a-zA-Z0-9]([a-zA-ZäöüÄÖÜ0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}.*" required>
@@ -258,6 +258,11 @@
 <script>
     var multiLangForm = Object.create(MultiLangWidget);
 
+    multiLangForm.submitFormData = function(event) {
+        this.serializeForm();
+        $.post(this.$form.attr('action'), this.$form.serialized);
+    }
+
     multiLangForm.onInit({
         langSelectorId: 'langSelector',
         formCssSelector: 'form#myedit',
@@ -273,28 +278,31 @@
 
         validateInputData: function (i, input) {
 
-            var search = input.name.match(/\[(.*)URI/)[1];
-            var pattern = input.getAttribute('pattern');
+            var enabled = $('#instant-shopping-toggle').prop('checked');
+            if(enabled === true) {
+                var search = input.name.match(/\[(.*)URI/)[1];
+                var pattern = input.getAttribute('pattern');
 
-            // find formValues related to the input
-            input.formValues = this.$form.serialized.filter(byNameContains.bind(null, [search]));
+                // find formValues related to the input
+                input.formValues = this.$form.serialized.filter(byNameContains.bind(null, [search]));
 
-            // reset validator
-            var langErrors = {invalidPatter: [], missingValue: []};
-            input.setCustomValidity('');
+                // reset validator
+                var langErrors = {invalidPatter: [], missingValue: []};
+                input.setCustomValidity('');
 
-            for (var j = 0; input.formValues[j]; j++) {
+                for (var j = 0; input.formValues[j]; j++) {
 
-                // has pattern , not empty, patternMismatch
-                if (pattern && (input.formValues[j].value !== "" && !input.formValues[j].value.match(pattern))) {
-                    langErrors.invalidPatter.push(input.formValues[j].name.match(/.*_(.*)]/)[1]);
-                    input.setCustomValidity(this.errors.patternMismatch + ' [' + langErrors.invalidPatter.join(', ') + ']');
-                }
+                    // has pattern , not empty, patternMismatch
+                    if (pattern && (input.formValues[j].value !== "" && !input.formValues[j].value.match(pattern))) {
+                        langErrors.invalidPatter.push(input.formValues[j].name.match(/.*_(.*)]/)[1]);
+                        input.setCustomValidity(this.errors.patternMismatch + ' [' + langErrors.invalidPatter.join(', ') + ']');
+                    }
 
-                // input required, formData is empty
-                if (input.required && input.formValues[j].value === "") {
-                    langErrors.missingValue.push(input.formValues[j].name.match(/.*_(.*)]/)[1]);
-                    input.setCustomValidity(this.errors.valueMissing + ' [' + langErrors.missingValue.join(', ') + ']');
+                    // input required, formData is empty
+                    if (input.required && input.formValues[j].value === "") {
+                        langErrors.missingValue.push(input.formValues[j].name.match(/.*_(.*)]/)[1]);
+                        input.setCustomValidity(this.errors.valueMissing + ' [' + langErrors.missingValue.join(', ') + ']');
+                    }
                 }
             }
         }
@@ -310,9 +318,12 @@
             if(this.checked) {
                 $plane.show(400);
                 $('#replace-button-key').attr('disabled', false);
+                $('#replace-button-key').trigger('click');
+                $('#conditionURI').attr('required', true);
             } else {
                 $plane.hide(400);
                 $('#replace-button-key').attr('disabled', true);
+                $('#conditionURI').attr('required', false);
             }
         });
 
@@ -361,11 +372,13 @@
         });
     })();
 </script>
-<script>
-    window.klarnaAsyncCallback = function () {
-        Klarna.InstantShopping.load([{$previewButtonConfig|@json_encode}]);
-    };
-</script>
+[{if $previewButtonConfig }]
+    <script>
+        window.klarnaAsyncCallback = function () {
+            Klarna.InstantShopping.load([{$previewButtonConfig|@json_encode}]);
+        };
+    </script>
+[{/if}]
 <script src="https://x.klarnacdn.net/instantshopping/lib/v1/lib.js"></script>
 <style>
     #replace-button-key:disabled {
