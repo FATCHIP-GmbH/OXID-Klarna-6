@@ -21,6 +21,7 @@ use TopConcepts\Klarna\Core\Exception\KlarnaBasketTooLargeException;
 use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
 use TopConcepts\Klarna\Core\InstantShopping\HttpClient;
 use TopConcepts\Klarna\Core\InstantShopping\PaymentHandler;
+use TopConcepts\Klarna\Core\KlarnaLogs;
 use TopConcepts\Klarna\Core\KlarnaUserManager;
 use TopConcepts\Klarna\Model\KlarnaInstantBasket;
 
@@ -120,7 +121,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
      */
     protected function logError($exception)
     {
-        Registry::getLogger()->error($exception->getMessage(), [$exception]);
+        Registry::getLogger()->error('[INSTANT SHOPPING]'.$exception->getMessage(), [$exception]);
     }
 
     /**
@@ -229,12 +230,21 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             $basketAdapter->validateOrderLines();
             $basketAdapter->storeBasket();
         } catch (\Exception $exception) {
-            Registry::getLogger()->error($exception->getMessage(), [$exception]);
+            Registry::getLogger()->error('[INSTANT SHOPPING UPDATE]'.$exception->getMessage(), [$exception]);
             return;
         }
 
         $updateData = $basketAdapter->getUpdateData();
         if ($updateData) {
+            $oLog = new KlarnaLogs();
+            $oLog->logData(
+                $this->getFncName(),
+                $this->requestData,
+                'callback',
+                '',
+                $updateData,
+                0
+            );
             $this->sendResponse($updateData);
         }
     }
