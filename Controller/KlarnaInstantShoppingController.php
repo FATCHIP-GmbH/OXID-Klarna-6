@@ -67,7 +67,8 @@ class KlarnaInstantShoppingController extends BaseCallbackController
 
     protected $validContextList = [
         'identification_updated',
-        'specifications_selected'
+        'specifications_selected',
+        'session_updated'
     ];
 
     public function init()

@@ -17,13 +17,50 @@
 
 function KlButtonManager (buttonConfig) {
     var instanceIndex = 0;
-    var buttons = document.querySelectorAll('klarna-instant-shopping');
+    var buttons = document.querySelectorAll('klarna-instant-shopping')
+    var amountInput;
+
+    this.quantityUpdate = false;
+
+    this.buttonClickHandler = function() {
+        if (this.quantityUpdate) {
+            Klarna.InstantShopping.update({
+                setup: buttonConfig.setup,
+                order_lines: buttonConfig.order_lines
+            });
+            this.quantityUpdate = false; // reset quantity update flag
+        }
+
+        $.ajax({
+            method: 'POST',
+            contentType: "application/json",
+            url: '?cl=KlarnaInstantShoppingController&fnc=startSessionAjax',
+                data: JSON.stringify(buttonConfig)
+        });
+    };
+
+    this.amountInputChangedHandler = function (evt) {
+        // update buttonConfig
+        var currentQuantity = + evt.target.value;
+        var item = buttonConfig.order_lines[0];
+        item.quantity = currentQuantity;
+        // update other fields in order pass through klarna validation - real update is made server-side later
+        item.total_amount = item.unit_price * currentQuantity;
+        item.total_tax_amount = item.total_amount - item.total_amount * 10000 / (item.tax_rate + 10000);
+        this.quantityUpdate = true;
+    };
+
     for(instanceIndex; instanceIndex < buttons.length; instanceIndex++) {
         buttons[instanceIndex].setAttribute('data-instance-id', instanceIndex);
         buttonConfig.setup.instance_id = instanceIndex.toString();
         Klarna.InstantShopping.load(buttonConfig);
         console.log(buttonConfig);
 
+        var itemForm = buttons[instanceIndex].closest('form');
+        amountInput =  itemForm ? itemForm.querySelector('[name=am]') : false;
+        if (amountInput) {
+            amountInput.addEventListener('change', this.amountInputChangedHandler.bind(this));
+        }
         Klarna.InstantShopping.on(
             'confirmation_displayed',
             function (event) {
@@ -34,14 +71,7 @@ function KlButtonManager (buttonConfig) {
 
         Klarna.InstantShopping.on(
             'buy_button_clicked',
-            function () {
-                $.ajax({
-                    method: 'POST',
-                    contentType: "application/json",
-                    url: '?cl=KlarnaInstantShoppingController&fnc=startSessionAjax',
-                    data: JSON.stringify(buttonConfig)
-                });
-            },
+            this.buttonClickHandler.bind(this),
             {setup: {instance_id: buttonConfig.setup.instance_id}}
         );
     }
