@@ -301,12 +301,12 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                 Registry::getSession()->setVariable('sTokenTimeStamp', $dt->getTimestamp());
             }
 
-            if (in_array($paymentId,  KlarnaPaymentModel::getKlarnaPaymentsIds('KP'))) {
-                // ignore agreements
-                $oConfig = Registry::getConfig();
-                $oConfig->setConfigParam('blConfirmAGB', false);
-                $oConfig->setConfigParam('blEnableIntangibleProdAgreement', false);
-            }
+//            if (in_array($paymentId,  KlarnaPaymentModel::getKlarnaPaymentsIds('KP'))) {
+//                // ignore agreements
+//                $oConfig = Registry::getConfig();
+//                $oConfig->setConfigParam('blConfirmAGB', false);
+//                $oConfig->setConfigParam('blEnableIntangibleProdAgreement', false);
+//            }
         }
 
         // if user is not logged in set the user
