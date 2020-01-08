@@ -43,9 +43,11 @@ function KlButtonManager (buttonConfig) {
         // update buttonConfig
         var currentQuantity = + evt.target.value;
         var item = buttonConfig.order_lines[0];
+        var itemDiscount = item.total_discount_amount / item.quantity;
         item.quantity = currentQuantity;
         // update other fields in order pass through klarna validation - real update is made server-side later
-        item.total_amount = item.unit_price * currentQuantity;
+        item.total_discount_amount = itemDiscount * currentQuantity;
+        item.total_amount = item.unit_price * currentQuantity - item.total_discount_amount;
         item.total_tax_amount = item.total_amount - item.total_amount * 10000 / (item.tax_rate + 10000);
         this.quantityUpdate = true;
     };
