@@ -67,7 +67,7 @@ class Button
 
         $orderData = [];
         try {
-            $orderData["order_lines"] = $this->getOrderLines($product);
+            $orderData["order_lines"] = $this->getOrderLines();
             $orderData["shipping_options"] = $this->getShippingOptions($product);
             $orderData["merchant_reference2"] = $this->basketAdapter->getMerchantData();
         } catch (KlarnaConfigException $e) {
@@ -135,12 +135,7 @@ class Button
         return $result;
     }
 
-    protected function getOrderLines(Article $product = null) {
-        $type = KlarnaInstantBasket::TYPE_SINGLE_PRODUCT;
-        if ($product === null) {
-            $type = KlarnaInstantBasket::TYPE_BASKET;
-        }
-        $this->basketAdapter->storeBasket($type);
+    protected function getOrderLines() {
         $this->basketAdapter->buildOrderLinesFromBasket();
 
         return $this->basketAdapter->getOrderData()['order_lines'];
@@ -248,6 +243,7 @@ class Button
 
     protected function getBasket(Article $product = null)
     {
+        $type = KlarnaInstantBasket::TYPE_BASKET;
         if ($this->oBasket) {
             return $this->oBasket;
         }
@@ -261,12 +257,13 @@ class Button
             } catch (\Exception $e) {
                 Registry::getLogger()->log('error', print_r($e->getMessage(), true));
             }
-
+            $type = KlarnaInstantBasket::TYPE_SINGLE_PRODUCT;
             Registry::getSession()->deleteVariable("blAddedNewItem"); // prevent showing notification to user
         } else {
             $oBasket = Registry::getSession()->getBasket();
         }
         $oBasket->setPayment(KlarnaPayment::KLARNA_INSTANT_SHOPPING);
+        $oBasket->tcklarnaISType = $type;
 
         return $this->oBasket = $oBasket;
     }
@@ -312,7 +309,7 @@ class Button
     /**
      * @codeCoverageIgnore
      */
-    protected function instantiateBasketAdapter(Article $product = null)
+    public function instantiateBasketAdapter(Article $product = null)
     {
         return oxNew(
             BasketAdapter::class,

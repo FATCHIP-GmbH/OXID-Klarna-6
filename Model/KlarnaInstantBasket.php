@@ -4,9 +4,9 @@
 namespace TopConcepts\Klarna\Model;
 
 
-use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Model\BaseModel;
+use OxidEsales\Eshop\Core\Registry;
 
 class KlarnaInstantBasket extends BaseModel
 {
@@ -75,6 +75,11 @@ class KlarnaInstantBasket extends BaseModel
         $this->tcklarna_instant_basket__type = new Field($type, Field::T_RAW);
     }
 
+    public function setHash($hash)
+    {
+        $this->tcklarna_instant_basket__hash = new Field($hash, Field::T_RAW);
+    }
+
     public function getType()
     {
         return $this->tcklarna_instant_basket__type->value;
@@ -89,19 +94,6 @@ class KlarnaInstantBasket extends BaseModel
         return $this->tcklarna_instant_basket__status->value === self::FINALIZED_STATUS;
     }
 
-    /**
-     * @param $userId
-     * @return bool
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
-     */
-    public function loadByUser($userId)
-    {
-        $query = $this->buildSelectString([$this->getViewName() . '.OXUSERID' => $userId]);
-        $this->_isLoaded = $this->assignRecord($query);
-
-        return $this->_isLoaded;
-    }
-
     public function getBasket()
     {
         return unserialize($this->tcklarna_instant_basket__basket_info->rawValue);
@@ -113,5 +105,30 @@ class KlarnaInstantBasket extends BaseModel
         $this->tcklarna_instant_basket__timestamp = new Field($now, Field::T_RAW);
 
         return parent::save();
+    }
+
+    /**
+     * returns hash unique for each details page as well as basket page
+     * @param null $artNum
+     * @return string
+     */
+    public function createHash($artNum = null)
+    {
+        $sid = Registry::getSession()->getId();
+        $artNum = $artNum ? $artNum : 'basket';
+        Registry::getLogger()->warning("$sid|$artNum" . ' : ' . md5("$sid|$artNum"));
+        return  md5("$sid|$artNum");
+    }
+
+    /**
+     * Load by hash
+     * @param string $hash
+     */
+    public function loadByHash($hash)
+    {
+        $query = $this->buildSelectString([
+                $this->getViewName() . '.HASH' => $hash
+            ]);
+        $this->_isLoaded = $this->assignRecord($query);
     }
 }
