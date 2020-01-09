@@ -112,12 +112,10 @@ class KlarnaInstantBasket extends BaseModel
      * @param null $artNum
      * @return string
      */
-    public function createHash($artNum = null)
+    public function createHash()
     {
         $sid = Registry::getSession()->getId();
-        $artNum = $artNum ? $artNum : 'basket';
-        Registry::getLogger()->warning("$sid|$artNum" . ' : ' . md5("$sid|$artNum"));
-        return  md5("$sid|$artNum");
+        return md5($sid . '|' . (new \DateTime())->getTimestamp());
     }
 
     /**

@@ -311,8 +311,7 @@ class BasketAdapter
     {
         if ($this->oInstantShoppingBasket === null) {
             $this->oInstantShoppingBasket = oxNew(KlarnaInstantBasket::class);
-            $artNum = $oProduct ? $oProduct->getFieldData('OXARTNUM') : null;
-            $hash = $this->oInstantShoppingBasket->createHash($artNum);
+            $hash = $this->oInstantShoppingBasket->createHash();
             $this->oInstantShoppingBasket->loadByHash($hash);
             $this->oInstantShoppingBasket->setHash($hash);
             $this->oInstantShoppingBasket->setType($type);
