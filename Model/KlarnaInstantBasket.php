@@ -108,9 +108,9 @@ class KlarnaInstantBasket extends BaseModel
     }
 
     /**
-     * returns hash unique for each details page as well as basket page
-     * @param null $artNum
+     * returns unique hash
      * @return string
+     * @throws \Exception
      */
     public function createHash()
     {

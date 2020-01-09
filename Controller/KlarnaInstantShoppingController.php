@@ -366,6 +366,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         $loaded = $oInstantShoppingBasket->load($this->actionData['merchant_reference2']);
         if ($loaded === false) {
 
+            // prepare product object for KlarnaInstantBasket::TYPE_SINGLE_PRODUCT
             $oProduct = null;
             $type = $this->actionData['merchant_reference2'];
             $oButton = Registry::get(Button::class);
