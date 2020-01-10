@@ -90,16 +90,27 @@ class Button
     }
 
     public function getMerchantUrls() {
-        $shopBaseUrl = Registry::getConfig()->getSslShopUrl();
+        $oConfig = Registry::getConfig();
+        $shopBaseUrl = $oConfig->getSslShopUrl();
+        $urlShopParam = method_exists($oConfig, 'mustAddShopIdToRequest')
+        && $oConfig->mustAddShopIdToRequest()
+            ? '&shp=' . $oConfig->getShopId()
+            : '';
         $lang = strtoupper(Registry::getLang()->getLanguageAbbr());
         $terms = KlarnaUtils::getShopConfVar('sKlarnaTermsConditionsURI_' . $lang);
 
+
+
+
         return [
-            "terms"             =>  $terms??$shopBaseUrl . "?cl=terms",
-            "confirmation"      =>  $shopBaseUrl . "?cl=thankyou",
-            "update"            =>  $shopBaseUrl . "?cl=KlarnaInstantShoppingController&fnc=updateOrder",
-            "place_order"       =>  $shopBaseUrl . "?cl=KlarnaInstantShoppingController&fnc=placeOrder"
+            "terms"             =>  $terms??$shopBaseUrl . "?cl=terms$urlShopParam",
+            "confirmation"      =>  $shopBaseUrl . "?cl=thankyou$urlShopParam",
+            "update"            =>  $shopBaseUrl . "?cl=KlarnaInstantShoppingController&fnc=updateOrder$urlShopParam",
+            "place_order"       =>  $shopBaseUrl . "?cl=KlarnaInstantShoppingController&fnc=placeOrder$urlShopParam"
         ];
+
+
+         $merchantUrls;
     }
 
     public function getButtonKey() {
