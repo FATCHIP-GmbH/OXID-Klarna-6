@@ -30,22 +30,6 @@ class KlarnaInstantBasket extends BaseModel
     }
 
     /**
-     * @return string
-     */
-    public function getOxuserId()
-    {
-        return $this->tcklarna_instant_basket__oxuserid->value;
-    }
-
-    /**
-     * @param string $oxuserid
-     */
-    public function setOxuserId(string $oxuserid)
-    {
-        $this->tcklarna_instant_basket__oxuserid = new Field($oxuserid, Field::T_RAW);
-    }
-
-    /**
      * @codeCoverageIgnore
      * @return string
      */
@@ -75,11 +59,6 @@ class KlarnaInstantBasket extends BaseModel
         $this->tcklarna_instant_basket__type = new Field($type, Field::T_RAW);
     }
 
-    public function setHash($hash)
-    {
-        $this->tcklarna_instant_basket__hash = new Field($hash, Field::T_RAW);
-    }
-
     public function getType()
     {
         return $this->tcklarna_instant_basket__type->value;
@@ -105,28 +84,5 @@ class KlarnaInstantBasket extends BaseModel
         $this->tcklarna_instant_basket__timestamp = new Field($now, Field::T_RAW);
 
         return parent::save();
-    }
-
-    /**
-     * returns unique hash
-     * @return string
-     * @throws \Exception
-     */
-    public function createHash()
-    {
-        $sid = Registry::getSession()->getId();
-        return md5($sid . '|' . (new \DateTime())->getTimestamp());
-    }
-
-    /**
-     * Load by hash
-     * @param string $hash
-     */
-    public function loadByHash($hash)
-    {
-        $query = $this->buildSelectString([
-                $this->getViewName() . '.HASH' => $hash
-            ]);
-        $this->_isLoaded = $this->assignRecord($query);
     }
 }

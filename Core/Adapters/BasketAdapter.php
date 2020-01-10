@@ -303,17 +303,13 @@ class BasketAdapter
 
     /**
      * @param null $type
-     * @param Article|null $oProduct
      * @return void
      * @throws \Exception
      */
-    public function storeBasket($type = null, Article $oProduct = null)
+    public function storeBasket($type = null)
     {
         if ($this->oInstantShoppingBasket === null) {
-            $this->oInstantShoppingBasket = oxNew(KlarnaInstantBasket::class);
-            $hash = $this->oInstantShoppingBasket->createHash();
-            $this->oInstantShoppingBasket->loadByHash($hash);
-            $this->oInstantShoppingBasket->setHash($hash);
+            $this->oInstantShoppingBasket = Registry::get(KlarnaInstantBasket::class);
             $this->oInstantShoppingBasket->setType($type);
             $this->oInstantShoppingBasket->setStatus(KlarnaInstantBasket::OPENED_STATUS);
         }
