@@ -359,6 +359,11 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         return  array_search($langAbbr, $langIds) ?: 0;
     }
 
+    /**
+     *  if not exists creates KlarnaInstantBasket record
+     *  Sends created object id in the response
+     * @throws \Exception
+     */
     public function startSessionAjax()
     {
         // try to load IS basket
@@ -372,13 +377,13 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             $oButton = Registry::get(Button::class);
             if ($type === KlarnaInstantBasket::TYPE_SINGLE_PRODUCT) {
                 $artNum = $this->actionData['order_lines'][0]['reference'];
-                $oProduct = oxNew(Article::class);
+                $oProduct = Registry::get(Article::class);
                 $oProduct->klarna_loadByArtNum($artNum);
             }
             // create IS basket
             /** @var BasketAdapter $oBasketAdapter */
             $oBasketAdapter = $oButton->instantiateBasketAdapter($oProduct);
-            $oBasketAdapter->storeBasket($type, $oProduct);
+            $oBasketAdapter->storeBasket($type);
 
             $this->sendResponse(['merchant_reference2' => $oBasketAdapter->getMerchantData()]);
         }

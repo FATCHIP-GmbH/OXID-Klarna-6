@@ -30,11 +30,10 @@ class ButtonTest extends ModuleUnitTestCase
 
         $basketAdapter = $this->getMockBuilder(BasketAdapter::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getMerchantData', 'storeBasket', 'buildOrderLinesFromBasket', 'getOrderData'])
+            ->setMethods(['getMerchantData', 'buildOrderLinesFromBasket', 'getOrderData'])
             ->getMock();
 
         $basketAdapter->expects($this->once())->method('getMerchantData')->willReturn("12345");
-        $basketAdapter->expects($this->once())->method('storeBasket');
         $basketAdapter->expects($this->once())->method('buildOrderLinesFromBasket');
         $basketAdapter->expects($this->once())->method('getOrderData')->willReturn($this->constructOrderData());
 

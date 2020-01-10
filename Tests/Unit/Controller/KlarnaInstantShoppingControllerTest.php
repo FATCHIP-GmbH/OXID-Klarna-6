@@ -4,13 +4,13 @@ namespace TopConcepts\Klarna\Tests\Unit\Controller;
 
 use Exception;
 use OxidEsales\Eshop\Application\Controller\OrderController;
+use OxidEsales\Eshop\Application\Model\Article;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Database\Adapter\Doctrine\Database;
 use OxidEsales\Eshop\Core\Exception\ExceptionToDisplay;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Registry;
-use oxUtilsHelper;
 use TopConcepts\Klarna\Controller\KlarnaInstantShoppingController;
 use TopConcepts\Klarna\Core\Adapters\BasketAdapter;
 use TopConcepts\Klarna\Core\Adapters\BasketItemAdapter;
@@ -18,6 +18,7 @@ use TopConcepts\Klarna\Core\Exception\InvalidItemException;
 use TopConcepts\Klarna\Core\Exception\InvalidOrderExecuteResult;
 use TopConcepts\Klarna\Core\Exception\KlarnaBasketTooLargeException;
 use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
+use TopConcepts\Klarna\Core\InstantShopping\Button;
 use TopConcepts\Klarna\Core\InstantShopping\HttpClient;
 use TopConcepts\Klarna\Core\InstantShopping\PaymentHandler;
 use TopConcepts\Klarna\Core\KlarnaUserManager;
@@ -404,20 +405,90 @@ class KlarnaInstantShoppingControllerTest extends ModuleUnitTestCase
             $this->assertFalse($basketAdapter);
         }
     }
+    public function startSessionDP()
+    {
+        $artNum = '111';
+        $orderLines = [
+            ['reference' => $artNum]
+        ];
 
-    public function testStartSessionAjax()
+        $oProductMock = $this->getMockBuilder(Article::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['klarna_loadByArtNum'])
+            ->getMock();
+        $oProductMock->expects($this->once())
+            ->method('klarna_loadByArtNum')
+            ->with($artNum);
+
+        $getBasketAdapterMock = function() {
+            $oBasketAdapterMock = $this->getMockBuilder(BasketAdapter::class)
+                ->disableOriginalConstructor()
+                ->setMethods(['storeBasket', 'getMerchantData'])
+                ->getMock();
+            $oBasketAdapterMock->expects($this->once())
+                ->method('storeBasket');
+            $oBasketAdapterMock->expects($this->once())
+                ->method('getMerchantData')
+                ->willReturn('id');
+            return $oBasketAdapterMock;
+        };
+
+
+        $getButtonMock = function($oBasketAdapterMock) {
+            $oButtonMock = $this->getMockBuilder(Button::class)
+                ->setMethods(['instantiateBasketAdapter'])
+                ->getMock();
+            $oButtonMock->expects($this->once())
+                ->method('instantiateBasketAdapter')
+                ->willReturn($oBasketAdapterMock);
+
+            return $oButtonMock;
+        };
+
+        return [
+            ['basket', null, null, null, true],
+            ['single_product', $orderLines, $getButtonMock($getBasketAdapterMock()), $oProductMock,  false],
+            ['basket', $orderLines, $getButtonMock($getBasketAdapterMock()), null, false],
+        ];
+    }
+
+    /**
+     * @dataProvider startSessionDP
+     * @param $typeRef string initial ref - basket type
+     * @param $orderLines
+     * @param $oProductMock
+     * @param $basketExists
+     */
+    public function testStartSessionAjax($typeRef, $orderLines, $oButtonMock, $oProductMock, $basketExists)
     {
         $oSUT = $this->getMockBuilder(KlarnaInstantShoppingController::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getUser'])
+            ->setMethods(['sendResponse'])
             ->getMock();
 
-        $data['merchant_reference2'] = 'merchant_reference2_test';
-        $this->setProtectedClassProperty($oSUT, 'actionData', $data);
-        $oSUT->startSessionAjax();
-        $result = Registry::getSession()->getVariable('instant_shopping_basket_id');
+        $sendResponseConstraints = $basketExists ? $this->never() : $this->once();
+        $oSUT->expects($sendResponseConstraints)
+            ->method('sendResponse')
+            ->with(['merchant_reference2' => 'id']);
 
-        $this->assertSame('merchant_reference2_test', $result);
+        $data['merchant_reference2'] = $typeRef;
+        $data['order_lines'] = $orderLines;
+
+        $this->setProtectedClassProperty($oSUT, 'actionData', $data);
+        $oInstantBasketMock = $this->getMockBuilder(KlarnaInstantBasket::class)
+            ->setMethods(['load'])
+            ->getMock();
+        $oInstantBasketMock->expects($this->once())
+            ->method('load')
+            ->willReturn($basketExists);
+
+        if ($oProductMock) {
+            Registry::set(Article::class, $oProductMock);
+        }
+        Registry::set(KlarnaInstantBasket::class, $oInstantBasketMock);
+        Registry::set(Button::class, $oButtonMock);
+
+        $oSUT->startSessionAjax();
     }
 
     public function testExtractOrderException()
@@ -447,30 +518,53 @@ class KlarnaInstantShoppingControllerTest extends ModuleUnitTestCase
         $this->assertSame(['testvalues'], $result->getValues());
     }
 
-    public function testSuccessAjax()
+    public function endSessionAjaxDP()
+    {
+        return [
+            [ 12, true, true, KlarnaInstantBasket::TYPE_BASKET, 1 ],
+            [ 12, true, true, KlarnaInstantBasket::TYPE_SINGLE_PRODUCT, 0 ]
+        ];
+    }
+
+    /**
+     * @dataProvider endSessionAjaxDP
+     * @param $basketId
+     * @param $loaded
+     * @param $isFinalized
+     * @param $type
+     * @param $expectedResult
+     */
+    public function testEndSessionAjax($basketId, $loaded, $isFinalized, $type, $expectedResult)
     {
 
         $oSUT = $this->getMockBuilder(KlarnaInstantShoppingController::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getUser'])
+            ->setMethods(['sendResponse'])
             ->getMock();
+        $data['merchant_reference2'] = $basketId;
+        $this->setProtectedClassProperty($oSUT, 'actionData', $data);
 
-        Registry::getSession()->setVariable('instant_shopping_basket_id', 1);
-        $oInstantShoppingBasket =  $this->getMockBuilder(KlarnaInstantBasket::class)
-            ->disableOriginalConstructor()
+        $oInstantBasketMock =  $this->getMockBuilder(KlarnaInstantBasket::class)
             ->setMethods(['load', 'isFinalized', 'getType'])
             ->getMock();
 
-        $oInstantShoppingBasket->expects($this->any())->method('load')->willReturn(true);
-        $oInstantShoppingBasket->expects($this->any())->method('isFinalized')->willReturn(true);
-        $oInstantShoppingBasket->expects($this->any())->method('getType')->willReturn(KlarnaInstantBasket::TYPE_BASKET);
-        Registry::set(KlarnaInstantBasket::class, $oInstantShoppingBasket);
+        $oInstantBasketMock->expects($this->once())
+            ->method('load')->willReturn($loaded);
+        $oInstantBasketMock->expects($this->once())
+            ->method('isFinalized')->willReturn($isFinalized);
+        $oInstantBasketMock->expects($this->once())
+            ->method('getType')->willReturn($type);
+        Registry::set(KlarnaInstantBasket::class, $oInstantBasketMock);
 
-        $oSUT->successAjax();
+        $oSUT->expects($this->once())
+            ->method('sendResponse')
+            ->with(['result' => $expectedResult]);
 
-        $expected = ['result' => 1];
-        $this->assertEquals($expected, json_decode(oxUtilsHelper::$response, true));
+        $oSUT->endSessionAjax();
 
+        $this->assertEquals(
+            $basketId,
+            $this->getSessionParam('instant_shopping_basket_id')
+        );
     }
-
 }
