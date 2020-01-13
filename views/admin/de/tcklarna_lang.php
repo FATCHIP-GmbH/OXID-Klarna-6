@@ -290,7 +290,7 @@ oder wenden Sie sich an den Klarna Integration Support.',
     'TCKLARNA_GIFT_WRAPPING_TITLE' => 'Geschenkverpackung',
     'TCKLARNA_GIFT_CARD_TITLE'     => 'Grußkarte',
 
-    'TCKLARNA_ERROR_SHOP_SSL_NOT_CONFIGURED' => 'Fataler Fehler: Die Angabe einer gültigen SSL-geschützten (https) $this->sSSLShopURL in der config.inc.php Ihres Shops ist Pflicht, wenn Sie den Klarna Checkout aktivieren möchten!',
+    'TCKLARNA_ERROR_SHOP_SSL_NOT_CONFIGURED' => 'Fataler Fehler: Die Angabe einer gültigen SSL-geschützten (https) $this->sSSLShopURL in der config.inc.php Ihres Shops ist Pflicht, wenn Sie den %s aktivieren möchten!',
     'TCKLARNA_ERROR_KCO_INACTIVE'            => 'Setup-Fehler: Klarna Checkout ist im Shop nicht aktiv',
 
     'KLARNA_CAPTURE_SUCCESSFULL'            => 'Der Betrag wurde erfolgreich abgebucht.',

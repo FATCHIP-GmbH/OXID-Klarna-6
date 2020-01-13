@@ -291,7 +291,8 @@ For a detailed description of the different settings please see the tool-tip fun
     'TCKLARNA_GIFT_WRAPPING_TITLE' => 'Gift wrapping',
     'TCKLARNA_GIFT_CARD_TITLE'     => 'Gift card',
 
-    'TCKLARNA_ERROR_SHOP_SSL_NOT_CONFIGURED' => 'Fatal error: It\'s mandatory to have a valid and SSL-secured (https) $this->sSSLShopURL configured in the config.inc.php of your shop to use the Klarna Checkout feature!',
+    'TCKLARNA_ERROR_SHOP_SSL_NOT_CONFIGURED' => 'Fatal error: It\'s mandatory to have a valid and SSL-secured (https) $this->sSSLShopURL configured in the config.inc.php of your shop to use the %s feature!',
+    'TCKLARNA_ERROR_WRONG_CREDS'             => '<strong>Wrong credentials!</strong>',
     'TCKLARNA_ERROR_KCO_INACTIVE'            => 'Setup error: Klarna Checkout is inactive in the shop',
 
     'KLARNA_CAPTURE_SUCCESSFULL'            => 'Order successfully captured in Klarna.',

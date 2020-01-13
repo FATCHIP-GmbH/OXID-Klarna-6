@@ -27,7 +27,7 @@
         [{if $sslNotSet }]
             <br>
             <div class="messagebox danger" style="display: block">
-                <strong>[{oxmultilang ident="TCKLARNA_ERROR_SHOP_SSL_NOT_CONFIGURED"}]</strong>
+                <strong>[{"TCKLARNA_ERROR_SHOP_SSL_NOT_CONFIGURED"|oxmultilangassign:"Klarna Checkout"}]</strong>
             </div>
             <br>
         [{/if}]

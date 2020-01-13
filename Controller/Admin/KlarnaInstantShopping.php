@@ -69,7 +69,6 @@ class KlarnaInstantShopping extends KlarnaBaseConfig {
             $this->generateAndSaveButtonKey();
         }
         $button = oxNew(Button::class);
-
         $this->addTplParam('buttonStyleOptions', $this->buttonStyleOptions);
         $this->addTplParam('buttonPlacement', $this->buttonPlacement);
         $this->addTplParam('buttonSettings', $this->buttonSettings);
@@ -88,6 +87,12 @@ class KlarnaInstantShopping extends KlarnaBaseConfig {
     }
 
     protected function generateAndSaveButtonKey() {
+        // TCKLARNA_ERROR_SHOP_SSL_NOT_CONFIGURED
+        if (Registry::getConfig()->getConfigParam('sSSLShopURL') == null) {
+            $error  = sprintf(Registry::getLang()->translateString('TCKLARNA_ERROR_SHOP_SSL_NOT_CONFIGURED'), 'Klarna Instant Shopping');
+            Registry::getUtilsView()->addErrorToDisplay($error);
+            return;
+        }
 
         $oConfig = Registry::getConfig();
         try {
@@ -95,7 +100,12 @@ class KlarnaInstantShopping extends KlarnaBaseConfig {
                 $this->getButtonRequestData()
             );
         } catch (KlarnaClientException $exception) {
-            Registry::getUtilsView()->addErrorToDisplay($exception);
+            $error = $exception;
+            if ($exception->getCode() === 401) {
+                $error = 'TCKLARNA_ERROR_WRONG_CREDS';
+            }
+            Registry::getUtilsView()->addErrorToDisplay($error);
+
             return;
         }
 

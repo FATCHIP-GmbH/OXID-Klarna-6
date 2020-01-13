@@ -334,6 +334,13 @@
                     }
                 }
             }
+        },
+        submitFormData: function(event) {
+            event.preventDefault();
+            this.serializeForm();
+            $.when(
+                $.post(this.$form.attr('action'), this.$form.serialized)
+            ).then(function(){window.location.reload()});
         }
     });
 </script>
@@ -369,7 +376,7 @@
 
             $form.get(0).appendChild(
                 $('<input>')
-                    .attr({name: 'replaceButton', value: '1'})
+                    .attr({name: 'replaceButton', value: '1', type: 'hidden'})
                     .get(0)
             );
             $form.submit();
