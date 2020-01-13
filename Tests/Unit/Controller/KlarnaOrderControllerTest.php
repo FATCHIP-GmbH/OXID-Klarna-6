@@ -432,6 +432,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
             ['KCO', 'klarna_checkout', 'AF', null, $userClassName, $kcoExternalPayments],
             ['KCO', 'bestitamazon', 'DE', null, false, $kcoExternalPayments],
             ['KCO', 'oxidpaypal', 'DE', null, $userClassName, $kcoExternalPayments],
+            ['KCO', 'oxidpaypal', 'DE', null, false, $kcoExternalPayments],
             ['KCO', 'oxidpaypal', 'AF', null, false, $kcoExternalPayments],
         ];
     }
@@ -450,6 +451,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $this->setModuleMode($mode);
         $this->setRequestParameter('externalCheckout', $externalCheckout);
         $this->setSessionParam('sCountryISO', $countryISO);
+        $userClassName && $this->setSessionParam('klarna_checkout_order_id', 'kcoId');
 
         $oBasket = oxNew(Basket::class);
         $oBasket->setPayment($payId);

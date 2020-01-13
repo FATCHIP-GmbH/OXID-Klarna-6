@@ -41,6 +41,7 @@ use TopConcepts\Klarna\Model\KlarnaOrderArticle;
 use TopConcepts\Klarna\Model\KlarnaPayment;
 use TopConcepts\Klarna\Model\KlarnaUser;
 use TopConcepts\Klarna\Model\KlarnaUserPayment;
+use TopConcepts\Klarna\Core\KlarnaShopControl;
 
 use OxidEsales\Eshop\Application\Component\BasketComponent;
 use OxidEsales\Eshop\Application\Component\UserComponent;
@@ -136,6 +137,7 @@ $aModule = array(
 
         OxidEsales\Eshop\Core\Config::class                      => Config::class,
         OxidEsales\Eshop\Application\Model\PaymentGateway::class => PaymentGateway::class,
+        OxidEsales\Eshop\Core\ShopControl::class => KlarnaShopControl::class
     ),
     'templates'   => array(
 
