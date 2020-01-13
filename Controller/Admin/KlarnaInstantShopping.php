@@ -88,7 +88,10 @@ class KlarnaInstantShopping extends KlarnaBaseConfig {
 
     protected function generateAndSaveButtonKey() {
         // TCKLARNA_ERROR_SHOP_SSL_NOT_CONFIGURED
-        if (Registry::getConfig()->getConfigParam('sSSLShopURL') == null) {
+        $sslShopUrl = Registry::getConfig()->getConfigParam('sSSLShopURL');
+        $res = preg_match('/https:\/\//', $sslShopUrl, $mat);
+
+        if ($res === 0) {
             $error  = sprintf(Registry::getLang()->translateString('TCKLARNA_ERROR_SHOP_SSL_NOT_CONFIGURED'), 'Klarna Instant Shopping');
             Registry::getUtilsView()->addErrorToDisplay($error);
             return;
