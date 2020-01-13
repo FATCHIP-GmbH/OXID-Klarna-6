@@ -5,22 +5,23 @@ namespace TopConcepts\Klarna\Controller;
 
 use OxidEsales\Eshop\Application\Controller\OrderController;
 use OxidEsales\Eshop\Application\Model\Address;
+use OxidEsales\Eshop\Application\Model\Article;
 use OxidEsales\Eshop\Application\Model\Basket;
-use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Exception\ExceptionToDisplay;
 use OxidEsales\Eshop\Core\Exception\StandardException;
-use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Core\Adapters\BasketAdapter;
 use TopConcepts\Klarna\Core\Exception\InvalidOrderExecuteResult;
 use TopConcepts\Klarna\Core\Exception\InvalidItemException;
 use TopConcepts\Klarna\Core\Exception\KlarnaBasketTooLargeException;
 use TopConcepts\Klarna\Core\Exception\KlarnaClientException;
+use TopConcepts\Klarna\Core\InstantShopping\Button;
 use TopConcepts\Klarna\Core\InstantShopping\HttpClient;
 use TopConcepts\Klarna\Core\InstantShopping\PaymentHandler;
+use TopConcepts\Klarna\Core\KlarnaLogs;
 use TopConcepts\Klarna\Core\KlarnaUserManager;
 use TopConcepts\Klarna\Model\KlarnaInstantBasket;
 
@@ -53,20 +54,25 @@ class KlarnaInstantShoppingController extends BaseCallbackController
                 'merchant_reference2' => ['required', 'notEmpty ', 'extract']
             ]
         ],
-        'successAjax' => [
-            'log' => false
+        'endSessionAjax' => [
+            'log' => false,
+            'validator' => [
+                'merchant_reference2' => ['required', 'notEmpty ', 'extract'],
+            ]
         ],
         'startSessionAjax' => [
             'log' => false,
             'validator' => [
                 'merchant_reference2' => ['required', 'notEmpty ', 'extract'],
+                'order_lines' => ['required', 'notEmpty ', 'extract'],
             ]
         ]
     ];
 
     protected $validContextList = [
         'identification_updated',
-        'specifications_selected'
+        'specifications_selected',
+        'session_updated'
     ];
 
     public function init()
@@ -120,7 +126,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
      */
     protected function logError($exception)
     {
-        Registry::getLogger()->error($exception->getMessage(), [$exception]);
+        Registry::getLogger()->error('[INSTANT SHOPPING]'.$exception->getMessage(), [$exception]);
     }
 
     /**
@@ -229,12 +235,21 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             $basketAdapter->validateOrderLines();
             $basketAdapter->storeBasket();
         } catch (\Exception $exception) {
-            Registry::getLogger()->error($exception->getMessage(), [$exception]);
+            Registry::getLogger()->error('[INSTANT SHOPPING UPDATE]'.$exception->getMessage(), [$exception]);
             return;
         }
 
         $updateData = $basketAdapter->getUpdateData();
         if ($updateData) {
+            $oLog = new KlarnaLogs();
+            $oLog->logData(
+                $this->getFncName(),
+                $this->requestData,
+                'callback',
+                '',
+                $updateData,
+                0
+            );
             $this->sendResponse($updateData);
         }
     }
@@ -281,10 +296,11 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         return $basketAdapter;
     }
 
-    public function successAjax()
+    public function endSessionAjax()
     {
         $result = false;
-        $instantShoppingBasketId = Registry::getSession()->getVariable('instant_shopping_basket_id');
+        $instantShoppingBasketId = $this->actionData['merchant_reference2'];
+        Registry::getSession()->setVariable('instant_shopping_basket_id', $instantShoppingBasketId);
         if ($instantShoppingBasketId) {
             /** @var KlarnaInstantBasket $oInstantShoppingBasket */
             $oInstantShoppingBasket = Registry::get(KlarnaInstantBasket::class);
@@ -295,6 +311,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
                 }
             }
         }
+
         $this->sendResponse(['result' => (int)$result]);
     }
 
@@ -340,8 +357,33 @@ class KlarnaInstantShoppingController extends BaseCallbackController
         return  array_search($langAbbr, $langIds) ?: 0;
     }
 
+    /**
+     *  if not exists creates KlarnaInstantBasket record
+     *  Sends created object id in the response
+     * @throws \Exception
+     */
     public function startSessionAjax()
     {
-        Registry::getSession()->setVariable('instant_shopping_basket_id', $this->actionData['merchant_reference2']);
+        // try to load IS basket
+        $oInstantShoppingBasket = Registry::get(KlarnaInstantBasket::class);
+        $loaded = $oInstantShoppingBasket->load($this->actionData['merchant_reference2']);
+        if ($loaded === false) {
+
+            // prepare product object for KlarnaInstantBasket::TYPE_SINGLE_PRODUCT
+            $oProduct = null;
+            $type = $this->actionData['merchant_reference2'];
+            $oButton = Registry::get(Button::class);
+            if ($type === KlarnaInstantBasket::TYPE_SINGLE_PRODUCT) {
+                $artNum = $this->actionData['order_lines'][0]['reference'];
+                $oProduct = Registry::get(Article::class);
+                $oProduct->klarna_loadByArtNum($artNum);
+            }
+            // create IS basket
+            /** @var BasketAdapter $oBasketAdapter */
+            $oBasketAdapter = $oButton->instantiateBasketAdapter($oProduct);
+            $oBasketAdapter->storeBasket($type);
+
+            $this->sendResponse(['merchant_reference2' => $oBasketAdapter->getMerchantData()]);
+        }
     }
 }

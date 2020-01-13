@@ -107,4 +107,12 @@ class KlarnaInstantShoppingTest extends ModuleUnitTestCase
         $this->assertArrayHasKey('options', $result);
         $this->assertArrayHasKey('styling', $result);
     }
+
+    public function testGetErrorMessages() {
+        $controller = new KlarnaInstantShopping();
+        $result = $controller->getErrorMessages();
+
+        $this->assertNotEmpty($result);
+
+    }
 }

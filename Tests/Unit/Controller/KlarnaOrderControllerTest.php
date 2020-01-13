@@ -433,6 +433,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
             ['KCO', 'bestitamazon', 'DE', null, false, $kcoExternalPayments],
             ['KCO', 'oxidpaypal', 'DE', null, $userClassName, $kcoExternalPayments],
             ['KCO', 'oxidpaypal', 'DE', null, false, $kcoExternalPayments],
+            ['KCO', 'oxidpaypal', 'DE', null, $userClassName, $kcoExternalPayments],
             ['KCO', 'oxidpaypal', 'AF', null, false, $kcoExternalPayments],
         ];
     }

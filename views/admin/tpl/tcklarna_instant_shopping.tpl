@@ -16,7 +16,9 @@
         <hr>
         <div class="klarna-row">
             <form name="myedit" id="myedit" method="post" action="[{$oViewConf->getSelfLink()}]"
-                  enctype="multipart/form-data">
+                  enctype="multipart/form-data"
+                  data-error="[{$oView->getErrorMessages()}]"
+                  data-langs="[{$oView->getLangs()}]">
                 <input type="hidden" name="MAX_FILE_SIZE" value="[{$iMaxUploadFileSize}]">
                 [{$oViewConf->getHiddenSid()}]
                 <input type="hidden" name="cl" value="KlarnaInstantShopping">
@@ -162,24 +164,6 @@
                                             <tr class="dark">
                                                 <td class="name-bold" colspan="3">[{oxmultilang ident="TCKLARNA_IS_BUTTON_SETTINGS_HEADLINE" }]</td>
                                             </tr>
-                                            <tr class="dark">
-                                                <td class="conf-label-2">[{ oxmultilang ident="TCKLARNA_SET_TAC_URI" }]</td>
-                                                <td class="lang-input">
-                                                    [{assign var="confVarName" value="sKlarnaInstantTermsConditionsURI_"|cat:$lang_tag}]
-                                                    <div class="input">
-                                                        <input type="text" class="url-input m-lang"
-                                                               name="confstrs[sKlarnaInstantTermsConditionsURI_[{$lang_tag}]]"
-                                                               value="[{$confstrs.$confVarName}]"
-                                                               pattern="^(https://)?([a-zA-Z0-9]([a-zA-ZäöüÄÖÜ0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}.*" required>
-                                                    </div>
-                                                </td>
-                                                <td class="info-block">
-                                                <span class="kl-tooltip"
-                                                      title="[{oxmultilang ident="TCKLARNA_SET_TAC_URI"}]">
-                                                    <i class="fa fa-question fa-lg" aria-hidden="true"></i>
-                                                </span>
-                                                </td>
-                                            </tr>
                                             [{foreach from=$buttonSettings item="optionName"}]
                                                 <tr class="dark">
                                                     <td class="name">[{oxmultilang ident="TCKLARNA_IS_SETTING_"|cat:$optionName|upper}]</td>
@@ -206,6 +190,81 @@
                                             [{/foreach}]
                                         </tbody>
                                     </table>
+                                    <table class="inner">
+                                        <tbody>
+                                        <tr class="dark">
+                                            <td>
+                                                [{oxmultilang ident="TCKLARNA_DEFAULT_SHOP_COUNTRY"}]:
+                                            </td>
+                                            <td>
+                                                <div class="selector" id="defaultCountry">
+                                                    <div class="selector__menu">
+                                                        <ul class="selector__choices">
+                                                            [{foreach from=$activeCountries item="oxCountry" name="activeCountris" }]
+                                                            <li class="selector__item[{if $confstrs.sKlarnaDefaultCountry === $oxCountry->oxcountry__oxisoalpha2->value }]--selected[{/if}]">
+                                                                <a href="#" data-value=[{ $oxCountry->oxcountry__oxisoalpha2->value }]>
+                                                                    [{ $oxCountry->oxcountry__oxtitle->value }]
+                                                                </a>
+                                                            </li>
+                                                            [{/foreach }]
+                                                        </ul>
+                                                        <input type="hidden" name="confstrs[sKlarnaDefaultCountry]"
+                                                               value="[{$confstrs.sKlarnaDefaultCountry}]">
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr class="dark">
+                                            <td class="saveinnewlangtext">
+                                                [{ oxmultilang ident="GENERAL_LANGUAGE" }]
+                                            </td>
+                                            <td>
+                                                <div class="input">
+                                                    <div class="selector" id="langSelector">
+                                                        <div class="selector__menu">
+                                                            <ul class="selector__choices">
+                                                                [{foreach from=$languages key=lang item=olang}]
+                                                                    <li class="selector__item[{if $lang == $editlanguage}]--selected[{/if}]">
+                                                                        <a href="#" data-value="[{ $lang }]">[{ $olang->name }]</a>
+                                                                    </li>
+                                                                [{/foreach}]
+                                                            </ul>
+                                                            <input type="hidden" name="editlanguage" id="editlanguage"
+                                                                   class="saveinnewlanginput"
+                                                                   value="[{ $editlanguage }]">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        [{if isset($iLang)}]
+                                            [{assign var="editlanguage" value=$iLang}]
+                                        [{/if}]
+                                        [{assign var="lang_tag" value=$languages.$editlanguage->abbr|oxupper}]
+                                        <tr class="dark">
+                                            <td class="conf-label-2">[{ oxmultilang ident="TCKLARNA_SET_TAC_URI" }]</td>
+                                            <td class="lang-input">
+                                                [{assign var="confVarName" value="sKlarnaTermsConditionsURI_"|cat:$lang_tag}]
+                                                <div class="input">
+                                                    <input type="text" id="conditionURI" class="url-input m-lang"
+                                                           name="confstrs[sKlarnaTermsConditionsURI_[{$lang_tag}]]"
+                                                           value="[{$confstrs.$confVarName}]"
+                                                           pattern="^(https://)?([a-zA-Z0-9]([a-zA-ZäöüÄÖÜ0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}.*" required>
+                                                </div>
+                                            </td>
+                                            <td class="info-block">
+                                                <span class="kl-tooltip"
+                                                      title="[{oxmultilang ident="TCKLARNA_SET_TAC_URI"}]">
+                                                    <i class="fa fa-question fa-lg" aria-hidden="true"></i>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
                             </td>
                         </tr>
 
@@ -220,6 +279,64 @@
     </div>
 </div>
 <script type="text/javascript" src="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_lib.js') }]"></script>
+<script>
+    var defaultCountrySelector = new Selector2({
+        id: 'defaultCountry',
+        fromOptions: false
+    });
+
+    var multiLangForm = Object.create(MultiLangWidget);
+
+    multiLangForm.submitFormData = function(event) {
+        this.serializeForm();
+        $.post(this.$form.attr('action'), this.$form.serialized);
+    }
+
+    multiLangForm.onInit({
+        langSelectorId: 'langSelector',
+        formCssSelector: 'form#myedit',
+        toggleCssSelector: null,
+        inputsCssSelector: '.m-lang',
+        dataPath: 'cl=KlarnaInstantShopping',
+        validateFormData: function () {
+            var $validateInputs = this.$inputs.filter('.url-input');
+            this.errors = $.extend(this.errors, JSON.parse(this.$form.attr('data-error')));
+            this.serializeForm();
+            $validateInputs.each(this.validateInputData.bind(this));
+        },
+
+        validateInputData: function (i, input) {
+
+            var enabled = $('#instant-shopping-toggle').prop('checked');
+            if(enabled === true) {
+                var search = input.name.match(/\[(.*)URI/)[1];
+                var pattern = input.getAttribute('pattern');
+
+                // find formValues related to the input
+                input.formValues = this.$form.serialized.filter(byNameContains.bind(null, [search]));
+
+                // reset validator
+                var langErrors = {invalidPatter: [], missingValue: []};
+                input.setCustomValidity('');
+
+                for (var j = 0; input.formValues[j]; j++) {
+
+                    // has pattern , not empty, patternMismatch
+                    if (pattern && (input.formValues[j].value !== "" && !input.formValues[j].value.match(pattern))) {
+                        langErrors.invalidPatter.push(input.formValues[j].name.match(/.*_(.*)]/)[1]);
+                        input.setCustomValidity(this.errors.patternMismatch + ' [' + langErrors.invalidPatter.join(', ') + ']');
+                    }
+
+                    // input required, formData is empty
+                    if (input.required && input.formValues[j].value === "") {
+                        langErrors.missingValue.push(input.formValues[j].name.match(/.*_(.*)]/)[1]);
+                        input.setCustomValidity(this.errors.valueMissing + ' [' + langErrors.missingValue.join(', ') + ']');
+                    }
+                }
+            }
+        }
+    });
+</script>
 <script type="text/javascript">
     (function(){
         var $form = $('#myedit');
@@ -230,9 +347,12 @@
             if(this.checked) {
                 $plane.show(400);
                 $('#replace-button-key').attr('disabled', false);
+                $('#replace-button-key').trigger('click');
+                $('#conditionURI').attr('required', true);
             } else {
                 $plane.hide(400);
                 $('#replace-button-key').attr('disabled', true);
+                $('#conditionURI').attr('required', false);
             }
         });
 
@@ -281,11 +401,13 @@
         });
     })();
 </script>
-<script>
-    window.klarnaAsyncCallback = function () {
-        Klarna.InstantShopping.load([{$previewButtonConfig|@json_encode}]);
-    };
-</script>
+[{if $previewButtonConfig }]
+    <script>
+        window.klarnaAsyncCallback = function () {
+            Klarna.InstantShopping.load([{$previewButtonConfig|@json_encode}]);
+        };
+    </script>
+[{/if}]
 <script src="https://x.klarnacdn.net/instantshopping/lib/v1/lib.js"></script>
 <style>
     #replace-button-key:disabled {

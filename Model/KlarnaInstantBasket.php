@@ -4,9 +4,9 @@
 namespace TopConcepts\Klarna\Model;
 
 
-use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Model\BaseModel;
+use OxidEsales\Eshop\Core\Registry;
 
 class KlarnaInstantBasket extends BaseModel
 {
@@ -27,22 +27,6 @@ class KlarnaInstantBasket extends BaseModel
     {
         parent::__construct();
         $this->init(self::TABLE_NAME);
-    }
-
-    /**
-     * @return string
-     */
-    public function getOxuserId()
-    {
-        return $this->tcklarna_instant_basket__oxuserid->value;
-    }
-
-    /**
-     * @param string $oxuserid
-     */
-    public function setOxuserId(string $oxuserid)
-    {
-        $this->tcklarna_instant_basket__oxuserid = new Field($oxuserid, Field::T_RAW);
     }
 
     /**
@@ -87,19 +71,6 @@ class KlarnaInstantBasket extends BaseModel
     public function isFinalized()
     {
         return $this->tcklarna_instant_basket__status->value === self::FINALIZED_STATUS;
-    }
-
-    /**
-     * @param $userId
-     * @return bool
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
-     */
-    public function loadByUser($userId)
-    {
-        $query = $this->buildSelectString([$this->getViewName() . '.OXUSERID' => $userId]);
-        $this->_isLoaded = $this->assignRecord($query);
-
-        return $this->_isLoaded;
     }
 
     public function getBasket()

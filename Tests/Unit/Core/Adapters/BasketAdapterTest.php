@@ -8,6 +8,7 @@ use OxidEsales\Eshop\Application\Model\BasketItem;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Price;
+use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Core\Adapters\BaseBasketItemAdapter;
 use TopConcepts\Klarna\Core\Adapters\BasketAdapter;
 use TopConcepts\Klarna\Core\Adapters\BasketItemAdapter;
@@ -246,66 +247,50 @@ class BasketAdapterTest extends ModuleUnitTestCase
         $oSUT->closeBasket($orderId);
     }
 
-    public function testStoreBasket()
+    public function storeBasketDP()
     {
-        $oUserMock = $this->getMockBuilder(User::class)
-            ->setMethods(['getId'])
+        $newBasket = $this->getMockBuilder(KlarnaInstantBasket::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['setBasketInfo', 'save', 'setType', 'setStatus'])
             ->getMock();
-        $oUserMock->expects($this->exactly(2))->method('getId')->willReturn('uid');
+        $newBasket->expects($this->once())->method('setType')->with(KlarnaInstantBasket::TYPE_BASKET);
+        $newBasket->expects($this->once())->method('setStatus');
+        $newBasket->expects($this->once())->method('setBasketInfo');
+        $newBasket->expects($this->once())->method('save');
+
+        $existingBasket = $this->getMockBuilder(KlarnaInstantBasket::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['setBasketInfo', 'save'])
+            ->getMock();
+        $existingBasket->expects($this->once())
+            ->method('setBasketInfo');
+        $existingBasket->expects($this->once())
+            ->method('save');
+
+        return [
+            [KlarnaInstantBasket::TYPE_BASKET, null, $newBasket],
+            [KlarnaInstantBasket::TYPE_SINGLE_PRODUCT, $existingBasket, $existingBasket]
+        ];
+    }
+
+    /**
+     * @dataProvider storeBasketDP
+     * @param $type
+     * @param $oInstantShoppingBasketProperty
+     * @param $oInstantShoppingBasketMock
+     */
+    public function testStoreBasket($type, $oInstantShoppingBasketProperty, $oInstantShoppingBasketMock)
+    {
         $oFakeBasket = new \stdClass();
-
-        $oSUT = $this->getMockBuilder(BasketAdapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getOrderData'])
-            ->getMock();
-        $this->setProtectedClassProperty($oSUT, 'oUser', $oUserMock);
-        $this->setProtectedClassProperty($oSUT, 'oBasket', $oFakeBasket);
-
-        $oSUT->storeBasket('type');
-        $oInstantShoppingBasket = $this->getProtectedClassProperty($oSUT, 'oInstantShoppingBasket');
-        $this->assertInstanceOf(KlarnaInstantBasket::class, $oInstantShoppingBasket);
-        $this->assertEquals('uid', $oInstantShoppingBasket->getOxuserId());
-        $this->assertEquals($oFakeBasket, $oInstantShoppingBasket->getBasket());
-        $this->assertEquals('type', $oInstantShoppingBasket->getType());
-
-        // -----
-
-        $this->setSessionParam('instant_shopping_basket_id', 'fakeId');
-        $oUserMock = $this->getMockBuilder(User::class)
-            ->setMethods(['getId'])
-            ->getMock();
-        $oUserMock->expects($this->once())->method('getId')->willReturn('uid');
-        $oSUT = $this->getMockBuilder(BasketAdapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getOrderData'])
-            ->getMock();
-        $this->setProtectedClassProperty($oSUT, 'oUser', $oUserMock);
-        $this->setProtectedClassProperty($oSUT, 'oBasket', $oFakeBasket);
-        $oSUT->storeBasket('type');
-        $oInstantShoppingBasket = $this->getProtectedClassProperty($oSUT, 'oInstantShoppingBasket');
-        $this->assertInstanceOf(KlarnaInstantBasket::class, $oInstantShoppingBasket);
-        $this->assertEquals('uid', $oInstantShoppingBasket->getOxuserId());
-        $this->assertEquals($oFakeBasket, $oInstantShoppingBasket->getBasket());
-        $this->assertEquals('type', $oInstantShoppingBasket->getType());
-
-        // -----
-
-        $this->setSessionParam('instant_shopping_basket_id', null);
         $oSUT = $this->getMockBuilder(BasketAdapter::class)
             ->disableOriginalConstructor()
             ->setMethods(['getOrderData'])
             ->getMock();
         $this->setProtectedClassProperty($oSUT, 'oBasket', $oFakeBasket);
-        $oInstantShoppingBasketMock = $this->getMockBuilder(KlarnaInstantBasket::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['setBasketInfo', 'save', 'getId'])
-            ->getMock();
-        $oInstantShoppingBasketMock->expects($this->once())->method('setBasketInfo');
-        $oInstantShoppingBasketMock->expects($this->once())->method('save');
-        $oInstantShoppingBasketMock->expects($this->once())->method('getId')->willReturn('id');
-        $this->setProtectedClassProperty($oSUT, 'oInstantShoppingBasket', $oInstantShoppingBasketMock);
-        $oSUT->storeBasket('type');
-        $this->assertEquals('id', $this->getSessionParam('instant_shopping_basket_id'));
+        $this->setProtectedClassProperty($oSUT, 'oInstantShoppingBasket', $oInstantShoppingBasketProperty);
+        Registry::set(KlarnaInstantBasket::class, $oInstantShoppingBasketMock);
+
+        $oSUT->storeBasket($type);
     }
 
     public function validationDataProvider()

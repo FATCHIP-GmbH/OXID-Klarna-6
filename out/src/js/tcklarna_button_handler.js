@@ -17,31 +17,93 @@
 
 function KlButtonManager (buttonConfig) {
     var instanceIndex = 0;
-    var buttons = document.querySelectorAll('klarna-instant-shopping');
+    var buttons = document.querySelectorAll('klarna-instant-shopping')
+    var amountInput;
+
+    this.quantityUpdate = false;
+
+    this.getConfigForEvent = function(event) {
+        return $.extend(
+            {},
+            buttonConfig,
+            {setup: {instance_id: event.instanceId}}
+        );
+    };
+
+    this.confirmationDisplayedHandler = function (event) {
+        $.ajax({
+            method: 'POST',
+            contentType: "application/json",
+            url: '?cl=KlarnaInstantShoppingController&fnc=endSessionAjax',
+            data: JSON.stringify(this.getConfigForEvent(event))
+        });
+    };
+
+    this.buttonClickHandler = function(event) {
+        var config = this.getConfigForEvent(event);
+        $.when(
+            $.ajax({
+                method: 'POST',
+                contentType: "application/json",
+                url: '?cl=KlarnaInstantShoppingController&fnc=startSessionAjax',
+                data: JSON.stringify(config)
+            })
+        ).then(
+            this.makeUpdate.bind(this, config)
+        );
+    };
+
+    this.makeUpdate = function(config, updateData) {
+        updateData = updateData || {};
+        if (this.quantityUpdate) {
+            $.extend(updateData, {order_lines: buttonConfig.order_lines});
+            this.quantityUpdate = false; // reset quantity update flag
+        }
+
+        if (updateData) {
+            // update buttonConfig
+            $.extend(buttonConfig, updateData);
+            // push update to klarna
+            Klarna.InstantShopping.update(
+                $.extend(updateData, {setup: config.setup})
+            );
+        }
+        console.log('updateData: ', updateData);
+    };
+
+    this.amountInputChangedHandler = function (evt) {
+        // update buttonConfig order_lines
+        var currentQuantity = + evt.target.value;
+        var item = buttonConfig.order_lines[0];
+        var itemDiscount = item.total_discount_amount / item.quantity;
+        item.quantity = currentQuantity;
+        // update other fields in order pass through klarna validation - real update is made server-side later
+        item.total_discount_amount = itemDiscount * currentQuantity;
+        item.total_amount = item.unit_price * currentQuantity - item.total_discount_amount;
+        item.total_tax_amount = item.total_amount - item.total_amount * 10000 / (item.tax_rate + 10000);
+        this.quantityUpdate = true;
+    };
+
     for(instanceIndex; instanceIndex < buttons.length; instanceIndex++) {
         buttons[instanceIndex].setAttribute('data-instance-id', instanceIndex);
         buttonConfig.setup.instance_id = instanceIndex.toString();
         Klarna.InstantShopping.load(buttonConfig);
         console.log(buttonConfig);
 
+        var itemForm = buttons[instanceIndex].closest('form');
+        amountInput =  itemForm ? itemForm.querySelector('[name=am]') : false;
+        if (amountInput) {
+            amountInput.addEventListener('change', this.amountInputChangedHandler.bind(this));
+        }
         Klarna.InstantShopping.on(
             'confirmation_displayed',
-            function (event) {
-                $.ajax('?cl=KlarnaInstantShoppingController&fnc=successAjax');
-            },
+            this.confirmationDisplayedHandler.bind(this),
             {setup: {instance_id: buttonConfig.setup.instance_id}}
         );
 
         Klarna.InstantShopping.on(
             'buy_button_clicked',
-            function () {
-                $.ajax({
-                    method: 'POST',
-                    contentType: "application/json",
-                    url: '?cl=KlarnaInstantShoppingController&fnc=startSessionAjax',
-                    data: JSON.stringify(buttonConfig)
-                });
-            },
+            this.buttonClickHandler.bind(this),
             {setup: {instance_id: buttonConfig.setup.instance_id}}
         );
     }

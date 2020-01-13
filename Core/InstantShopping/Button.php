@@ -67,7 +67,7 @@ class Button
 
         $orderData = [];
         try {
-            $orderData["order_lines"] = $this->getOrderLines($product);
+            $orderData["order_lines"] = $this->getOrderLines();
             $orderData["shipping_options"] = $this->getShippingOptions($product);
             $orderData["merchant_reference2"] = $this->basketAdapter->getMerchantData();
         } catch (KlarnaConfigException $e) {
@@ -90,15 +90,27 @@ class Button
     }
 
     public function getMerchantUrls() {
-        $shopBaseUrl = Registry::getConfig()->getSslShopUrl();
+        $oConfig = Registry::getConfig();
+        $shopBaseUrl = $oConfig->getSslShopUrl();
+        $urlShopParam = method_exists($oConfig, 'mustAddShopIdToRequest')
+        && $oConfig->mustAddShopIdToRequest()
+            ? '&shp=' . $oConfig->getShopId()
+            : '';
         $lang = strtoupper(Registry::getLang()->getLanguageAbbr());
-        $terms = KlarnaUtils::getShopConfVar('sKlarnaInstantTermsConditionsURI_' . $lang);
+        $terms = KlarnaUtils::getShopConfVar('sKlarnaTermsConditionsURI_' . $lang);
+
+
+
+
         return [
-            "terms"             =>  $terms,
-            "confirmation"      =>  $shopBaseUrl . "?cl=thankyou",
-            "update"            =>  $shopBaseUrl . "?cl=KlarnaInstantShoppingController&fnc=updateOrder",
-            "place_order"       =>  $shopBaseUrl . "?cl=KlarnaInstantShoppingController&fnc=placeOrder"
+            "terms"             =>  $terms??$shopBaseUrl . "?cl=terms$urlShopParam",
+            "confirmation"      =>  $shopBaseUrl . "?cl=thankyou$urlShopParam",
+            "update"            =>  $shopBaseUrl . "?cl=KlarnaInstantShoppingController&fnc=updateOrder$urlShopParam",
+            "place_order"       =>  $shopBaseUrl . "?cl=KlarnaInstantShoppingController&fnc=placeOrder$urlShopParam"
         ];
+
+
+         $merchantUrls;
     }
 
     public function getButtonKey() {
@@ -134,12 +146,7 @@ class Button
         return $result;
     }
 
-    protected function getOrderLines(Article $product = null) {
-        $type = KlarnaInstantBasket::TYPE_SINGLE_PRODUCT;
-        if ($product === null) {
-            $type = KlarnaInstantBasket::TYPE_BASKET;
-        }
-        $this->basketAdapter->storeBasket($type);
+    protected function getOrderLines() {
         $this->basketAdapter->buildOrderLinesFromBasket();
 
         return $this->basketAdapter->getOrderData()['order_lines'];
@@ -179,18 +186,24 @@ class Button
 
     public function getGenericConfig()
     {
+        if(!$this->getButtonKey()){
+            return [];
+        }
+        $defaultShopCountry = Registry::getConfig()->getConfigParam('sKlarnaDefaultCountry');
+        $currencies = KlarnaConsts::getCountry2CurrencyArray();
+        $currency = isset($currencies[$defaultShopCountry]) ? $currencies[$defaultShopCountry] : 'EUR';
 
         return [
             "setup"=> [
-                "key" => "45a2837c-aa16-46df-9a93-69fcddbc4810",
+                "key" => $this->getButtonKey(),
                 "environment" => $this->getEnvironment(),
                 "region" => "eu"
             ],
             "styling" => [
                 "theme" => $this->getButtonStyling()
             ],
-            "purchase_country" => "DE",
-            "purchase_currency" => "EUR",
+            "purchase_country" => Registry::getConfig()->getConfigParam('sKlarnaDefaultCountry'),
+            "purchase_currency" => $currency,
             "locale" => KlarnaConsts::getLocale(true),
             "merchant_urls" => $this->getMerchantUrls(),
             "order_lines" => [[
@@ -241,6 +254,7 @@ class Button
 
     protected function getBasket(Article $product = null)
     {
+        $type = KlarnaInstantBasket::TYPE_BASKET;
         if ($this->oBasket) {
             return $this->oBasket;
         }
@@ -254,12 +268,13 @@ class Button
             } catch (\Exception $e) {
                 Registry::getLogger()->log('error', print_r($e->getMessage(), true));
             }
-
+            $type = KlarnaInstantBasket::TYPE_SINGLE_PRODUCT;
             Registry::getSession()->deleteVariable("blAddedNewItem"); // prevent showing notification to user
         } else {
             $oBasket = Registry::getSession()->getBasket();
         }
         $oBasket->setPayment(KlarnaPayment::KLARNA_INSTANT_SHOPPING);
+        $oBasket->tcklarnaISType = $type;
 
         return $this->oBasket = $oBasket;
     }
@@ -305,7 +320,7 @@ class Button
     /**
      * @codeCoverageIgnore
      */
-    protected function instantiateBasketAdapter(Article $product = null)
+    public function instantiateBasketAdapter(Article $product = null)
     {
         return oxNew(
             BasketAdapter::class,

@@ -110,6 +110,16 @@ abstract class BaseBasketItemAdapter
             ->getItemData();
 
         if ($this->isValidItemData()) {
+            // itemData mapper function
+            $mapper = function ($k, $v) {
+                // decode single quotes for name field
+                if ($k === 'name') {
+                    return [$k, html_entity_decode($v, ENT_QUOTES, 'UTF-8')];
+                }
+                return [$k, $v];
+            };
+            $itemData = array_column(array_map($mapper, array_keys($itemData), $itemData), 1, 0);
+
             $orderLines[] = $this->encodeMerchantData($itemData);
             return true;
         }

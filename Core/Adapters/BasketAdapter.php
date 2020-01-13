@@ -6,6 +6,7 @@ namespace TopConcepts\Klarna\Core\Adapters;
 
 use DateInterval;
 use DateTime;
+use OxidEsales\Eshop\Application\Model\Article;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\BasketItem;
 use OxidEsales\Eshop\Application\Model\Order;
@@ -303,26 +304,18 @@ class BasketAdapter
     /**
      * @param null $type
      * @return void
-     * @throws DatabaseConnectionException
+     * @throws \Exception
      */
     public function storeBasket($type = null)
     {
         if ($this->oInstantShoppingBasket === null) {
-            $this->oInstantShoppingBasket = oxNew(KlarnaInstantBasket::class);
-            $instant_shopping_basket_id = Registry::getSession()->getVariable('instant_shopping_basket_id');
-            if ($instant_shopping_basket_id) {
-                $this->oInstantShoppingBasket->load($instant_shopping_basket_id);
-            } else {
-                $this->oInstantShoppingBasket->loadByUser($this->oUser->getId());
-            }
-            $this->oInstantShoppingBasket->setOxuserId($this->oUser->getId());
+            $this->oInstantShoppingBasket = Registry::get(KlarnaInstantBasket::class);
             $this->oInstantShoppingBasket->setType($type);
             $this->oInstantShoppingBasket->setStatus(KlarnaInstantBasket::OPENED_STATUS);
         }
 
         $this->oInstantShoppingBasket->setBasketInfo(serialize($this->oBasket));
         $this->oInstantShoppingBasket->save();
-        Registry::getSession()->setVariable('instant_shopping_basket_id', $this->oInstantShoppingBasket->getId());
     }
 
     /**
@@ -346,7 +339,9 @@ class BasketAdapter
      */
     public function getMerchantData()
     {
-        return $this->oInstantShoppingBasket->getId();
+        return $this->oInstantShoppingBasket
+            ? $this->oInstantShoppingBasket->getId()
+            : $this->oBasket->tcklarnaISType;
     }
 
     /**
