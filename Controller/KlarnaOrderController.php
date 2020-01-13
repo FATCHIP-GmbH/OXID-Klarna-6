@@ -135,6 +135,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                         $this->_aOrderData = $oClient->getOrder();
                     } catch (KlarnaClientException $oEx) {
                         KlarnaUtils::logException($oEx);
+                        return;
                     }
 
                     if (KlarnaUtils::is_ajax() && $this->_aOrderData['status'] === 'checkout_complete') {
@@ -211,6 +212,11 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         }
 
         if ($oBasket->getPaymentId() === 'bestitamazon') {
+            return false;
+        }
+
+        $kcoId = Registry::getSession()->getVariable('klarna_checkout_order_id');
+        if ($oBasket->getPaymentId() === 'oxidpaypal' && $kcoId === null) {
             return false;
         }
 
@@ -300,13 +306,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                 $dt = new \DateTime();
                 Registry::getSession()->setVariable('sTokenTimeStamp', $dt->getTimestamp());
             }
-
-//            if (in_array($paymentId,  KlarnaPaymentModel::getKlarnaPaymentsIds('KP'))) {
-//                // ignore agreements
-//                $oConfig = Registry::getConfig();
-//                $oConfig->setConfigParam('blConfirmAGB', false);
-//                $oConfig->setConfigParam('blEnableIntangibleProdAgreement', false);
-//            }
         }
 
         // if user is not logged in set the user
