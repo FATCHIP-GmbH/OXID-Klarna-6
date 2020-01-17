@@ -12,6 +12,7 @@ use OxidEsales\Eshop\Core\Price;
 use OxidEsales\Eshop\Core\Registry;
 use stdClass;
 use TopConcepts\Klarna\Core\Exception\InvalidItemException;
+use TopConcepts\Klarna\Core\KlarnaUtils;
 
 abstract class BaseBasketItemAdapter
 {
@@ -235,7 +236,7 @@ abstract class BaseBasketItemAdapter
      */
     protected function validateData($orderLine, $key, $basketValue) {
 
-        Registry::getLogger()->log('debug', 'VALIDATING: ' . print_r([
+        KlarnaUtils::log('debug', 'VALIDATING: ' . print_r([
             'type' => $this->getType(),
             'key' => $key,
             'requestedValue' => $orderLine[$key],

@@ -7,6 +7,7 @@ namespace TopConcepts\Klarna\Controller;
 use OxidEsales\Eshop\Core\Controller\BaseController;
 use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Core\KlarnaLogs;
+use TopConcepts\Klarna\Core\KlarnaUtils;
 
 abstract class BaseCallbackController extends BaseController
 {
@@ -26,7 +27,7 @@ abstract class BaseCallbackController extends BaseController
     public function init() {
         parent::init();
         $this->requestData = $this->getRequestData();
-        Registry::getLogger()->log('info', $this->getFncName() . " request:\n" , $this->requestData);
+        KlarnaUtils::log('info', $this->getFncName() . " request:\n" , $this->requestData);
         if ($this->validateRequestData() === false) {
             Registry::getUtils()->showMessageAndExit('');
         }
@@ -108,7 +109,7 @@ abstract class BaseCallbackController extends BaseController
 
     protected function sendResponse($data)
     {
-        Registry::getLogger()->log('debug', 'CALLBACK_RESPONSE: ' .
+        KlarnaUtils::log('debug', 'CALLBACK_RESPONSE: ' .
             print_r($data, true)
         );
         Registry::getUtils()->setHeader('Content-Type: application/json');

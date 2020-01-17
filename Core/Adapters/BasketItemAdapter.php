@@ -12,6 +12,7 @@ use OxidEsales\Eshop\Core\Exception\NoArticleException;
 use OxidEsales\Eshop\Core\Exception\OutOfStockException;
 use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Core\Exception\InvalidItemException;
+use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Model\KlarnaArticle;
 
 /**
@@ -56,7 +57,7 @@ class BasketItemAdapter extends BaseBasketItemAdapter
                 // NoArticleException
                 // OutOfStockException
                 // Currently there is no proper way to handle it in update callback request
-                Registry::getLogger()->error($changeBasketException->getMessage(), $changeBasketException->getTrace());
+                KlarnaUtils::logException($changeBasketException);
             }
         }
 
@@ -67,7 +68,7 @@ class BasketItemAdapter extends BaseBasketItemAdapter
             $updateOrderLines = true;
         }
 
-        Registry::getLogger()->log('debug', 'ITEM_UPDATED: ' .
+        KlarnaUtils::log('debug', 'ITEM_UPDATED: ' .
             print_r([
                 'reference' => $this->itemData['reference'],
                 'title' => $this->oItem->getTitle(),

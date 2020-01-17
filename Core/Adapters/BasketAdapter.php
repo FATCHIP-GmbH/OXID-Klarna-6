@@ -110,7 +110,7 @@ class BasketAdapter
             $orderLine['merchant_data']['type'] = $typeName;
             $typeClass = $adapterClassMap[$typeName];
         } else {
-            Registry::getLogger()->log('error', 'UNRECOGNIZED_ORDER_LINE_TYPE', $orderLine);
+            KlarnaUtils::log('error', 'UNRECOGNIZED_ORDER_LINE_TYPE', $orderLine);
             throw new StandardException('UNRECOGNIZED_ORDER_LINE_TYPE ' . $orderLine['merchant_data']['type']);
         }
 
