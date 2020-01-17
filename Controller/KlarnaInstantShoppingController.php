@@ -110,7 +110,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             $basketAdapter->closeBasket($orderId);
 
         } catch (\Exception $exception) {
-            KlarnaUtils::logException($exception);
+            $this->logError($exception);
             try {
                 $this->declineOrder($exception);
             } catch (KlarnaClientException $declineOrderException) {
@@ -120,6 +120,14 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             return;
         }
         $this->db->commitTransaction();
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    protected function logError($exception)
+    {
+        KlarnaUtils::logException('[INSTANT SHOPPING]'.$exception->getMessage(), [$exception]);
     }
 
     /**
