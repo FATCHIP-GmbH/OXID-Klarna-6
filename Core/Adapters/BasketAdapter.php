@@ -176,7 +176,7 @@ class BasketAdapter
             yield $itemAdapter;
         }
         /** @var \stdClass $oVoucher */
-        foreach($this->oBasket->getVouchers() as $ref => $oVoucher) {
+        foreach((array)$this->oBasket->getVouchers() as $ref => $oVoucher) {
             $itemAdapter = $this->createItemAdapterForType(
                 ['merchant_data' => ['type' => 'voucher']],
                 $oVoucher
@@ -185,7 +185,7 @@ class BasketAdapter
             yield $itemAdapter;
         }
         /** @var \stdClass $oDiscount */
-        foreach($this->oBasket->getDiscounts() as $ref => $oDiscount) {
+        foreach((array)$this->oBasket->getDiscounts() as $ref => $oDiscount) {
             $itemAdapter = $this->createItemAdapterForType(
                 ['merchant_data' => ['type' => 'discount']],
                 $oDiscount
