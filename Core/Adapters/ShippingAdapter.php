@@ -12,6 +12,7 @@ use OxidEsales\Eshop\Core\Request;
 use OxidEsales\Eshop\Application\Model\PaymentList;
 use TopConcepts\Klarna\Core\Exception\InvalidItemException;
 use TopConcepts\Klarna\Core\Exception\KlarnaConfigException;
+use TopConcepts\Klarna\Core\KlarnaUtils;
 
 class ShippingAdapter extends BasketCostAdapter
 {
@@ -163,7 +164,7 @@ class ShippingAdapter extends BasketCostAdapter
             $this->oBasket->getPaymentId(),
             $this->oBasket->getPriceForPayment()
         );
-        Registry::getLogger()->log('debug', 'VALIDATING: ' . print_r([
+        KlarnaUtils::log('debug', 'VALIDATING: ' . print_r([
                 'type' => $this->getType(),
                 'isValid' => $isValidShippingId
             ], true));
@@ -184,6 +185,6 @@ class ShippingAdapter extends BasketCostAdapter
      */
     public function handleUpdate(&$updateData) {
         $updateData['shipping_options'] = $this->getShippingOptions($this->oBasket->getPaymentId());
-        Registry::getLogger()->log('debug', 'SHIPPING_OPTIONS_RECALCULATED');
+        KlarnaUtils::log('debug', 'SHIPPING_OPTIONS_RECALCULATED');
     }
 }

@@ -406,9 +406,30 @@ class KlarnaUtils
      */
     public static function logException($e) {
         if (method_exists(Registry::class, 'getLogger')) {
-            Registry::getLogger()->error($e->getMessage(), [$e]);
+            Registry::getLogger()->error('KLARNA ' . $e->getMessage(), [$e]);
         } else {
             $e->debugOut();
+        }
+    }
+
+    public static function log($level, $message, $context = []) {
+        if (method_exists(Registry::class, 'getLogger')) {
+            Registry::getLogger()->log($level, 'KLARNA ' . $message, $context);
+        } else {
+            $targetLogFile = 'oxideshop.log';
+            // eshop 6.0 log wrapper
+            $oConfig = Registry::getConfig();
+            $iDebug = $oConfig->getConfigParam('iDebug');
+            $level =  strtoupper($level);
+            $context = json_encode($context);
+            if ($level !== 'ERROR' && $iDebug === 0) {
+                return; // don't log anything besides errors in production mode
+            }
+            $date = (new \DateTime())->format('Y-m-d H:i:s');
+            Registry::getUtils()->writeToLog(
+                "[$date] OXID Logger.$level: KLARNA $message $context\n",
+                $targetLogFile
+            );
         }
     }
 }

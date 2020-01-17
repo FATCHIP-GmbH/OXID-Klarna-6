@@ -23,6 +23,7 @@ use TopConcepts\Klarna\Core\InstantShopping\HttpClient;
 use TopConcepts\Klarna\Core\InstantShopping\PaymentHandler;
 use TopConcepts\Klarna\Core\KlarnaLogs;
 use TopConcepts\Klarna\Core\KlarnaUserManager;
+use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Model\KlarnaInstantBasket;
 
 class KlarnaInstantShoppingController extends BaseCallbackController
@@ -126,7 +127,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
      */
     protected function logError($exception)
     {
-        Registry::getLogger()->error('[INSTANT SHOPPING]'.$exception->getMessage(), [$exception]);
+        KlarnaUtils::logException('[INSTANT SHOPPING]'.$exception->getMessage(), [$exception]);
     }
 
     /**
@@ -134,7 +135,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
      */
     protected function logOrderNotFound($declineOrderException)
     {
-        Registry::getLogger()->log('error', 'ORDER_NOT_FOUND: ' . $declineOrderException->getMessage());
+        KlarnaUtils::logException('[INSTANT SHOPPING] ORDER_NOT_FOUND: ' . $declineOrderException->getMessage());
     }
 
     protected function prepareOrderExecution()
@@ -235,7 +236,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
             $basketAdapter->validateOrderLines();
             $basketAdapter->storeBasket();
         } catch (\Exception $exception) {
-            Registry::getLogger()->error('[INSTANT SHOPPING UPDATE]'.$exception->getMessage(), [$exception]);
+            KlarnaUtils::logException($exception);
             return;
         }
 

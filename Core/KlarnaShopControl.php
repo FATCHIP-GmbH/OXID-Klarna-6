@@ -19,7 +19,7 @@ class KlarnaShopControl extends KlarnaShopControl_parent
         // remove KCO id from session
         if ((bool)$found) {
             Registry::getSession()->deleteVariable('klarna_checkout_order_id');
-            Registry::getLogger()->debug('Paypal button usage detected: ' . json_encode($found, 128));
+            KlarnaUtils::log('debug','Paypal button usage detected: ' . json_encode($found, 128));
         }
 
         return parent::_initializeViewObject($sClass, $sFunction, $aParams, $aViewsChain);
