@@ -219,8 +219,8 @@ class KlarnaInstaller extends ShopConfiguration
                                  array($de_prefix => 'Klarna Pay Now Direct Debit', $en_prefix => 'Klarna Pay Now Direct Debit'),
                              KlarnaPayment::KLARNA_SOFORT =>
                                  array($de_prefix => 'Klarna Sofortüberweisung', $en_prefix => 'Klarna Pay Now Instant'),
-                             KlarnaPayment::KLARNA_INSTANT_SHOPPING =>
-                                 array($de_prefix => 'Klarna Instant Shopping', $en_prefix => 'Klarna Instant Shopping'),
+//                             KlarnaPayment::KLARNA_INSTANT_SHOPPING =>
+//                                 array($de_prefix => 'Klarna Instant Shopping', $en_prefix => 'Klarna Instant Shopping'),
         );
 
         $sort   = -350;
