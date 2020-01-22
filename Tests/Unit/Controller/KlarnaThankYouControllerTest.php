@@ -6,6 +6,7 @@ namespace TopConcepts\Klarna\Testes\Unit\Controllers;
 use OxidEsales\Eshop\Application\Controller\ThankYouController;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\BasketItem;
+use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Controller\KlarnaThankYouController;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
@@ -22,21 +23,16 @@ use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 class KlarnaThankYouControllerTest extends ModuleUnitTestCase
 {
 
-    /**
-     * @throws \Exception
-     */
-    public function testRender_KCO()
-    {
+    protected function getSUT() {
         $payId = 'klarna_checkout';
-        $snippet = '<html snippet>';
         $klSessionId = 'fake_session';
 
         $this->setSessionParam('paymentid', $payId);
         $this->setSessionParam('klarna_checkout_order_id', $klSessionId);
 
-        $apiClient = $this->getMockBuilder(KlarnaCheckoutClient::class)->setMethods(['getOrder', 'getHtmlSnippet'])->getMock();
-        $apiClient->expects($this->once())->method('getOrder')->willReturn([]);
-        $apiClient->expects($this->once())->method('getHtmlSnippet')->willReturn($snippet);
+        $oOrderMock = $this->getMockBuilder(Order::class)->setMethods(['isLoaded'])->getMock();
+        $oOrderMock->expects($this->once())->method('isLoaded')->willReturn(true);
+        Registry::set(Order::class, $oOrderMock);
 
         $oBasketItem = oxNew(BasketItem::class);
         $oBasket = $this->getMockBuilder(\OxidEsales\Eshop\Application\Model\Basket::class)->setMethods(['getContents', 'getProductsCount', 'getOrderId'])->getMock();
@@ -48,20 +44,46 @@ class KlarnaThankYouControllerTest extends ModuleUnitTestCase
         $thankYouController = oxNew(ThankYouController::class);
         $this->setProtectedClassProperty($thankYouController, '_oBasket', $oBasket);
 
+        return $thankYouController;
+    }
+    /**
+     * @throws \Exception
+     */
+    public function testRender_KCO_client_exception()
+    {
+        $thankYouController = $this->getSUT();
         // check client
         // base code will log KlarnaWrongCredentialsException in this case, because getOrder will be called on not configured client
         $thankYouController->render();
         $this->assertLoggedException(KlarnaWrongCredentialsException::class, '');
         $this->assertInstanceOf(KlarnaCheckoutClient::class, $this->getProtectedClassProperty($thankYouController, 'client'));
+    }
 
+    public function testRender_KCO_success()
+    {
+        $snippet = '<html snippet>';
+        $apiClient = $this->getMockBuilder(KlarnaCheckoutClient::class)->setMethods(['getOrder', 'getHtmlSnippet'])->getMock();
+        $apiClient->expects($this->once())->method('getOrder')->willReturn([]);
+        $apiClient->expects($this->once())->method('getHtmlSnippet')->willReturn($snippet);
+
+        $thankYouController = $this->getSUT();
         // check success
         $this->setProtectedClassProperty($thankYouController, 'client', $apiClient);
         $thankYouController->render();
         $this->assertNull($this->getSessionParam('klarna_checkout_order_id'));
+    }
 
+    public function testRender_KCO_client_exception_2()
+    {
+        $snippet = '<html snippet>';
         // check exception
         $this->setSessionParam('klarna_checkout_order_id', 'test');
+        $apiClient = $this->getMockBuilder(KlarnaCheckoutClient::class)->setMethods(['getOrder', 'getHtmlSnippet'])->getMock();
+        $apiClient->expects($this->once())->method('getHtmlSnippet')->willReturn($snippet);
         $apiClient->expects($this->once())->method('getOrder')->willThrowException(new KlarnaClientException('Test'));
+        $thankYouController = $this->getSUT();
+        $this->setProtectedClassProperty($thankYouController, 'client', $apiClient);
+
         $thankYouController->render();
         $this->assertLoggedException(KlarnaClientException::class, 'Test');
     }

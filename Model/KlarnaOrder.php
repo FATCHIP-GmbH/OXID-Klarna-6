@@ -25,6 +25,12 @@ use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 
+/**
+ * Class KlarnaOrder
+ * @package TopConcepts\Klarna\Model
+ *
+ * @property bool _isLoaded
+ */
 class KlarnaOrder extends KlarnaOrder_parent
 {
 
@@ -280,5 +286,12 @@ class KlarnaOrder extends KlarnaOrder_parent
             return $this->isAnonymous;
 
         return $this->isAnonymous = KlarnaUtils::getShopConfVar('blKlarnaEnableAnonymization');
+    }
+
+    public function loadByKlarnaId($id) {
+        $query = $this->buildSelectString(array('tcklarna_orderid' => $id));
+        $this->_isLoaded = $this->assignRecord($query);
+
+        return $this->_isLoaded;
     }
 }

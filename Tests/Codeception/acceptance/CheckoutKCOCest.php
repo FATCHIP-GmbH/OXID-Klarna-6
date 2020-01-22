@@ -37,14 +37,19 @@ class CheckoutKCOCest {
         $I->wait(1);
         $I->executeJS('document.querySelector("[data-cid=\'button.buy_button\']").click()');
         $I->switchToIFrame(); // navigate back to to main document frame
+        $I->waitForPageLoad();
+        $I->waitForElement('#orderAddress');
+        $I->waitForPageLoad();
+        $I->click(Translator::translate('SUBMIT_ORDER'));
         $I->waitForElement('#thankyouPage');
         $I->waitForPageLoad();
 
         $billEmail = Fixtures::get('gKCOEmail'); // recall generated and stored email
         $I->seeInDatabase('oxuser', ['oxusername' => $billEmail, 'oxpassword' => '']);
-        $klarnaId = $I->grabFromDatabase('oxorder', 'TCKLARNA_ORDERID', ['OXBILLEMAIL' => $billEmail]);
-        $I->assertNotEmpty($klarnaId);
-        $I->seeInKlarnaAPI($klarnaId, "AUTHORIZED", false);
+        $orderNumber = $I->grabFromDatabase('oxorder', 'OXORDERNR', ['OXBILLEMAIL' => $billEmail]);
+        $I->seeInPageSource(
+            sprintf(Translator::translate('REGISTERED_YOUR_ORDER'), $orderNumber)
+        );
     }
 
     /**

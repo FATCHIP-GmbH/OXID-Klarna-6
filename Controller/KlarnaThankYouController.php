@@ -51,24 +51,20 @@ class KlarnaThankYouController extends KlarnaThankYouController_parent
         }
 
         if ($sKlarnaId = Registry::getSession()->getVariable('klarna_checkout_order_id')) {
-            $oOrder = oxNew(Order::class);
-            $query = $oOrder->buildSelectString(array('tcklarna_orderid' => $sKlarnaId));
-            $oOrder->assignRecord($query);
-            $sCountryISO = KlarnaUtils::getCountryISO($oOrder->getFieldData('oxbillcountryid'));
-            $this->addTplParam("klOrder", $oOrder);
+            $oOrder = Registry::get(Order::class);
+            $oOrder->loadByKlarnaId($sKlarnaId);
+            if ($oOrder->isLoaded()) {
+                $this->loadClient($oOrder);
+                try {
+                    $this->client->getOrder($sKlarnaId);
 
-            if(!$this->client){
-                $this->client = KlarnaCheckoutClient::getInstance($sCountryISO);
+                } catch (KlarnaClientException $e) {
+                    KlarnaUtils::logException($e);
+                }
+                // add klarna confirmation snippet
+                $this->addTplParam("klOrder", $oOrder);
+                $this->addTplParam("sKlarnaIframe", $this->client->getHtmlSnippet());
             }
-
-            try {
-                $this->client->getOrder($sKlarnaId);
-
-            } catch (KlarnaClientException $e) {
-                KlarnaUtils::logException($e);
-            }
-            // add klarna confirmation snippet
-            $this->addTplParam("sKlarnaIframe", $this->client->getHtmlSnippet());
         }
 
         KlarnaUtils::fullyResetKlarnaSession();
@@ -112,5 +108,13 @@ class KlarnaThankYouController extends KlarnaThankYouController_parent
     {
         Registry::getSession()->deleteVariable('instant_shopping_basket_id');
         $oInstantShoppingBasket->delete();
+    }
+
+    protected function loadClient($oOrder) {
+        if(!$this->client){
+            $this->client = KlarnaCheckoutClient::getInstance(
+                KlarnaUtils::getCountryISO($oOrder->getFieldData('oxbillcountryid'))
+            );
+        }
     }
 }
