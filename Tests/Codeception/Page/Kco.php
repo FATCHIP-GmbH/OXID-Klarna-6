@@ -136,7 +136,7 @@ class Kco extends Page
     public function fillKcoShippingForm() {
         $I = $this->user;
         $I->wait(4); // wait for loaders and overlays to be hidden
-        $I->click('#SHIPMO-container #preview__touchable');
+        $I->click('#preview__preview__touchable');
         $I->switchToIFrame(); // go back to the main content
         $I->waitForElement('#' . $this->frames['full']);
         $I->switchToIFrame($this->frames['full']);
@@ -144,7 +144,7 @@ class Kco extends Page
         $I->fillField('//*[@id="postal_code"]', $I->getKlarnaDataByName('sKCOFormDelPostCode'));
         $I->fillField('//*[@id="street_address"]', $I->getKlarnaDataByName('sKCOFormDelStreetName') .' '. $I->getKlarnaDataByName('sKCOFormDelStreetNumber'));
         $I->fillField('//*[@id="city"]', $I->getKlarnaDataByName('sKCOFormDelCity'));
-        $I->click('//*[@id="SHIPMO-dialog-submit-button"]/div/div[2]');
+        $I->click('//*[@id="SHIPMO-dialog-submit-button"]');
         $I->switchToIFrame();
         $I->switchToIFrame($this->frames['main']);
         $I->wait(3);

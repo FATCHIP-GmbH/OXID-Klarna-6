@@ -53,7 +53,7 @@ class CheckoutKCOCest {
     }
 
     /**
-``     * @group KCO_frontend
+     * @group KCO_frontend
      * @dataProvider klarnaKCOMethodsProvider
      * @param AcceptanceTester $I
      * @param Example $dataSet
