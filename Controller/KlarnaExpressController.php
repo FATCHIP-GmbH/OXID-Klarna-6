@@ -146,7 +146,7 @@ class KlarnaExpressController extends FrontendController
         $oBasket->setBasketUser($this->_oUser);
 
         $this->blShowPopup = $this->showCountryPopup();
-        $this->addTplParam("blShowPopUp", $this->blShowPopup);
+
 
         if ($this->blockIframeRender) {
             return $this->_sThisTemplate;
@@ -532,7 +532,7 @@ class KlarnaExpressController extends FrontendController
             $oCountry = oxNew(Country::class);
             $oCountry->load($oCountry->getIdByCode($sCountryISO));
             $this->addTplParam("sCountryName", $oCountry->oxcountry__oxtitle->value);
-
+            $this->addTplParam("blShowPopUp", $this->blShowPopup);
             $this->addTplParam("sPurchaseCountry", $sCountryISO);
             $this->addTplParam("sKlarnaIframe", $this->getKlarnaClient($sCountryISO)->getHtmlSnippet());
             $this->addTplParam("sCurrentUrl", Registry::get(UtilsUrl::class)->getCurrentUrl());

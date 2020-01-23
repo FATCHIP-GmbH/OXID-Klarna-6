@@ -27,7 +27,9 @@
                     <div class="form-group">
                         <select class="form-control js-country-select" id="other-countries">
                             <option disabled selected>[{oxmultilang ident="TCKLARNA_MORE_COUNTRIES"}]</option>
+                            [{assign var="shopCountriesCount" value=0}]
                             [{foreach from=$oView->getActiveShopCountries() item="country" name="otherCountries" }]
+                                [{counter assign="shopCountriesCount"}]
                                 <option value="[{$country->oxcountry__oxisoalpha2->value}]">[{$country->oxcountry__oxtitle->value}]</option>
                             [{/foreach}]
                         </select>
@@ -42,7 +44,7 @@
 </div>
 <script type="text/javascript">
     var showModal = false;
-    [{if $blShowPopUp && $sKlarnaIframe}]
+    [{if $blShowPopUp && $sKlarnaIframe && $shopCountriesCount > 1}]
         showModal = true;
     [{/if}]
     if (window.addEventListener) {
