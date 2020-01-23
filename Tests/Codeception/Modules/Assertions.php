@@ -198,8 +198,11 @@ class Assertions extends Module
     {
         foreach ($dataMapper as $fieldName => $anotherFieldName) {
 //            print_r("Comparing $fieldName = $expectedArray[$fieldName] to $anotherFieldName = $actualArray[$anotherFieldName]\n");
-            // remove klarna postal_code formatting
-            if ($anotherFieldName === 'postal_code') { $actualArray[$anotherFieldName] = str_replace(' ', '', $actualArray[$anotherFieldName]);}
+            // remove postal_code formatting
+            if ($anotherFieldName === 'postal_code') {
+                $actualArray[$anotherFieldName] = str_replace(' ', '', $actualArray[$anotherFieldName]);
+                $expectedArray[$anotherFieldName] = str_replace(' ', '', $expectedArray[$anotherFieldName]);
+            }
             $this->assertEquals($expectedArray[$fieldName], $actualArray[$anotherFieldName]);
         }
     }
