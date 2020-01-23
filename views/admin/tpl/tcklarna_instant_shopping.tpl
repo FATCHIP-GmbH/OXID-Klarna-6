@@ -213,7 +213,11 @@
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td>
+                                            <td class="info-block">
+                                                <span class="kl-tooltip"
+                                                      title="[{oxmultilang ident="TCKLARNA_IS_DEFAULT_COUNTRY_TIP"}]">
+                                                    <i class="fa fa-question fa-lg" aria-hidden="true"></i>
+                                                </span>
                                             </td>
                                         </tr>
                                         <tr class="dark">
@@ -258,7 +262,7 @@
                                             </td>
                                             <td class="info-block">
                                                 <span class="kl-tooltip"
-                                                      title="[{oxmultilang ident="TCKLARNA_SET_TAC_URI"}]">
+                                                      title="[{oxmultilang ident="TCKLARNA_IS_TERMS_URI_TIP"}]">
                                                     <i class="fa fa-question fa-lg" aria-hidden="true"></i>
                                                 </span>
                                             </td>

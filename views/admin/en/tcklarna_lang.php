@@ -365,4 +365,6 @@ You can deactivate it anytime by removing the codes again.',
     'TCKLARNA_IS_BUTTON_SETTINGS_TYPE' => 'Type',
     'TCKLARNA_IS_SETTING_PHONE_MANDATORY' => 'Phone number mandatory',
     'TCKLARNA_IS_SETTING_PHONE_MANDATORY_TOOLTIP' => 'Please choose whether you want to make the phone number mandatory.',
+    'TCKLARNA_IS_DEFAULT_COUNTRY_TIP'            => 'Please choose from the list, which country should be preselected by default when Klarna Instant Shopping is entered, while customer has not specified his country yet.',
+    'TCKLARNA_IS_TERMS_URI_TIP' => 'Enter the URL to your terms and conditions here. This page will be linked from inside the Klarna Instant Shopping popup. A valid URL starting with https:// must be specified.',
 );
