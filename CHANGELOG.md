@@ -1,7 +1,11 @@
 ### 5.1.0
-* On-Site Message Implementation
+* Implementation of Klarna Instant Shopping
+* Implementation or Klarna On-Site Messaging
 * PaymentGateway implementation for KP
-* Preperation for Klarna Instant Shopping
+* Bugfix for KCO Ext. Payment PayPal: Salutation, Company or c/o field and billing address lost
+* Update of Klarna merchant center URLs in admin backend
+* Rename of "Slice it" to "Financing"
+* Hide KCO country selector with only one active country
 
 ### 5.0.2
 * Acknowledge bug fix
