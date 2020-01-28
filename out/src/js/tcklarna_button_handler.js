@@ -65,10 +65,10 @@ function KlButtonManager (buttonConfig) {
             $.extend(buttonConfig, updateData);
             // push update to klarna
             Klarna.InstantShopping.update(
-                $.extend(updateData, {setup: config.setup})
+                $.extend(updateData, {setup: config.setup}, {merchant_urls: config.merchant_urls})
             );
+            console.log('updateData: ', updateData);
         }
-        console.log('updateData: ', updateData);
     };
 
     this.amountInputChangedHandler = function (evt) {
