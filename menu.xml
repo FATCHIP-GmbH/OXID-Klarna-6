@@ -9,7 +9,7 @@
             <SUBMENU id="TCKLARNA_EXTERNAL_PAYMENTS" cl="KlarnaExternalPayments" />
             <SUBMENU id="TCKLARNA_EXTRA_MERCHANT_DATA" cl="KlarnaEmdAdmin" />
             <SUBMENU id="TCKLARNA_ON_SITE_MESSAGING" cl="KlarnaMessaging" />
-<!--            <SUBMENU id="TCKLARNA_INSTANT_SHOPPING_MENU" cl="KlarnaInstantShopping" />-->
+            <SUBMENU id="TCKLARNA_INSTANT_SHOPPING_MENU" cl="KlarnaInstantShopping" />
         </MAINMENU>
         <MAINMENU id="mxorders">
             <SUBMENU id="mxdisplayorders" cl="admin_order" list="order_list">

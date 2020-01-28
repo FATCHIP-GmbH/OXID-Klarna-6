@@ -15,7 +15,6 @@ class InstantShoppingCest
      */
     public function visibleButton(AcceptanceTester $I, $scenario)
     {
-        $scenario->skip('InstantShopping will be included on next release');
         $this->activateInstantShopping($I);
         $I->openShop();
         $I->waitForPageLoad();
@@ -40,7 +39,6 @@ class InstantShoppingCest
      */
     public function instantShopping(AcceptanceTester $I, $scenario)
     {
-        $scenario->skip('InstantShopping will be included on next release');
         $this->activateInstantShopping($I);
         $I->wait(3);
         $I->openShop();
