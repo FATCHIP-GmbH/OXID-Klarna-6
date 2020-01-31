@@ -1,15 +1,16 @@
 [{$smarty.block.parent}]
-
-<div id="instant">
+<div class="clearfix"></div>
+<div id="instant" class="pull-right">
     [{include file="tcklarna_instant_shopping_button.tpl"}]
 </div>
 
 <style>
     #instant{
-        float: right;
-        padding-right: 15px !important;
-        margin: 0 15px 0 0 !important;
-        border-right: 1px solid #ccc;
-        border-right-color: rgb(204, 204, 204);
+        margin-top:15px;
+    }
+    button.nextStep {
+        width: 300px;
+        padding: 15px;
+        border-radius: 0;
     }
 </style>
