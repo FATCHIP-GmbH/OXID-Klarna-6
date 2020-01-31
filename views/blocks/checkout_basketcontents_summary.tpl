@@ -5,7 +5,11 @@
 [{if $aKlPromotion and $sKlarnaMessagingScript|trim}]
     <div class="clear clearfix"></div>
 
-    <div class="kl-basket-rate-note pull-right" style="margin-bottom: 20px;">
-        [{$aKlPromotion}]
+    <div class="col-12">
+        <div class="kl-basket-rate-note pull-right float-right"
+                [{if $oViewConf->isActiveThemeFlow()}]style="margin-bottom: 20px;"[{/if}]
+        >
+            [{$aKlPromotion}]
+        </div>
     </div>
 [{/if}]
