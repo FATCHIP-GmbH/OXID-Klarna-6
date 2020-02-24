@@ -324,20 +324,27 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
 
     public function testGetPaymentList()
     {
+        $getSUT = function() {
+            $oPaymentController = $this->getMockBuilder(PaymentController::class)
+                ->setMethods(['tckl_getPaymentListParent'])
+                ->getMock();
+            $oPayment = 'fakeObject';
+            $payList = [
+                'klarna_pay_later'        => $oPayment,
+                'id_1'                    => $oPayment,
+                'klarna_checkout'         => $oPayment,
+                'klarna_slice_it'         => $oPayment,
+                'id_4'                    => $oPayment,
+                'klarna_instant_shopping' => $oPayment,
+            ];
+            $oPaymentController->expects($this->any())->method('tckl_getPaymentListParent')
+                ->willReturn($payList);
 
-        $oPaymentController = oxNew(PaymentController::class);
-        $oPayment           = 'fakeObject';
+            return $oPaymentController;
+        };
 
-        $payList = [
-            'klarna_pay_later' => $oPayment,
-            'id_1'             => $oPayment,
-            'klarna_checkout'  => $oPayment,
-            'klarna_slice_it'  => $oPayment,
-            'id_4'             => $oPayment,
-        ];
-
-        $this->setProtectedClassProperty($oPaymentController, 'aPaymentList', $payList);
-        $result = $oPaymentController->getPaymentList();
+        $this->setModuleMode('KP');
+        $result = $getSUT()->getPaymentList();
         $this->assertEquals([
             'klarna_pay_later' => 'fakeObject',
             'id_1'             => 'fakeObject',
@@ -346,8 +353,7 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
         ], $result);
 
         $this->setModuleMode('KCO');
-        $this->setProtectedClassProperty($oPaymentController, 'aPaymentList', $payList);
-        $result = $oPaymentController->getPaymentList();
+        $result = $getSUT()->getPaymentList();
         $this->assertEquals([
             'id_1'             => 'fakeObject',
             'id_4'             => 'fakeObject'

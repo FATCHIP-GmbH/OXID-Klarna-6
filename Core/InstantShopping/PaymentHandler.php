@@ -45,7 +45,7 @@ class PaymentHandler implements PaymentHandlerInterface
             $this->context['authorization_token'],
             $this->context['order']
         );
-            KlarnaUtils::log(debug, __METHOD__, (array)$approveResponse);
+        KlarnaUtils::log('debug', __METHOD__, (array)$approveResponse);
 
         $result = $this->checkFraudStatus($approveResponse, $oOrder);
         if ($result) {

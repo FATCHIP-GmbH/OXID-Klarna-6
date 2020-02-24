@@ -323,7 +323,7 @@ class KlarnaInstantShoppingController extends BaseCallbackController
     protected function extractOrderException($result) {
         $orderException = new InvalidOrderExecuteResult('INVALID_ORDER_EXECUTE_RESULT: ' . print_r($result, true));
         $errors = Registry::getSession()->getVariable('Errors');
-        if (count($errors) > 0) {
+        if ($errors && count($errors) > 0) {
             foreach ($errors as $location => $serializedExceptions) {
                 foreach ($serializedExceptions as $serializedException) {
                     /** @var  ExceptionToDisplay $oException */

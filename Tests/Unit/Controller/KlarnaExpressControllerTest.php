@@ -273,9 +273,8 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase {
 
     public function testRenderBlockIframeRender() {
         $this->setRequestParameter('sslredirect', 'forced');
-        $keController = $this->getMockBuilder(KlarnaExpressController::class)->setMethods(['addTplParam', 'getKlarnaOrder'])->getMock();
+        $keController = $this->getMockBuilder(KlarnaExpressController::class)->setMethods(['getKlarnaOrder'])->getMock();
         $this->setProtectedClassProperty($keController, 'blockIframeRender', true);
-        $keController->expects($this->once())->method('addTplParam')->with('blShowPopUp');
         $keController->expects($this->never())->method('getKlarnaOrder');
         $keController->init();
         $result = $keController->render();
