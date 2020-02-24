@@ -141,7 +141,8 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
             $promotion = KlarnaUtils::getShopConfVar($key);
             $promotion = preg_replace('/data-purchase_amount=\"(\d*)\"/', 'data-purchase_amount="%s"', $promotion);
             $price = 0;
-            if($key == "sKlarnaCreditPromotionProduct" && $detailProduct != null) {
+            $productHasPrice = Registry::getConfig()->getConfigParam('bl_perfLoadPrice');
+            if($key == "sKlarnaCreditPromotionProduct" && $detailProduct != null && $productHasPrice) {
                 $price = $detailProduct->getPrice()->getBruttoPrice();
                 $price = number_format((float)$price*100., 0, '.', '');
             }
