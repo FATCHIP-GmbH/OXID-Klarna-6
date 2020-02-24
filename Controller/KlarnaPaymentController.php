@@ -201,14 +201,14 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
          */
         if (!$this->aPaymentList) {
             $this->aPaymentList = parent::getPaymentList();
-        }
-        if (KlarnaUtils::isKlarnaPaymentsEnabled()) {
-            // remove needless methods from the list
-            unset($this->aPaymentList[KlarnaPaymentModel::KLARNA_PAYMENT_CHECKOUT_ID]);
 
-        } else {
-            $klarnaPayments = KlarnaPaymentModel::getKlarnaPaymentsIds();
-            foreach ($klarnaPayments as $paymentId) {
+            $allKlarnaPaymentIds = KlarnaPaymentModel::getKlarnaPaymentsIds();
+            $toRemove = $allKlarnaPaymentIds;
+            if (KlarnaUtils::isKlarnaPaymentsEnabled()) {
+                $KPPaymentIds = KlarnaPaymentModel::getKlarnaPaymentsIds('KP');
+                $toRemove = array_diff($allKlarnaPaymentIds, $KPPaymentIds);
+            }
+            foreach ($toRemove as $paymentId) {
                 unset($this->aPaymentList[$paymentId]);
             }
         }
