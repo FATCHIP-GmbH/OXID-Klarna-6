@@ -65,6 +65,8 @@ class KlarnaInstantShoppingTest extends ModuleUnitTestCase
 
     public function testGenerateAndSaveButtonKey()
     {
+        $validSSLUrl = 'https://test.de';
+        $this->setConfigParam('sSSLShopURL', $validSSLUrl);
         $instantShoppingClient = $this->getMockBuilder(HttpClient::class)
             ->disableOriginalConstructor()
             ->setMethods(['createButton'])
@@ -88,6 +90,20 @@ class KlarnaInstantShoppingTest extends ModuleUnitTestCase
         $result = $class->generateAndSaveButtonKey();
         $this->assertEmpty($result);
 
+    }
+
+    public function testGenerateAndSaveButtonKeyInvalidSSlUrl()
+    {
+        $inValidSSLUrl = 'http://test.de';
+        $this->setConfigParam('sSSLShopURL', $inValidSSLUrl);
+        $SUT = $this->getMockBuilder(KlarnaInstantShopping::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['isReplaceButtonRequest'])
+            ->getMock();
+
+        $SUT->generateAndSaveButtonKey();
+        $errors = $this->getSessionParam('Errors');
+        $this->assertContains('TCKLARNA_ERROR_SHOP_SSL_NOT_CONFIGURED', print_r($errors, true));
     }
 
     public function testGetButtonRequestData()

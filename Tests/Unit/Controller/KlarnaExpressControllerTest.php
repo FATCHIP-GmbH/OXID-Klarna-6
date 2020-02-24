@@ -190,29 +190,24 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase {
      * @param $expectedResult
      * @dataProvider checkSslDataProvider
      */
-    public function testCheckSsl($sslredirect, $getCurrentShopURL, $expectedResult) {
+    public function testCheckSsl($sslredirect, $expectedResult) {
+        $this->setConfigParam('sShopURL', 'http://test.de');
+        $this->setConfigParam('sSSLShopURL', 'https://test.de');
         $oRequest = $this->getMockBuilder(Request::class)->setMethods(['getRequestEscapedParameter'])->getMock();
         $oRequest->expects($this->once())->method('getRequestEscapedParameter')->willReturn($sslredirect);
-        $oConfig = $this->getMockBuilder(Config::class)->setMethods(['getCurrentShopURL', 'getSSLShopURL'])->getMock();
-        $oConfig->expects($this->once())->method('getCurrentShopURL')->willReturn($getCurrentShopURL);
-        $oConfig->expects($this->any())->method('getSSLShopURL')->willReturn(str_replace('http://', 'https://', $getCurrentShopURL));
-        \OxidEsales\Eshop\Core\Registry::set(\OxidEsales\Eshop\Core\Config::class, $oConfig);
-
-        $kcoController = $this->getMockBuilder(KlarnaExpressController::class)->setMethods(['getConfig'])->getMock();
-
+        $kcoController = oxNew(KlarnaExpressController::class);
         $kcoController->checkSsl($oRequest);
-
-        $this->assertEquals($expectedResult, \oxUtilsHelper::$sRedirectUrl);
+        $this->assertContains((string)$expectedResult, (string)\oxUtilsHelper::$sRedirectUrl);
     }
 
     public function checkSslDataProvider() {
-        $forceSslUrl = $this->getConfig()->getSSLShopURL() . 'index.php?sslredirect=forced&cl=KlarnaExpress';
+        $forceSslUrlSuffix = 'index.php?sslredirect=forced&cl=KlarnaExpress';
 
         return [
-            ['forced', $this->getConfig()->getShopUrl(), null],
-            ['forced', $this->getConfig()->getSSLShopURL(), null],
-            ['asdf', $this->getConfig()->getSSLShopURL(), null],
-            ['asdf', $this->getConfig()->getShopUrl(), $forceSslUrl],
+            ['forced', null],
+            ['forced', null],
+            ['asdf', null],
+            ['asdf', $forceSslUrlSuffix]
         ];
     }
 
