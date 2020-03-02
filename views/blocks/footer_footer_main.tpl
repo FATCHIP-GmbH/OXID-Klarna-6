@@ -61,7 +61,7 @@
                 </style>
 
                 <div class="kl-logo">
-                    <div class="[{if ($aKlFooter.class === 'logoBlack' || $aKlFooter.class === 'logoWhite') }]kl-logo-inner[{/if}]">
+                    <div class="[{if ($aKlFooter.class === 'logoFooter') }]kl-logo-inner[{/if}]">
                         <img src="[{$aKlFooter.url}]">
                     </div>
                 </div>

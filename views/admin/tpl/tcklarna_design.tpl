@@ -350,31 +350,11 @@
                                             </tr>
                                             <tr class="dark">
                                                 <td class="half">
-                                                    [{ oxmultilang ident="TCKLARNA_BLACK" }]
-                                                </td>
-                                                <td class="half">
-                                                    [{ oxmultilang ident="TCKLARNA_WHITE" }]
-                                                </td>
-                                            </tr>
-                                            <tr class="dark">
-                                                <td class="half">
-                                                    <input type="radio" id="logo-black" name="confstrs[sKlarnaFooterValue]"
-                                                           value="logoBlack"
-                                                           [{ if $confstrs.sKlarnaFooterValue == 'logoBlack' }]checked="checked"[{/if}]>
-                                                    <label class="kl-logo white" for="logo-black">
-                                                        <div class="kl-logo-inner">
-                                                            <img class="" src="[{ $aKlarnaFooterImgUrls.logoBlack }]">
-                                                        </div>
-                                                    </label>
-                                                </td>
-                                                <td class="half">
-                                                    <input type="radio" id="logo-white" name="confstrs[sKlarnaFooterValue]"
-                                                           value="logoWhite"
-                                                           [{ if $confstrs.sKlarnaFooterValue == 'logoWhite' }]checked[{/if}]>
-                                                    <label class="kl-logo black" for="logo-white">
-                                                        <div class="kl-logo-inner">
-                                                            <img class="" src="[{ $aKlarnaFooterImgUrls.logoWhite }]">
-                                                        </div>
+                                                    <input type="radio" id="logo-footer" name="confstrs[sKlarnaFooterValue]"
+                                                           value="logoFooter"
+                                                           [{ if $confstrs.sKlarnaFooterValue == 'logoFooter' }]checked="checked"[{/if}]>
+                                                    <label for="logo-footer">
+                                                        <img class="" src="[{ $aKlarnaFooterImgUrls.logoFooter }]">
                                                     </label>
                                                 </td>
                                             </tr>

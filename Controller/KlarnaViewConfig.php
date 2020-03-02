@@ -92,7 +92,9 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
 
             $url  = sprintf(KlarnaConsts::getFooterImgUrls(KlarnaUtils::getShopConfVar('sKlarnaFooterValue')), $sLocale);
             $from = '/' . preg_quote('-', '/') . '/';
-            $url  = preg_replace($from, '_', $url, 1);
+            if(KlarnaUtils::getShopConfVar('sKlarnaFooterValue') != 'logoFooter') {
+                $url  = preg_replace($from, '_', $url, 1);
+            }
 
             $response = array(
                 'url'   => $url,

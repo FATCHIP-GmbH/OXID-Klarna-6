@@ -174,8 +174,7 @@ class KlarnaConsts
             'longWhite'  => '//cdn.klarna.com/1.0/shared/image/generic/badge/%s/checkout/long-white.png?width=440',
             'shortBlack' => '//cdn.klarna.com/1.0/shared/image/generic/badge/%s/checkout/short-blue.png?width=312',
             'shortWhite' => '//cdn.klarna.com/1.0/shared/image/generic/badge/%s/checkout/short-white.png?width=312',
-            'logoBlack'  => '//cdn.klarna.com/1.0/shared/image/generic/logo/en_gb/basic/logo_black.png',
-            'logoWhite'  => '//cdn.klarna.com/1.0/shared/image/generic/logo/en_gb/basic/logo_white.png',
+            'logoFooter'  => 'https://x.klarnacdn.net/payment-method/assets/badges/generic/klarna.svg'
         );
 
         if ($key)

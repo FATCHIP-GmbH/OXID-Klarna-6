@@ -257,14 +257,10 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
     {
         return [
             ['KP', 0, 'longBlack',false,false, false],
-            ['KP', 1, 'logoBlack',false,false, false],
-            ['KP', 2, 'logoBlack',false,false, [
-                'url' => '//cdn.klarna.com/1.0/shared/image/generic/logo/en_gb/basic/logo_black.png',
-                'class' => 'logoBlack'
-            ]],
-            ['KP', 2, 'logoWhite',false,false, [
-                'url' => '//cdn.klarna.com/1.0/shared/image/generic/logo/en_gb/basic/logo_white.png',
-                'class' => 'logoWhite'
+            ['KP', 1, 'logoFooter',false,false, false],
+            ['KP', 2, 'logoFooter',false,false, [
+                'url' => 'https://x.klarnacdn.net/payment-method/assets/badges/generic/klarna.svg',
+                'class' => 'logoFooter'
             ]],
             ['KCO', 0, 'longBlack', false,false, false],
             ['KCO', 1, 'longBlack',false,false, [
@@ -283,17 +279,13 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
                 'url' => '//cdn.klarna.com/1.0/shared/image/generic/badge/de_de/checkout/short-white.png?width=312',
                 'class' => 'shortWhite'
             ]],
-            ['KCO', 2, 'logoBlack',false,false, [
-                'url' => '//cdn.klarna.com/1.0/shared/image/generic/logo/en_gb/basic/logo_black.png',
-                'class' => 'logoBlack'
+            ['KCO', 2, 'logoFooter',false,false, [
+                'url' => 'https://x.klarnacdn.net/payment-method/assets/badges/generic/klarna.svg',
+                'class' => 'logoFooter'
             ]],
-            ['KCO', 2, 'logoWhite',false,false, [
-                'url' => '//cdn.klarna.com/1.0/shared/image/generic/logo/en_gb/basic/logo_white.png',
-                'class' => 'logoWhite'
-            ]],
-            ['KCO', 2, 'logoWhite','script','promo', [
-                'url' => '//cdn.klarna.com/1.0/shared/image/generic/logo/en_gb/basic/logo_white.png',
-                'class' => 'logoWhite',
+            ['KCO', 2, 'logoFooter','script','promo', [
+                'url' => 'https://x.klarnacdn.net/payment-method/assets/badges/generic/klarna.svg',
+                'class' => 'logoFooter',
                 'script' => 'script',
                 'promotion' => 'promo'
             ]],
