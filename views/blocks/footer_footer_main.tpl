@@ -5,35 +5,6 @@
     [{$aKlFooter.script}]
 [{/if}]
 [{oxscript include=$oViewConf->getModuleUrl('tcklarna','out/src/js/tcklarna_scripts.js') priority=10 }]
-[{assign var="sKlBanner" value=$oViewConf->getKlarnaHomepageBanner() }]
-[{*  *}]
-[{if ($sKlBanner && $oView->getClassName() === 'start') }]
-    [{if $oViewConf->getActiveTheme() == 'azure' }]
-        <script>
-            var re = /src="(.*)"/g;
-            var strBannerSrc = '[{$sKlBanner|escape:javascript}]';
-            var url = re.exec(strBannerSrc)[1];
-            var separator = document.createElement('div');
-            separator.style.height = '20px';
-            document.querySelector('#content div').after(separator);
-
-            var bannerSrc = document.createElement('script');
-            bannerSrc.setAttribute('src', url);
-            bannerSrc.async = true;
-
-            var wrapper = document.createElement('div');
-            wrapper.appendChild(bannerSrc);
-            document.querySelector('#content div').after(wrapper);
-        </script>
-    [{else}]
-        [{capture assign=klContentMainBanner }]
-            [{$sKlBanner }]
-            <div style="height:20px;"></div>
-        [{/capture}]
-        [{assign var=klContentMainBanner value=$klContentMainBanner|escape:javascript }]
-        [{oxscript add='$(\'#content div:first\').after(\''|cat:$klContentMainBanner|cat:'\');' }]
-    [{/if}]
-[{/if}]
 
 [{if $aKlFooter}]
 

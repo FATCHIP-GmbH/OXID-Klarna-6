@@ -158,7 +158,6 @@ class KlarnaBaseConfigTest extends ModuleUnitTestCase {
             'sKlarnaAnonymizedProductTitle'    => 'anonymized product',
             'sKlarnaAnonymizedProductTitle_DE' => 'Produktname',
             'sKlarnaAnonymizedProductTitle_EN' => 'Product name',
-            'sKlarnaBannerSrc_DE'              => '&lt;script src=&quot;https://embed.bannerflow.com/599d7ec18d988017005eb279?targeturl=https://www.klarna.com&amp;politeloading=off&amp;merchantid={{merchantid}}&amp;responsive=on&quot; async&gt;&lt;/script&gt;',
             'sKlarnaCancellationRightsURI_DE'  => 'https://www.example.com/cancel_deutsch.pdf',
             'sKlarnaCancellationRightsURI_EN'  => 'https://www.example.com/cancel_english.pdf',
             'sKlarnaDefaultCountry'            => 'DE',

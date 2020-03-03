@@ -84,8 +84,6 @@ class KlarnaInstaller extends ShopConfiguration
 
         $instance->addConfigVars();
 
-        $instance->addActions();
-
         $instance->addKlarnaPaymentsMethods();
     }
 
@@ -138,7 +136,6 @@ class KlarnaInstaller extends ShopConfiguration
                 'blKlarnaEnableAutofocus'              => 1,
                 //                'tcklarna_blKlarnaEnableDHLPackstations'        => 1,
                 'blKlarnaEnablePreFilling'             => 1,
-                'blKlarnaDisplayBanner'                => 1,
                 'blKlarnaPreFillNotification'          => 1,
             ),
             'str'    => array(
@@ -438,45 +435,6 @@ class KlarnaInstaller extends ShopConfiguration
         $oMetaData = oxNew(DbMetaDataHandler::class);
         $oMetaData->updateViews();
         //}
-    }
-
-    /**
-     * Adds Teaser Action
-     */
-    protected function addActions()
-    {
-        $shopId = $this->getConfig()->getShopId();
-        // Klarna Teaser
-        $oxId             = 'klarna_teaser_' . $shopId;
-        $sTitle           = 'Klarna Teaser';
-        $sLink            = '';
-        $sFileName        = 'klarna-banner.png';
-        $actionsMediaPath = Registry::getConfig()->getConfigParam('sShopDir') . '/out/pictures/promo/';
-
-        $oActionKlarnaTeaser = oxNew(Actions::class);
-        $oActionKlarnaTeaser->setShopId($shopId);
-        $oActionKlarnaTeaser->load($oxId);
-        $oActionKlarnaTeaser->setId($oxId);
-        $active                                   = $oActionKlarnaTeaser->oxactions__oxactive->value ?: 0;                                                // assign old value
-        $oActionKlarnaTeaser->oxactions__oxtype   = new Field(3, Field::T_RAW);
-        $oActionKlarnaTeaser->oxactions__oxactive = new Field($active, Field::T_RAW);
-
-        // set multi language fields
-        $oActionKlarnaTeaser->setEnableMultilang(false);
-        $aLangs = Registry::getLang()->getLanguageArray();
-        foreach ($aLangs as $oLang) {
-            $langFileName                                        = $oLang->oxid . '_' . $sFileName;
-            $sTag                                                = Registry::getLang()->getLanguageTag($oLang->id);
-            $oActionKlarnaTeaser->{'oxactions__oxtitle' . $sTag} = new Field($sTitle, Field::T_RAW);
-            $oActionKlarnaTeaser->{'oxactions__oxlink' . $sTag}  = new Field($sLink, Field::T_RAW);
-            $oActionKlarnaTeaser->{'oxactions__oxpic' . $sTag}   = new Field($langFileName, Field::T_RAW);
-
-            $filePath = self::$instance->modulePath . '/out/src/img/' . $langFileName;
-            if (file_exists($filePath)) {
-                copy($filePath, $actionsMediaPath . $langFileName);
-            }
-        }
-        $oActionKlarnaTeaser->save();
     }
 
     public static function onDeactivate()

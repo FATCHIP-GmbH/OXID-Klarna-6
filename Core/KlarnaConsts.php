@@ -231,18 +231,6 @@ class KlarnaConsts
 
     /**
      * @codeCoverageIgnore
-     * @return array
-     */
-    public static function getDefaultBannerSrc()
-    {
-        return array(
-            'de' => '<script src="https://embed.bannerflow.com/599d7ec18d988017005eb279?targeturl=https%3A//www.klarna.com&politeloading=off&merchantid={{merchantid}}&responsive=on" async></script>',
-            'en' => '<script src="https://embed.bannerflow.com/599d7ec18d988017005eb27d?targeturl=https%3A//www.klarna.com&politeloading=off&merchantid={{merchantid}}&responsive=on" async></script>',
-        );
-    }
-
-    /**
-     * @codeCoverageIgnore
      * Override to change which countries are shown separately with a flag in the Klarna Checkout country popup.
      * Need to
      *

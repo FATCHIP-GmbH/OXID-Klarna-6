@@ -97,14 +97,6 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
         $this->assertFalse( $oViewConfig->getIsAustria());
     }
 
-    public function getKlarnaHomepageBannerDataProvider()
-    {
-        return [
-            [true, 'mid'],
-            [false, 'mid2']
-        ];
-    }
-
     public function isDEDataProvider()
     {
         return [
@@ -133,28 +125,6 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
         $oViewConfig = $this->getMockBuilder(ViewConfig::class)->setMethods(['getUser'])->getMock();
         $oViewConfig->expects($this->once())->method('getUser')->willReturn(null);
         $this->assertTrue( $oViewConfig->getIsGermany());
-    }
-
-    /**
-     * @dataProvider getKlarnaHomepageBannerDataProvider
-     * @param $displayBanner
-     * @param $merchantId
-     */
-    public function testGetKlarnaHomepageBanner($displayBanner, $merchantId)
-    {
-
-        $this->getConfig()->saveShopConfVar('bool', 'blKlarnaDisplayBanner', $displayBanner, $this->getShopId(), 'module:tcklarna');
-        $this->getConfig()->saveShopConfVar('str', 'sKlarnaMerchantId', $merchantId, $this->getShopId(), 'module:tcklarna');
-
-        $oViewConfig = oxNew(ViewConfig::class);
-        $result = $oViewConfig->getKlarnaHomepageBanner();
-
-        if($displayBanner){
-            $this->assertContains($merchantId, $result);
-        } else {
-            $this->assertEquals(null, $result);
-        }
-
     }
 
     public function showCheckoutTermsDataProvider()

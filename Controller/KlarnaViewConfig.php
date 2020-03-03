@@ -109,27 +109,6 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
         return $response;
     }
 
-    /**
-     *
-     */
-    public function getKlarnaHomepageBanner()
-    {
-        if (KlarnaUtils::getShopConfVar('blKlarnaDisplayBanner')) {
-            $oLang = Registry::getLang();
-            $lang  = $oLang->getLanguageAbbr();
-
-            $varName = 'sKlarnaBannerSrc' . '_' . strtoupper($lang);
-            if (!$sBannerScript = KlarnaUtils::getShopConfVar($varName)) {
-                $aDefaults     = KlarnaConsts::getDefaultBannerSrc();
-                $sBannerScript = $aDefaults[$lang];
-            }
-
-            return str_replace('{{merchantid}}', KlarnaUtils::getShopConfVar('sKlarnaMerchantId'), $sBannerScript);
-        }
-
-        return false;
-    }
-
     public function getOnSitePromotionInfo($key, $detailProduct = null)
     {
 

@@ -18,9 +18,6 @@ class KlarnaDesign extends KlarnaBaseConfig
 
     protected $_sThisTemplate = 'tcklarna_design.tpl';
 
-    /** @inheritdoc */
-    protected $MLVars = ['sKlarnaBannerSrc_'];
-
     /**
      * Render logic
      *
@@ -45,55 +42,10 @@ class KlarnaDesign extends KlarnaBaseConfig
         $from   = '/' . preg_quote('-', '/') . '/';
         $locale = preg_replace($from, '_', strtolower(KlarnaConsts::getLocale(true)), 1);
 
-        $this->addTplParam('settings', $this->getAdditionalSettings());
         $this->addTplParam('mode', $this->getActiveKlarnaMode());
         $this->addTplParam('locale', $locale);
         $this->addTplParam('aKlarnaFooterImgUrls', KlarnaConsts::getFooterImgUrls());
 
         return $this->_sThisTemplate;
-    }
-
-    /**
-     * Save configuration values
-     *
-     * @return void
-     * @throws \Exception
-     */
-    public function save()
-    {
-        parent::save();
-        $this->saveAdditionalSetting();
-    }
-
-    /**
-     *
-     */
-    protected function saveAdditionalSetting()
-    {
-        $oConfig   = Registry::getConfig();
-        $oShop     = $oConfig->getActiveShop();
-        $aSettings = Registry::get(Request::class)->getRequestEscapedParameter('settings');
-
-        $oKlarnaTeaserAction = oxNew(Actions::class);
-        $oKlarnaTeaserAction->load('klarna_teaser_' . $oShop->getId());
-        $oKlarnaTeaserAction->oxactions__oxactive->setValue($aSettings['blKlarnaTeaserActive'], Field::T_RAW);
-        $oKlarnaTeaserAction->save();
-    }
-
-    /**
-     * @return array
-     */
-    protected function getAdditionalSettings()
-    {
-        $oConfig = Registry::getConfig();
-        $oShop   = $oConfig->getActiveShop();
-
-        $oKlarnaTeaserAction = oxNew(Actions::class);
-        $oKlarnaTeaserAction->load('klarna_teaser_' . $oShop->getId());
-
-        return array(
-            'blKlarnaTeaserActive' => $oKlarnaTeaserAction->oxactions__oxactive->value,
-            'sDefaultBannerSrc'    => json_encode(KlarnaConsts::getDefaultBannerSrc()),
-        );
     }
 }

@@ -29,29 +29,4 @@ class KlarnaDesignTest extends ModuleUnitTestCase
         $this->assertEquals('"test"', $result);
 
     }
-
-    /**
-     * @dataProvider saveDataProvider
-     */
-    public function testSave($input)
-    {
-        $this->setRequestParameter('settings', ['blKlarnaTeaserActive' => $input]);
-
-        $controller = new KlarnaDesign;
-        $controller->save();
-
-        $teaserAction = oxNew(Actions::class);
-        $teaserAction->load('klarna_teaser_' . Registry::getConfig()->getActiveShop()->getId());
-        $result = $teaserAction->oxactions__oxactive->value;
-
-        $this->assertEquals($input, $result);
-    }
-
-    public function saveDataProvider()
-    {
-        return [
-            [1],
-            [0],
-        ];
-    }
 }
