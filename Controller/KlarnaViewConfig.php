@@ -106,11 +106,6 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
             $response['script'] = KlarnaUtils::getShopConfVar('sKlarnaMessagingScript');
         }
 
-        if(KlarnaUtils::getShopConfVar('sKlarnaFooterPromotion')) {
-            $response['promotion'] = KlarnaUtils::getShopConfVar('sKlarnaFooterPromotion');
-        }
-
-
         return $response;
     }
 

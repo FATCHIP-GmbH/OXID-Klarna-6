@@ -68,20 +68,6 @@
             </section>
         [{/if}]
     [{/if}]
-    [{if $aKlFooter.promotion}]
-        <section>
-            <div id="footer-promotion">
-                [{$aKlFooter.promotion}]
-            </div>
-        </section>
-        <style>
-            #footer-promotion {
-                margin-top: 10px;
-                width: 50%;
-                height: 50%;
-            }
-        </style>
-    [{/if}]
     [{/capture}]
 
     <script type="text/javascript">

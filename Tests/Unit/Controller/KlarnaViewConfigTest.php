@@ -286,8 +286,7 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
             ['KCO', 2, 'logoFooter','script','promo', [
                 'url' => 'https://x.klarnacdn.net/payment-method/assets/badges/generic/klarna.svg',
                 'class' => 'logoFooter',
-                'script' => 'script',
-                'promotion' => 'promo'
+                'script' => 'script'
             ]],
         ];
     }
@@ -316,7 +315,6 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
         $this->getConfig()->saveShopConfVar('str', 'sKlarnaFooterValue', $klFooterValue, $this->getShopId(), 'module:tcklarna');
 
         $this->getConfig()->saveShopConfVar('str', 'sKlarnaMessagingScript', $klScript, $this->getShopId(), 'module:tcklarna');
-        $this->getConfig()->saveShopConfVar('str', 'sKlarnaFooterPromotion', $klPromo, $this->getShopId(), 'module:tcklarna');
         $this->setModuleMode($mode);
 
         $oViewConfig = oxNew(ViewConfig::class);

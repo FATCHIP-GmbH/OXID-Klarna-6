@@ -92,17 +92,6 @@
                 </tr>
 
                 <tr>
-                    <td>[{oxmultilang ident="TCKLARNA_FOOTER_PROMOTION"}]:</td>
-                    <td class="input">
-                        <textarea id="klfooter" name="confstrs[sKlarnaFooterPromotion]" class="source">[{$confstrs.sKlarnaFooterPromotion}]</textarea>
-                    </td>
-                    <td>
-                        <span class="kl-tooltip" title="[{oxmultilang ident="TCKLARNA_FOOTER_PROMOTION_TOOLTIP"}]">
-                            <i class="fa fa-question fa-lg" aria-hidden="true"></i>
-                        </span>
-                    </td>
-                </tr>
-                <tr>
                     <td>[{oxmultilang ident="TCKLARNA_BANNER_PROMOTION"}]:</td>
                     <td class="input">
                         <textarea id="klbanner" name="confstrs[sKlarnaBannerPromotion]" class="source">[{$confstrs.sKlarnaBannerPromotion}]</textarea>
