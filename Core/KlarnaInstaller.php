@@ -211,11 +211,11 @@ class KlarnaInstaller extends ShopConfiguration
                              KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID  =>
                                  array($de_prefix => 'Klarna Ratenkauf', $en_prefix => 'Klarna Financing'),
                              KlarnaPayment::KLARNA_PAYMENT_PAY_NOW =>
-                                 array($de_prefix => 'Sofort bezahlen', $en_prefix => 'Klarna Pay Now'),
+                                 array($de_prefix => 'Klarna Sofort bezahlen', $en_prefix => 'Klarna Pay Now'),
                              KlarnaPayment::KLARNA_DIRECTDEBIT =>
-                                 array($de_prefix => 'Klarna Pay Now Direct Debit', $en_prefix => 'Klarna Pay Now Direct Debit'),
+                                 array($de_prefix => 'Klarna Lastschrift', $en_prefix => 'Klarna Direct Debit'),
                              KlarnaPayment::KLARNA_SOFORT =>
-                                 array($de_prefix => 'Klarna Sofortüberweisung', $en_prefix => 'Klarna Pay Now Instant'),
+                                 array($de_prefix => 'Klarna Sofortüberweisung', $en_prefix => 'Klarna Online Bank Transfer'),
                              KlarnaPayment::KLARNA_INSTANT_SHOPPING =>
                                  array($de_prefix => 'Klarna Instant Shopping', $en_prefix => 'Klarna Instant Shopping'),
         );
