@@ -10,6 +10,7 @@
     [{if $oViewConf->isActiveThemeFlow()}]
         #instant{
             margin-top:15px;
+            float:right;
         }
         button.nextStep {
             width: 300px;
@@ -20,6 +21,7 @@
         #instant{
             margin-top:15px;
             width:100% !important;
+            float:right;
         }
         .half-width{
             width:50% !important;
