@@ -226,3 +226,7 @@ div.klarna-flag {
 button.nextStep {
     margin-bottom: 10px;
 }
+
+.half-width button.nextStep {
+    margin-bottom: 10px;
+}
