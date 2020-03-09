@@ -130,8 +130,8 @@ $aLang = array(
     'TCKLARNA_ORDER_VALIDATION'                  => 'Bestell-Validierung',
 
     'TCKLARNA_CHOOSE_KP_OPTIONS'              => 'Bitte wählen Sie die Klarna Payment Optionen, die Sie Ihren Kunden anbieten möchten:',
-    'TCKLARNA_PAY_LATER'                      => 'Pay later',
-    'TCKLARNA_PAY_LATER.'                     => 'Rechnung',
+    'TCKLARNA_PAY_LATER'                      => 'Rechnung',
+    'TCKLARNA_PAY_LATER.'                     => 'Rechnung.',
     'TCKLARNA_PAY_LATER_START'                => 'Für Kunden, die jetzt kaufen und bequem später bezahlen möchten.',
     'TCKLARNA_PAY_LATER_TEXT'                 => 'Die Option “Rechnung” macht Kunden den Bezahlvorgang einfach und schnell, ohne dabei persönliche Daten oder komplizierte Nummern eingeben zu müssen. Der Kunde hat die Wahl zwischen Rechnung und im Monat X bezahlen.',
     'TCKLARNA_SLICE_IT'                       => 'Ratenkauf',
