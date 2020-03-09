@@ -78,10 +78,6 @@ $aLang = array(
     'TCKLARNA_NO_CHECKBOX'                       => 'Keine Checkbox anzeigen',
 
     /* design */
-    'TCKLARNA_TEASER'                            => 'Klarna Teaser',
-    'TCKLARNA_ENABLE_TEASER'                     => 'Klarna Teaser in der Top-Animation auf der Startseite einblenden?',
-    'TCKLARNA_HOMEPAGE_BANNER'                   => 'Homepage Banner',
-    'TCKLARNA_BANNER'                            => 'Klarna Banner',
     'TCKLARNA_DISPLAY_ON_HOME'                   => 'Auf der Shop Startseite anzeigen?',
     'TCKLARNA_BANNER_SRC'                        => 'Klarna Banner Quelle',
     'TCKLARNA_FOOTER'                            => 'Fußzeile',
@@ -135,7 +131,7 @@ $aLang = array(
 
     'TCKLARNA_CHOOSE_KP_OPTIONS'              => 'Bitte wählen Sie die Klarna Payment Optionen, die Sie Ihren Kunden anbieten möchten:',
     'TCKLARNA_PAY_LATER'                      => 'Pay later',
-    'TCKLARNA_PAY_LATER.'                     => 'Später bezahlen.',
+    'TCKLARNA_PAY_LATER.'                     => 'Rechnung',
     'TCKLARNA_PAY_LATER_START'                => 'Für Kunden, die jetzt kaufen und bequem später bezahlen möchten.',
     'TCKLARNA_PAY_LATER_TEXT'                 => 'Die Option “Rechnung” macht Kunden den Bezahlvorgang einfach und schnell, ohne dabei persönliche Daten oder komplizierte Nummern eingeben zu müssen. Der Kunde hat die Wahl zwischen Rechnung und im Monat X bezahlen.',
     'TCKLARNA_SLICE_IT'                       => 'Ratenkauf',
@@ -234,7 +230,6 @@ oder wenden Sie sich an den Klarna Integration Support.',
     'TCKLARNA_EMD_PAYMENT_TYPE_TOOLTIP'                => 'Ordnen Sie bitte zu, um was für eine Zahlungsart es sich bei dieser Bezahlmethode handelt.',
     'TCKLARNA_EMD_HISTORY_FULL_TOOLTIP'                => 'Bitte legen Sie hier fest, ob und ggf. welche Bestellungen mit dieser Zahlungsart bei der Übertragung der Bestellhistorie des Kunden enthalten sein sollen. Die Abhängigkeit des Feldes OXORDER.OXPAID besagt, ob dabei nur bezahlte oder alle Bestellungen berücksichtigt werden sollen.',
     'TCKLARNA_EMD_PASSTHROUGH_FIELD_TOOLTIP'           => 'Es besteht die Möglichkeit mit Hilfe eines Pass-through Feldes weitere beliebige Daten an Klarna zu übermitteln. Um diese Funktion zu nutzen, müssen Sie ein entsprechendes Modul im OXID eShop installieren, dass die gewünschten Daten in das Pass-through Feld schreibt. Eine entsprechende Anleitung finden Sie in der Entwickler-Dokumentation.',
-    'TCKLARNA_ENABLE_TEASER_TOOLTIP'                   => 'Dieser Schalter fügt einen Klarna Banner in der großen Animation oben auf der Startseite in den Standard-Themes Flow bzw. Azure hinzu.',
     'TCKLARNA_DISPLAY_ON_HOME_TOOLTIP'                 => 'Mit diesem Schalter aktivieren Sie einen Klarna Banner auf Ihrer Shop-Startseite in den Standard-Themes Flow bzw. Azure.',
     'TCKLARNA_BANNER_SRC_TOOLTIP'                      => 'Hier können Sie den script-Tag für die Banner-Einbindung hinterlegen. Im Banner-Portal von Klarna finden Sie ggf. weitere Banner zur Auswahl.',
     'TCKLARNA_FOOTER_PAYMENT_METHODS_TOOLTIP'          => 'Mit diesem Schalter aktivieren Sie das Klarna Payment Method Display im Footer Ihres Shops in den Standard-Themes Flow bzw. Azure.',

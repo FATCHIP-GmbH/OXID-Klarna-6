@@ -92,7 +92,6 @@ Replace into oxconfig (oxid, oxshopid, oxmodule, oxvarname, oxvartype, oxvarvalu
 Replace into oxconfig (oxid, oxshopid, oxmodule, oxvarname, oxvartype, oxvarvalue) values('744e20e55593c0fe3a752f706f10c3de', '1', 'tcklarna', 'sKlarnaCancellationRightsURI_EN', 'str', ENCODE( 'https://demohost.topconcepts.net/henrik/4_0_0/ce_601/source/withdrawal/', 'fq45QS09_fqyx09239QQ') );
 Replace into oxconfig (oxid, oxshopid, oxmodule, oxvarname, oxvartype, oxvarvalue) values('0ddcd4b8df2950a85402157e5c21ebe3', '1', 'tcklarna', 'sKlarnaShippingDetails_EN', 'str', ENCODE( "We\'ll take care of quick shipping!", 'fq45QS09_fqyx09239QQ') );
 
-update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaDisplayBanner' and oxshopid=1;
 Replace into oxconfig (oxid, oxshopid, oxmodule, oxvarname, oxvartype, oxvarvalue) values('3344c6128d6cbf3c1bc04c285a0e6e0a', '1', 'tcklarna', 'blKlarnaDisplayBuyNow', 'bool', ENCODE( '1', 'fq45QS09_fqyx09239QQ') );
 
 update oxconfig set oxvarvalue=ENCODE( '<script src=\"https://embed.bannerflow.com/599d7ec18d988017005eb27d?targeturl=https%3A//www.klarna.com&politeloading=off&merchantid={{merchantid}}&responsive=on\" async></script>', 'fq45QS09_fqyx09239QQ') where oxvarname='sKlarnaBannerSrc_EN' and oxshopid=1;
@@ -117,8 +116,6 @@ Replace into oxobject2payment set oxid = '596423d183fe0c4e08dd098c9a321a7e',oxpa
 Replace into oxobject2payment set oxid = '395b879300be94bc4a69f3e42661951f',oxpaymentid = 'klarna_slice_it',oxobjectid = '1b842e732a23255b1.91207751',oxtype = 'oxdelset';
 Replace into oxobject2payment set oxid = '545686ac66ef18c496161203e7a131b1',oxpaymentid = 'klarna_pay_later',oxobjectid = '1b842e732a23255b1.91207751',oxtype = 'oxdelset';
 Replace into oxobject2payment set oxid = '039e9f03b01ad423f8faff7ff548d342',oxpaymentid = 'klarna_pay_now',oxobjectid = '1b842e732a23255b1.91207751',oxtype = 'oxdelset';
-
-update oxactions set oxid = 'klarna_teaser_1',oxshopid = '1',oxtype = '3',oxtitle = 'Klarna Teaser',oxlongdesc = '',oxactive = '1',oxactivefrom = '0000-00-00 00:00:00',oxactiveto = '0000-00-00 00:00:00',oxpic = 'de_klarna-banner.png',oxlink = '',oxsort = '0' where oxactions.oxid = 'klarna_teaser_1';
 
 update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaEmdCustomerAccountInfo' and oxshopid=1;
 update oxconfig set oxvarvalue=ENCODE( '1', 'fq45QS09_fqyx09239QQ') where oxvarname='blKlarnaEmdPaymentHistoryFull' and oxshopid=1;
@@ -170,6 +167,3 @@ VALUES
 ('81b40cf0cd383d3a9.70988998', '1', '1', '1', '1', '1', 'CARD', 'Haifisch', 'Shark', '', '', 'img_ecard_03_wp.jpg', '3', '2017-10-19 16:39:08');
 REPLACE INTO `oxdiscount` (OXID,OXSHOPID,OXACTIVE,OXACTIVEFROM,OXACTIVETO,OXTITLE,OXTITLE_1,OXTITLE_2,OXTITLE_3,OXAMOUNT,OXAMOUNTTO,OXPRICETO,OXPRICE,OXADDSUMTYPE,OXADDSUM,OXITMARTID,OXITMAMOUNT,OXITMMULTIPLE,OXSORT,OXTIMESTAMP)
 VALUES ('9fc3e801da9cdd0b2.74513077', 1, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '10% ab 200 Euro Einkaufswert', '10% on 200 Euro or more', '', '', 0, 999999, 999999, 200, '%', 10, '', 0, 0, 20, '2018-04-23 11:01:04');
-
-REPLACE INTO `oxactions` (OXID,OXSHOPID,OXTYPE,OXTITLE,OXTITLE_1,OXTITLE_2,OXTITLE_3,OXLONGDESC,OXLONGDESC_1,OXLONGDESC_2,OXLONGDESC_3,OXACTIVE,OXACTIVEFROM,OXACTIVETO,OXPIC,OXPIC_1,OXPIC_2,OXPIC_3,OXLINK,OXLINK_1,OXLINK_2,OXLINK_3,OXSORT,OXTIMESTAMP)
-VALUES ('klarna_teaser_1', 1, 3, 'Klarna Teaser', 'Klarna Teaser', '', '', '', '', '', '', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'de_klarna-banner.png', 'en_klarna-banner.png', '', '', '', '', '', '', 0, '2018-04-27 19:58:15');

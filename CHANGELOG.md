@@ -1,3 +1,13 @@
+### 5.1.1
+* Remove Klarna homepage banner and teaser
+* Remove On-Site Messaging Footer Promotion
+* Replace Footer Logo for KP
+* Fix Javascript problem when custom theme is in use
+* Rename Klarna Payment methods
+* Update Pay Now and Pay later translation
+* Test and support for OXID 6.2.0 RC 2
+* Add support for PHP 7.3 and PHP 7.4
+
 ### 5.1.0
 * Implementation of Klarna Instant Shopping
 * Implementation or Klarna On-Site Messaging

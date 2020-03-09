@@ -174,8 +174,7 @@ class KlarnaConsts
             'longWhite'  => '//cdn.klarna.com/1.0/shared/image/generic/badge/%s/checkout/long-white.png?width=440',
             'shortBlack' => '//cdn.klarna.com/1.0/shared/image/generic/badge/%s/checkout/short-blue.png?width=312',
             'shortWhite' => '//cdn.klarna.com/1.0/shared/image/generic/badge/%s/checkout/short-white.png?width=312',
-            'logoBlack'  => '//cdn.klarna.com/1.0/shared/image/generic/logo/en_gb/basic/logo_black.png',
-            'logoWhite'  => '//cdn.klarna.com/1.0/shared/image/generic/logo/en_gb/basic/logo_white.png',
+            'logoFooter'  => 'https://x.klarnacdn.net/payment-method/assets/badges/generic/klarna.svg'
         );
 
         if ($key)
@@ -228,18 +227,6 @@ class KlarnaConsts
         }
 
         return $locale;
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return array
-     */
-    public static function getDefaultBannerSrc()
-    {
-        return array(
-            'de' => '<script src="https://embed.bannerflow.com/599d7ec18d988017005eb279?targeturl=https%3A//www.klarna.com&politeloading=off&merchantid={{merchantid}}&responsive=on" async></script>',
-            'en' => '<script src="https://embed.bannerflow.com/599d7ec18d988017005eb27d?targeturl=https%3A//www.klarna.com&politeloading=off&merchantid={{merchantid}}&responsive=on" async></script>',
-        );
     }
 
     /**

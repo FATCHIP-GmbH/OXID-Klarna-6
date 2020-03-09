@@ -81,10 +81,6 @@ $aLang = array(
     'TCKLARNA_CREATE_USER_ACCOUNT_AND_SUBSCRIBE' => 'Create Customer Account AND subscribe to Newsletter',
     'TCKLARNA_NO_CHECKBOX'                       => 'Do not show a Checkbox',
 
-    'TCKLARNA_TEASER'                 => 'Klarna Teaser',
-    'TCKLARNA_ENABLE_TEASER'          => 'Enable Klarna Teaser on top animation of shop homepage?',
-    'TCKLARNA_HOMEPAGE_BANNER'        => 'Homepage Banner',
-    'TCKLARNA_BANNER'                 => 'Klarna Banner',
     'TCKLARNA_DISPLAY_ON_HOME'        => 'Display on shop homepage?',
     'TCKLARNA_BANNER_SRC'             => 'Klarna Banner Source',
     'TCKLARNA_FOOTER'                 => 'Footer',
@@ -147,7 +143,7 @@ $aLang = array(
     'TCKLARNA_PAY_NOW'           => 'Pay Now',
     'TCKLARNA_PAY_NOW.'          => 'Pay now.',
     'TCKLARNA_PAY_NOW_START'     => 'For consumers, who want to pay everything at once Sofort and Direct Debit are perfect solutions.',
-    'TCKLARNA_PAY_NOW_TEXT'      => 'Customers who want to pay in full at checkout can do it quickly and securely with Klarnas Pay now-option - using credit/debit card or Direct bank transfer: Klarna Direkt, Sofort, SEPA Direct Debit.',
+    'TCKLARNA_PAY_NOW_TEXT'      => 'Customers who want to pay in full at checkout can do it quickly and securely with Klarnas Pay now-option - using Direct debit, Online Bank Transfer or Card.',
     'TCKLARNA_CHECKOUT'          => 'Klarna‘s Checkout.​',
     'TCKLARNA_CHECKOUT_START'    => 'Klarna’s comprehensive online checkout offers all major popular payment methods in one, integrated solution.',
 
@@ -235,7 +231,6 @@ For a detailed description of the different settings please see the tool-tip fun
     'TCKLARNA_EMD_PAYMENT_TYPE_TOOLTIP'                => 'Please assign what kind of payment this payment method is.',
     'TCKLARNA_EMD_HISTORY_FULL_TOOLTIP'                => 'Please specify here, if and which orders with this payment method should be included in the transfer of the order history of the customer. The dependency of the field OXORDER.OXPAID indicates whether only paid or all orders should be considered.',
     'TCKLARNA_EMD_PASSTHROUGH_FIELD_TOOLTIP'           => 'It is possible with the help of a pass-through field to forward any other data to Klarna. To use this feature, you must install an appropriate module in the OXID eShop that writes the desired data into the pass-through field. A corresponding manual can be found in the developer documentation.',
-    'TCKLARNA_ENABLE_TEASER_TOOLTIP'                   => 'This button adds a Klarna banner to the big teaser animation at the top of the start page in the default themes Flow or Azure.',
     'TCKLARNA_DISPLAY_ON_HOME_TOOLTIP'                 => 'With this switch, you activate a Klarna banner on your shop homepage in the standard themes Flow or Azure.',
     'TCKLARNA_BANNER_SRC_TOOLTIP'                      => 'Here you can define the script tag for the banner integration. In the banner portal of Klarna you may find more banners to choose from.',
     'TCKLARNA_FOOTER_PAYMENT_METHODS_TOOLTIP'          => 'With this switch, you activate the Klarna Payment Method Display in the footer of your shop in the standard themes Flow or Azure.',

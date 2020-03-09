@@ -84,8 +84,6 @@ class KlarnaInstaller extends ShopConfiguration
 
         $instance->addConfigVars();
 
-        $instance->addActions();
-
         $instance->addKlarnaPaymentsMethods();
     }
 
@@ -138,7 +136,6 @@ class KlarnaInstaller extends ShopConfiguration
                 'blKlarnaEnableAutofocus'              => 1,
                 //                'tcklarna_blKlarnaEnableDHLPackstations'        => 1,
                 'blKlarnaEnablePreFilling'             => 1,
-                'blKlarnaDisplayBanner'                => 1,
                 'blKlarnaPreFillNotification'          => 1,
             ),
             'str'    => array(
@@ -214,11 +211,11 @@ class KlarnaInstaller extends ShopConfiguration
                              KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID  =>
                                  array($de_prefix => 'Klarna Ratenkauf', $en_prefix => 'Klarna Financing'),
                              KlarnaPayment::KLARNA_PAYMENT_PAY_NOW =>
-                                 array($de_prefix => 'Sofort bezahlen', $en_prefix => 'Klarna Pay Now'),
+                                 array($de_prefix => 'Klarna Sofort bezahlen', $en_prefix => 'Klarna Pay Now'),
                              KlarnaPayment::KLARNA_DIRECTDEBIT =>
-                                 array($de_prefix => 'Klarna Pay Now Direct Debit', $en_prefix => 'Klarna Pay Now Direct Debit'),
+                                 array($de_prefix => 'Klarna Lastschrift', $en_prefix => 'Klarna Direct Debit'),
                              KlarnaPayment::KLARNA_SOFORT =>
-                                 array($de_prefix => 'Klarna Sofortüberweisung', $en_prefix => 'Klarna Pay Now Instant'),
+                                 array($de_prefix => 'Klarna Sofortüberweisung', $en_prefix => 'Klarna Online Bank Transfer'),
                              KlarnaPayment::KLARNA_INSTANT_SHOPPING =>
                                  array($de_prefix => 'Klarna Instant Shopping', $en_prefix => 'Klarna Instant Shopping'),
         );
@@ -438,45 +435,6 @@ class KlarnaInstaller extends ShopConfiguration
         $oMetaData = oxNew(DbMetaDataHandler::class);
         $oMetaData->updateViews();
         //}
-    }
-
-    /**
-     * Adds Teaser Action
-     */
-    protected function addActions()
-    {
-        $shopId = $this->getConfig()->getShopId();
-        // Klarna Teaser
-        $oxId             = 'klarna_teaser_' . $shopId;
-        $sTitle           = 'Klarna Teaser';
-        $sLink            = '';
-        $sFileName        = 'klarna-banner.png';
-        $actionsMediaPath = Registry::getConfig()->getConfigParam('sShopDir') . '/out/pictures/promo/';
-
-        $oActionKlarnaTeaser = oxNew(Actions::class);
-        $oActionKlarnaTeaser->setShopId($shopId);
-        $oActionKlarnaTeaser->load($oxId);
-        $oActionKlarnaTeaser->setId($oxId);
-        $active                                   = $oActionKlarnaTeaser->oxactions__oxactive->value ?: 0;                                                // assign old value
-        $oActionKlarnaTeaser->oxactions__oxtype   = new Field(3, Field::T_RAW);
-        $oActionKlarnaTeaser->oxactions__oxactive = new Field($active, Field::T_RAW);
-
-        // set multi language fields
-        $oActionKlarnaTeaser->setEnableMultilang(false);
-        $aLangs = Registry::getLang()->getLanguageArray();
-        foreach ($aLangs as $oLang) {
-            $langFileName                                        = $oLang->oxid . '_' . $sFileName;
-            $sTag                                                = Registry::getLang()->getLanguageTag($oLang->id);
-            $oActionKlarnaTeaser->{'oxactions__oxtitle' . $sTag} = new Field($sTitle, Field::T_RAW);
-            $oActionKlarnaTeaser->{'oxactions__oxlink' . $sTag}  = new Field($sLink, Field::T_RAW);
-            $oActionKlarnaTeaser->{'oxactions__oxpic' . $sTag}   = new Field($langFileName, Field::T_RAW);
-
-            $filePath = self::$instance->modulePath . '/out/src/img/' . $langFileName;
-            if (file_exists($filePath)) {
-                copy($filePath, $actionsMediaPath . $langFileName);
-            }
-        }
-        $oActionKlarnaTeaser->save();
     }
 
     public static function onDeactivate()
