@@ -32,8 +32,8 @@
                 </style>
 
                 <div class="kl-logo">
-                    <div class="[{if ($aKlFooter.class === 'logoFooter') }]kl-logo-inner[{/if}]">
-                        <img width="135" height="75" src="[{$aKlFooter.url}]">
+                    <div class="[{if ($aKlFooter.class === 'logoFooter' || $aKlFooter.class === 'logoBlack' || $aKlFooter.class === 'logoWhite') }]kl-logo-inner[{/if}]">
+                        <img [{if ($aKlFooter.class === 'logoFooter')}]width="135" height="75"[{/if}] src="[{$aKlFooter.url}]">
                     </div>
                 </div>
             </section>

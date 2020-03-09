@@ -3,6 +3,7 @@
 namespace TopConcepts\Klarna\Controller\Admin;
 
 
+use OxidEsales\Eshop\Core\Request;
 use TopConcepts\Klarna\Core\KlarnaConsts;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use OxidEsales\Eshop\Core\Registry;
@@ -52,6 +53,23 @@ class KlarnaGeneral extends KlarnaBaseConfig
         $this->addTplParam('b2options', array('B2C', 'B2B', 'B2BOTH'));
 
         return $this->_sThisTemplate;
+    }
+
+    public function save()
+    {
+        $params = Registry::get(Request::class)->getRequestEscapedParameter('confstrs');
+
+        // Reset footer display setting if user changes klarna mode
+        if($params['sKlarnaActiveMode'] != KlarnaUtils::getShopConfVar('sKlarnaActiveMode')) {
+            Registry::getConfig()->saveShopConfVar(
+                'strs',
+                'sKlarnaFooterDisplay',
+                0,
+                $this->getEditObjectId(),
+                $this->_getModuleForConfigVars());
+        }
+
+        parent::save();
     }
 
     /**
