@@ -19,7 +19,7 @@
 
                 <div class="kl-logo">
                     <div class="kl-logo-inner">
-                        <img src="[{$aKlFooter.url}]">
+                        <img width="135" height="75" src="[{$aKlFooter.url}]">
                     </div>
                 </div>
             </li>
@@ -33,7 +33,7 @@
 
                 <div class="kl-logo">
                     <div class="[{if ($aKlFooter.class === 'logoFooter') }]kl-logo-inner[{/if}]">
-                        <img src="[{$aKlFooter.url}]">
+                        <img width="135" height="75" src="[{$aKlFooter.url}]">
                     </div>
                 </div>
             </section>
