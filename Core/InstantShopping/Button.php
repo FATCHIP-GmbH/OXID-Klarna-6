@@ -141,6 +141,12 @@ class Button
             if($attachment) {
                 $result['attachment'] = $user->getAttachmentsData();
             }
+
+            if($user->oxuser__oxbirthdate->value != "0000-00-00") {
+                $result['customer']['date_of_birth'] = $user->oxuser__oxbirthdate->value;
+            }
+
+            $result['customer']['gender'] = $user->oxuser__oxsal->value;
         }
 
         return $result;

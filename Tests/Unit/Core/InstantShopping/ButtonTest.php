@@ -154,10 +154,11 @@ class ButtonTest extends ModuleUnitTestCase
                     'street_address' => 'street',
                     'country' => 'DE',
                 ],
-            'customer' => [
-                'date_of_birth' => '1978-03-06'
-            ],
             'attachment' => 'test',
+            'customer' => [
+                'date_of_birth' => null,
+                'gender' => null
+            ],
         ];
 
         $this->assertSame($expected,$result);
