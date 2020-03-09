@@ -105,7 +105,7 @@
                                     </table>
                                 </td>
                             </tr>
-                            [{ if ($mode === 'KCO') }]
+                            [{if ($mode === 'KCO') }]
                                 <tr class="no-t-border">
                                     <td>
                                         <div class="rows-wrapper"
@@ -176,34 +176,83 @@
                                     </td>
                                 </tr>
                             [{/if}]
-                            <tr class="no-t-border no-b-border">
+
+                            [{if ($mode === 'KCO') }]
+                                <tr class="no-t-border no-b-border">
                                 <td>
                                     <div class="rows-wrapper"
-                                         [{ if $confstrs.sKlarnaFooterDisplay === '2' }]style="display: block"[{/if}]>
+                                         [{if $confstrs.sKlarnaFooterDisplay === '2' }]style="display: block"[{/if}]>
+                                        <table class="inner">
+                                        <tbody>
+                                        <tr class="dark">
+                                            <td class="name-bold" colspan="3">
+                                                [{oxmultilang ident="TCKLARNA_FOOTER_KLARNA_LOGO" }] [{oxmultilang ident="TCKLARNA_DESIGN" }]
+                                            </td>
+                                        </tr>
+                                        <tr class="dark">
+                                            <td class="half">
+                                                [{oxmultilang ident="TCKLARNA_BLACK" }]
+                                            </td>
+                                            <td class="half">
+                                                [{oxmultilang ident="TCKLARNA_WHITE" }]
+                                            </td>
+                                        </tr>
+                                        <tr class="dark">
+                                            <td class="half">
+                                                <input type="radio" id="logo-black" name="confstrs[sKlarnaFooterValue]"
+                                                       value="logoBlack"
+                                                       [{if $confstrs.sKlarnaFooterValue == 'logoBlack' }]checked="checked"[{/if}]>
+                                                <label class="kl-logo white" for="logo-black">
+                                                    <div class="kl-logo-inner">
+                                                        <img class="" src="[{ $aKlarnaFooterImgUrls.logoBlack }]">
+                                                    </div>
+                                                </label>
+                                            </td>
+                                            <td class="half">
+                                                <input type="radio" id="logo-white" name="confstrs[sKlarnaFooterValue]"
+                                                       value="logoWhite"
+                                                       [{if $confstrs.sKlarnaFooterValue == 'logoWhite' }]checked[{/if}]>
+                                                <label class="kl-logo black" for="logo-white">
+                                                    <div class="kl-logo-inner">
+                                                        <img class="" src="[{ $aKlarnaFooterImgUrls.logoWhite }]">
+                                                    </div>
+                                                </label>
+                                            </td>
+                                        </tr>
+
+                                        </tbody>
+                                    </table>
+                                    </div>
+                                </td>
+                            </tr>
+                            [{else}]
+                                <tr class="no-t-border no-b-border">
+                                <td>
+                                    <div class="rows-wrapper"
+                                         [{if $confstrs.sKlarnaFooterDisplay === '2' }]style="display: block"[{/if}]>
                                         <table class="inner">
                                             <tbody>
                                             <tr class="dark">
                                                 <td class="name-bold" colspan="3">
-                                                    [{ oxmultilang ident="TCKLARNA_FOOTER_KLARNA_LOGO" }] [{ oxmultilang ident="TCKLARNA_DESIGN" }]
+                                                    [{oxmultilang ident="TCKLARNA_FOOTER_KLARNA_LOGO" }] [{ oxmultilang ident="TCKLARNA_DESIGN" }]
                                                 </td>
                                             </tr>
                                             <tr class="dark">
                                                 <td class="half">
                                                     <input type="radio" id="logo-footer" name="confstrs[sKlarnaFooterValue]"
                                                            value="logoFooter"
-                                                           [{ if $confstrs.sKlarnaFooterValue == 'logoFooter' }]checked="checked"[{/if}]>
+                                                           [{if $confstrs.sKlarnaFooterValue == 'logoFooter' }]checked="checked"[{/if}]>
                                                     <label for="logo-footer">
-                                                        <img class="" src="[{ $aKlarnaFooterImgUrls.logoFooter }]">
+                                                        <img width="135" height="75" class="" src="[{ $aKlarnaFooterImgUrls.logoFooter }]">
                                                     </label>
                                                 </td>
                                             </tr>
-
                                             </tbody>
                                         </table>
                                     </div>
                                 </td>
                             </tr>
-
+                            [{/if}]
                             </tbody>
                         </table>
                     </div>

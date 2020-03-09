@@ -9,3 +9,5 @@
         }
     </script>
 [{/if}]
+
+[{oxstyle include=$oViewConf->getModuleUrl('tcklarna', 'out/src/css/tcklarna_style.css')}]

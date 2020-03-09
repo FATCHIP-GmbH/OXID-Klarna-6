@@ -226,36 +226,40 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
     public function getKlarnaFooterContentDataProvider()
     {
         return [
-            ['KP', 0, 'longBlack',false,false, false],
-            ['KP', 1, 'logoFooter',false,false, false],
-            ['KP', 2, 'logoFooter',false,false, [
+            ['KP', 0, 'longBlack',false, false],
+            ['KP', 1, 'logoFooter',false, false],
+            ['KP', 2, 'logoFooter',false, [
                 'url' => 'https://x.klarnacdn.net/payment-method/assets/badges/generic/klarna.svg',
                 'class' => 'logoFooter'
             ]],
-            ['KCO', 0, 'longBlack', false,false, false],
-            ['KCO', 1, 'longBlack',false,false, [
+            ['KCO', 0, 'longBlack', false, false],
+            ['KCO', 1, 'longBlack',false, [
                 'url' => '//cdn.klarna.com/1.0/shared/image/generic/badge/de_de/checkout/long-blue.png?width=440',
                 'class' => 'longBlack'
             ]],
-            ['KCO', 1, 'longWhite',false,false, [
+            ['KCO', 1, 'longWhite',false, [
                 'url' => '//cdn.klarna.com/1.0/shared/image/generic/badge/de_de/checkout/long-white.png?width=440',
                 'class' => 'longWhite'
             ]],
-            ['KCO', 1, 'shortBlack',false,false, [
+            ['KCO', 1, 'shortBlack',false, [
                 'url' => '//cdn.klarna.com/1.0/shared/image/generic/badge/de_de/checkout/short-blue.png?width=312',
                 'class' => 'shortBlack'
             ]],
-            ['KCO', 1, 'shortWhite',false,false, [
+            ['KCO', 1, 'shortWhite',false, [
                 'url' => '//cdn.klarna.com/1.0/shared/image/generic/badge/de_de/checkout/short-white.png?width=312',
                 'class' => 'shortWhite'
             ]],
-            ['KCO', 2, 'logoFooter',false,false, [
-                'url' => 'https://x.klarnacdn.net/payment-method/assets/badges/generic/klarna.svg',
-                'class' => 'logoFooter'
+            ['KCO', 2, 'logoBlack',false, [
+                'url' => '//cdn.klarna.com/1.0/shared/image/generic/logo/en_gb/basic/logo_black.png',
+                'class' => 'logoBlack'
             ]],
-            ['KCO', 2, 'logoFooter','script','promo', [
-                'url' => 'https://x.klarnacdn.net/payment-method/assets/badges/generic/klarna.svg',
-                'class' => 'logoFooter',
+            ['KCO', 2, 'logoWhite',false, [
+                'url' => '//cdn.klarna.com/1.0/shared/image/generic/logo/en_gb/basic/logo_white.png',
+                'class' => 'logoWhite'
+            ]],
+            ['KCO', 2, 'logoWhite','script', [
+                'url' => '//cdn.klarna.com/1.0/shared/image/generic/logo/en_gb/basic/logo_white.png',
+                'class' => 'logoWhite',
                 'script' => 'script'
             ]],
         ];
@@ -279,7 +283,7 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
      * @param $klPromo
      * @param $expectedResult
      */
-    public function testGetKlarnaFooterContent($mode, $klFooterType, $klFooterValue, $klScript, $klPromo, $expectedResult)
+    public function testGetKlarnaFooterContent($mode, $klFooterType, $klFooterValue, $klScript, $expectedResult)
     {
         $this->getConfig()->saveShopConfVar('str', 'sKlarnaFooterDisplay', $klFooterType, $this->getShopId(), 'module:tcklarna');
         $this->getConfig()->saveShopConfVar('str', 'sKlarnaFooterValue', $klFooterValue, $this->getShopId(), 'module:tcklarna');
