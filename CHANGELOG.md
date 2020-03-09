@@ -6,6 +6,7 @@
 * Rename Klarna Payment methods
 * Update Pay Now and Pay later translation
 * Test and support for OXID 6.2.0 RC 2
+* Add support for PHP 7.3 and PHP 7.4
 
 ### 5.1.0
 * Implementation of Klarna Instant Shopping
