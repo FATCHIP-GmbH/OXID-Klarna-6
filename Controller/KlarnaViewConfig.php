@@ -111,6 +111,9 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
 
     public function getOnSitePromotionInfo($key, $detailProduct = null)
     {
+        if($this->getActiveClassName() != 'basket' && $key == "sKlarnaCreditPromotionBasket") {
+            return '';
+        }
 
         if($key == "sKlarnaCreditPromotionBasket" || $key == "sKlarnaCreditPromotionProduct") {
 
@@ -123,7 +126,7 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
                 $price = number_format((float)$price*100., 0, '.', '');
             }
 
-            if($key == "sKlarnaCreditPromotionBasket") {
+            if($key == "sKlarnaCreditPromotionBasket" ) {
                 $price = Registry::getSession()->getBasket()->getPrice()->getNettoPrice();
                 $price = number_format((float)$price*100., 0, '.', '');
             }
