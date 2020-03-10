@@ -14,7 +14,7 @@
 [{assign var="aKlPromotion" value=$oViewConf->getOnSitePromotionInfo('sKlarnaCreditPromotionProduct', $oDetailsProduct)}]
 [{assign var="sKlarnaMessagingScript" value=$oViewConf->getOnSitePromotionInfo('sKlarnaMessagingScript')}]
 [{if $aKlPromotion and $sKlarnaMessagingScript|trim}]
-    <div>
+    <div id="credit_promo">
         [{$aKlPromotion}]
     </div>
     <div class="clear clearfix"></div>
@@ -23,5 +23,12 @@
 <style>
     .klarna-express-button {
         margin-bottom: 5px;
+    }
+
+    .instant-shopping-button {
+        max-height: 50px;
+    }
+    body.cl-details .tobasket .tobasketFunction{
+        display:inline-block;
     }
 </style>
