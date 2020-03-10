@@ -499,7 +499,18 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
         $price->expects($this->any())->method('getBruttoPrice')->willReturn(10);
         $price->expects($this->any())->method('getVat')->willReturn(0.23);
 
+        //promotion product key
+        $this->getConfig()->saveShopConfVar('str', 'sKlarnaCreditPromotionProduct', 'data-purchase-amount="%s"', null, 'module:tcklarna');
+        $product = $this->getMockBuilder(Article::class)->setMethods(['getPrice'])->getMock();
+
+        $product->expects($this->any())->method('getPrice')->willReturn($price);
+
+        $result = $oViewConfig->getOnSitePromotionInfo('sKlarnaCreditPromotionProduct', $product);
+
+        $this->assertSame('data-purchase-amount="1000"', $result);
+
         //promotion basket key
+        $oViewConfig->expects($this->any())->method('getActiveClassName')->willReturn('basket');
         $this->getConfig()->saveShopConfVar('str', 'sKlarnaCreditPromotionBasket', 'data-purchase-amount="%s"', null, 'module:tcklarna');
 
         $basket = $this->getMockBuilder(Basket::class)->setMethods(['getPrice'])->getMock();
@@ -511,16 +522,6 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
         $result = $oViewConfig->getOnSitePromotionInfo('sKlarnaCreditPromotionBasket');
 
         $this->assertSame('data-purchase-amount="998"', $result);
-
-        //promotion product key
-        $this->getConfig()->saveShopConfVar('str', 'sKlarnaCreditPromotionProduct', 'data-purchase-amount="%s"', null, 'module:tcklarna');
-        $product = $this->getMockBuilder(Article::class)->setMethods(['getPrice'])->getMock();
-
-        $product->expects($this->any())->method('getPrice')->willReturn($price);
-
-        $result = $oViewConfig->getOnSitePromotionInfo('sKlarnaCreditPromotionProduct', $product);
-
-        $this->assertSame('data-purchase-amount="1000"', $result);
 
     }
 
