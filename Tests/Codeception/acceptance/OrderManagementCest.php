@@ -84,7 +84,6 @@ class OrderManagementCest
         $I->fillField("//*[@id='klproduct']","klproduct");
         $I->fillField("//*[@id='klbasket']","klbasket");
         $I->fillField("//*[@id='klstrip']","klstrip");
-        $I->fillField("//*[@id='klfooter']","klfooter");
         $I->fillField("//*[@id='klbanner']","klbanner");
         $I->click("//*[@id='form-save-button']");
         $I->wait(3);
@@ -92,7 +91,6 @@ class OrderManagementCest
         $I->wait(3);
         $I->see("klstrip");
         $I->see("klbanner");
-        $I->see("klfooter");
         $basket = new Basket($I);
         $basket->addProductToBasket('05848170643ab0deb9914566391c0c63', 1);
         $I->waitForElement('//div[@class="btn-group minibasket-menu"]/button');

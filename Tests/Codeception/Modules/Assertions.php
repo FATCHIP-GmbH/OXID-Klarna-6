@@ -197,11 +197,14 @@ class Assertions extends Module
     public function assertDataEquals($expectedArray, $actualArray, $dataMapper)
     {
         foreach ($dataMapper as $fieldName => $anotherFieldName) {
-//            print_r("Comparing $fieldName = $expectedArray[$fieldName] to $anotherFieldName = $actualArray[$anotherFieldName]\n");
             // remove postal_code formatting
             if ($anotherFieldName === 'postal_code') {
                 $actualArray[$anotherFieldName] = str_replace(' ', '', $actualArray[$anotherFieldName]);
-                $expectedArray[$anotherFieldName] = str_replace(' ', '', $expectedArray[$anotherFieldName]);
+                if(!empty($expectedArray[$anotherFieldName])) {
+                    $expectedArray[$anotherFieldName] = str_replace(' ', '', $expectedArray[$anotherFieldName]);
+                } else {
+                    $expectedArray[$fieldName] = str_replace(' ', '', $expectedArray[$fieldName]);
+                }
             }
             $this->assertEquals($expectedArray[$fieldName], $actualArray[$anotherFieldName]);
         }

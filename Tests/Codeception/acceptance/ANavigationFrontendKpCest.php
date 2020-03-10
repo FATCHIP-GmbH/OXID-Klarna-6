@@ -220,7 +220,7 @@ class ANavigationFrontendKpCest
         $this->navigateToPay($I);
         //Wait for Klarna page to load
         $I->wait(6);
-        $I->selectOption('form input[name=paymentid]', 'Pay Now Direct Debit');
+        $I->selectOption('form input[name=paymentid]', 'Direct Debit');
         $I->click(".nextStep");
         $I->wait(2);
         $I->switchToIFrame('klarna-direct-debit-fullscreen');
