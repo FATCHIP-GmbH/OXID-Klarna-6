@@ -115,7 +115,7 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
         if($key == "sKlarnaCreditPromotionBasket" || $key == "sKlarnaCreditPromotionProduct") {
 
             $promotion = KlarnaUtils::getShopConfVar($key);
-            $promotion = preg_replace('/data-purchase_amount=\"(\d*)\"/', 'data-purchase_amount="%s"', $promotion);
+            $promotion = preg_replace('/data-purchase-amount=\"(\d*)\"/', 'data-purchase-amount="%s"', $promotion);
             $price = 0;
             $productHasPrice = Registry::getConfig()->getConfigParam('bl_perfLoadPrice');
             if($key == "sKlarnaCreditPromotionProduct" && $detailProduct != null && $productHasPrice) {
