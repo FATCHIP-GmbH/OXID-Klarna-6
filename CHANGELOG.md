@@ -1,3 +1,11 @@
+### 5.1.2
+* Adjust Codeception Tests
+
+On-Site Messaging: 
+* Field data-purchase_amount was renamed into data-purchase-amount
+* Adjust styling on details page and remove from order overview
+
+
 ### 5.1.1
 * Remove Klarna homepage banner and teaser
 * Remove On-Site Messaging Footer Promotion
