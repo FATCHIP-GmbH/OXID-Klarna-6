@@ -61,15 +61,14 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
     public function testKlarnaExternalPayment($paymentId, $moduleId)
     {
         $payment = $this->getMockBuilder(Payment::class)->setMethods(['load'])->getMock();
-        $payment->expects($this->once())->method('load')->willReturn(true);
+        $payment->expects($this->any())->method('load')->willReturn(true);
         $payment->oxpayments__oxactive = new Field(true);
         $oBasket = $this->getMockBuilder(KlarnaBasket::class)->setMethods(['onUpdate'])->getMock();
-        $oBasket->expects($this->once())->method('onUpdate')->willReturn(true);
+        $oBasket->expects($this->any())->method('onUpdate')->willReturn(true);
         $user = $this->getMockBuilder(KlarnaUser::class)->setMethods(['isCreatable', 'save', 'onOrderExecute'])->getMock();
         $user->expects($this->any())->method('save')->willReturn(true);
         $user->expects($this->any())->method('onOrderExecute')->willReturn(true);
         $sut = $this->getMockBuilder(KlarnaOrderController::class)->setMethods(['klarnaExternalCheckout', '_createUser'])->getMock();
-        $sut->expects($this->once())->method('klarnaExternalCheckout')->willReturn(true);
 
         if($paymentId === 'bestitamazon') {
             $user->expects($this->once())->method('isCreatable')->willReturn(true);
@@ -81,7 +80,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $this->setSessionParam('klarna_checkout_order_id', '1');
         $this->setRequestParameter('payment_id', $paymentId);
 
-        $this->setProtectedClassProperty($sut, 'isExternalCheckout', true);
+        $this->setProtectedClassProperty($sut, 'isExternalCheckout', false);
         $this->setProtectedClassProperty($sut, '_oUser', $user);
         $this->setProtectedClassProperty(
             $sut,
@@ -1190,5 +1189,18 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $sut->expects($this->any())->method('getUser')->willReturn($oUser);
         $result = $sut->getDeliveryAddressMD5();
         $this->assertEquals($userEncodedAddress, $result);
+    }
+
+    public function testResetKlarnaCheckoutSession()
+    {
+        $sut = $this->getMockBuilder(KlarnaOrderController::class)
+            ->setMethods(['getUser'])->getMock();
+        $class = new \ReflectionClass(KlarnaOrderController::class);
+        $method = $class->getMethod('resetKlarnaCheckoutSession');
+        $method->setAccessible(true);
+        $this->setSessionParam('klarna_checkout_order_id', '1');
+        $this->assertEquals($this->getSessionParam('klarna_checkout_order_id'), '1');
+        $method->invoke($sut);
+        $this->assertEquals($this->getSessionParam('klarna_checkout_order_id'), null);
     }
 }

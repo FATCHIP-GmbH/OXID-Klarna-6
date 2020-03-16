@@ -8,6 +8,7 @@ use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Facts\Facts;
 use TopConcepts\Klarna\Model\KlarnaUser;
 
 class KlarnaUserManager
@@ -35,6 +36,11 @@ class KlarnaUserManager
             $oCountry->getIdByCode(strtoupper($orderData['billing_address']['country'])),
             Field::T_RAW
         );
+
+        $facts = new Facts;
+        if ('EE' == $facts->getEdition()) {
+            $oUser->oxuser__oxustidstatus = new Field(0, Field::T_RAW);
+        }
         //TODO: this part requires update after merging paypal fixes - KlarnaFormatter is updated in that branch
         $aUserData = KlarnaFormatter::klarnaToOxidAddress($orderData, 'billing_address');
         $nonEmptyFields = array_filter(

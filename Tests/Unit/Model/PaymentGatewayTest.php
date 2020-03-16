@@ -77,8 +77,7 @@ class PaymentGatewayTest extends ModuleUnitTestCase
 
         return [
             [$getHandlerMock(true, null), true, null],
-            [$getHandlerMock(false, 'GENERIC_ERROR'), false, 'GENERIC_ERROR'],
-            [false, true, null],
+            [$getHandlerMock(false, 'GENERIC_ERROR'), false, 'GENERIC_ERROR']
         ];
     }
 
