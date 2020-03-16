@@ -246,16 +246,12 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
 
         $oPaymentController = $this->getMockBuilder(PaymentController::class)->setMethods(['countKPMethods', 'getUser', 'removeUnavailableKP'])->getMock();
 
-        // "at" method behaves incorrect here - indexes should be 0 an 1 not 2 and 5
-        // possibly PHPUnit bug
-        $oPaymentController->expects($this->at(2))
+        $oPaymentController->expects($this->any())
             ->method('countKPMethods')->willReturn($args['countKPMethodsBefore']);
-        $oPaymentController->expects($this->at(5))
-            ->method('countKPMethods')->willReturn(0);
-
 
         $oPaymentController->expects($this->any())
             ->method('getUser')->willReturn($oUser);
+
         $oPaymentController->expects($this->exactly($results['removeUnavailableKP_calls']))
             ->method('removeUnavailableKP');
 
@@ -269,7 +265,7 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
         $this->assertEquals("page/checkout/payment.tpl", $tpl);
 
         $viewData = $oPaymentController->getViewData();
-        $results['shouldError'] ? $this->assertArrayHasKey('kpError', $viewData) : $this->assertArrayNotHasKey('kpError', $viewData);
+        $results['isError'] ? $this->assertArrayHasKey('kpError', $viewData) : $this->assertArrayNotHasKey('kpError', $viewData);
         $results['shouldLocale'] ? $this->assertArrayHasKey('sLocale', $viewData) : $this->assertArrayNotHasKey('sLocale', $viewData);
         $args['countKPMethodsAfter'] === 0 && $this->assertFalse($oPaymentController->loadKlarnaPaymentWidget);
 
