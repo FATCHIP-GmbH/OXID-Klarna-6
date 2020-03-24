@@ -57,10 +57,6 @@
         var loadedPurchaseCountry = "[{$sPurchaseCountry|upper}]";
         var $modal = $('#myModal');
 
-        [{if $blShowPopUp && $sKlarnaIframe}]
-            showModal = true;
-        [{/if}]
-
         $('#resetCountry').on('click', 'a', function () {
             $modal.modal('show');
         });
