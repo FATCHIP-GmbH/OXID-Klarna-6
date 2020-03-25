@@ -42,6 +42,8 @@ class KlarnaPaymentHistoryFullTest extends ModuleUnitTestCase
 
         $history = $paymentHistoryFull->getPaymentHistoryFull($oUser);
 
+        $oneYearAgo  = date('Y-m-d', mktime(0, 0, 0, date("m"),   date("d"),   date("Y")-1));
+
         $expected = [
             "payment_history_full" =>
                 [
@@ -50,8 +52,8 @@ class KlarnaPaymentHistoryFullTest extends ModuleUnitTestCase
                         'payment_option' => "other",
                         'number_paid_purchases' => 1,
                         'total_amount_paid_purchases' => 479,
-                        'date_of_last_paid_purchase' => "2018-03-22T16:07:50Z",
-                        'date_of_first_paid_purchase' => "2018-03-22T16:07:50Z",
+                        'date_of_last_paid_purchase' => $oneYearAgo . "T16:07:50Z",
+                        'date_of_first_paid_purchase' => $oneYearAgo . "T16:07:50Z",
                     ],
                 ],
         ];
