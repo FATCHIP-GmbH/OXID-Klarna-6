@@ -1,3 +1,6 @@
+### not yet released
+* Instant Shopping iframe height is too small - tagline clipped off
+
 ### 5.1.4
 * Change Klarna Contact information
 * Bugfix: Don't show KCO country selector popup when only one country is active
