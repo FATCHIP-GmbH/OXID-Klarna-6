@@ -25,9 +25,6 @@
         margin-bottom: 5px;
     }
 
-    .instant-shopping-button {
-        max-height: 50px;
-    }
     body.cl-details .tobasket .tobasketFunction{
         display:inline-block;
     }
