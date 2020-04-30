@@ -142,7 +142,7 @@ $aLang = array(
     'TCKLARNA_PAY_NOW.'                       => 'Sofort bezahlen.',
     'TCKLARNA_PAY_NOW_START'                  => 'Einfache und schnelle Direktbezahlung mit Klarna‘s Sofort bezahlen. In Deutschland sollten Sofortüberweisung und Lastschrift im Portfolio nicht fehlen.',
     'TCKLARNA_PAY_NOW_TEXT'                   => 'Kunden, die Beträge sofort vollständig beim Bestellabschluss bezahlen möchten, können die Option "Sofort bezahlen" nutzen. Zur Auswahl stehen hierbei Kreditkarte, Lastschrift und die Sofortüberweisung.',
-    'TCKLARNA_CHECKOUT'                       => 'Der Klarna Checkout.​',
+    'TCKLARNA_CHECKOUT'                       => 'Der Klarna Checkout.',
     'TCKLARNA_CHECKOUT_START'                 => 'Das beste Checkout-Erlebnis für Ihre Kunden. Zuverlässige Kundenidentifizierung und Versandauswahl. Alle Zahlungen inklusive. Weltweite Verfügbarkeit, lokal optimiert. Wir übernehmen das ganze Risiko und Sie erhalten immer Ihr Geld. ',
 
     'TCKLARNA_EXTERNAL_PAYMENTS_ADMIN_DESC'   =>

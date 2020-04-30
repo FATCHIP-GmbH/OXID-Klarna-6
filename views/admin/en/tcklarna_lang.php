@@ -144,7 +144,7 @@ $aLang = array(
     'TCKLARNA_PAY_NOW.'          => 'Pay now.',
     'TCKLARNA_PAY_NOW_START'     => 'For consumers, who want to pay everything at once Sofort and Direct Debit are perfect solutions.',
     'TCKLARNA_PAY_NOW_TEXT'      => 'Customers who want to pay in full at checkout can do it quickly and securely with Klarnas Pay now-option - using Direct debit, Online Bank Transfer or Card.',
-    'TCKLARNA_CHECKOUT'          => 'Klarna‘s Checkout.​',
+    'TCKLARNA_CHECKOUT'          => 'Klarna‘s Checkout.',
     'TCKLARNA_CHECKOUT_START'    => 'Klarna’s comprehensive online checkout offers all major popular payment methods in one, integrated solution.',
 
     'TCKLARNA_EXTERNAL_PAYMENTS_ADMIN_DESC'   =>
