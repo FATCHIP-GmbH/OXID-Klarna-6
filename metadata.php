@@ -18,6 +18,7 @@ use TopConcepts\Klarna\Controller\Admin\KlarnaOrderMain;
 use TopConcepts\Klarna\Controller\Admin\KlarnaOrderOverview;
 use TopConcepts\Klarna\Controller\Admin\KlarnaOrders;
 use TopConcepts\Klarna\Controller\Admin\KlarnaPaymentMain;
+use TopConcepts\Klarna\Controller\Admin\KlarnaShipping;
 use TopConcepts\Klarna\Controller\Admin\KlarnaStart;
 use TopConcepts\Klarna\Controller\KlarnaInstantShoppingController;
 use TopConcepts\Klarna\Controller\KlarnaUserController;
@@ -97,6 +98,7 @@ $aModule = array(
         'KlarnaOrders'           => KlarnaOrders::class,
         'KlarnaMessaging'        => KlarnaMessaging::class,
         'KlarnaInstantShopping'  => KlarnaInstantShopping::class,
+        'KlarnaShipping'         => KlarnaShipping::class,
         // controllers
         'KlarnaExpress'          => KlarnaExpressController::class,
         'KlarnaAjax'             => KlarnaAjaxController::class,
@@ -162,6 +164,7 @@ $aModule = array(
         'tcklarna_orders.tpl'                  => 'tc/tcklarna/views/admin/tpl/tcklarna_orders.tpl',
         'tcklarna_messaging.tpl'               => 'tc/tcklarna/views/admin/tpl/tcklarna_messaging.tpl',
         'tcklarna_instant_shopping.tpl'        => 'tc/tcklarna/views/admin/tpl/tcklarna_instant_shopping.tpl',
+        'tcklarna_shipping.tpl'                => 'tc/tcklarna/views/admin/tpl/tcklarna_shipping.tpl',
         //admin partial
         'tcklarna_country_creds.tpl'           => 'tc/tcklarna/views/admin/tpl/tcklarna_country_creds.tpl',
         'tcklarna_header.tpl'                  => 'tc/tcklarna/views/admin/tpl/tcklarna_header.tpl',
