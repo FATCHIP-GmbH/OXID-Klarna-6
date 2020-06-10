@@ -19,10 +19,7 @@ class KlarnaShipping extends KlarnaBaseConfig
     const POSTAL = 'Postal';
     const DHL_PACK_STATION = 'DHLPackstation';
     const DIGITAL = 'Digital';
-    const POSTAL_WITH_DHL_PACK_STATION = 'Postal + DHLPackstation';
-    
-    const SHIPPING_MAP_KEY = 'tcKlarnaShippingMap';
-    
+    const POSTAL_WITH_DHL_PACK_STATION = 'Postal + DHLPackstation';    
     
     protected $_sThisTemplate = 'tcklarna_shipping.tpl';
     
@@ -44,11 +41,9 @@ class KlarnaShipping extends KlarnaBaseConfig
     
     public function render() {
         parent::render();
-        $oConfig = Registry::getConfig();
         $this->_aViewData += array(
             'KCOShippingSets' => $this->getKCOShippingSets(),
             'KCOShippingMethods' => $this->getKCOShippingMethods(),
-            'shippingMap' => (array) $oConfig->getConfigParam(self::SHIPPING_MAP_KEY)
         );
         
         return $this->_sThisTemplate;
