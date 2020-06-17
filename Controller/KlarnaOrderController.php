@@ -1146,4 +1146,11 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     {
         return new KlarnaOrder($oBasket, $this->_oUser);
     }
+    
+    public function getPayment() {
+        $oPayment = parent::getPayment();
+        $oPayment->oxpayments__oxdesc->value = str_replace('Klarna ', '', $oPayment->oxpayments__oxdesc->value);
+        
+        return $oPayment;
+    }
 }
