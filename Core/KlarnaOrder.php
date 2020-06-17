@@ -20,6 +20,7 @@ namespace TopConcepts\Klarna\Core;
 use OxidEsales\Eshop\Application\Model\DeliveryList;
 use OxidEsales\Eshop\Core\UtilsView;
 use OxidEsales\EshopCommunity\Core\Exception\SystemComponentException;
+use TopConcepts\Klarna\Controller\Admin\KlarnaShipping;
 use TopConcepts\Klarna\Core\Exception\KlarnaConfigException;
 use TopConcepts\Klarna\Model\EmdPayload\KlarnaPassThrough;
 use TopConcepts\Klarna\Model\KlarnaEMD;
@@ -305,8 +306,11 @@ class KlarnaOrder extends BaseModel
         $this->_selectedShippingSetId = $oBasket->getShippingId();
 
         $shippingOptions = array();
+        $shippingMap = Registry::getConfig()->getShopConfVar('aarrKlarnaShippingMap');
 
         foreach ($allSets as $shippingId => $shippingMethod) {
+            $assignedShippingMethod = isset($shippingMap[$shippingId]) ? $shippingMap[$shippingId] : false;
+            
             $oBasket->setShipping($shippingId);
             $oPrice      = $oBasket->tcklarna_calculateDeliveryCost();
             $basketPrice = $oBasket->getPriceForPayment() / $currency->rate;
@@ -316,9 +320,8 @@ class KlarnaOrder extends BaseModel
                 $price             = KlarnaUtils::parseFloatAsInt($oPrice->getBruttoPrice() * 100);
                 $tax_rate          = KlarnaUtils::parseFloatAsInt($oPrice->getVat() * 100);
                 $tax_amount        = KlarnaUtils::parseFloatAsInt($price - round($price / ($tax_rate / 10000 + 1), 0));
-                $shippingOptions[] = array(
+                $option = array(
                     "id"          => $shippingId,
-                    //                    "id"          => 'SRV_DELIVERY',
                     "name"        => html_entity_decode($method->oxdeliveryset__oxtitle->value, ENT_QUOTES),
                     "description" => null,
                     "promo"       => null,
@@ -327,9 +330,20 @@ class KlarnaOrder extends BaseModel
                     'tax_rate'    => $tax_rate,
                     'preselected' => $shippingId === $this->_selectedShippingSetId ? true : false,
                 );
+                
+                if ($assignedShippingMethod) {
+                    if (KlarnaShipping::POSTAL_WITH_DHL_PACK_STATION === $assignedShippingMethod) {
+                        $option['shipping_method'] = KlarnaShipping::DHL_PACK_STATION;
+                        $shippingOptions[] = $option;
+                        $option['shipping_method'] = KlarnaShipping::POSTAL;
+                    } else {
+                        $option['shipping_method'] = $assignedShippingMethod;
+                    }
+                }
+                $shippingOptions[] = $option;
             }
         }
-
+        
         // set basket back to selected shipping option
         $oBasket->setShipping($this->_selectedShippingSetId);
 
