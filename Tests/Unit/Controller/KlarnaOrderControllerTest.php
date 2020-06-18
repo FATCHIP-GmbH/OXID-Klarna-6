@@ -377,10 +377,13 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
     public function testRender()
     {
         $this->setModuleConfVar('sKlarnaActiveMode', KlarnaConsts::MODULE_MODE_KP);
-        $oBasket = $this->getMockBuilder(KlarnaBasket::class)->setMethods(['getPaymentId'])->getMock();
+        $oBasket = $this->getMockBuilder(Basket::class)->setMethods(['getPaymentId'])->getMock();
         $oBasket->expects($this->any())->method('getPaymentId')->willReturn('klarna_pay_now');
-        $sut = $this->getMockBuilder(KlarnaOrderController::class)->setMethods(['isCountryHasKlarnaPaymentsAvailable'])->getMock();
+        $sut = $this->getMockBuilder(OrderController::class)->setMethods(['isCountryHasKlarnaPaymentsAvailable', 'getPayment'])->getMock();
         $sut->expects($this->any())->method('isCountryHasKlarnaPaymentsAvailable')->willReturn(true);
+        $sut->expects($this->once())->method('getPayment')->willReturn(
+            $this->getMockBuilder(Payment::class)
+        );
 
         $this->getSession()->setBasket($oBasket);
         $this->setSessionParam('klarna_session_data', ['client_token' => 'test']);

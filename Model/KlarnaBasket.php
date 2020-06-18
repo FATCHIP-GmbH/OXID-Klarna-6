@@ -413,8 +413,7 @@ class KlarnaBasket extends KlarnaBasket_parent
         $type = 'discount';
         $reference = 'SRV_DISCOUNT';
         $name = html_entity_decode(Registry::getLang()->translateString('TCKLARNA_DISCOUNT_TITLE', $iLang), ENT_QUOTES);
-            
-        if ($value > 0) {
+        if ($value < 0) {
             $type = 'surcharge';
             $reference = 'SRV_SURCHARGE';
             $name = html_entity_decode(Registry::getLang()->translateString('TCKLARNA_SURCHARGE_TITLE', $iLang), ENT_QUOTES);
