@@ -73,6 +73,9 @@ class KlarnaOrder extends BaseModel
 
     /** @var boolean KCO allowed for b2c clients */
     protected $b2cAllowed;
+    
+    /** @var string */
+    protected $activeB2Option;
 
     protected $_aUserData;
     protected $_klarnaCountryList;
@@ -183,8 +186,10 @@ class KlarnaOrder extends BaseModel
             }
 
             if($this->isB2BAllowed()) {
-                $this->_aOrderData['customer']['type'] = 'organization';
-                $this->_aOrderData['options']['allowed_customer_types'] = array( 'organization', 'person');
+                $typeList = KlarnaConsts::getCustomerTypes();
+                $type = $typeList[$this->activeB2Option];
+                $this->_aOrderData['customer']['type'] = reset($type);
+                $this->_aOrderData['options']['allowed_customer_types'] = $type;
             }
 
             $this->setAttachmentsData();
@@ -232,13 +237,13 @@ class KlarnaOrder extends BaseModel
     {
         $this->b2bAllowed = false;
         $this->b2cAllowed = true;
-        $activeB2Option = KlarnaUtils::getShopConfVar('sKlarnaB2Option');
+        $this->activeB2Option = KlarnaUtils::getShopConfVar('sKlarnaB2Option');
 
-        if(in_array($activeB2Option, array('B2B', 'B2BOTH'))){
+        if (strpos($this->activeB2Option, 'B2B') !== false) {
             $this->b2bAllowed = in_array($sCountryISO, KlarnaConsts::getKlarnaKCOB2BCountries());
         }
 
-        if($activeB2Option === 'B2B'){
+        if($this->activeB2Option === 'B2B'){
             $this->b2cAllowed = false;
         }
     }

@@ -242,4 +242,14 @@ class KlarnaConsts
     {
         return array('DE', 'AT', 'CH');
     }
+    
+    public static function getCustomerTypes() {
+        return array(
+            'B2C'     => array('person'),
+            'B2B'     => array('organization'),
+            'B2C_B2B' => array('person', 'organization'),
+            'B2B_B2C' => array('organization', 'person'),
+            'B2BOTH'  => array('organization', 'person') // old config value
+        );
+    }
 }

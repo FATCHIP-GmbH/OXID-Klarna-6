@@ -302,7 +302,8 @@ For a detailed description of the different settings please see the tool-tip fun
     'TCKLARNA_CUSTOMER_TYPE_TOOLTIP' => 'Here you can define whether the shop should accept only B2C transactions (default setting), only B2B transactions or both B2C and B2B transactions.',
     'TCKLARNA_B2C'                   => 'B2C customers only',
     'TCKLARNA_B2B'                   => 'B2B customers only',
-    'TCKLARNA_B2BOTH'                => 'Both B2C and B2B customers',
+    'TCKLARNA_B2B_B2C'               => 'Mainly B2B and also B2C customers',
+    'TCKLARNA_B2C_B2B'               => 'Mainly B2C and also B2B customers',
     'TCKLARNA_NEED_SUPPORT'          => 'Need support with the integration?',
     'TCKLARNA_REACH_SUPPORT'         => 'Reach out to Klarna\'s Merchant support',
 

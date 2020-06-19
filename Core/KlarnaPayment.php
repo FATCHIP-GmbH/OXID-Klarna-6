@@ -99,6 +99,9 @@ class KlarnaPayment extends BaseModel
 
     /** @var int Session timeout (24h) in seconds */
     protected $sessionTimeout = 86400;
+    
+    /** @var string */
+    protected $activeB2Option;
 
     /** @var string current action for ajax request */
     public $action;
@@ -167,8 +170,10 @@ class KlarnaPayment extends BaseModel
         $this->addOptions();
 
         if ($this->isB2B()) {
-            $this->_aOrderData['customer']['type']                  = 'organization';
-            $this->_aOrderData['options']['allowed_customer_types'] = array('organization', 'person');
+            $typeList = KlarnaConsts::getCustomerTypes();
+            $type = $typeList[$this->activeB2Option];
+            $this->_aOrderData['customer']['type'] = reset($type);
+            $this->_aOrderData['options']['allowed_customer_types'] = $type;
         }
 
         $this->checksumCheck();
@@ -191,13 +196,13 @@ class KlarnaPayment extends BaseModel
     {
         $this->b2bAllowed = false;
         $this->b2cAllowed = true;
-        $activeB2Option = KlarnaUtils::getShopConfVar('sKlarnaB2Option');
+        $this->activeB2Option = KlarnaUtils::getShopConfVar('sKlarnaB2Option');
 
-        if(in_array($activeB2Option, array('B2B', 'B2BOTH'))){
+        if(strpos($this->activeB2Option, 'B2B') !== false){
             $this->b2bAllowed = in_array($sCountryISO, KlarnaConsts::getKlarnaKPB2BCountries());
         }
 
-        if($activeB2Option === 'B2B'){
+        if($this->activeB2Option === 'B2B'){
             $this->b2cAllowed = false;
         }
     }

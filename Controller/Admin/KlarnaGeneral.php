@@ -50,7 +50,7 @@ class KlarnaGeneral extends KlarnaBaseConfig
             'tcklarna_notSetUpCountries',
             array_diff_key($this->_aKlarnaCountries, $this->_aKlarnaCountryCreds) ?: false
         );
-        $this->addTplParam('b2options', array('B2C', 'B2B', 'B2BOTH'));
+        $this->addTplParam('b2options', array('B2C', 'B2B', 'B2C_B2B', 'B2B_B2C'));
 
         return $this->_sThisTemplate;
     }
