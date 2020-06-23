@@ -163,19 +163,12 @@ class KlarnaPayment extends BaseModel
             ),
         );
 
-        $this->_aUserData             = $oUser->getKlarnaPaymentData($this->b2bAllowed);
+        $this->_aUserData             = $oUser->getKlarnaPaymentData();
         $this->_aOrderLines           = $oBasket->getKlarnaOrderLines();
         $this->_aOrderLines['locale'] = $sLocale;
         $this->_aOrderData            = array_merge($this->_aOrderData, $this->_aOrderLines);
         $this->addOptions();
-
-        if ($this->isB2B()) {
-            $typeList = KlarnaConsts::getCustomerTypes();
-            $type = $typeList[$this->activeB2Option];
-            $this->_aOrderData['customer']['type'] = reset($type);
-            $this->_aOrderData['options']['allowed_customer_types'] = $type;
-        }
-
+        $this->setCustomerData();
         $this->checksumCheck();
 
         if (!(KlarnaUtils::is_ajax()) && $this->isAuthorized() && $this->aUpdateData) {
@@ -206,15 +199,19 @@ class KlarnaPayment extends BaseModel
             $this->b2cAllowed = false;
         }
     }
-
-    public function isB2BAllowed()
-    {
-        return $this->b2bAllowed;
+    
+    protected function setCustomerData() {
+        $append = array();
+        if ($this->isB2B()) {
+            $append['customer']['type'] = 'organization';
+        } else {
+            $append['customer']['type'] = 'person';
+        }
+        $this->_aOrderData += $append;
     }
 
     public function isB2B()
     {
-
         return $this->b2bAllowed && !empty($this->_aUserData['billing_address']['organization_name']);
     }
 

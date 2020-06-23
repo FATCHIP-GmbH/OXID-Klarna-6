@@ -102,10 +102,8 @@ class KlarnaUser extends KlarnaUser_parent
 
     /**
      * Applicable in KP mode
-     * @param bool $isB2BAvailable
      * @return array
-     * @throws SystemComponentException
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
+     * @throws \Exception
      */
     public function getKlarnaPaymentData()
     {
