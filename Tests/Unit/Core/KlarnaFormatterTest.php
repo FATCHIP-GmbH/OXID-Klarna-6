@@ -48,7 +48,7 @@ class KlarnaFormatterTest extends ModuleUnitTestCase
         ];
         $expectedResultUser1 = $expectedResultUser;
         $expectedResultUser1['phone'] = '111';
-        $expectedResultAddress = ['street_address' => ' '];
+        $expectedResultAddress = [];
 
         $expectedExceptionMessage = 'Argument must be instance of User|Address.';
 

@@ -197,7 +197,8 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
                 ],
             'gui'                      => ['options' => ['disable_autofocus']],
             'merchant_data'            => 'To be implemented by the merchant.',
-            'billing_countries' => ["AD", "AT", "DE"]
+            'billing_countries' => ["AD", "AT", "DE"],
+            'customer' => ['type' => 'person']
         ];
 
         $result = $this->getProtectedClassProperty($order, '_aOrderData');

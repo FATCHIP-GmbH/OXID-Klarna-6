@@ -140,6 +140,7 @@ class KlarnaFormatter extends Base
             switch ($klarnaName) {
                 case 'street_address':
                     $aUserData[$klarnaName] = "{$oxObject->{$sTable . 'oxstreet'}->value} {$oxObject->{$sTable . 'oxstreetnr'}->value}";
+                    $aUserData[$klarnaName] = $aUserData[$klarnaName] !== ' ' ? $aUserData[$klarnaName] : null;
                     break;
                 case 'country':
                     $aUserData[$klarnaName] = $sCountryISO;

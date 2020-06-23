@@ -109,7 +109,7 @@ class KlarnaOrder extends BaseModel
         $currencyName      = $oBasket->getBasketCurrency()->name;
         $sLocale           = $this->_oUser->resolveLocale($sCountryISO);
         $lang              = strtoupper(Registry::getLang()->getLanguageAbbr());
-        $this->_aUserData    = $this->_oUser->getKlarnaData($this->b2bAllowed);
+        $this->_aUserData    = $this->_oUser->getKlarnaData();
         $cancellationTerms = KlarnaUtils::getShopConfVar('sKlarnaCancellationRightsURI_' . $lang);
         $terms             = KlarnaUtils::getShopConfVar('sKlarnaTermsConditionsURI_' . $lang);
 
@@ -184,14 +184,7 @@ class KlarnaOrder extends BaseModel
                     'disable_autofocus',
                 );
             }
-
-            if($this->isB2BAllowed()) {
-                $typeList = KlarnaConsts::getCustomerTypes();
-                $type = $typeList[$this->activeB2Option];
-                $this->_aOrderData['customer']['type'] = reset($type);
-                $this->_aOrderData['options']['allowed_customer_types'] = $type;
-            }
-
+            $this->setCustomerData();
             $this->setAttachmentsData();
             $this->setPassThroughField();
             $this->validateKlarnaB2B();
@@ -247,10 +240,19 @@ class KlarnaOrder extends BaseModel
             $this->b2cAllowed = false;
         }
     }
-
-    public function isB2BAllowed()
-    {
-        return $this->b2bAllowed;
+    
+    protected function setCustomerData() {
+        $append = array();
+        $typeList = KlarnaConsts::getCustomerTypes();
+        $type = $typeList[$this->activeB2Option];
+        $append['options']['allowed_customer_types'] = $type;
+        
+        if ($this->b2bAllowed && empty($this->_aUserData['billing_address']['organization_name']) === false) {
+            $append['customer']['type'] = 'organization';
+        } else {
+            $append['customer']['type'] = reset($type);
+        }
+        $this->_aOrderData += $append;
     }
 
     /**

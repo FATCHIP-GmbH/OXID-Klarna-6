@@ -550,11 +550,11 @@ class KlarnaUserTest extends ModuleUnitTestCase
     public function getKlarnaDataProvider_PFE()
     {
         return [
-            [0, 0, null, null, ['customer', 'billing_address']],
-            [0, 0, null, 1, ['customer', 'billing_address']],
-            [1, 0, null, null, ['customer', 'billing_address']],
-            [3, 0, null, null, ['customer', 'billing_address']],
-            [2, 1, '41b545c65fe99ca2898614e563a7108a', null, ['customer', 'billing_address', 'shipping_address']],
+            [0, 0, null, null, ['billing_address']],
+            [0, 0, null, 1, ['billing_address']],
+            [1, 0, null, null, ['billing_address']],
+            [3, 0, null, null, ['billing_address']],
+            [2, 1, '41b545c65fe99ca2898614e563a7108a', null, ['billing_address', 'shipping_address']],
         ];
     }
 
@@ -578,7 +578,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
         $oUser->setType($userType);
         $result = $oUser->getKlarnaData();
 
-        $this->assertEquals(array_keys($result), $resultKeys);
+        $this->assertEquals($resultKeys, array_keys($result));
     }
 
     /**
