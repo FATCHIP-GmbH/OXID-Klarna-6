@@ -363,4 +363,7 @@ You can deactivate it anytime by removing the codes again.',
     'TCKLARNA_IS_SETTING_PHONE_MANDATORY_TOOLTIP' => 'Please choose whether you want to make the phone number mandatory.',
     'TCKLARNA_IS_DEFAULT_COUNTRY_TIP'            => 'Please choose from the list, which country should be preselected by default when Klarna Instant Shopping is entered, while customer has not specified his country yet.',
     'TCKLARNA_IS_TERMS_URI_TIP' => 'Enter the URL to your terms and conditions here. This page will be linked from inside the Klarna Instant Shopping popup. A valid URL starting with https:// must be specified.',
+    'TCKLARNA_SHIPPING_KCO' => 'Shipping sets assignments for the Klarna Checkout',
+    'TCKLARNA_SHIPPING_KCO_DESC' => 'Please assign your defined shipping sets to the corresponding Klarna labels. By this assignment you can amongst others enable Packstation deliveries.',
+    'TCKLARNA_SHIPPING_SETTINGS' => 'Shipping sets',
 );

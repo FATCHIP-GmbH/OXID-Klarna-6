@@ -363,4 +363,7 @@ Sie können es jederzeit deaktivieren, indem Sie die Codes wieder entfernen.',
     'TCKLARNA_IS_SETTING_PHONE_MANDATORY_TOOLTIP' => 'Bitte wählen Sie, ob die Telefonnummer ein Pflichtfeld sein soll.',
     'TCKLARNA_IS_DEFAULT_COUNTRY_TIP'            => 'Bitte wählen Sie aus der Liste aus, welches Land bei Aufruf des Klarna Instant Shoppings standardmäßig voreingestellt sein soll, solange der Kunde sein Land noch nicht angegeben hat.',
     'TCKLARNA_IS_TERMS_URI_TIP' => 'Geben Sie hier die URL zu Ihren Allgemeinen Geschäftsbedingungen an. Diese werden im Klarna Instant Shopping Popup verlinkt. Eine gültige URL, die mit https:// beginnt, muss angegeben werden.',
+    'TCKLARNA_SHIPPING_KCO' => 'Versandarten-Zuordnung für den Klarna Checkout',
+    'TCKLARNA_SHIPPING_KCO_DESC' => 'Bitte ordnen Sie Ihren definierten Versandarten die entsprechenden Klarna Bezeichnungen zu. Über diese Zuordnung richten Sie unter anderem die Lieferung an Packstationen ein.',
+    'TCKLARNA_SHIPPING_SETTINGS' => 'Versandarten',
 );
