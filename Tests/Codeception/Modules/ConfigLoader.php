@@ -147,4 +147,18 @@ class ConfigLoader extends Module
         $sql = "UPDATE oxpayments SET ".join(',', $set)." WHERE `OXID`='$id'";
         $this->dbHandler->exec($sql);
     }
+    
+    public function assignDHLPackStation() {
+        
+        $encodeString = $this->getEncodeString('a:1:{s:12:"oxidstandard";s:23:"Postal + DHLPackstation";}');
+        $oxId = md5(time());
+        $sql = "INSERT INTO `oxconfig` VALUES ('{$oxId}', 1, 'module:tcklarna', 'aarrKlarnaShippingMap', 'aarr', {$encodeString}, now())";
+        $this->dbHandler->exec($sql);
+    }
+    
+    protected function getEncodeString($value) {
+        $encodeKey = $this->getKlarnaDataByName('sKlarnaEncodeKey');
+        
+        return "ENCODE('{$value}', '{$encodeKey}')";
+    }
 }
