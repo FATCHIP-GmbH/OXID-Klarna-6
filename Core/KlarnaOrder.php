@@ -37,6 +37,7 @@ use OxidEsales\EshopCommunity\Application\Model\PaymentList;
 
 class KlarnaOrder extends BaseModel
 {
+    const PACK_STATION_PREFIX = 'tcklarna_pack_station_';
     /**
      * @var array data to post to Klarna
      */
@@ -245,14 +246,12 @@ class KlarnaOrder extends BaseModel
         $append = array();
         $typeList = KlarnaConsts::getCustomerTypes();
         $type = $typeList[$this->activeB2Option];
-        $append['options']['allowed_customer_types'] = $type;
-        
         if ($this->b2bAllowed && empty($this->_aUserData['billing_address']['organization_name']) === false) {
             $append['customer']['type'] = 'organization';
         } else {
             $append['customer']['type'] = reset($type);
         }
-        $this->_aOrderData += $append;
+        $this->_aOrderData = array_merge_recursive($this->_aOrderData, $append);
     }
 
     /**
@@ -340,9 +339,15 @@ class KlarnaOrder extends BaseModel
                 
                 if ($assignedShippingMethod) {
                     if (KlarnaShipping::POSTAL_WITH_DHL_PACK_STATION === $assignedShippingMethod) {
-                        $option['shipping_method'] = KlarnaShipping::DHL_PACK_STATION;
-                        $shippingOptions[] = $option;
-                        $option['shipping_method'] = KlarnaShipping::POSTAL;
+                        $selectedShippingDuplicate = Registry::getSession()->getVariable('tcKlarnaSelectedDuplicate');
+                        $duplicate = $option;
+                        $duplicate['shipping_method'] = KlarnaShipping::DHL_PACK_STATION;
+                        $duplicate['id'] = self::PACK_STATION_PREFIX . $option['id'];
+                        $duplicate['preselected'] = $duplicate['id'] === $selectedShippingDuplicate;
+                        $shippingOptions[] = $duplicate;
+                        if ($duplicate['preselected']) {
+                            $option['preselected'] = false;
+                        }
                     } else {
                         $option['shipping_method'] = $assignedShippingMethod;
                     }
@@ -350,7 +355,6 @@ class KlarnaOrder extends BaseModel
                 $shippingOptions[] = $option;
             }
         }
-        
         // set basket back to selected shipping option
         $oBasket->setShipping($this->_selectedShippingSetId);
 
@@ -511,6 +515,11 @@ class KlarnaOrder extends BaseModel
         if (!$designSettings = KlarnaUtils::getShopConfVar('aKlarnaDesign')) {
             $designSettings = array();
         }
+        
+        $typeList = KlarnaConsts::getCustomerTypes();
+        $type = $typeList[$this->activeB2Option];
+        $options['allowed_customer_types'] = $type;
+        
         $options = array_merge($options, $designSettings);
 
         $this->_aOrderData['options'] = $options;
@@ -590,7 +599,7 @@ class KlarnaOrder extends BaseModel
      */
     protected function isSeparateDeliveryAddressAllowed()
     {
-        return KlarnaUtils::getShopConfVar('blKlarnaAllowSeparateDeliveryAddress');
+        return (bool) KlarnaUtils::getShopConfVar('blKlarnaAllowSeparateDeliveryAddress');
     }
 
     /**

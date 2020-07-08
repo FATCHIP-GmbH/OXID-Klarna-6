@@ -194,6 +194,7 @@ class KlarnaOrderTest extends ModuleUnitTestCase {
                     'date_of_birth_mandatory'           => true,
                     'require_validate_callback_success' => false,
                     'shipping_details'                  => "Wir kümmern uns schnellstens um den Versand!",
+                    'allowed_customer_types'            => ['person']
                 ],
             'gui'                      => ['options' => ['disable_autofocus']],
             'merchant_data'            => 'To be implemented by the merchant.',

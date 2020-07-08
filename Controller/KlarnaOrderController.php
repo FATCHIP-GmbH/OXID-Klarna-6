@@ -713,6 +713,13 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     protected function shipping_option_change($aPost)
     {
         if (isset($aPost['id'])) {
+            // clean up duplicated method id
+            $selectedDuplicate = null;
+            if (strpos($aPost['id'], KlarnaOrder::PACK_STATION_PREFIX) === 0) {
+                $selectedDuplicate = $aPost['id'];
+                $aPost['id'] = substr($aPost['id'], strlen(KlarnaOrder::PACK_STATION_PREFIX));
+            }
+            Registry::getSession()->setVariable('tcKlarnaSelectedDuplicate', $selectedDuplicate);
 
             // update basket
             $oSession = Registry::getSession();
