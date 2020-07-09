@@ -407,5 +407,6 @@
         </form>
     </div>
 </div>
+<div style="height: 80px"></div>
 <script src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_lib.js') }]"></script>
 <script src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_general.js') }]"></script>
