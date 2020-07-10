@@ -312,7 +312,7 @@ class KlarnaOrder extends BaseModel
         $this->_selectedShippingSetId = $oBasket->getShippingId();
 
         $shippingOptions = array();
-        $shippingMap = Registry::getConfig()->getShopConfVar('aarrKlarnaShippingMap');
+        $shippingMap = KlarnaUtils::getShopConfVar('aarrKlarnaShippingMap');
 
         foreach ($allSets as $shippingId => $shippingMethod) {
             $assignedShippingMethod = isset($shippingMap[$shippingId]) ? $shippingMap[$shippingId] : false;
