@@ -29,7 +29,7 @@ or add the following line within the "require" section to your composer.json fil
 
 and run 
 
-  composer update
+  composer install
   
 
 ## Documentation ##
