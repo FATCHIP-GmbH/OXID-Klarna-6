@@ -1,5 +1,10 @@
-### not yet released
-* Instant Shopping iframe height is too small - tagline clipped off
+
+### 5.2.0
+* Packstation implementation for KCO
+* Improved configuration options for a B2B and B2C store
+* oxDiscout object with negative oxPrice value transferred as surcharge to Klarna API
+* Word "Klarna" removed from payment method name on user views: order overview, email
+* Improved logging for patch order request
 
 ### 5.1.4
 * Change Klarna Contact information
