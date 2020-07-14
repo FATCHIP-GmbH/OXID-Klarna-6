@@ -36,4 +36,7 @@ return [
     'sKCOFormDelStreetName'    => '<Klarna KCOFormDelStreetName>',
     'sKCOFormDelStreetNumber'  => '<Klarna KCOFormDelStreetNumber>',
     'sKCOFormDelCity'          => '<Klarna KCOFormDelCity>',
+    'sKCOFormDelPackstation'   => 'Packstation',
+    'sKCOFormDelMachineId'     => '<DHLPackstation MachineId>',
+    'sKCOFormDelCustomerNumber'=> '<DHLPackstation CustomerNumber>'
 ];

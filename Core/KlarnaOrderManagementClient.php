@@ -118,16 +118,17 @@ class KlarnaOrderManagementClient extends KlarnaClientBase
      */
     public function sendOxidOrderNr($oxOrderNr, $order_id)
     {
+        $body = json_encode(array('merchant_reference1' => $oxOrderNr));
         $oResponse  =
             $this->patch(
                 sprintf(self::UPDATE_MERCHANT_REFERENCES_ENDPOINT, $order_id),
-                json_encode(array('merchant_reference1' => $oxOrderNr))
+                $body
             );
         $statusCode = $oResponse->status_code;
 
         $this->logKlarnaData(
             'Patch Order',
-            '',
+            $body,
             self::UPDATE_MERCHANT_REFERENCES_ENDPOINT,
             $oResponse->body,
             $order_id,

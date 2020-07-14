@@ -294,4 +294,10 @@ class KlarnaOrder extends KlarnaOrder_parent
 
         return $this->_isLoaded;
     }
+    
+    protected function _sendOrderByEmail($oUser = null, $oBasket = null, $oPayment = null) {
+        $oPayment->oxpayments__oxdesc->value = str_replace('Klarna ', '', $oPayment->oxpayments__oxdesc->value);
+        
+        return parent::_sendOrderByEmail($oUser, $oBasket, $oPayment);
+    }
 }

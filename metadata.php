@@ -18,6 +18,7 @@ use TopConcepts\Klarna\Controller\Admin\KlarnaOrderMain;
 use TopConcepts\Klarna\Controller\Admin\KlarnaOrderOverview;
 use TopConcepts\Klarna\Controller\Admin\KlarnaOrders;
 use TopConcepts\Klarna\Controller\Admin\KlarnaPaymentMain;
+use TopConcepts\Klarna\Controller\Admin\KlarnaShipping;
 use TopConcepts\Klarna\Controller\Admin\KlarnaStart;
 use TopConcepts\Klarna\Controller\KlarnaInstantShoppingController;
 use TopConcepts\Klarna\Controller\KlarnaUserController;
@@ -80,7 +81,7 @@ $aModule = array(
         'de' => 'Egal was Sie verkaufen, unsere Produkte sind dafür gemacht, Ihren Kunden das beste Erlebnis zu bereiten. Das gefällt nicht nur Ihnen, sondern auch uns! Die Klarna Plugins werden stets auf Herz und Nieren geprüft und können ganz einfach durch Sie oder Ihre technischen Ansprechpartner aktiviert werden. Das nennen wir smoooth. Hier können Sie sowohl Klarna Payments aktivieren und anschließend genau die Zahlarten auswählen, die Sie wünschen oder mit der Komplettlösung, dem Klarna Checkout, Ihre Customer Journey optimieren. Erfahren Sie hier mehr zu Klarna für OXID: <a href="https://www.klarna.com/de/verkaeufer/oxid/">https://www.klarna.com/de/verkaeufer/oxid/</a> Und so einfach ist die Integration: <a href="https://hello.klarna.com/rs/778-XGY-327/images/How_to_OXID.mp4" target="_blank">Zum Video</a>',
         'en' => 'No matter what you sell, our products are made to give your customers the best purchase experience. This is not only smoooth for you - it is smoooth for us, too! Klarna plugins are always tested and can be activated by you or your technical contact with just a few clicks. That is smoooth. Here you can activate Klarna Payments and then select exactly the payment methods you want or optimize your customer journey with the complete Klarna Checkout solution. Find out more about Klarna for OXID: <a href="https://www.klarna.com/de/verkaeufer/oxid/" target="_blank">https://www.klarna.com/de/verkaeufer/oxid/</a> Integrating Klarna at OXID is easy as pie: <a href="https://hello.klarna.com/rs/778-XGY-327/images/How_to_OXID.mp4" target="_blank">to the video (click)</a>'
     ),
-    'version'     => '5.1.4',
+    'version'     => '5.2.0',
     'author'      => '<a href="https://www.cgrd.de/oxid-eshop" target="_blank">https://www.cgrd.de/oxid-eshop</a>',
     'thumbnail'   => '/out/admin/src/img/klarna_lockup_black.jpg',
     'url'         => 'https://www.klarna.com/de/verkaeufer/plattformen-und-partner/oxid/',
@@ -97,6 +98,7 @@ $aModule = array(
         'KlarnaOrders'           => KlarnaOrders::class,
         'KlarnaMessaging'        => KlarnaMessaging::class,
         'KlarnaInstantShopping'  => KlarnaInstantShopping::class,
+        'KlarnaShipping'         => KlarnaShipping::class,
         // controllers
         'KlarnaExpress'          => KlarnaExpressController::class,
         'KlarnaAjax'             => KlarnaAjaxController::class,
@@ -162,6 +164,7 @@ $aModule = array(
         'tcklarna_orders.tpl'                  => 'tc/tcklarna/views/admin/tpl/tcklarna_orders.tpl',
         'tcklarna_messaging.tpl'               => 'tc/tcklarna/views/admin/tpl/tcklarna_messaging.tpl',
         'tcklarna_instant_shopping.tpl'        => 'tc/tcklarna/views/admin/tpl/tcklarna_instant_shopping.tpl',
+        'tcklarna_shipping.tpl'                => 'tc/tcklarna/views/admin/tpl/tcklarna_shipping.tpl',
         //admin partial
         'tcklarna_country_creds.tpl'           => 'tc/tcklarna/views/admin/tpl/tcklarna_country_creds.tpl',
         'tcklarna_header.tpl'                  => 'tc/tcklarna/views/admin/tpl/tcklarna_header.tpl',

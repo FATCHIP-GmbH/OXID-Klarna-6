@@ -299,16 +299,6 @@ class KlarnaUserTest extends ModuleUnitTestCase
         $this->assertTrue($bday_resultIsNull === is_null($result['customer']['date_of_birth']));
         $this->assertEquals($result['billing_address'] !== $result['shipping_address'], boolval($deladrid));
     }
-    public function testGetKlarnaPaymentData_B2B()
-    {
-        $oUser = oxNew(User::class);
-        $oUser->load('oxdefaultadmin');
-        $oUser->oxuser__oxcompany = new Field("Test Company", Field::T_RAW);
-        $result = $oUser->getKlarnaPaymentData(true);
-
-        $this->assertEquals('organization',$result['customer']['type']);
-
-    }
 
     public function isWritableDataProvider()
     {
@@ -550,11 +540,11 @@ class KlarnaUserTest extends ModuleUnitTestCase
     public function getKlarnaDataProvider_PFE()
     {
         return [
-            [0, 0, null, null, ['customer', 'billing_address']],
-            [0, 0, null, 1, ['customer', 'billing_address']],
-            [1, 0, null, null, ['customer', 'billing_address']],
-            [3, 0, null, null, ['customer', 'billing_address']],
-            [2, 1, '41b545c65fe99ca2898614e563a7108a', null, ['customer', 'billing_address', 'shipping_address']],
+            [0, 0, null, null, ['billing_address']],
+            [0, 0, null, 1, ['billing_address']],
+            [1, 0, null, null, ['billing_address']],
+            [3, 0, null, null, ['billing_address']],
+            [2, 1, '41b545c65fe99ca2898614e563a7108a', null, ['billing_address', 'shipping_address']],
         ];
     }
 
@@ -578,7 +568,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
         $oUser->setType($userType);
         $result = $oUser->getKlarnaData();
 
-        $this->assertEquals(array_keys($result), $resultKeys);
+        $this->assertEquals($resultKeys, array_keys($result));
     }
 
     /**

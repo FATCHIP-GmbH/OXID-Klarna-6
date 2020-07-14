@@ -26,6 +26,7 @@ $aLang = array(
     'TCKLARNA_CHECKOUT'               => 'Kasse',
 
     'TCKLARNA_DISCOUNT_TITLE'                     => 'Rabatt',
+    'TCKLARNA_SURCHARGE_TITLE'                    => 'Aufschlag',
     'TCKLARNA_VOUCHER_DISCOUNT'                   => 'Gutschein Rabatt',
     'TCKLARNA_GIFT_WRAPPING_TITLE'                => 'Geschenkverpackung',
     'TCKLARNA_GIFT_CARD_TITLE'                    => 'Grußkarte',

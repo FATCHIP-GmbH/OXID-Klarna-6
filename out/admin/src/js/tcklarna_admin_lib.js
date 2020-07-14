@@ -125,7 +125,11 @@ Selector2.prototype.init = function () {
     if (selected) {
         selected.index = Array.prototype.indexOf.call(this.choices.childNodes, selected);
         this.choices.insertBefore(this.choices.childNodes[selected.index], this.choices.childNodes[0]); // move selected to the top
-        this.emptyOption = false;
+        if(this.emptyOption === 'keep') {
+            this.choices.insertBefore($('<li class="selector__item--selected"><a href="#" data-value="" style="height: 100%"></a></li>')[0], this.choices.childNodes[1]);
+        } else {
+            this.emptyOption = false;            
+        }
     } else if(this.emptyOption){
         this.setEmptyOption();
     } else {
@@ -152,9 +156,8 @@ Selector2.prototype.setEmptyOption = function(){
     if(selected){
         selected.className = 'selector__item';
     }
-    this.choices.insertBefore($('<li class="selector__item--selected"></li>')[0], this.choices.childNodes[0]);
+    this.choices.insertBefore($('<li class="selector__item--selected"><a href="#" data-value="" style="height: 100%"></a></li>')[0], this.choices.childNodes[0]);
     this.hiddenInput.value = null;
-    this.emptyOption = true;
 };
 
 Selector2.prototype.cleanChoices = function () {
@@ -171,7 +174,7 @@ Selector2.prototype.selectItem = function (event) {
     this.beforeSelect.call(this, this.choices.childNodes[0]);
 
     //remove empty option
-    if(this.choices.childNodes[0].innerHTML == ''){
+    if(this.emptyOption !== 'keep' && this.choices.childNodes[0].innerHTML == ''){
         this.emptyOption = false;
         this.choices.childNodes[0].remove();
     }

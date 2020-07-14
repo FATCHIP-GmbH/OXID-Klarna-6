@@ -52,11 +52,10 @@ class KlarnaUser extends KlarnaUser_parent
     protected $_countryISO;
 
     /**
-     * @param bool $isB2BAvailable
      * @return array
      * @throws SystemComponentException
      */
-    public function getKlarnaData($isB2BAvailable = false)
+    public function getKlarnaData()
     {
         $shippingAddress = null;
         $result          = array();
@@ -64,7 +63,6 @@ class KlarnaUser extends KlarnaUser_parent
         if ((bool)KlarnaUtils::getShopConfVar('blKlarnaEnablePreFilling')) {
             $this->preFillAddress($result);
         }
-        $billingAddress = KlarnaFormatter::oxidToKlarnaAddress($this);
 
         if ($sCountryISO = Registry::get(Request::class)->getRequestEscapedParameter('selected-country')) {
             if (Registry::getSession()->hasVariable('invadr')) {
@@ -72,10 +70,6 @@ class KlarnaUser extends KlarnaUser_parent
             }
             $result['billing_address']['country'] = $sCountryISO;
             Registry::getSession()->setVariable('sCountryISO', $sCountryISO);
-        }
-
-        if($isB2BAvailable && !empty($billingAddress['organization_name'])){
-            $result['customer']['type'] = 'organization';
         }
 
         return $result;
@@ -87,18 +81,10 @@ class KlarnaUser extends KlarnaUser_parent
      */
     protected function preFillAddress(&$result)
     {
-        $customer = array(
-            'type' => 'person',
-        );
-
         $userBirthDate = $this->getFieldData('oxbirthdate');
         if ($userBirthDate && $userBirthDate != '0000-00-00') {
             $customer['date_of_birth'] = $userBirthDate;
         }
-
-        $result = [
-            'customer' => $customer,
-        ];
 
         $blShowShippingAddress = (bool)Registry::getSession()->getVariable('blshowshipaddress');
 
@@ -116,12 +102,10 @@ class KlarnaUser extends KlarnaUser_parent
 
     /**
      * Applicable in KP mode
-     * @param bool $isB2BAvailable
      * @return array
-     * @throws SystemComponentException
-     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
+     * @throws \Exception
      */
-    public function getKlarnaPaymentData($isB2BAvailable = false)
+    public function getKlarnaPaymentData()
     {
         $customer = array(
             'date_of_birth' => null,
@@ -144,10 +128,6 @@ class KlarnaUser extends KlarnaUser_parent
             'customer'         => $customer,
             'attachment'       => $this->getAttachmentsData(),
         );
-
-        if($isB2BAvailable && !empty($billingAddress['organization_name'])){
-            $aUserData['customer']['type'] = 'organization';
-        }
 
         return $aUserData;
     }

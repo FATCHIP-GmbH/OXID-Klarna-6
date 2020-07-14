@@ -182,7 +182,7 @@ class ANavigationFrontendKpCest
     public function testB2BOrder(AcceptanceTester $I)
     {
         $I->clearShopCache();
-        $I->loadKlarnaAdminConfig('KP', 'B2BOTH');
+        $I->loadKlarnaAdminConfig('KP', 'B2B_B2C');
 
         //Navigate untill step 3
         $this->navigateToPay($I, 'DE', true);

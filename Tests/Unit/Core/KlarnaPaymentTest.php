@@ -551,7 +551,7 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
         $this->assertEquals('Payment with this Klarna payment method is currently available only for companies.', $errors[0]);
 
         // valid b2b
-        $this->setModuleConfVar('sKlarnaB2Option', 'B2BOTH');
+        $this->setModuleConfVar('sKlarnaB2Option', 'B2B');
         $oUser->oxuser__oxcompany = new Field('FakeCompany', Field::T_RAW);
         $oKlarnaOrder = new  KlarnaPayment($oBasket, $oUser, []);
         $errors = $oKlarnaOrder->getError();

@@ -1999,3 +1999,9 @@ p {
 #merchant-button:focus {
     color: #3E3E3E;
 }
+
+#b2optionSelector {margin-left: 40px;}
+#b2optionSelector,
+#b2optionSelector .selector__choices,
+#b2optionSelector .selector__item,
+#b2optionSelector .selector__item--selected {width: 400px;}

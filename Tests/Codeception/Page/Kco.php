@@ -118,8 +118,11 @@ class Kco extends Page
         $I->wait(2);
         $I->fillField("//*[@id=\"postal_code\"]",$I->getKlarnaDataByName('sKCOFormPostCode'));
         $I->fillField("//*[@id=\"email\"]", $generatedEmail);
-        $I->waitForElement('//*[@id="title__root"]', 20);
-        $I->selectOption("//select[@id='title']", ['value' => 'frau']);
+        $I->waitForElement("//div[@data-cid='am.title']");
+        $I->click("//div[@data-cid='am.title']");
+        $I->click("//div[@data-cid='row frau']");
+        
+        
         $I->fillField("//*[@id=\"given_name\"]",$I->getKlarnaDataByName('sKCOFormGivenName'));
         $I->fillField("//*[@id='family_name']",$I->getKlarnaDataByName('sKCOFormFamilyName'));
         $I->fillField("//*[@id='street_address']",$I->getKlarnaDataByName('sKCOFormStreetName').' '.$I->getKlarnaDataByName('sKCOFormStreetNumber'));
@@ -150,5 +153,42 @@ class Kco extends Page
         $I->wait(3);
         $I->selectOption('#SHIPMO-container input[name=radio]', 'UPS 48');
         $I->wait(3);
+    }
+    
+    public function submitPackstationOption() {
+        $I = $this->user; 
+        $I->executeJS('document.querySelector(\'#SHIPMO-shipping-options__container input\').click()');
+        $I->wait(2);
+        $I->click('Enter your details');
+        
+        // switch to form iframe
+        $I->switchToIFrame(); // go back to the main content
+        $I->waitForElement('#' . $this->frames['full']);
+        $I->switchToIFrame($this->frames['full']);
+        $I->waitForElementVisible('//*[@id="machine-id"]');
+        $I->wait(2);
+
+        $I->click('//*[@id="machine-id"]');
+        $I->fillField('//*[@id="machine-id"]', $I->getKlarnaDataByName('sKCOFormDelMachineId'));
+        $I->click('//*[@id="customer-number"]');
+        $I->fillField('//*[@id="customer-number"]', $I->getKlarnaDataByName('sKCOFormDelCustomerNumber'));
+        $I->click('Confirm');
+
+        // switch to KCO iframe
+        $I->switchToIFrame();
+        $I->switchToIFrame($this->frames['main']);
+    }
+
+    /**
+     * Fill the field character by character
+     * @param string $input
+     * @param string $msg
+     * @param AcceptanceTester $I
+     */
+    protected function fillFieldSpecial(string $input, string $msg, AcceptanceTester $I)
+    {
+        foreach (str_split($msg) as $key) {
+            $I->pressKey($input, $key);
+        }
     }
 }
