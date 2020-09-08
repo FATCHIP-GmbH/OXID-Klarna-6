@@ -72,6 +72,35 @@ class OrderManagementCest
      * @group Admin
      * @param AcceptanceTester $I
      */
+    public function refundPayment(AcceptanceTester $I)
+    {
+        $I->loadKlarnaAdminConfig('KCO');
+        $klarnaId = $this->_prepareNewOrder($I);
+        $admin = $I->openShopAdminPanel();
+        $admin->login();
+        $admin->selectShop();
+        $admin->navigateMenu(["Administer Orders", "Orders"]);
+        $name = $I->getKlarnaDataByName('sKCOFormGivenName');
+        $admin->selectListItem($name);
+
+        $admin->selectDetailsTab("Klarna");
+        $I->wait(3);
+        $I->waitForFrame("basefrm");
+        $I->waitForFrame('edit');
+        $I->cantSee('Refunds');
+        $I->click("//form[@id='capture']//input[@type='submit']");
+        $I->wait(3);
+        $I->seeInKlarnaAPI($klarnaId,  'CAPTURED', false);
+        $I->wait(3);
+        $I->click("//form[@id='refund']//input[@type='submit']");
+        $I->wait(3);
+        $I->see('Refunds');
+    }
+
+    /**
+     * @group Admin
+     * @param AcceptanceTester $I
+     */
     public function onSiteMessage(AcceptanceTester $I)
     {
         $admin = $I->openShopAdminPanel();
