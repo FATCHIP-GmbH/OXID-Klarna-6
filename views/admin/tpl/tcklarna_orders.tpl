@@ -244,7 +244,7 @@
                                 [{$refund.description}]
                             </td>
                             <td>
-                                [{$refund.refunded_at}]
+                                [{$refund.refunded_at|date_format:"%Y-%m-%d %H:%M:%S"}]
                             </td>
                         </tr>
                     [{/foreach}]
