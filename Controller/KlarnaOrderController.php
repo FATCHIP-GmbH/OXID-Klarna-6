@@ -1157,7 +1157,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     public function getPayment() {
         $oPayment = parent::getPayment();
 
-        if (is_object($oPayment) && in_array($oPayment->oxpayments__oxid->value, $oPayment->getKlarnaPaymentsIds())) {
+        if (is_object($oPayment) && in_array($oPayment->oxpayments__oxid->value, KlarnaPaymentModel::getKlarnaPaymentsIds())) {
             $oPayment->assign(
                 [
                     'oxdesc' => str_replace('Klarna ', '', $oPayment->getFieldData('oxdesc'))

@@ -297,7 +297,7 @@ class KlarnaOrder extends KlarnaOrder_parent
     
     protected function _sendOrderByEmail($oUser = null, $oBasket = null, $oPayment = null) {
 
-        if (is_object($oPayment) && in_array($oPayment->oxpayments__oxid->value, $oPayment->getKlarnaPaymentsIds())) {
+        if (is_object($oPayment) && in_array($oPayment->oxpayments__oxid->value, KlarnaPayment::getKlarnaPaymentsIds())) {
             $oPayment->assign(
                 [
                     'oxdesc' => str_replace('Klarna ', '', $oPayment->getFieldData('oxdesc'))
