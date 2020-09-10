@@ -84,7 +84,7 @@ class KlarnaConsts
      */
     public static function getKlarnaCoreCountries()
     {
-        return array('SE', 'NO', 'FI', 'DE', 'AT', 'NL', 'GB', 'DK', 'CH', 'ES', 'FR', 'BE');
+        return array('SE', 'NO', 'FI', 'DE', 'AT', 'NL', 'GB', 'DK', 'CH', 'ES', 'FR', 'BE', 'IT');
     }
 
     /**
@@ -122,7 +122,9 @@ class KlarnaConsts
             'GB' => 'GBP',
             'CH' => 'CHF',
             'BE' => 'EUR',
-            'FR' => 'EUR'
+            'FR' => 'EUR',
+            'ES' => 'EUR',
+            'IT' => 'EUR'
         );
     }
 
