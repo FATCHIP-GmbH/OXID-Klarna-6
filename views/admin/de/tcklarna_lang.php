@@ -37,6 +37,7 @@ $aLang = array(
     'tcklarna_tbclklarna_orders' => 'Klarna',
     'TCKLARNA_NO_OPTIONS_MODE'   => 'In diesem Modus gibt es keine Einstellungen.',
     'TCKLARNA_CHANGES_SAVED'     => 'Alle Einstellungen wurden gesichert.',
+    'TCKLARNA_EMPTY_FIELDS_WARRNING' => 'Das Leerlassen von URL-Feldern kann zu Fehlfunktionen des Moduls führen.',
 
     'TCKLARNA_EASY'                         => 'So einfach ist es, Klarna zu aktiveren',
     'TCKLARNA_PHONE'                        => 'Telefon',
