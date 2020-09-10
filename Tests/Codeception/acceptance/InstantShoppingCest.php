@@ -40,9 +40,9 @@ class InstantShoppingCest
     public function instantShopping(AcceptanceTester $I, $scenario)
     {
         $this->activateInstantShopping($I);
-        $I->wait(3);
+        $I->wait(4);
         $I->openShop();
-        $I->wait(3);
+        $I->wait(4);
         $productNavigation = new ProductNavigation($I);
         $productNavigation->openProductDetailsPage('05848170643ab0deb9914566391c0c63');
         $I->wait(4);
@@ -51,12 +51,12 @@ class InstantShoppingCest
         $this->fillInstantShoppingForm($I);
         $I->waitForElement('//*[@id="checkout-button"]');
         $I->click('//*[@id="checkout-button"]');
-        $I->wait(5);
+        $I->wait(6);
         $I->waitForElementClickable('//*[@id="confirmation__bottom"]');
         $I->click('//*[@id="confirmation__bottom"]');
-        $I->wait(3);
+        $I->wait(4);
         $I->seeInCurrentUrl('thankyou');
-        $I->wait(2);
+        $I->wait(3);
         $I->assertKlarnaData();
 
     }
@@ -93,8 +93,12 @@ class InstantShoppingCest
         $I->fillField("//*[@id='city']",$I->getKlarnaDataByName('sKCOFormCity'));
         $I->fillField("//*[@id='phone']",$I->getKlarnaDataByName('sKCOFormPhone'));
         $I->fillField("//*[@id='date_of_birth']",$I->getKlarnaDataByName('sKCOFormDob'));
-        $I->waitForElement('//*[@id="title__root"]', 20);
-        $I->selectOption("//select[@id='title']", ['value' => 'frau']);
+
+        try {
+            $I->waitForElement('//*[@id="title__root"]', 10);
+            $I->selectOption("//select[@id='title']", ['value' => 'frau']);
+        } catch (Exception $e) {}
+
         $I->click("//*[@id=\"address-button\"]");
     }
 

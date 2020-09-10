@@ -139,7 +139,7 @@ class Kco extends Page
     public function fillKcoShippingForm() {
         $I = $this->user;
         $I->wait(4); // wait for loaders and overlays to be hidden
-        $I->click('#preview__preview__touchable');
+        $I->click('//*[@id="klarna-checkout-shipping-details"]//*[@id="preview__link"]');
         $I->switchToIFrame(); // go back to the main content
         $I->waitForElement('#' . $this->frames['full']);
         $I->switchToIFrame($this->frames['full']);
