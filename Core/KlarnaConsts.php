@@ -212,8 +212,9 @@ class KlarnaConsts
             'sv' => 'sv-SE',
             'at' => 'de-AT',
             'us' => 'en-US',
-            'be' => 'fr-be',
-            'fr' => 'fr-fr'
+            'be' => 'fr-BE',
+            'fr' => 'fr-fr',
+            'es' => 'es-ES'
         ];
 
         if(isAdmin() && $default === true) {
