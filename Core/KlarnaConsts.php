@@ -214,7 +214,8 @@ class KlarnaConsts
             'us' => 'en-US',
             'be' => 'fr-BE',
             'fr' => 'fr-fr',
-            'es' => 'es-ES'
+            'es' => 'es-ES',
+            'it' => 'it-IT'
         ];
 
         if(isAdmin() && $default === true) {
