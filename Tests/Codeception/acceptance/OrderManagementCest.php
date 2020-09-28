@@ -30,17 +30,12 @@ class OrderManagementCest
         $name = $I->getKlarnaDataByName('sKCOFormGivenName');
         $admin->selectListItem($name);
 
-        $admin->selectDetailsTab("Main");
+        $admin->selectDetailsTab("Klarna");
         $I->wait(3);
         $I->waitForFrame("basefrm");
         $I->waitForFrame('edit');
-        $I->fillField("//input[@name='editval[oxorder__oxdiscount]']", self::NEW_ORDER_DISCOUNT);
-        $I->fillField("//input[@name='editval[oxorder__oxtrackcode]']", self::NEW_ORDER_TRACK_CODE);
-        $I->click("#saveFormButton");
+        $I->click("//form[@id='capture']//input[@type='submit']");
         $I->wait(3);
-        $I->click("#shippNowButton");
-        $I->wait(3);
-
         $I->seeInKlarnaAPI($klarnaId,  'CAPTURED', false);
     }
 
@@ -66,6 +61,35 @@ class OrderManagementCest
         $I->click("//form[@id='cancel']//input[@type='submit']");
         $I->wait(3);
         $I->seeInKlarnaAPI($klarnaId,  'CANCELLED', false);
+    }
+
+    /**
+     * @group Admin
+     * @param AcceptanceTester $I
+     */
+    public function refundPayment(AcceptanceTester $I)
+    {
+        $I->loadKlarnaAdminConfig('KCO');
+        $klarnaId = $this->_prepareNewOrder($I);
+        $admin = $I->openShopAdminPanel();
+        $admin->login();
+        $admin->selectShop();
+        $admin->navigateMenu(["Administer Orders", "Orders"]);
+        $name = $I->getKlarnaDataByName('sKCOFormGivenName');
+        $admin->selectListItem($name);
+
+        $admin->selectDetailsTab("Klarna");
+        $I->wait(3);
+        $I->waitForFrame("basefrm");
+        $I->waitForFrame('edit');
+        $I->cantSee('Refunds');
+        $I->click("//form[@id='capture']//input[@type='submit']");
+        $I->wait(3);
+        $I->seeInKlarnaAPI($klarnaId,  'CAPTURED', false);
+        $I->wait(3);
+        $I->click("//form[@id='refund']//input[@type='submit']");
+        $I->wait(3);
+        $I->see('Refunds');
     }
 
     /**

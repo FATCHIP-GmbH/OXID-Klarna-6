@@ -5,6 +5,9 @@
         max-width: 100%;
         margin-bottom: 20px;
     }
+    .table > thead > tr{
+        text-align: left;
+    }
 
     .table > thead > tr > th,
     .table > tbody > tr > th,
@@ -184,6 +187,16 @@
     [{if $aCaptures}]
         <div>
             <h2>[{oxmultilang ident="KLARNA_CAPTURES"}]</h2>
+            [{if $canRefund and !$aRefunds}]
+                <form name="refund" id="refund" action="[{ $oViewConf->getSelfLink() }]" method="post">
+                    [{ $oViewConf->getHiddenSid() }]
+                    <input type="hidden" name="cl" value="KlarnaOrders">
+                    <input type="hidden" name="oxid" value="[{ $oxid }]">
+                    <input type="hidden" name="fnc" value="refundFullOrder">
+
+                    <input type="submit" value="[{ oxmultilang ident="TCKLARNA_COMPLETE_REFUND" }]" class="alert-warning">
+                </form>
+            [{/if}]
             <table class="table table-condensed table-striped">
                 <thead>
                 <tr>
@@ -231,7 +244,7 @@
                                 [{$refund.description}]
                             </td>
                             <td>
-                                [{$refund.refunded_at}]
+                                [{$refund.refunded_at|date_format:"%Y-%m-%d %H:%M:%S"}]
                             </td>
                         </tr>
                     [{/foreach}]

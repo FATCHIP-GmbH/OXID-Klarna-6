@@ -47,10 +47,11 @@ class ANavigationFrontendKpCest
             $I->waitForElementClickable('//*[@id="mandate-signup-sepa-details-confirmation__footer-button-wrapper"]');
             $I->click('//*[@id="mandate-signup-sepa-details-confirmation__footer-button-wrapper"]');
         } catch (Exception $e) {
-            $I->waitForElementClickable('//*[@id="direct-debit-mandate-review__bottom"]');
-            $I->click('//*[@id="direct-debit-mandate-review__bottom"]/span/button');
-            $I->waitForElementClickable('//*[@id="direct-debit-confirmation__bottom"]');
-            $I->click('//*[@id="direct-debit-confirmation__bottom"]/span/button');
+            $I->waitForElementClickable('//*[@id="paynow-aligned-content__button__0"]');
+            $I->click('//*[@id="paynow-aligned-content__button__0"]');
+            $I->wait(3);
+            $I->waitForElementClickable('//*[@id="paynow-aligned-content__button__0"]');
+            $I->click('//*[@id="paynow-aligned-content__button__0"]');
         }
 
         $I->switchToIFrame();
@@ -138,10 +139,11 @@ class ANavigationFrontendKpCest
                 $I->waitForElementClickable('//*[@id="mandate-signup-sepa-details-confirmation__footer-button-wrapper"]');
                 $I->click('//*[@id="mandate-signup-sepa-details-confirmation__footer-button-wrapper"]');
             } catch (Exception $e) {
-                $I->waitForElementClickable('//*[@id="direct-debit-mandate-review__bottom"]');
-                $I->click('//*[@id="direct-debit-mandate-review__bottom"]');
-                $I->waitForElementClickable('//*[@id="direct-debit-confirmation__bottom"]');
-                $I->click('//*[@id="direct-debit-confirmation__bottom"]');
+                $I->waitForElementClickable('//*[@id="paynow-aligned-content__button__0"]');
+                $I->click('//*[@id="paynow-aligned-content__button__0"]');
+                $I->wait(3);
+                $I->waitForElementClickable('//*[@id="paynow-aligned-content__button__0"]');
+                $I->click('//*[@id="paynow-aligned-content__button__0"]');
             }
         }
 
@@ -161,7 +163,7 @@ class ANavigationFrontendKpCest
     {
 
         return [
-            [ 'radio' => 'klarna_pay_later', 'iframe' => 'klarna-pay-later-fullscreen', 'country' => null],
+            ['radio' => 'klarna_pay_later', 'iframe' => 'klarna-pay-later-fullscreen', 'country' => null],
             ['radio' => 'klarna_pay_later', 'iframe' => 'klarna-pay-later-fullscreen','country' => 'AT'],
             ['radio' => 'klarna_pay_later','iframe' => 'klarna-pay-later-fullscreen','country' => 'DK'],
             ['radio' => 'klarna_pay_later','iframe' => 'klarna-pay-later-fullscreen','country' => 'FI'],
@@ -193,12 +195,12 @@ class ANavigationFrontendKpCest
         $I->waitForElementVisible('//*[@id="klarna-pay-later-fullscreen"]');
         $I->switchToIFrame("klarna-pay-later-fullscreen");
         $I->wait(2);
-        $I->click('//*[@id="organizationalData-dataCollection__entityType__container"]');
-        $I->click('//*[@id="organizationalData-entityType__limited_company"]');
-        $I->click('//*[@id="organizationalData-dataCollection__organizationNumber"]');
-        $this->fillFieldSpecial('//*[@id="organizationalData-dataCollection__organizationNumber"]', "HRB12345", $I);
-        $this->fillFieldSpecial('//*[@id="organizationalData-dataCollection__vatId"]', "DE999999999", $I);
-        $I->click('//*[@id="organizationalData-dataCollection__submit"]');
+        $I->click('//*[@id="mismatch-dialog-confirm-button"]');
+        $I->wait(3);
+        $this->fillFieldSpecial('//*[@id="purchase-approval-date-of-birth"]',$I->getKlarnaDataByName('sKlarnaBDate'), $I);
+        $this->fillFieldSpecial('//*[@id="purchase-approval-phone-number"]',$I->getKlarnaDataByName('sKlarnaPhoneNumber'), $I);
+        $I->click('//*[@id="purchase-approval-continue"]');
+        $I->wait(8);
         $I->switchToIFrame();
         $I->wait(2);
         $I->click(".nextStep");
@@ -230,10 +232,11 @@ class ANavigationFrontendKpCest
         $I->click('//*[@id="purchase-approval-continue"]');
         $I->wait(2);
 
-        $I->waitForElementClickable('//*[@id="direct-debit-mandate-review__bottom"]');
-        $I->click('//*[@id="direct-debit-mandate-review__bottom"]/span/button');
-        $I->waitForElementClickable('//*[@id="direct-debit-confirmation__bottom"]');
-        $I->click('//*[@id="direct-debit-confirmation__bottom"]/span/button');
+        $I->waitForElementClickable('//*[@id="paynow-aligned-content__button__0"]');
+        $I->click('//*[@id="paynow-aligned-content__button__0"]');
+        $I->wait(3);
+        $I->waitForElementClickable('//*[@id="paynow-aligned-content__button__0"]');
+        $I->click('//*[@id="paynow-aligned-content__button__0"]');
 
         $I->switchToIFrame();
         $I->click(".nextStep");

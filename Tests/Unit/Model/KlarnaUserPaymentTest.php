@@ -27,7 +27,7 @@ class KlarnaUserPaymentTest extends ModuleUnitTestCase
 
         $result = $userPaymentModel->getBadgeUrl();
 
-        $this->assertEquals($result, $expectedResult);
+        $this->assertContains($expectedResult, $result);
     }
 
     public function paymentDataProvider()

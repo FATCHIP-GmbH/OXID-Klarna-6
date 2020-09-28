@@ -221,7 +221,7 @@ class KlarnaOrdersTest extends ModuleUnitTestCase {
     /**
      *
      */
-    public function testRefundOrderAmount() {
+    public function testRefundFullOrder() {
         $this->setOrder();
 
         $client = $this->getMockBuilder(KlarnaOrderManagementClient::class)->setMethods(['createOrderRefund'])->getMock();
@@ -230,7 +230,8 @@ class KlarnaOrdersTest extends ModuleUnitTestCase {
         $controller->expects($this->any())->method('getEditObjectId')->willReturn('test');
         $controller->expects($this->any())->method('getKlarnaMgmtClient')->willReturn($client);
         $this->setProtectedClassProperty($controller, 'client', $client);
-        $result = $controller->refundOrderAmount(100);
+        $controller->refundFullOrder();
+        $result = $this->getSession()->getVariable('testorderRefund');
         $this->assertEquals('test', $result);
 
         $client = $this->getMockBuilder(KlarnaOrderManagementClient::class)->setMethods(['createOrderRefund'])->getMock();
@@ -239,7 +240,8 @@ class KlarnaOrdersTest extends ModuleUnitTestCase {
         $controller->expects($this->any())->method('getEditObjectId')->willReturn('test');
         $controller->expects($this->any())->method('getKlarnaMgmtClient')->willReturn($client);
         $this->setProtectedClassProperty($controller, 'client', $client);
-        $result = $controller->refundOrderAmount(100);
+        $controller->refundFullOrder();
+        $result = $this->getSession()->getVariable('testorderRefund');
 
         $this->assertNull($result);
     }

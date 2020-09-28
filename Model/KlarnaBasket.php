@@ -18,6 +18,7 @@
 namespace TopConcepts\Klarna\Model;
 
 
+use OxidEsales\Eshop\Application\Model\Discount;
 use OxidEsales\Eshop\Core\Config;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Core\Exception\KlarnaBasketTooLargeException;
@@ -291,7 +292,7 @@ class KlarnaBasket extends KlarnaBasket_parent
     {
         $oDiscount = $this->getVoucherDiscount();
         if ($this->_isServicePriceSet($oDiscount)) {
-            $this->klarnaOrderLines[] = $this->_getKlarnaCheckoutVoucherDiscount($oDiscount, $iLang, $oOrder);
+            $this->klarnaOrderLines[] = $this->_getKlarnaCheckoutVoucherDiscount($oDiscount, $iLang);
         }
 
         $oDiscount = $this->getOxDiscount();
@@ -302,8 +303,58 @@ class KlarnaBasket extends KlarnaBasket_parent
             $oDiscount->setPrice($oOrder->getFieldData('oxdiscount'));
         }
         if ($this->_isServicePriceSet($oDiscount)) {
-            $this->klarnaOrderLines[] = $this->_getKlarnaCheckoutDiscount($oDiscount, $iLang, $oOrder);
+            $taxInfo = [];
+            foreach ($this->klarnaOrderLines as $orderLine) {
+                $taxInfo[$orderLine['tax_rate']] += $orderLine['unit_price'];
+            }
+
+            if(count($taxInfo) > 1) {
+                $klarnaDiscounts = $this->buildDiscounts();
+
+                if(!empty($klarnaDiscounts)) {
+                    foreach ($klarnaDiscounts as $discount) {
+                        foreach ($taxInfo as $taxRate => $unitPrice) {
+                            $this->klarnaOrderLines[] = $this->_getKlarnaCheckoutDiscount($oDiscount, $iLang,
+                                ['taxRate' => $taxRate, 'unitPrice' => $unitPrice, 'discount' => $discount]);
+                        }
+                    }
+                }
+            } else {
+                $this->klarnaOrderLines[] = $this->_getKlarnaCheckoutDiscount($oDiscount, $iLang);
+            }
         }
+    }
+
+    /**
+     * @codeIgnoreCoverage
+     * @return array
+     */
+    protected function buildDiscounts()
+    {
+        $discounts = $this->getDiscounts();
+        $klarnaDiscounts = [];
+        if (!is_array($discounts)) {
+            $discount = oxNew(Discount::class);
+            $discount->load($discounts->sOXID);
+            if($discount->isLoaded()){
+                $klarnaDiscounts[] = $discount;
+            }
+            return $klarnaDiscounts;
+        }
+
+        foreach ($discounts as $discount) {
+            if ($discount->sType == 'itm') {
+                continue;
+            }
+
+            $discountobj = oxNew(Discount::class);
+            $discountobj->load($discount->sOXID);
+            if($discountobj->isLoaded()){
+                $klarnaDiscounts[] = $discountobj;
+            }
+        }
+
+        return $klarnaDiscounts;
     }
 
     /**
@@ -405,22 +456,25 @@ class KlarnaBasket extends KlarnaBasket_parent
      *
      * @param Price $oPrice
      * @param null $iLang
+     * @param null $taxInfo
      * @return array
      */
-    protected function _getKlarnaCheckoutDiscount(Price $oPrice, $iLang = null)
+    protected function _getKlarnaCheckoutDiscount(Price $oPrice, $iLang = null, $taxInfo = null)
     {
         $value = $oPrice->getBruttoPrice();
         $type = 'discount';
         $reference = 'SRV_DISCOUNT';
         $name = html_entity_decode(Registry::getLang()->translateString('TCKLARNA_DISCOUNT_TITLE', $iLang), ENT_QUOTES);
+        $unit_price = -KlarnaUtils::parseFloatAsInt( $value * 100);
+        $tax_rate   = KlarnaUtils::parseFloatAsInt($this->getOrderVatAverage() * 100);
         if ($value < 0) {
             $type = 'surcharge';
             $reference = 'SRV_SURCHARGE';
             $name = html_entity_decode(Registry::getLang()->translateString('TCKLARNA_SURCHARGE_TITLE', $iLang), ENT_QUOTES);
+        } elseif(!empty($taxInfo) && $taxInfo['unitPrice'] && is_object($taxInfo['discount'])) {
+            $unit_price = -$taxInfo['discount']->getAbsValue($taxInfo['unitPrice']);
+            $tax_rate = $taxInfo['taxRate'];
         }
-        
-        $unit_price = -KlarnaUtils::parseFloatAsInt( $value * 100);
-        $tax_rate   = KlarnaUtils::parseFloatAsInt($this->getOrderVatAverage() * 100);
 
         $aItem = array(
             'type'             => $type,

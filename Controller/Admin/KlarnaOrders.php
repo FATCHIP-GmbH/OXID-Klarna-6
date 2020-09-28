@@ -81,6 +81,17 @@ class KlarnaOrders extends AdminDetailsController
 
         $this->setOrderSync($klarnaOrderData);
 
+        if(!empty($klarnaOrderData['captures'])
+            && is_array($klarnaOrderData['captures'])
+            && !empty(current($klarnaOrderData['captures'])['captured_amount']))
+        {
+            $orderValue = KlarnaUtils::parseFloatAsInt($this->getEditObject()->getTotalOrderSum() * 100);
+
+            if(current($klarnaOrderData['captures'])['captured_amount'] === $orderValue) {
+                $this->addTplParam('canRefund', $this->formatCaptures($klarnaOrderData['captures']));
+            }
+        }
+
         $this->addTplParam('aCaptures', $this->formatCaptures($klarnaOrderData['captures']));
         $this->addTplParam('aRefunds', $klarnaOrderData['refunds']);
         $klarnaRef = $klarnaOrderData['klarna_reference'] ?: " - ";
@@ -171,26 +182,25 @@ class KlarnaOrders extends AdminDetailsController
 
     /**
      * @param $amount
-     * @return array
      * @throws \OxidEsales\EshopCommunity\Core\Exception\SystemComponentException
      */
-    public function refundOrderAmount($amount)
+    public function refundFullOrder()
     {
         $orderRefund = null;
         $data        = array(
-            'refunded_amount' => $amount,
+            'refunded_amount' => KlarnaUtils::parseFloatAsInt($this->getEditObject()->getTotalOrderSum() * 100),
         );
 
         $sCountryISO = KlarnaUtils::getCountryISO($this->getEditObject()->getFieldData('oxbillcountryid'));
-
+        $result = null;
         try {
             $client      = $this->getKlarnaMgmtClient($sCountryISO);
-            $orderRefund = $client->createOrderRefund($data, $this->getEditObject()->getFieldData('tcklarna_orderid'));
+            $result = $client->createOrderRefund($data, $this->getEditObject()->getFieldData('tcklarna_orderid'));
         } catch (\Exception $e) {
             Registry::get("oxUtilsView")->addErrorToDisplay($e->getMessage());
         }
 
-        return $orderRefund;
+        $this->getSession()->setVariable($this->getEditObjectId().'orderRefund', $result);
     }
 
     /**

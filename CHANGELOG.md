@@ -1,3 +1,8 @@
+### 5.3.0
+* Order Refund button in admin
+* Bugfix: Separate discount blocks for each VAT rate
+* PR: OXID module compatibility
+* Add Klarna Support for new countries: IT, ES, FR and BE
 
 ### 5.2.0
 * Packstation implementation for KCO

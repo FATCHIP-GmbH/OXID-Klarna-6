@@ -9,6 +9,50 @@ use TopConcepts\Klarna\Core\KlarnaConsts;
 use TopConcepts\Klarna\Tests\Codeception\Page\Kco;
 
 class CheckoutKCOCest {
+
+    /**
+     * Test new order guest user
+     * @group KCO_frontend
+     * @param AcceptanceTester $I
+     * @throws \Exception
+     */
+    public function frontendKcoOrderNachnahme(AcceptanceTester $I)
+    {
+        $I->loadKlarnaAdminConfig('KCO');
+        $I->setExternalPayment('oxidcashondel', ['TCKLARNA_EXTERNALNAME' => 'Nachnahme', 'TCKLARNA_EXTERNALPAYMENT' => 1]);
+        $homePage = $I->openShop();
+        $I->waitForPageLoad();
+        $basket = new Basket($I);
+        $basket->addProductToBasket('05848170643ab0deb9914566391c0c63', 1);
+        $basket->addProductToBasket('058de8224773a1d5fd54d523f0c823e0', 1);
+        $homePage->openMiniBasket();
+        $I->click(Translator::translate('CHECKOUT'));
+        $I->waitForPageLoad();
+        $I->selectOption("#other-countries", 'DE');
+
+        //Fill order info
+        $kco = new Kco($I);
+        $kco->fillKcoUserForm();
+        $I->wait(4);
+        $I->selectOption("//*[@name='payment-selector']", "external_nachnahme");
+        $I->wait(1);
+        $I->executeJS('document.querySelector("[data-cid=\'button.buy_button\']").click()');
+        $I->switchToIFrame(); // navigate back to to main document frame
+        $I->waitForPageLoad();
+        $I->waitForElement('#orderAddress');
+        $I->waitForPageLoad();
+        $I->click(Translator::translate('SUBMIT_ORDER'));
+        $I->waitForElement('#thankyouPage');
+        $I->waitForPageLoad();
+
+        $billEmail = Fixtures::get('gKCOEmail'); // recall generated and stored email
+        $I->seeInDatabase('oxuser', ['oxusername' => $billEmail, 'oxpassword' => '']);
+        $orderNumber = $I->grabFromDatabase('oxorder', 'OXORDERNR', ['OXBILLEMAIL' => $billEmail]);
+        $I->seeInPageSource(
+            sprintf(Translator::translate('REGISTERED_YOUR_ORDER'), $orderNumber)
+        );
+    }
+
     /**
      * @group KCO_frontend
      * @param AcceptanceTester $I
@@ -59,49 +103,6 @@ class CheckoutKCOCest {
 
         $I->seeOrderInDb($klarnaId, $inputDataMapper);
         $I->seeInKlarnaAPI($klarnaId, "AUTHORIZED", true);
-    }
-    
-    /**
-     * Test new order guest user
-     * @group KCO_frontend
-     * @param AcceptanceTester $I
-     * @throws \Exception
-     */
-    public function frontendKcoOrderNachnahme(AcceptanceTester $I)
-    {
-        $I->loadKlarnaAdminConfig('KCO');
-        $I->setExternalPayment('oxidcashondel', ['TCKLARNA_EXTERNALNAME' => 'Nachnahme', 'TCKLARNA_EXTERNALPAYMENT' => 1]);
-        $homePage = $I->openShop();
-        $I->waitForPageLoad();
-        $basket = new Basket($I);
-        $basket->addProductToBasket('05848170643ab0deb9914566391c0c63', 1);
-        $basket->addProductToBasket('058de8224773a1d5fd54d523f0c823e0', 1);
-        $homePage->openMiniBasket();
-        $I->click(Translator::translate('CHECKOUT'));
-        $I->waitForPageLoad();
-        $I->selectOption("#other-countries", 'DE');
-
-        //Fill order info
-        $kco = new Kco($I);
-        $kco->fillKcoUserForm();
-        $I->wait(4);
-        $I->selectOption("//*[@name='payment-selector']", "external_nachnahme");
-        $I->wait(1);
-        $I->executeJS('document.querySelector("[data-cid=\'button.buy_button\']").click()');
-        $I->switchToIFrame(); // navigate back to to main document frame
-        $I->waitForPageLoad();
-        $I->waitForElement('#orderAddress');
-        $I->waitForPageLoad();
-        $I->click(Translator::translate('SUBMIT_ORDER'));
-        $I->waitForElement('#thankyouPage');
-        $I->waitForPageLoad();
-
-        $billEmail = Fixtures::get('gKCOEmail'); // recall generated and stored email
-        $I->seeInDatabase('oxuser', ['oxusername' => $billEmail, 'oxpassword' => '']);
-        $orderNumber = $I->grabFromDatabase('oxorder', 'OXORDERNR', ['OXBILLEMAIL' => $billEmail]);
-        $I->seeInPageSource(
-            sprintf(Translator::translate('REGISTERED_YOUR_ORDER'), $orderNumber)
-        );
     }
 
     /**
@@ -194,9 +195,12 @@ class CheckoutKCOCest {
         $kco->fillKcoShippingForm();
 
         $I->see('Create Customer Account AND subscribe to Newsletter');
+        $I->wait(2);
         // js clicks - the only working way to click Newsletter checkbox and PlaceOrder
         $I->executeJS('document.querySelector("#additional_checkbox_from_merchant__root>div input").click()');
+        $I->wait(2);
         $I->executeJS('document.querySelector("[data-cid=\'button.buy_button\']").click()');
+        $I->wait(2);
         $I->switchToIFrame(); // navigate back to to main document frame
         $I->waitForElement('#thankyouPage');
         $I->waitForPageLoad();
