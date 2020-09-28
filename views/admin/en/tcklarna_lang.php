@@ -367,4 +367,5 @@ You can deactivate it anytime by removing the codes again.',
     'TCKLARNA_SHIPPING_KCO_DESC' => 'Please assign your defined shipping sets to the corresponding Klarna labels. By this assignment you can amongst others enable Packstation deliveries.',
     'TCKLARNA_SHIPPING_SETTINGS' => 'Shipping sets',
     'TCKLARNA_COMPLETE_REFUND' => 'Refund complete order',
+    'TCKLARNA_PACKSTATION_NO_SHIPPING_SET' => 'No active shipping sets found',
 );
