@@ -1,3 +1,6 @@
+### 5.4.0
+* Add klarna credit card payment method
+
 ### 5.3.0
 * Order Refund button in admin
 * Bugfix: Separate discount blocks for each VAT rate

@@ -23,6 +23,7 @@ class PaymentGateway extends PaymentGateway_parent
         KlarnaPayment::KLARNA_PAYMENT_PAY_LATER_ID => KPHandler::class,
         KlarnaPayment::KLARNA_PAYMENT_PAY_NOW      => KPHandler::class,
         KlarnaPayment::KLARNA_DIRECTDEBIT          => KPHandler::class,
+        KlarnaPayment::KLARNA_CARD                 => KPHandler::class,
         KlarnaPayment::KLARNA_SOFORT               => KPHandler::class,
     ];
 
