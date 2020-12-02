@@ -6,7 +6,7 @@ use Codeception\Example;
 use Exception;
 use OxidEsales\Codeception\Step\Basket;
 use TopConcepts\Klarna\Core\KlarnaConsts;
-
+use OxidEsales\Codeception\Module\Translation\Translator;
 
 class ANavigationFrontendKpCest
 {
@@ -240,6 +240,44 @@ class ANavigationFrontendKpCest
 
         $I->switchToIFrame();
         $I->click(".nextStep");
+        $I->waitForPageLoad();
+        $I->wait(4);
+        $I->seeInCurrentUrl('thankyou');
+    }
+
+    /**
+     * @group KP_frontend
+     * @param AcceptanceTester $I
+     * @throws Exception
+     */
+    public function testKpCardOrder(AcceptanceTester $I)
+    {
+        $I->clearShopCache();
+        $I->loadKlarnaAdminConfig('KPSPLIT');
+        //Navigate untill step 3
+        $this->navigateToPay($I);
+        //Wait for Klarna page to load
+        $I->wait(6);
+        $I->waitForPageLoad();
+        $I->click('#payment input[value=klarna_card]');
+        $I->wait(3);
+        //Fill card info
+        $I->switchToIFrame('klarna-card-main');
+        $I->wait(2);
+        $I->switchToIFrame('payment-gateway-frame');
+        $I->wait(2);
+        $I->fillField('cardNumber', "4111111111111111");
+        $I->wait(2);
+        $I->fillField("securityCode", "111");
+        $I->wait(2);
+        $I->fillField("expire", "01/24");
+        $I->switchToIFrame();
+        $I->wait(3);
+        $I->click(".nextStep");
+        $I->wait(2);
+        $I->waitForPageLoad();
+        $I->click(Translator::translate('SUBMIT_ORDER'));
+        $I->waitForElement('#thankyouPage');
         $I->waitForPageLoad();
         $I->wait(4);
         $I->seeInCurrentUrl('thankyou');

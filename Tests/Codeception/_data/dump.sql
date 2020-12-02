@@ -239,6 +239,14 @@ INSERT INTO `oxobject2delivery` (`OXID`,`OXDELIVERYID`,`OXOBJECTID`,`OXTYPE`,`OX
 ('f9ea13ac57eaae949a6405d7625ac936', '1b842e734b62a4775.45738618', '8f241f11096176795.61257067', 'oxcountry', '2018-04-30 13:59:06');
 truncate table oxobject2payment;
 INSERT INTO `oxobject2payment` (`OXID`,`OXPAYMENTID`,`OXOBJECTID`,`OXTYPE`,`OXTIMESTAMP`) VALUES
+('1cb44d619374d33be20c9b11975303bb', 'klarna_card', 'a7c40f632e04633c9.47194042', 'oxcountry', '2020-12-02 12:30:02'),
+('22bea58d3e2a110c31fc7b8d4b6ed344', 'klarna_card', 'a7c40f632848c5217.53322339', 'oxcountry', '2020-12-02 12:30:02'),
+('2ca5622aabb8b0d3628c9b0f69d3657c', 'klarna_card', 'a7c40f633038cd578.22975442', 'oxcountry', '2020-12-02 12:30:02'),
+('30fdc6936b4837c7fd89758a8e999d98', 'klarna_card', 'a7c40f631fc920687.20179984', 'oxcountry', '2020-12-02 12:30:02'),
+('63e0843f97fee7fc6722889ee6f1d8bc', 'klarna_card', 'a7c40f6323c4bfb36.59919433', 'oxcountry', '2020-12-02 12:30:02'),
+('8711448c121c1cb01745ad9f549a4a6a', 'klarna_card', 'oxidstandard', 'oxdelset', '2020-12-02 12:30:13'),
+('a4d628aad668b1b62c5aa33e7f5eed9c', 'klarna_card', '1b842e732a23255b1.91207750', 'oxdelset', '2020-12-02 12:30:21'),
+('c0a92f4c329546d1d731222dd77ffd70', 'klarna_card', '1b842e732a23255b1.91207751', 'oxdelset', '2020-12-02 12:30:26'),
 ('0e255603888311b574d43a5d1419ad1f', 'klarna_directdebit', '8f241f11096877ac0.98748826', 'oxcountry', '2019-09-20 16:09:52'),
 ('2dd012eaf3f548cee6c76fc9b1e2ee0c', 'klarna_directdebit', '8f241f110957e6ef8.56458418', 'oxcountry', '2019-09-20 16:09:52'),
 ('447882713388ad4923e805f5b4f41d96', 'klarna_directdebit', 'a7c40f632a0804ab5.18804076', 'oxcountry', '2019-09-20 16:09:52'),

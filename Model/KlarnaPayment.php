@@ -69,6 +69,13 @@ class KlarnaPayment extends KlarnaPayment_parent
     const KLARNA_DIRECTDEBIT = 'klarna_directdebit';
 
     /**
+     * Oxid value of Klarna card
+     *
+     * @var string
+     */
+    const KLARNA_CARD = 'klarna_card';
+
+    /**
      * Oxid value of Klarna Pay Now payment
      *
      * @var string
@@ -93,6 +100,7 @@ class KlarnaPayment extends KlarnaPayment_parent
                 self::KLARNA_PAYMENT_PAY_LATER_ID,
                 self::KLARNA_PAYMENT_PAY_NOW,
                 self::KLARNA_DIRECTDEBIT,
+                self::KLARNA_CARD,
                 self::KLARNA_SOFORT,
             );
         }
@@ -102,6 +110,7 @@ class KlarnaPayment extends KlarnaPayment_parent
                 self::KLARNA_PAYMENT_PAY_LATER_ID,
                 self::KLARNA_PAYMENT_PAY_NOW,
                 self::KLARNA_DIRECTDEBIT,
+                self::KLARNA_CARD,
                 self::KLARNA_SOFORT,
             );
         }
@@ -119,6 +128,7 @@ class KlarnaPayment extends KlarnaPayment_parent
                 self::KLARNA_PAYMENT_PAY_LATER_ID => 'pay_later',
                 self::KLARNA_PAYMENT_PAY_NOW      => 'pay_now',
                 self::KLARNA_DIRECTDEBIT          => 'direct_debit',
+                self::KLARNA_CARD                 => 'card',
                 self::KLARNA_SOFORT               => 'direct_bank_transfer',
             );
 
@@ -198,6 +208,10 @@ class KlarnaPayment extends KlarnaPayment_parent
         $this->save();
 
         $this->load("klarna_sofort");
+        $this->oxpayments__oxactive = new Field($value, Field::T_RAW);
+        $this->save();
+
+        $this->load("klarna_card");
         $this->oxpayments__oxactive = new Field($value, Field::T_RAW);
         $this->save();
     }

@@ -47,6 +47,13 @@ class KlarnaPaymentHelper
      *
      * @var string
      */
+    const KLARNA_CARD = 'klarna_card';
+
+    /**
+     * Oxid value of Klarna Pay Now payment
+     *
+     * @var string
+     */
     const KLARNA_SOFORT = 'klarna_sofort';
 
     const KLARNA_INSTANT_SHOPPING = 'klarna_instant_shopping';
@@ -67,6 +74,7 @@ class KlarnaPaymentHelper
                 self::KLARNA_PAYMENT_PAY_LATER_ID,
                 self::KLARNA_PAYMENT_PAY_NOW,
                 self::KLARNA_DIRECTDEBIT,
+                self::KLARNA_CARD,
                 self::KLARNA_SOFORT,
             );
         }
@@ -76,6 +84,7 @@ class KlarnaPaymentHelper
                 self::KLARNA_PAYMENT_PAY_LATER_ID,
                 self::KLARNA_PAYMENT_PAY_NOW,
                 self::KLARNA_DIRECTDEBIT,
+                self::KLARNA_CARD,
                 self::KLARNA_SOFORT,
             );
         }

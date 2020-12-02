@@ -214,6 +214,8 @@ class KlarnaInstaller extends ShopConfiguration
                                  array($de_prefix => 'Klarna Sofort bezahlen', $en_prefix => 'Klarna Pay Now'),
                              KlarnaPayment::KLARNA_DIRECTDEBIT =>
                                  array($de_prefix => 'Klarna Lastschrift', $en_prefix => 'Klarna Direct Debit'),
+                             KlarnaPayment::KLARNA_CARD =>
+                                 array($de_prefix => 'Klarna Kreditkarte', $en_prefix => 'Klarna Card'),
                              KlarnaPayment::KLARNA_SOFORT =>
                                  array($de_prefix => 'Klarna Sofortüberweisung', $en_prefix => 'Klarna Online Bank Transfer'),
                              KlarnaPayment::KLARNA_INSTANT_SHOPPING =>
