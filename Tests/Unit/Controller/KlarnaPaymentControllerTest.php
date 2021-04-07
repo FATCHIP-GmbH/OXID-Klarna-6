@@ -331,7 +331,6 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
                 'klarna_checkout'         => $oPayment,
                 'klarna_slice_it'         => $oPayment,
                 'id_4'                    => $oPayment,
-                'klarna_instant_shopping' => $oPayment,
             ];
             $oPaymentController->expects($this->any())->method('tckl_getPaymentListParent')
                 ->willReturn($payList);

@@ -56,8 +56,6 @@ class KlarnaPaymentHelper
      */
     const KLARNA_SOFORT = 'klarna_sofort';
 
-    const KLARNA_INSTANT_SHOPPING = 'klarna_instant_shopping';
-
     /**
      * Get list of Klarna payments ids
      *
@@ -68,7 +66,6 @@ class KlarnaPaymentHelper
     {
         if (!$filter) {
             return array(
-                self::KLARNA_INSTANT_SHOPPING,
                 self::KLARNA_PAYMENT_CHECKOUT_ID,
                 self::KLARNA_PAYMENT_SLICE_IT_ID,
                 self::KLARNA_PAYMENT_PAY_LATER_ID,

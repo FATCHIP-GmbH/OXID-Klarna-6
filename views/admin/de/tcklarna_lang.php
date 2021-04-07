@@ -333,8 +333,6 @@ On-Site Messaging ist einfach und problemlos zu integrieren und bietet maßgesch
 Melden Sie sich im <a class="cl-pink" href="https://merchants.klarna.com/" target="_blank">Händlerportal</a> an, um Ihren persönlichen JavaScript- und Placement-Code zu generieren. On-Site-Messaging wird in Ihrem Shop aktiviert, sobald der JavaScript-Code gespeichert und mindestens ein Placement-Code eingegeben wurde.<br>
 Sie können es jederzeit deaktivieren, indem Sie die Codes wieder entfernen.',
     'TCKLARNA_ON_SITE_MESSAGING_MERCHANT_BUTTON' => 'Händlerportal',
-    'TCKLARNA_INSTANT_SHOPPING_MENU' => 'Instant Shopping',
-    'TCKLARNA_INSTANT_SHOPPING_HEADER' => 'Klarna\'s Instant Shopping kann vor dem Bezahlen an früher gelegenen Stellen im Salesfunnel verwendet werden, um den Umsatz zu steigern. Dies bedeutet, dass Sie Klarna\'s Instant Shopping innerhalb Ihrer Domain z.B. auf einer Produkt- oder Warenkorb-Seite einbinden können.',
     'TCKLARNA_IS_ENABLED_HEADLINE' => 'Klarna Instant Shopping aktivieren',
     'TCKLARNA_IS_ENABLED' => 'Aktiv',
     'TCKLARNA_IS_BUTTON_REPLACE' => 'Button Key erneuern',
