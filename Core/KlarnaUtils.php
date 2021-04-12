@@ -254,7 +254,8 @@ class KlarnaUtils
         if (!$oItem->isBundle()) {
             $regUnitPrice = $oItem->getRegularUnitPrice();
             if ($isOrderMgmt) {
-                $unitPrice = $oItem->getArticle()->getUnitPrice();
+                $regUnitPrice = $oItem->getPrice();
+                $unitPrice = $oItem->getPrice();
             } else {
                 $unitPrice = $oItem->getUnitPrice();
             }
