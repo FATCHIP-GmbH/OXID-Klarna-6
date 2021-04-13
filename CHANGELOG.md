@@ -1,3 +1,9 @@
+### 5.5.0
+* Remove Instant Shopping
+* Backend Rebranding
+* Bugfix: Order management order item price
+* Bugfix: Calculate delivery cost parent call
+
 ### 5.4.0
 * Add klarna credit card payment method
 
