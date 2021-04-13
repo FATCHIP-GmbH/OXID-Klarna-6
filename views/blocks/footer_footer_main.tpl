@@ -68,13 +68,4 @@
     [{oxscript add="embedKlarnaLogo('$klFooterContent');"}]
 [{/if}]
 
-[{assign var="oKlarnaButton" value=$oViewConf->getInstantShoppingButton()}]
-[{if $oKlarnaButton}]
-    <script>
-        var klButtonManagerConfig = [{$oKlarnaButton->getConfig($oDetailsProduct)|@json_encode}];
-    </script>
-    [{oxscript include=$oViewConf->getModuleUrl('tcklarna','out/src/js/tcklarna_button_handler.js')}]
-    [{oxscript include="https://x.klarnacdn.net/instantshopping/lib/v1/lib.js"}]
-[{/if}]
-
 

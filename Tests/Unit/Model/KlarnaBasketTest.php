@@ -39,51 +39,6 @@ class KlarnaBasketTest extends ModuleUnitTestCase
 
     /**
      *
-     */
-    public function testTcklarna_calculateDeliveryCost()
-    {
-        $oBasket = $this->getMockBuilder(Basket::class)->setMethods(['getAdditionalServicesVatPercent'])->getMock();
-        $oBasket->expects($this->once())->method('getAdditionalServicesVatPercent')->willReturn(7.00);
-        $this->setConfigParam('blDeliveryVatOnTop', true);
-        $oBasket->setDeliveryPrice('price already set');
-
-        $result = $oBasket->tcklarna_calculateDeliveryCost();
-        $this->assertEquals('price already set', $result);
-
-
-        $oBasket->setDeliveryPrice(null);
-        $this->setConfigParam('blCalculateDelCostIfNotLoggedIn', false);
-
-        $result = $oBasket->tcklarna_calculateDeliveryCost();
-        $this->assertTrue($result instanceof Price);
-        $this->assertTrue($result->isNettoMode());
-        $this->assertEquals(0, $result->getVat());
-        $this->assertEquals(0, $result->getBruttoPrice());
-        $this->assertEquals(0, $result->getNettoPrice());
-        $this->assertEquals(0, $result->getVatValue());
-
-
-        $this->setConfigParam('blDeliveryVatOnTop', false);
-        $oUser = oxNew(User::class);
-        $oUser->load('oxdefaultadmin');
-        $oBasket->setBasketUser($oUser);
-        $oDelivery = oxNew(Delivery::class);
-        $oPrice    = oxNew(Price::class);
-        $oPrice->setPrice(100.00);
-        $oDelivery->setDeliveryPrice($oPrice);
-        $oDeliveryList = $this->getMockBuilder(DeliveryList::class)->setMethods(['getDeliveryList'])->getMock();
-        $oDeliveryList->expects($this->once())->method('getDeliveryList')->willReturn([$oDelivery]);
-        UtilsObject::setClassInstance(DeliveryList::class, $oDeliveryList);
-
-        $result = $oBasket->tcklarna_calculateDeliveryCost();
-        $this->assertTrue($result instanceof Price);
-        $this->assertEquals(7, $result->getVat());
-        $this->assertEquals(100, $result->getBruttoPrice());
-        $this->assertEquals(6.54, $result->getVatValue());
-    }
-
-    /**
-     *
      * @dataProvider KlarnaPaymentDeliveryDataProvider
      * @param $bruttoPrice
      * @param $vat

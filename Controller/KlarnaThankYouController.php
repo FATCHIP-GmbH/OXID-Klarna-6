@@ -38,17 +38,12 @@ class KlarnaThankYouController extends KlarnaThankYouController_parent
     /** @var KlarnaCheckoutClient */
     protected $client;
 
-    /** @var bool */
-    protected $instantShoppingActive = false;
     /**
      * @return mixed
      */
     public function render()
     {
         $render = parent::render();
-        if ($this->instantShoppingActive) {
-            return $render;
-        }
 
         if ($sKlarnaId = Registry::getSession()->getVariable('klarna_checkout_order_id')) {
             $oOrder = Registry::get(Order::class);
@@ -72,42 +67,12 @@ class KlarnaThankYouController extends KlarnaThankYouController_parent
         return $render;
     }
 
-
-    public function init() {
-        $instantShoppingBasketId = Registry::getSession()->getVariable('instant_shopping_basket_id');
-        if ($instantShoppingBasketId) {
-            /** @var KlarnaInstantBasket $oInstantShoppingBasket */
-            $oInstantShoppingBasket = $this->getNewKlarnaInstantBasket();
-            if ($oInstantShoppingBasket->load($instantShoppingBasketId) && $oInstantShoppingBasket->isFinalized()) {
-                $this->instantShoppingActive = true;
-                // copying basket object
-                $oBasket = $oInstantShoppingBasket->getBasket();
-                $this->_oBasket = clone $oBasket;
-                FrontendController::init();
-                $this->clearInstantShopping($oInstantShoppingBasket);
-                return;
-            }
-        }
-
-        parent::init();
-
-    }
-
     /**
      * @codeCoverageIgnore
      */
     protected function getNewKlarnaInstantBasket()
     {
         return oxNew(KlarnaInstantBasket::class);
-    }
-
-    /**
-     * @param $oInstantShoppingBasket KlarnaInstantBasket
-     */
-    protected function clearInstantShopping($oInstantShoppingBasket)
-    {
-        Registry::getSession()->deleteVariable('instant_shopping_basket_id');
-        $oInstantShoppingBasket->delete();
     }
 
     protected function loadClient($oOrder) {

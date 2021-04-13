@@ -21,6 +21,7 @@ namespace TopConcepts\Klarna\Core;
 use OxidEsales\Eshop\Application\Model\BasketItem;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\Field;
+use OxidEsales\Eshop\Core\Price;
 use OxidEsales\Eshop\Core\UtilsObject;
 use TopConcepts\Klarna\Model\KlarnaCountryList;
 use TopConcepts\Klarna\Model\KlarnaUser;
@@ -254,7 +255,14 @@ class KlarnaUtils
         if (!$oItem->isBundle()) {
             $regUnitPrice = $oItem->getRegularUnitPrice();
             if ($isOrderMgmt) {
-                $unitPrice = $oItem->getArticle()->getUnitPrice();
+                if($oItem->getArticle()->isOrderArticle()) {
+                    $orderArticlePrice = oxNew(Price::class);
+                    $orderArticlePrice->setPrice($oItem->getArticle()->oxorderarticles__oxbprice->value);
+                    $regUnitPrice = $orderArticlePrice;
+                    $unitPrice = $orderArticlePrice;
+                } else {
+                    $unitPrice = $oItem->getArticle()->getUnitPrice();
+                }
             } else {
                 $unitPrice = $oItem->getUnitPrice();
             }

@@ -19,7 +19,6 @@ namespace TopConcepts\Klarna\Controller;
 
 
 use TopConcepts\Klarna\Core\KlarnaConsts;
-use TopConcepts\Klarna\Core\InstantShopping\Button;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Model\KlarnaUser;
 use OxidEsales\Eshop\Application\Model\CountryList;
@@ -301,25 +300,5 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
     public function isPrefillIframe()
     {
         return (bool)KlarnaUtils::getShopConfVar('blKlarnaEnablePreFilling');
-    }
-
-    public function getInstantShoppingButton()
-    {
-        if ($this->tcKlarnaButton) {
-            return $this->tcKlarnaButton;
-        }
-
-        $oConfig = $this->getConfig();
-        $isEnabled = $oConfig->getConfigParam('blKlarnaInstantShoppingEnabled');
-        if($isEnabled) {
-            $placementArray = $oConfig->getConfigParam('aarrKlarnaISButtonPlacement');
-            $viewName = $oConfig->getTopActiveView()->getClassKey();
-            $isActiveForCurrentView = isset($placementArray[$viewName]) ? (bool)$placementArray[$viewName] : false;
-            if ($isActiveForCurrentView) {
-                $this->tcKlarnaButton = oxNew(Button::class);
-            }
-        }
-
-        return $this->tcKlarnaButton;
     }
 }
