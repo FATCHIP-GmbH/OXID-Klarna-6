@@ -73,7 +73,7 @@
             </div>
             <div class="user-guide-country">
                 <select id="country" class="form-control" type="text" name="edit[Land]" onchange="$('.start_user_guide .support').find('div').hide();$('.start_user_guide .support').show();$('.start_user_guide .support').find('.country-' + $(this).val().toLowerCase()).show();">
-                    <option disabled value="" selected>Merchent Supportz</option>
+                    <option disabled value="" selected>[{oxmultilang ident="TCKLARNA_RB_MERCHANT_SUPPORT"}]</option>
                     <option value="DE">[{$countries.DE}]</option>
                     <option value="GB">[{$countries.GB}]</option>
                     <option value="AT">[{$countries.AT}]</option>
