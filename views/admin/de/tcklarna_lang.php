@@ -69,8 +69,8 @@ $aLang = array(
 
     'TCKLARNA_CHECKOUT_DESC'     => 'Die Komplettlösung enthält alle wichtigen Zahlarten (Rechnung, Ratenkauf, Sofortüberweisung, Lastschrift, Mastercard und VISA-Card) und wird durch Klarna gehostet. Ihre Kunden müssen beim Bezahlen lediglich E-Mail-Adresse und Postleitzahl eingeben und können ihre bevorzugte Zahlart wählen. Alles mit nur einer Integration.',
     'TCKLARNA_PAYMENTS_DESC'     => 'Mit Klarna können Endkunden auf drei Arten bezahlen: Sofortüberweisung, später oder in Raten. Das ermöglicht Endkunden, Ware erst zu probieren und nur das zu bezahlen, was sie behalten möchten, Produkte im Shop zu finanzieren oder sofort zu bezahlen. Rechnung, Ratenkauf, Sofortüberweisung oder Lastschrift können Sie mit einer Integration aktivieren und sind dank der iFrame Lösung von Klarna rechtlich und inhaltlich immer auf dem aktuellen Stand.',
-    'TCKLARNA_EASY_AND_SECURE_SHOPPING' => 'Die beliebtesten Zahlarten. Smooth, abgesichert und einfach zu integrieren.',
-    'TCKLARNA_WELCOME_TO_CONFIGURATION' => 'Herzlich willkommen in den Konfigurations-Einstellungen von Klarna Checkout und Klarna Payments. Hier finden Sie alles, was zur Aktivierung benötigt wird. Wählen Sie links in der Leiste die Klarna Unter-Menüpunkte, um die Modul-Einrichtung abzuschließen.',
+    'TCKLARNA_EASY_AND_SECURE_SHOPPING' => 'Die beliebtesten Zahlarten. Abgesichert und einfach zu integrieren.',
+    'TCKLARNA_WELCOME_TO_CONFIGURATION' => 'Herzliche willkommen in den Konfigurations-Einstellungen von Klarna Checkout und Klarna Payments. Hier finden Sie alles, was zur Aktivierung benötigt wird. Wählen Sie links ‘in der Leiste die Klarna Unter-Menüpunkte, um die Modul-Einrichtung abzuschließen.',
 
     'TCKLARNA_CREATE_USER_ACCOUNT'               => 'Kundenkonto im OXID eShop anlegen',
     'TCKLARNA_SUBSCRIBE_TO_NEWSLETTER'           => 'Newsletter-Anmeldung',
@@ -132,18 +132,25 @@ $aLang = array(
     'TCKLARNA_CHOOSE_KP_OPTIONS'              => 'Bitte wählen Sie die Klarna Payment Optionen, die Sie Ihren Kunden anbieten möchten:',
     'TCKLARNA_PAY_LATER'                      => 'Rechnung',
     'TCKLARNA_PAY_LATER.'                     => 'Rechnung.',
-    'TCKLARNA_PAY_LATER_START'                => 'Für Kunden, die jetzt kaufen und bequem später bezahlen möchten.',
+    'TCKLARNA_PAY_LATER_START'                => 'Für Kunden, die jetzt kaufen und später bezahlen möchten. Ganz bequem in 14, 21 oder 28 Tagen, je nach Markt.',
     'TCKLARNA_PAY_LATER_TEXT'                 => 'Die Option “Rechnung” macht Kunden den Bezahlvorgang einfach und schnell, ohne dabei persönliche Daten oder komplizierte Nummern eingeben zu müssen. Der Kunde hat die Wahl zwischen Rechnung und im Monat X bezahlen.',
-    'TCKLARNA_SLICE_IT'                       => 'Ratenkauf',
+    'TCKLARNA_SLICE_IT'                       => 'Ratenkauf.',
     'TCKLARNA_SLICE_IT.'                      => 'In Raten bezahlen.',
-    'TCKLARNA_SLICE_IT_START'                 => 'Steigern Sie die Kaufkraft Ihrer Kunden durch Zahlung in Raten.',
+    'TCKLARNA_SLICE_IT_START'                 => 'Steigern Sie die Kaufkraft Ihrer Kunden durch Zahlung in Raten. Kunden haben die Wahl zwischen flexiblen und fixen Raten, aufgeteilt auf 6 - 36 Monate.',
     'TCKLARNA_SLICE_IT_TEXT'                  => 'Mittels “Ratenkauf” können Kunden die Einkaufssumme bei geringen Zinsen in Häppchen aufteilen. Das erhöht den Investitionsrahmen und die Kaufkraft. Klarna´s einzigartige Kreditbearbeitung erfordert nur wenige Augenblicke und minimale Dateneingabe. Der Kunde hat die Wahl zwischen fixen und flexiblen Raten.',
     'TCKLARNA_PAY_NOW'                        => 'Sofort bezahlen',
     'TCKLARNA_PAY_NOW.'                       => 'Sofort bezahlen.',
-    'TCKLARNA_PAY_NOW_START'                  => 'Einfache und schnelle Direktbezahlung mit Klarna‘s Sofort bezahlen. In Deutschland sollten Sofortüberweisung und Lastschrift im Portfolio nicht fehlen.',
+    'TCKLARNA_PAY_NOW_START'                  => 'Einfache und schnelle Direktbezahlung mit Klarna’s Sofort bezahlen. In Deutschland sollten Sofortüberweisung, Kreditkarte und Lastschrift im Portfolio nicht fehlen.',
     'TCKLARNA_PAY_NOW_TEXT'                   => 'Kunden, die Beträge sofort vollständig beim Bestellabschluss bezahlen möchten, können die Option "Sofort bezahlen" nutzen. Zur Auswahl stehen hierbei Kreditkarte, Lastschrift und die Sofortüberweisung.',
     'TCKLARNA_CHECKOUT'                       => 'Der Klarna Checkout.',
-    'TCKLARNA_CHECKOUT_START'                 => 'Das beste Checkout-Erlebnis für Ihre Kunden. Zuverlässige Kundenidentifizierung und Versandauswahl. Alle Zahlungen inklusive. Weltweite Verfügbarkeit, lokal optimiert. Wir übernehmen das ganze Risiko und Sie erhalten immer Ihr Geld. ',
+    'TCKLARNA_CHECKOUT_START'                 => 'Das beste Checkout-Erlebnis für Ihre Kunden. Zuverlässige Kundenidentifizierung und Versandauswahl. Alle Zahlungen inklusive Weltweite Verfügbarkeit, lokal optimiert. Wir übernehmen das ganze Risiko und Sie erhalten immer Ihr Geld.',
+
+    'TCKLARNA_RB_HOW_TO_ACTIVATE'             => 'How-to-activate<br>Klarna guide.',
+    'TCKLARNA_RB_HOW_TO_ACTIVATE_LIST_ONE'    => 'Klicken Sie im OXID Backend auf den neuen Menüpunkt Klarna, die Unterkategorie Allgemein. und wählen anschließend das gewünschte Klarna Produkt aus. Sie haben die Wahl zwischen Klarna Payments und Klarna Checkout.',
+    'TCKLARNA_RB_HOW_TO_ACTIVATE_LIST_TWO'    => 'Geben Sie Ihre Zugangsdaten ein (Benutzername und Passwort) nehmen Sie unter Shopeinstellungen>Zahlungsarten sowie >Versandarten die OXID typischen Zuordnungen für Zahlarten vor.',
+    'TCKLARNA_RB_HOW_TO_ACTIVATE_LIST_THREE'  => 'Speichern Sie die Änderungen.',
+    'TCKLARNA_RB_HOW_TO_ACTIVATE_LIST_FOUR'   => 'Sie sind jetzt online und können anfangen, mit Klarna zu verkaufen.',
+
 
     'TCKLARNA_EXTERNAL_PAYMENTS_ADMIN_DESC'   =>
         'Hier können Sie externe Bezahlarten und externe Checkouts zur Einbindung innerhalb des Klarna Checkout Iframes konfigurieren. 
