@@ -47,7 +47,7 @@
     </div>
     <div class="klarna-header info">
         <div class="w6 img-outer">
-            <img class="device-img" src="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/img/device.png') }]">
+            <img class="device-img" src="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/img/')}][{oxmultilang ident="TCKLARNA_DEVICE_IMG"}]">
         </div>
         <div class="w6 ml-half">
             <div>
