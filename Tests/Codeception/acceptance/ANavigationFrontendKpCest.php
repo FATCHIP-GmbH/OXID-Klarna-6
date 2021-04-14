@@ -32,10 +32,9 @@ class ANavigationFrontendKpCest
         $I->click(".nextStep");
         $I->wait(2);
         $I->switchToIFrame('klarna-pay-now-fullscreen');
-        $this->fillFieldSpecial('//*[@id="purchase-approval-date-of-birth"]',$I->getKlarnaDataByName('sKlarnaBDate'), $I);
-        $this->fillFieldSpecial('//*[@id="purchase-approval-phone-number"]',$I->getKlarnaDataByName('sKlarnaPhoneNumber'), $I);
-
-        $I->click('//*[@id="purchase-approval-continue"]');
+        $this->fillFieldSpecial('//*[@id="purchase-approval-form-date-of-birth"]',$I->getKlarnaDataByName('sKlarnaBDate'), $I);
+        $this->fillFieldSpecial('//*[@id="purchase-approval-form-phone-number"]',$I->getKlarnaDataByName('sKlarnaPhoneNumber'), $I);
+        $I->click('//*[@id="purchase-approval-form-continue-button"]');
         $I->wait(2);
 
         try {
@@ -47,13 +46,10 @@ class ANavigationFrontendKpCest
             $I->waitForElementClickable('//*[@id="mandate-signup-sepa-details-confirmation__footer-button-wrapper"]');
             $I->click('//*[@id="mandate-signup-sepa-details-confirmation__footer-button-wrapper"]');
         } catch (Exception $e) {
-            $I->waitForElementClickable('//*[@id="paynow-aligned-content__button__0"]');
-            $I->click('//*[@id="paynow-aligned-content__button__0"]');
-            $I->wait(3);
-            $I->waitForElementClickable('//*[@id="paynow-aligned-content__button__0"]');
-            $I->click('//*[@id="paynow-aligned-content__button__0"]');
+            $I->click('//*[@id="mandate-review__confirmation-button"]');
         }
 
+        $I->wait(5);
         $I->switchToIFrame();
         $I->wait(2);
         $I->click(".nextStep");
@@ -116,20 +112,45 @@ class ANavigationFrontendKpCest
                         $number = "";
                 }
 
-                $this->fillFieldSpecial('//*[@id="purchase-approval-national-identification-number"]',$number, $I);
-                $this->fillFieldSpecial('//*[@id="purchase-approval-phone-number"]',$phone, $I);
+                $this->fillFieldSpecial('//*[@id="purchase-approval-form-national-identification-number"]',$number, $I);
+                $this->fillFieldSpecial('//*[@id="purchase-approval-form-phone-number"]',$phone, $I);
+                $I->click('//*[@id="purchase-approval-form-continue-button"]');
             } else {
                 $bday = null;
                 if($data['country'] == 'AT') {
                     $bday = '14041988';
                 }
-                $this->fillFieldSpecial('//*[@id="purchase-approval-date-of-birth"]',$bday != null?$bday:$I->getKlarnaDataByName('sKlarnaBDate'), $I);
-                $this->fillFieldSpecial('//*[@id="purchase-approval-phone-number"]',$I->getKlarnaDataByName('sKlarnaPhoneNumber'), $I);
+                $I->wait(2);
+                if($data['country'] == 'NL') {
+                    $I->wait(2);
+                    $I->switchToIFrame();
+                    $I->wait(1);
+                    $I->switchToIFrame($data['iframe']);
+                    $this->fillFieldSpecial('//*[@id="invoice_kp-purchase-approval-form-date-of-birth"]',$I->getKlarnaDataByName('sKlarnaBDate'), $I);
+                    $this->fillFieldSpecial('//*[@id="invoice_kp-purchase-approval-form-phone-number"]',$I->getKlarnaDataByName('sKlarnaPhoneNumber'), $I);
+                    $I->click('//*[@id="invoice_kp-purchase-approval-form-continue-button"]');
+                } else {
+                    $this->fillFieldSpecial('//*[@id="purchase-approval-form-date-of-birth"]',$bday != null?$bday:$I->getKlarnaDataByName('sKlarnaBDate'), $I);
+                    $this->fillFieldSpecial('//*[@id="purchase-approval-form-phone-number"]',$I->getKlarnaDataByName('sKlarnaPhoneNumber'), $I);
+                    $I->click('//*[@id="purchase-approval-form-continue-button"]');
+                }
             }
-            $I->click('//*[@id="purchase-approval-continue"]');
+        }
+
+        if($data['country'] == 'GB') {
+            $I->wait(1);
+            $I->switchToIFrame();
+            $I->wait(1);
+            $I->switchToIFrame($data['iframe']);
+            $I->click('//*[@id="btn-continue"]');
+            $I->wait(2);
+            $this->fillFieldSpecial('//*[@id="otp_field"]','123456', $I);
+            $I->wait(2);
+            $I->click('Confirm');
         }
 
         if($data['iframe'] == 'klarna-pay-now-fullscreen') {
+            $I->wait(2);
             try {
                 //Check if IBAN needs to be filled
                 $I->seeElement('//*[@id="iban"]');
@@ -139,11 +160,7 @@ class ANavigationFrontendKpCest
                 $I->waitForElementClickable('//*[@id="mandate-signup-sepa-details-confirmation__footer-button-wrapper"]');
                 $I->click('//*[@id="mandate-signup-sepa-details-confirmation__footer-button-wrapper"]');
             } catch (Exception $e) {
-                $I->waitForElementClickable('//*[@id="paynow-aligned-content__button__0"]');
-                $I->click('//*[@id="paynow-aligned-content__button__0"]');
-                $I->wait(3);
-                $I->waitForElementClickable('//*[@id="paynow-aligned-content__button__0"]');
-                $I->click('//*[@id="paynow-aligned-content__button__0"]');
+                $I->click('//*[@id="mandate-review__confirmation-button"]');
             }
         }
 
@@ -197,9 +214,9 @@ class ANavigationFrontendKpCest
         $I->wait(2);
         $I->click('//*[@id="mismatch-dialog-confirm-button"]');
         $I->wait(3);
-        $this->fillFieldSpecial('//*[@id="purchase-approval-date-of-birth"]',$I->getKlarnaDataByName('sKlarnaBDate'), $I);
-        $this->fillFieldSpecial('//*[@id="purchase-approval-phone-number"]',$I->getKlarnaDataByName('sKlarnaPhoneNumber'), $I);
-        $I->click('//*[@id="purchase-approval-continue"]');
+        $this->fillFieldSpecial('//*[@id="purchase-approval-form-date-of-birth"]',$I->getKlarnaDataByName('sKlarnaBDate'), $I);
+        $this->fillFieldSpecial('//*[@id="purchase-approval-form-phone-number"]',$I->getKlarnaDataByName('sKlarnaPhoneNumber'), $I);
+        $I->click('//*[@id="purchase-approval-form-continue-button"]');
         $I->wait(8);
         $I->switchToIFrame();
         $I->wait(2);
@@ -226,17 +243,23 @@ class ANavigationFrontendKpCest
         $I->click(".nextStep");
         $I->wait(2);
         $I->switchToIFrame('klarna-direct-debit-fullscreen');
-        $this->fillFieldSpecial('//*[@id="purchase-approval-date-of-birth"]',$I->getKlarnaDataByName('sKlarnaBDate'), $I);
-        $this->fillFieldSpecial('//*[@id="purchase-approval-phone-number"]',$I->getKlarnaDataByName('sKlarnaPhoneNumber'), $I);
+        $this->fillFieldSpecial('//*[@id="purchase-approval-form-date-of-birth"]',$I->getKlarnaDataByName('sKlarnaBDate'), $I);
+        $this->fillFieldSpecial('//*[@id="purchase-approval-form-phone-number"]',$I->getKlarnaDataByName('sKlarnaPhoneNumber'), $I);
 
-        $I->click('//*[@id="purchase-approval-continue"]');
+        $I->click('//*[@id="purchase-approval-form-continue-button"]');
         $I->wait(2);
-
-        $I->waitForElementClickable('//*[@id="paynow-aligned-content__button__0"]');
-        $I->click('//*[@id="paynow-aligned-content__button__0"]');
-        $I->wait(3);
-        $I->waitForElementClickable('//*[@id="paynow-aligned-content__button__0"]');
-        $I->click('//*[@id="paynow-aligned-content__button__0"]');
+        try {
+            //Check if IBAN needs to be filled
+            $I->seeElement('//*[@id="iban"]');
+            $I->waitForElementClickable('//*[@id="iban"]');
+            $this->fillFieldSpecial('//*[@id="iban"]', $I->getKlarnaDataByName('sKlarnaPayNowIbanDE'), $I);
+            $I->click('//*[@id="mandate-signup-sepa-iban__footer-button-wrapper"]');
+            $I->waitForElementClickable('//*[@id="mandate-signup-sepa-details-confirmation__footer-button-wrapper"]');
+            $I->click('//*[@id="mandate-signup-sepa-details-confirmation__footer-button-wrapper"]');
+        } catch (Exception $e) {
+            $I->click('//*[@id="mandate-review__confirmation-button"]');
+        }
+        $I->wait(7);
 
         $I->switchToIFrame();
         $I->click(".nextStep");

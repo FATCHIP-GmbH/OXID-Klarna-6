@@ -34,14 +34,17 @@ class CheckoutKCOCest {
         $kco = new Kco($I);
         $kco->fillKcoUserForm();
         $I->wait(4);
+        $I->click("//*[@id='payment-selector-external_nachnahme']");
+        $I->wait(1);
         $I->selectOption("//*[@name='payment-selector']", "external_nachnahme");
         $I->wait(1);
         $I->executeJS('document.querySelector("[data-cid=\'button.buy_button\']").click()');
         $I->switchToIFrame(); // navigate back to to main document frame
         $I->waitForPageLoad();
-        $I->waitForElement('#orderAddress');
-        $I->waitForPageLoad();
-        $I->click(Translator::translate('SUBMIT_ORDER'));
+        if ($I->isElementPresent("#orderAddress")) {
+            $I->waitForPageLoad();
+            $I->click(Translator::translate('SUBMIT_ORDER'));
+        }
         $I->waitForElement('#thankyouPage');
         $I->waitForPageLoad();
 
@@ -74,9 +77,8 @@ class CheckoutKCOCest {
         $kco = new Kco($I);
         $kco->fillKcoUserForm();
         $I->wait(4);
-
         $kco->submitPackstationOption();
-
+        $I->wait(5);
         $I->executeJS('document.querySelector("[data-cid=\'button.buy_button\']").click()');
         $I->wait(10);
         $I->switchToIFrame(); // navigate back to to main document frame
@@ -139,9 +141,28 @@ class CheckoutKCOCest {
         $I->wait(7);
         $I->selectOption('#SHIPMO-container input[name=radio]', 'UPS 48');
         $I->wait(4);
-        $kco->fillPayment();
+        if($country == 'GB' || $country == 'BE') {
+            $kco->fillPayment();
+        }
 
         $I->executeJS('document.querySelector("[data-cid=\'button.buy_button\']").click()');
+
+        if($country == 'SE') {
+            $I->wait(4);
+            $I->switchToIFrame();
+            $I->wait(1);
+            if ($I->isElementPresent("#klarna-fullscreen-iframe")) {
+                $I->switchToIFrame('klarna-fullscreen-iframe');
+                $I->wait(1);
+                $I->waitForElement('#clearingNumber');
+                $I->fillField("//input[@id='clearingNumber']", '1234');
+                $I->fillField("//input[@id='accountNumber']", '12345');
+                $I->click('Continue');
+                $I->wait(60);
+                $I->click('Confirm with Mobile BankID');
+            }
+        }
+
         $I->wait(10);
         $I->switchToIFrame(); // navigate back to to main document frame
         $I->waitForElement('#thankyouPage');
@@ -191,11 +212,12 @@ class CheckoutKCOCest {
 
         $kco = new Kco($I);
         $kco->fillKcoUserForm();
+        $I->wait(2);
         //different delivery address
         $kco->fillKcoShippingForm();
-
+        $I->wait(4);
         $I->see('Create Customer Account AND subscribe to Newsletter');
-        $I->wait(2);
+        $I->wait(4);
         // js clicks - the only working way to click Newsletter checkbox and PlaceOrder
         $I->executeJS('document.querySelector("#additional_checkbox_from_merchant__root>div input").click()');
         $I->wait(2);

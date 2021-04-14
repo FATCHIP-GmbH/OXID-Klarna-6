@@ -151,6 +151,7 @@ $aLang = array(
     'TCKLARNA_RB_HOW_TO_ACTIVATE_LIST_THREE'  => 'Speichern Sie die Änderungen.',
     'TCKLARNA_RB_HOW_TO_ACTIVATE_LIST_FOUR'   => 'Sie sind jetzt online und können anfangen, mit Klarna zu verkaufen.',
     'TCKLARNA_RB_MERCHANT_SUPPORT'            => 'Merchant Support',
+    'TCKLARNA_DEVICE_IMG'                     => 'device.png',
 
 
     'TCKLARNA_EXTERNAL_PAYMENTS_ADMIN_DESC'   =>
