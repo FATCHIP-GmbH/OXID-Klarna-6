@@ -14,7 +14,6 @@ use OxidEsales\Eshop\Core\Price;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\ViewConfig;
 use TopConcepts\Klarna\Controller\KlarnaViewConfig;
-use TopConcepts\Klarna\Core\InstantShopping\Button;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 /**
@@ -524,33 +523,4 @@ class KlarnaViewConfigTest extends ModuleUnitTestCase
         $this->assertSame('data-purchase-amount="998"', $result);
 
     }
-
-    public function testGetInstantShoppingButton()
-    {
-        $oViewConfig = $this->getMockBuilder(KlarnaViewConfig::class)->setMethods(['getActiveClassName'])->getMock();
-        $this->setConfigParam("blKlarnaInstantShoppingEnabled", false);
-        $result = $oViewConfig->getInstantShoppingButton();
-        $this->assertNull($result);
-
-        $oViewConfig = $this->getMockBuilder(KlarnaViewConfig::class)->setMethods(['getConfig'])->getMock();
-        $topViewAny = $this->getMockBuilder(FrontendController::class)->setMethods(['getClassKey'])->getMock();
-        $topViewAny->expects($this->once())->method('getClassKey')->willReturn('basket');
-        $config = $this->getMockBuilder(Config::class)->setMethods(['getTopActiveView', 'getConfigParam'])->getMock();
-        $config->expects($this->any())->method('getTopActiveView')->willReturn($topViewAny);
-        $config->expects($this->at(0))->method('getConfigParam')
-            ->with($this->equalTo('blKlarnaInstantShoppingEnabled'))->willReturn(true);
-        $config->expects($this->at(1))->method('getConfigParam')
-            ->with($this->equalTo('aarrKlarnaISButtonPlacement'))->willReturn(['basket' => 1]);
-
-        $oViewConfig->expects($this->any())->method('getConfig')->willReturn($config);
-        $result = $oViewConfig->getInstantShoppingButton();
-        $this->assertInstanceOf(Button::class, $result);
-
-        $this->setProtectedClassProperty($oViewConfig,'tcKlarnaButton', 'test');
-        $result = $oViewConfig->getInstantShoppingButton();
-
-        $this->assertSame('test', $result);
-    }
-
-
 }

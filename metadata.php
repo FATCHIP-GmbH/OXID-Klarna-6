@@ -9,7 +9,6 @@ use TopConcepts\Klarna\Controller\Admin\KlarnaDesign;
 use TopConcepts\Klarna\Controller\Admin\KlarnaEmdAdmin;
 use TopConcepts\Klarna\Controller\Admin\KlarnaExternalPayments;
 use TopConcepts\Klarna\Controller\Admin\KlarnaGeneral;
-use TopConcepts\Klarna\Controller\Admin\KlarnaInstantShopping;
 use TopConcepts\Klarna\Controller\Admin\KlarnaMessaging;
 use TopConcepts\Klarna\Controller\Admin\KlarnaOrderAddress;
 use TopConcepts\Klarna\Controller\Admin\KlarnaOrderArticle as KlarnaAdminOrderArticle;
@@ -20,7 +19,6 @@ use TopConcepts\Klarna\Controller\Admin\KlarnaOrders;
 use TopConcepts\Klarna\Controller\Admin\KlarnaPaymentMain;
 use TopConcepts\Klarna\Controller\Admin\KlarnaShipping;
 use TopConcepts\Klarna\Controller\Admin\KlarnaStart;
-use TopConcepts\Klarna\Controller\KlarnaInstantShoppingController;
 use TopConcepts\Klarna\Controller\KlarnaUserController;
 use TopConcepts\Klarna\Controller\KlarnaAcknowledgeController;
 use TopConcepts\Klarna\Controller\KlarnaAjaxController;
@@ -97,7 +95,6 @@ $aModule = array(
         'KlarnaEmdAdmin'         => KlarnaEmdAdmin::class,
         'KlarnaOrders'           => KlarnaOrders::class,
         'KlarnaMessaging'        => KlarnaMessaging::class,
-        'KlarnaInstantShopping'  => KlarnaInstantShopping::class,
         'KlarnaShipping'         => KlarnaShipping::class,
         // controllers
         'KlarnaExpress'          => KlarnaExpressController::class,
@@ -105,7 +102,6 @@ $aModule = array(
         'KlarnaEpmDispatcher'    => KlarnaEpmDispatcher::class,
         'KlarnaAcknowledge'      => KlarnaAcknowledgeController::class,
         'KlarnaValidate'         => KlarnaValidationController::class,
-        'KlarnaInstantShoppingController' => KlarnaInstantShoppingController::class
     ),
     'extend'      => array(
         // models
@@ -152,7 +148,6 @@ $aModule = array(
         'tcklarna_country_select_popup.tpl'    => 'tc/tcklarna/views/tpl/checkout/inc/tcklarna_country_select_popup.tpl',
         'tcklarna_checkout_login_box.tpl'      => 'tc/tcklarna/views/tpl/checkout/inc/tcklarna_checkout_login_box.tpl',
         'tcklarna_checkout_address_box.tpl'    => 'tc/tcklarna/views/tpl/checkout/inc/tcklarna_checkout_address_box.tpl',
-        'tcklarna_instant_shopping_button.tpl' => 'tc/tcklarna/views/tpl/instant_shopping/tcklarna_instant_shopping_button.tpl',
         //admin
         'tcklarna_general.tpl'                 => 'tc/tcklarna/views/admin/tpl/tcklarna_general.tpl',
         'tcklarna_design.tpl'                  => 'tc/tcklarna/views/admin/tpl/tcklarna_design.tpl',
@@ -163,7 +158,6 @@ $aModule = array(
         'tcklarna_emd_admin.tpl'               => 'tc/tcklarna/views/admin/tpl/tcklarna_emd_admin.tpl',
         'tcklarna_orders.tpl'                  => 'tc/tcklarna/views/admin/tpl/tcklarna_orders.tpl',
         'tcklarna_messaging.tpl'               => 'tc/tcklarna/views/admin/tpl/tcklarna_messaging.tpl',
-        'tcklarna_instant_shopping.tpl'        => 'tc/tcklarna/views/admin/tpl/tcklarna_instant_shopping.tpl',
         'tcklarna_shipping.tpl'                => 'tc/tcklarna/views/admin/tpl/tcklarna_shipping.tpl',
         //admin partial
         'tcklarna_country_creds.tpl'           => 'tc/tcklarna/views/admin/tpl/tcklarna_country_creds.tpl',
@@ -210,16 +204,6 @@ $aModule = array(
             'template' => 'page/checkout/inc/basketcontents.tpl',
             'block'    => 'checkout_basketcontents_summary',
             'file'     => 'views/blocks/checkout_basketcontents_summary.tpl',
-        ),
-        array(
-            'template' => 'page/checkout/basket.tpl',
-            'block' => 'basket_btn_next_top',
-            'file' => 'views/blocks/instant_shopping_checkout.tpl',
-        ),
-        array(
-            'template' => 'page/checkout/basket.tpl',
-            'block' => 'basket_btn_next_bottom',
-            'file' => 'views/blocks/instant_shopping_checkout.tpl',
         ),
         array(
             'template' => 'page/checkout/payment.tpl',

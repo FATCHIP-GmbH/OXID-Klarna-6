@@ -188,7 +188,6 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
     public function KlarnaPaymentsIdDataProvider()
     {
         $expectedResult_1 = [
-            KlarnaPayment::KLARNA_INSTANT_SHOPPING,
             KlarnaPayment::KLARNA_PAYMENT_CHECKOUT_ID,
             KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID,
             KlarnaPayment::KLARNA_PAYMENT_PAY_LATER_ID,

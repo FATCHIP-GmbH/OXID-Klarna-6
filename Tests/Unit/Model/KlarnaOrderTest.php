@@ -344,7 +344,6 @@ class KlarnaOrderTest extends ModuleUnitTestCase
     {
         return [
             [KlarnaPayment::KLARNA_PAYMENT_PAY_NOW, 'isKP', 'kp_order_id'],
-            [KlarnaPayment::KLARNA_INSTANT_SHOPPING, 'isKIS', 'kis_order_id']
         ];
     }
 
