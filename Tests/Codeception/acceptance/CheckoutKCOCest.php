@@ -35,12 +35,12 @@ class CheckoutKCOCest {
         $kco->fillKcoUserForm();
         $I->wait(4);
         $I->click("//*[@id='payment-selector-external_nachnahme']");
+        $I->wait(1);
         $I->selectOption("//*[@name='payment-selector']", "external_nachnahme");
         $I->wait(1);
         $I->executeJS('document.querySelector("[data-cid=\'button.buy_button\']").click()');
         $I->switchToIFrame(); // navigate back to to main document frame
         $I->waitForPageLoad();
-        $I->waitForElement('#orderAddress');
         if ($I->isElementPresent("#orderAddress")) {
             $I->waitForPageLoad();
             $I->click(Translator::translate('SUBMIT_ORDER'));
@@ -141,7 +141,7 @@ class CheckoutKCOCest {
         $I->wait(7);
         $I->selectOption('#SHIPMO-container input[name=radio]', 'UPS 48');
         $I->wait(4);
-        if($country == 'GB') {
+        if($country == 'GB' || $country == 'BE') {
             $kco->fillPayment();
         }
 
@@ -212,11 +212,12 @@ class CheckoutKCOCest {
 
         $kco = new Kco($I);
         $kco->fillKcoUserForm();
+        $I->wait(2);
         //different delivery address
         $kco->fillKcoShippingForm();
-
+        $I->wait(4);
         $I->see('Create Customer Account AND subscribe to Newsletter');
-        $I->wait(2);
+        $I->wait(4);
         // js clicks - the only working way to click Newsletter checkbox and PlaceOrder
         $I->executeJS('document.querySelector("#additional_checkbox_from_merchant__root>div input").click()');
         $I->wait(2);
