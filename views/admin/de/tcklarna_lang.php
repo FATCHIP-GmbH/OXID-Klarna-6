@@ -77,6 +77,7 @@ $aLang = array(
     'TCKLARNA_CREATE_USER_ACCOUNT_AND_SUBSCRIBE' => 'Kundenkonto anlegen UND Newsletter-Anmeldung',
     'TCKLARNA_NO_CHECKBOX'                       => 'Keine Checkbox anzeigen',
 
+
     /* design */
     'TCKLARNA_DISPLAY_ON_HOME'                   => 'Auf der Shop Startseite anzeigen?',
     'TCKLARNA_BANNER_SRC'                        => 'Klarna Banner Quelle',
@@ -151,6 +152,7 @@ $aLang = array(
     'TCKLARNA_RB_HOW_TO_ACTIVATE_LIST_THREE'  => 'Speichern Sie die Änderungen.',
     'TCKLARNA_RB_HOW_TO_ACTIVATE_LIST_FOUR'   => 'Sie sind jetzt online und können anfangen, mit Klarna zu verkaufen.',
     'TCKLARNA_RB_MERCHANT_SUPPORT'            => 'Merchant Support',
+    'TCKLARNA_DEVICE_IMG'                     => 'device.png',
 
 
     'TCKLARNA_EXTERNAL_PAYMENTS_ADMIN_DESC'   =>

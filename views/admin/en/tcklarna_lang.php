@@ -152,12 +152,7 @@ $aLang = array(
     'TCKLARNA_RB_HOW_TO_ACTIVATE_LIST_THREE'  => 'Save the changes.',
     'TCKLARNA_RB_HOW_TO_ACTIVATE_LIST_FOUR'   => 'You are now online and you can start selling with Klarna.',
     'TCKLARNA_RB_MERCHANT_SUPPORT'            => 'Merchant support',
-
-    'TCKLARNA_RB_HOW_TO_ACTIVATE'             => 'How-to-activate<br>Klarna guide.',
-    'TCKLARNA_RB_HOW_TO_ACTIVATE_LIST_ONE'    => 'Klicken Sie im OXID Backend auf den neuen Menüpunkt Klarna, die Unterkategorie Allgemein. und wählen anschließend das gewünschte Klarna Produkt aus. Sie haben die Wahl zwischen Klarna Payments und Klarna Checkout.',
-    'TCKLARNA_RB_HOW_TO_ACTIVATE_LIST_TWO'    => 'Geben Sie Ihre Zugangsdaten ein (Benutzername und Passwort) nehmen Sie unter Shopeinstellungen>Zahlungsarten sowie >Versandarten die OXID typischen Zuordnungen für Zahlarten vor.',
-    'TCKLARNA_RB_HOW_TO_ACTIVATE_LIST_THREE'  => 'Speichern Sie die Änderungen.',
-    'TCKLARNA_RB_HOW_TO_ACTIVATE_LIST_FOUR'   => 'Sie sind jetzt online und können anfangen, mit Klarna zu verkaufen.',
+    'TCKLARNA_DEVICE_IMG'                    => 'device-en.png',
 
     'TCKLARNA_EXTERNAL_PAYMENTS_ADMIN_DESC'   =>
         'Here you can configure External Payment Methods and External Checkouts to be included inside the Klarna Checkout Iframe. 
