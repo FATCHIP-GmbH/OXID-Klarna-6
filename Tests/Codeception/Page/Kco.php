@@ -31,19 +31,21 @@ class Kco extends Page
 
     public function fillPayment() {
         $I = $this->user;
-        if (!$I->isElementPresent("#payment-selector-pay_later__container")) {
-            if (!$I->isElementPresent("#pgw-iframe-credit_card")) {
-                $I->click("//div[@id='payment-selector']//*[text()='Card']");
-            }
-            $I->switchToIFrame('pgw-iframe-credit_card');
-            foreach (str_split("4111111111111111") as $key) {
-                $I->pressKey("//*[@id='cardNumber']", $key);
-            }
-            $I->fillField("securityCode", "111");
-            $I->fillField("expire", "01/24");
-            $I->switchToIFrame();
-            $I->switchToIFrame('klarna-checkout-iframe');
+        $I->wait(1);
+        if (!$I->isElementPresent("#pgw-iframe-credit_card")) {
+            $I->click("//div[@id='payment-selector']//*[text()='Card']");
         }
+        $I->switchToIFrame();
+        $I->wait(2);
+        $I->switchToIFrame('klarna-checkout-iframe');
+        $I->switchToIFrame('pgw-iframe-credit_card');
+        foreach (str_split("4111111111111111") as $key) {
+            $I->pressKey("//*[@id='cardNumber']", $key);
+        }
+        $I->fillField("//*[@id='securityCode']", "111");
+        $I->fillField("//*[@id='expire']", "01/24");
+        $I->switchToIFrame();
+        $I->switchToIFrame('klarna-checkout-iframe');
     }
 
     public function loginKlarnaWidget($country)
@@ -114,21 +116,19 @@ class Kco extends Page
         Fixtures::add('gKCOEmail', $generatedEmail);
         $I->waitForElement('#' . $this->frames['main']);
         $I->switchToIFrame($this->frames['main']);
-        $I->waitForElementClickable('//*[@id="email"]');
+        $I->waitForElementClickable('//*[@id="billing-email"]');
         $I->wait(2);
-        $I->fillField("//*[@id=\"postal_code\"]",$I->getKlarnaDataByName('sKCOFormPostCode'));
-        $I->fillField("//*[@id=\"email\"]", $generatedEmail);
-        $I->waitForElement("//div[@data-cid='am.title']");
-        $I->click("//div[@data-cid='am.title']");
-        $I->click("//div[@data-cid='row frau']");
-        
-        
-        $I->fillField("//*[@id=\"given_name\"]",$I->getKlarnaDataByName('sKCOFormGivenName'));
-        $I->fillField("//*[@id='family_name']",$I->getKlarnaDataByName('sKCOFormFamilyName'));
-        $I->fillField("//*[@id='street_address']",$I->getKlarnaDataByName('sKCOFormStreetName').' '.$I->getKlarnaDataByName('sKCOFormStreetNumber'));
-        $I->fillField("//*[@id='city']",$I->getKlarnaDataByName('sKCOFormCity'));
-        $I->fillField("//*[@id='phone']",$I->getKlarnaDataByName('sKCOFormPhone'));
-        $I->fillField("//*[@id='date_of_birth']",$I->getKlarnaDataByName('sKCOFormDob'));
+        $I->fillField("//*[@id=\"billing-postal_code\"]",$I->getKlarnaDataByName('sKCOFormPostCode'));
+        $I->fillField("//*[@id=\"billing-email\"]", $generatedEmail);
+        $I->waitForElementClickable('//*[@id="billing-given_name"]');
+        $I->fillField("//*[@id=\"billing-given_name\"]",$I->getKlarnaDataByName('sKCOFormGivenName'));
+        $I->fillField("//*[@id='billing-family_name']",$I->getKlarnaDataByName('sKCOFormFamilyName'));
+        $I->fillField("//*[@id='billing-street_address']",$I->getKlarnaDataByName('sKCOFormStreetName').' '.$I->getKlarnaDataByName('sKCOFormStreetNumber'));
+        $I->fillField("//*[@id='billing-city']",$I->getKlarnaDataByName('sKCOFormCity'));
+        $I->fillField("//*[@id='billing-phone']",$I->getKlarnaDataByName('sKCOFormPhone'));
+        $I->fillField("//*[@id='billing-date_of_birth']",$I->getKlarnaDataByName('sKCOFormDob'));
+        $I->click("//*[@id='billing-title']");
+        $I->click("//*[@id='billing-title__option__frau']");
         $I->click("//*[@id=\"button-primary\"]");
     }
 
@@ -140,13 +140,14 @@ class Kco extends Page
         $I = $this->user;
         $I->wait(4); // wait for loaders and overlays to be hidden
         $I->click('//*[@id="klarna-checkout-shipping-details"]//*[@id="preview__link"]');
+        $I->wait(2);
         $I->switchToIFrame(); // go back to the main content
         $I->waitForElement('#' . $this->frames['full']);
         $I->switchToIFrame($this->frames['full']);
-        $I->waitForElementVisible('//*[@id="fieldset"]');
-        $I->fillField('//*[@id="postal_code"]', $I->getKlarnaDataByName('sKCOFormDelPostCode'));
-        $I->fillField('//*[@id="street_address"]', $I->getKlarnaDataByName('sKCOFormDelStreetName') .' '. $I->getKlarnaDataByName('sKCOFormDelStreetNumber'));
-        $I->fillField('//*[@id="city"]', $I->getKlarnaDataByName('sKCOFormDelCity'));
+        $I->waitForElementVisible('//*[@id="addressCollector-fieldset"]');
+        $I->fillField('//*[@id="addressCollector-postal_code"]', $I->getKlarnaDataByName('sKCOFormDelPostCode'));
+        $I->fillField('//*[@id="addressCollector-street_address"]', $I->getKlarnaDataByName('sKCOFormDelStreetName') .' '. $I->getKlarnaDataByName('sKCOFormDelStreetNumber'));
+        $I->fillField('//*[@id="addressCollector-city"]', $I->getKlarnaDataByName('sKCOFormDelCity'));
         $I->click('//*[@id="SHIPMO-dialog-submit-button"]');
         $I->switchToIFrame();
         $I->switchToIFrame($this->frames['main']);
@@ -156,11 +157,11 @@ class Kco extends Page
     }
     
     public function submitPackstationOption() {
-        $I = $this->user; 
-        $I->executeJS('document.querySelector(\'#SHIPMO-shipping-options__container input\').click()');
-        $I->wait(2);
-        $I->click('Enter your details');
-        
+        $I = $this->user;
+        $I->wait(3);
+        $I->selectOption('#SHIPMO-container input[name=radio]', 'DHL Packstation');
+        $I->wait(3);
+        $I->click('//*[@id="shipping-option-content"]//*[@id="preview__link"]');
         // switch to form iframe
         $I->switchToIFrame(); // go back to the main content
         $I->waitForElement('#' . $this->frames['full']);
