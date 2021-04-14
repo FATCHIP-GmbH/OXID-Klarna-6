@@ -151,7 +151,7 @@ class Kco extends Page
         $I->click('//*[@id="SHIPMO-dialog-submit-button"]');
         $I->switchToIFrame();
         $I->switchToIFrame($this->frames['main']);
-        $I->wait(3);
+        $I->wait(5);
         $I->selectOption('#SHIPMO-container input[name=radio]', 'UPS 48');
         $I->wait(3);
     }
