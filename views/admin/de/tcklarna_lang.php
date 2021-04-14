@@ -77,7 +77,6 @@ $aLang = array(
     'TCKLARNA_CREATE_USER_ACCOUNT_AND_SUBSCRIBE' => 'Kundenkonto anlegen UND Newsletter-Anmeldung',
     'TCKLARNA_NO_CHECKBOX'                       => 'Keine Checkbox anzeigen',
 
-
     /* design */
     'TCKLARNA_DISPLAY_ON_HOME'                   => 'Auf der Shop Startseite anzeigen?',
     'TCKLARNA_BANNER_SRC'                        => 'Klarna Banner Quelle',
