@@ -77,7 +77,7 @@ class KlarnaFormatterTest extends ModuleUnitTestCase
         $result = KlarnaFormatter::klarnaToOxidAddress($addressData, $sKey);
         $sKey === null
             ? $this->assertNull($result)
-            : $this->assertArraySubset($expected, $result);
+            : $this->doAssertArraySubset($expected, $result);
     }
 
     public function klarnaToOxidAddressDataprovider()
@@ -164,5 +164,14 @@ class KlarnaFormatterTest extends ModuleUnitTestCase
             ['92ebae5067055431aeaaa6f75bd9a131', ['41b545c65fe99ca2898614e563a7108a' => 'Gregory Dabrowski, Karnapp 25, 21079 Hamburg']],
             ['c95a1d97acaebd371851727d1173dcd0', false]
         ];
+    }
+
+    protected function doAssertArraySubset($needle, $haystack)
+    {
+        if (method_exists($this, 'assertArraySubsetOxid')) {
+            parent::assertArraySubsetOxid($needle, $haystack);
+        } else {
+            parent::doAssertArraySubset($needle, $haystack);
+        }
     }
 }
