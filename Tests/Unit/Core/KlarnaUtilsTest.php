@@ -49,7 +49,7 @@ class KlarnaUtilsTest extends ModuleUnitTestCase
             ->getMock();
         $item->expects($this->exactly(2))->method('isBundle')->willReturn(false);
         $item->expects($this->once())->method('getUnitPrice')->willReturn($price);
-        $item->expects($this->once())->method('getArticle')->willReturn($article);
+        $item->expects($this->exactly(2))->method('getArticle')->willReturn($article);
         $item->expects($this->once())->method('getRegularUnitPrice')->willReturn($priceUnit);
         $result = KlarnaUtils::calculateOrderAmountsPricesAndTaxes($item, true);
         $expected = [
