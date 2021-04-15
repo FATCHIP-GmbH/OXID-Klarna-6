@@ -23,7 +23,7 @@ use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 class KlarnaUserTest extends ModuleUnitTestCase
 {
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
     }

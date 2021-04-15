@@ -18,13 +18,13 @@ use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 class KlarnaValidationControllerTest extends ModuleUnitTestCase
 {
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->setModuleConfVar('blKlarnaLoggingEnabled', true, 'bool');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         $this->setModuleConfVar('blKlarnaLoggingEnabled', false, 'bool');

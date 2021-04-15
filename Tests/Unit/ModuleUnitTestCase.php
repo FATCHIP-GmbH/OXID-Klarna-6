@@ -33,7 +33,7 @@ class ModuleUnitTestCase extends UnitTestCase
     /** @var TestConfig  */
     protected $testConfig;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -72,7 +72,7 @@ class ModuleUnitTestCase extends UnitTestCase
         return $url;
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 
