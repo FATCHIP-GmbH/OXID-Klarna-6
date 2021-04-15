@@ -210,7 +210,7 @@ class ModuleUnitTestCase extends UnitTestCase
 
     protected function doAssertNotContains($needle, $haystack, $message = '')
     {
-        if (method_exists($this, 'assertStringContainsString')) {
+        if (method_exists($this, 'assertStringNotContainsString')) {
             parent::assertStringNotContainsString($needle, $haystack, $message);
         } else {
             parent::assertNotContains($needle, $haystack, $message);
