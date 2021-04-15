@@ -110,7 +110,7 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
     {
         $oPaymentController = oxNew(PaymentController::class);
         $result             = $oPaymentController->removeKlarnaPrefix('Klarna String');
-        $this->assertNotContains('Klarna ', $result);
+        $this->doAssertNotContains('Klarna ', $result);
     }
 
     public function testIncludeKPWidget()

@@ -114,7 +114,7 @@ class KlarnaValidationControllerTest extends ModuleUnitTestCase
         $this->assertNotEmpty($result->count());
 
         $this->assertEquals(303, \oxUtilsHelper::$iCode);
-        $this->assertContains('klarnaInvalid=1&MY_ERROR=33&CANT_BUY=10', \oxUtilsHelper::$sRedirectUrl);
+        $this->doAssertContains('klarnaInvalid=1&MY_ERROR=33&CANT_BUY=10', \oxUtilsHelper::$sRedirectUrl);
     }
 
 

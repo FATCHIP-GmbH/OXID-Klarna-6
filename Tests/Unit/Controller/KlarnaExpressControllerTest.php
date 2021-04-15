@@ -197,7 +197,7 @@ class KlarnaExpressControllerTest extends ModuleUnitTestCase {
         $oRequest->expects($this->once())->method('getRequestEscapedParameter')->willReturn($sslredirect);
         $kcoController = oxNew(KlarnaExpressController::class);
         $kcoController->checkSsl($oRequest);
-        $this->assertContains((string)$expectedResult, (string)\oxUtilsHelper::$sRedirectUrl);
+        $this->doAssertContains((string)$expectedResult, (string)\oxUtilsHelper::$sRedirectUrl);
     }
 
     public function checkSslDataProvider() {
