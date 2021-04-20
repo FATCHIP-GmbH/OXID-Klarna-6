@@ -171,7 +171,7 @@ class KlarnaFormatterTest extends ModuleUnitTestCase
         if (method_exists($this, 'assertArraySubsetOxid')) {
             parent::assertArraySubsetOxid($needle, $haystack);
         } else {
-            parent::doAssertArraySubset($needle, $haystack);
+            parent::assertArraySubset($needle, $haystack);
         }
     }
 }
