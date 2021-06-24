@@ -148,11 +148,11 @@ class KlarnaPaymentTest extends ModuleUnitTestCase
 
         $oKlarnaOrder = new  KlarnaPayment($oBasket, $oUser, $aPost);
 
-        $this->assertContains($results['controllerName'], $oKlarnaOrder->refreshUrl);
+        $this->doAssertContains($results['controllerName'], $oKlarnaOrder->refreshUrl);
         $this->assertEquals($results['_sPaymentMethod'], $this->getProtectedClassProperty($oKlarnaOrder, '_sPaymentMethod'));
         $this->assertEquals($results['currencyToCountryMatch'], $this->getProtectedClassProperty($oKlarnaOrder, 'currencyToCountryMatch'));
         $this->assertEquals((bool)$results['error'], $oKlarnaOrder->isError());
-        $results['error'] && $this->assertContains($results['error'], $oKlarnaOrder->getError()[0]);
+        $results['error'] && $this->doAssertContains($results['error'], $oKlarnaOrder->getError()[0]);
         $this->assertEquals($results['reauthorizeRequired'], $this->getSessionParam('reauthorizeRequired'));
         $this->assertEquals($results['sessionValid'], $oKlarnaOrder->isSessionValid());
 
