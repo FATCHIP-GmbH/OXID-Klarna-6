@@ -70,7 +70,7 @@ $aLang = array(
     'TCKLARNA_CHECKOUT_DESC'     => 'Die Komplettlösung enthält alle wichtigen Zahlarten (Rechnung, Ratenkauf, Sofortüberweisung, Lastschrift, Mastercard und VISA-Card) und wird durch Klarna gehostet. Ihre Kunden müssen beim Bezahlen lediglich E-Mail-Adresse und Postleitzahl eingeben und können ihre bevorzugte Zahlart wählen. Alles mit nur einer Integration.',
     'TCKLARNA_PAYMENTS_DESC'     => 'Mit Klarna können Endkunden auf drei Arten bezahlen: Sofortüberweisung, später oder in Raten. Das ermöglicht Endkunden, Ware erst zu probieren und nur das zu bezahlen, was sie behalten möchten, Produkte im Shop zu finanzieren oder sofort zu bezahlen. Rechnung, Ratenkauf, Sofortüberweisung oder Lastschrift können Sie mit einer Integration aktivieren und sind dank der iFrame Lösung von Klarna rechtlich und inhaltlich immer auf dem aktuellen Stand.',
     'TCKLARNA_EASY_AND_SECURE_SHOPPING' => 'Die beliebtesten Zahlarten. Abgesichert und einfach zu integrieren.',
-    'TCKLARNA_WELCOME_TO_CONFIGURATION' => 'Herzliche willkommen in den Konfigurations-Einstellungen von Klarna Checkout und Klarna Payments. Hier finden Sie alles, was zur Aktivierung benötigt wird. Wählen Sie links ‘in der Leiste die Klarna Unter-Menüpunkte, um die Modul-Einrichtung abzuschließen.',
+    'TCKLARNA_WELCOME_TO_CONFIGURATION' => 'Herzlich willkommen in den Konfigurations-Einstellungen von Klarna Checkout und Klarna Payments. Hier finden Sie alles, was zur Aktivierung benötigt wird. Wählen Sie links in der Leiste die Klarna Unter-Menüpunkte, um die Modul-Einrichtung abzuschließen.',
 
     'TCKLARNA_CREATE_USER_ACCOUNT'               => 'Kundenkonto im OXID eShop anlegen',
     'TCKLARNA_SUBSCRIBE_TO_NEWSLETTER'           => 'Newsletter-Anmeldung',
@@ -147,8 +147,8 @@ $aLang = array(
     'TCKLARNA_CHECKOUT_START'                 => 'Das beste Checkout-Erlebnis für Ihre Kunden. Zuverlässige Kundenidentifizierung und Versandauswahl. Alle Zahlungen inklusive Weltweite Verfügbarkeit, lokal optimiert. Wir übernehmen das ganze Risiko und Sie erhalten immer Ihr Geld.',
 
     'TCKLARNA_RB_HOW_TO_ACTIVATE'             => 'How-to-activate<br>Klarna guide.',
-    'TCKLARNA_RB_HOW_TO_ACTIVATE_LIST_ONE'    => 'Klicken Sie im OXID Backend auf den neuen Menüpunkt Klarna, die Unterkategorie Allgemein. und wählen anschließend das gewünschte Klarna Produkt aus. Sie haben die Wahl zwischen Klarna Payments und Klarna Checkout.',
-    'TCKLARNA_RB_HOW_TO_ACTIVATE_LIST_TWO'    => 'Geben Sie Ihre Zugangsdaten ein (Benutzername und Passwort) nehmen Sie unter Shopeinstellungen>Zahlungsarten sowie >Versandarten die OXID typischen Zuordnungen für Zahlarten vor.',
+    'TCKLARNA_RB_HOW_TO_ACTIVATE_LIST_ONE'    => 'Klicken Sie im OXID Backend auf den neuen Menüpunkt Klarna, die Unterkategorie Allgemein und wählen anschließend das gewünschte Klarna Produkt aus. Sie haben die Wahl zwischen Klarna Payments und Klarna Checkout.',
+    'TCKLARNA_RB_HOW_TO_ACTIVATE_LIST_TWO'    => 'Geben Sie Ihre Zugangsdaten ein (Benutzername und Passwort), und nehmen Sie unter Shopeinstellungen>Zahlungsarten sowie >Versandarten die OXID typischen Zuordnungen für Zahlarten vor.',
     'TCKLARNA_RB_HOW_TO_ACTIVATE_LIST_THREE'  => 'Speichern Sie die Änderungen.',
     'TCKLARNA_RB_HOW_TO_ACTIVATE_LIST_FOUR'   => 'Sie sind jetzt online und können anfangen, mit Klarna zu verkaufen.',
     'TCKLARNA_RB_MERCHANT_SUPPORT'            => 'Merchant Support',
