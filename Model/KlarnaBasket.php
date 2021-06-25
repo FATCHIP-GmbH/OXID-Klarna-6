@@ -497,8 +497,55 @@ class KlarnaBasket extends KlarnaBasket_parent
      */
     public function tcklarna_calculateDeliveryCost()
     {
-        return parent::_calcDeliveryCost();
+        if ($this->_oDeliveryPrice !== null) {
+            return $this->_oDeliveryPrice;
+        }
+        $myConfig       = Registry::getConfig();
+        $oDeliveryPrice = oxNew(Price::class);
+
+        Registry::getConfig()->getConfigParam('blDeliveryVatOnTop')?$oDeliveryPrice->setNettoPriceMode():$oDeliveryPrice->setBruttoPriceMode();
+
+        // don't calculate if not logged in
+        $oUser = $this->getBasketUser();
+
+        if (!$oUser && !$myConfig->getConfigParam('blCalculateDelCostIfNotLoggedIn')) {
+            return $oDeliveryPrice;
+        }
+
+        $fDelVATPercent = $this->getAdditionalServicesVatPercent();
+        $oDeliveryPrice->setVat($fDelVATPercent);
+
+        // list of active delivery costs
+        $this->handleDeliveryCosts($myConfig,$oUser,$oDeliveryPrice,$fDelVATPercent);
+
+        return $oDeliveryPrice;
     }
+
+    protected function handleDeliveryCosts(Config $myConfig, $oUser, Price &$oDeliveryPrice, $fDelVATPercent)
+    {
+        // list of active delivery costs
+        if ($myConfig->getConfigParam('bl_perfLoadDelivery')) {
+            /** @var DeliveryList oDeliveryList */
+            $oDeliveryList = oxNew(DeliveryList::class);
+            $aDeliveryList = $oDeliveryList->getDeliveryList(
+                $this,
+                $oUser,
+                $this->_findDelivCountry(),
+                $this->getShippingId()
+            );
+
+            if (count($aDeliveryList) > 0) {
+                foreach ($aDeliveryList as $oDelivery) {
+                    //debug trace
+                    if ($myConfig->getConfigParam('iDebug') == 5) {
+                        echo("Delivery Cost : " . $oDelivery->oxdelivery__oxtitle->value . "<br>"); // @codeCoverageIgnore
+                    }
+                    $oDeliveryPrice->addPrice($oDelivery->getDeliveryPrice($fDelVATPercent));
+                }
+            }
+        }
+    }
+
 
     /**
      * Get average of order VAT
