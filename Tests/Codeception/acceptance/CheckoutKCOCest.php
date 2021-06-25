@@ -248,4 +248,61 @@ class CheckoutKCOCest {
         $I->seeOrderInDb($klarnaId, $inputDataMapper);
         $I->seeInKlarnaAPI($klarnaId, "AUTHORIZED", true);
     }
+
+    /**
+     * @group KCO_frontend
+     * @param AcceptanceTester $I
+     * @throws \Exception
+     */
+    public function differentShippingMethod(AcceptanceTester $I)
+    {
+        $I->clearShopCache();
+        $I->wantToTest('Checkout with different shipping method');
+        $I->loadKlarnaAdminConfig('KCO');
+        $homePage = $I->openShop();
+        $basket = new Basket($I);
+        $basket->addProductToBasket('05848170643ab0deb9914566391c0c63', 1);
+        $basket->addProductToBasket('058de8224773a1d5fd54d523f0c823e0', 1);
+        $homePage->openMiniBasket();
+        $I->click(Translator::translate('CHECKOUT'));
+        $I->waitForPageLoad();
+        $I->click("//form[@id='select-country-form']//button[@value='DE']");
+        $I->wait(2);
+
+        $kco = new Kco($I);
+        $kco->fillKcoUserForm();
+        $I->wait(2);
+        //Test if shipping method price is correct
+        $I->see('12,90 €');
+        $I->wait(2);
+        //different shipping method
+        $kco->fillKcoShippingForm('UPS Express 24');
+        $I->wait(2);
+        $I->executeJS('document.querySelector("[data-cid=\'button.buy_button\']").click()');
+        $I->wait(2);
+        $I->switchToIFrame(); // navigate back to to main document frame
+        $I->waitForElement('#thankyouPage');
+        $I->waitForPageLoad();
+
+        $billEmail = Fixtures::get('gKCOEmail'); // recall generated and stored email
+        $I->seeInDatabase('oxuser', ['oxusername' => $billEmail, 'oxpassword' => '']);
+        $klarnaId = $I->grabFromDatabase('oxorder', 'TCKLARNA_ORDERID', ['OXBILLEMAIL' => $billEmail]);
+        $I->assertNotEmpty($klarnaId);
+
+        $inputDataMapper = [
+            'sKCOFormPostCode' => 'OXBILLZIP',
+            'sKCOFormGivenName' => 'OXBILLFNAME',
+            'sKCOFormFamilyName' => 'OXBILLLNAME',
+            'sKCOFormStreetName' => 'OXBILLSTREET',
+            'sKCOFormStreetNumber' => 'OXBILLSTREETNR',
+            'sKCOFormCity' => 'OXBILLCITY',
+            'sKCOFormDelPostCode' => 'OXDELZIP',
+            'sKCOFormDelStreetName' => 'OXDELSTREET',
+            'sKCOFormDelStreetNumber' => 'OXDELSTREETNR',
+            'sKCOFormDelCity' => 'OXDELCITY',
+        ];
+
+        $I->seeOrderInDb($klarnaId, $inputDataMapper);
+        $I->seeInKlarnaAPI($klarnaId, "AUTHORIZED", true);
+    }
 }
