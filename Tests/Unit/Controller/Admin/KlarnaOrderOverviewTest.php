@@ -276,6 +276,7 @@ class KlarnaOrderOverviewTest extends ModuleUnitTestCase {
     }
 
     public function testIsCredentialsValid() {
+        $this->setOrder();
         $controller = $this->getMockBuilder(OrderOverview::class)
             ->setMethods(['getEditObjectId',])
             ->getMock();
@@ -283,13 +284,12 @@ class KlarnaOrderOverviewTest extends ModuleUnitTestCase {
         $result = $controller->isCredentialsValid();
         $this->assertFalse($result);
 
-        $this->setOrder();
         $this->setModuleConfVar('aKlarnaCreds_DE', '');
         $this->setModuleConfVar('sKlarnaMerchantId', 'smid');
         $this->setModuleConfVar('sKlarnaPassword', 'psw');
         $controller = $this->getMockBuilder(OrderOverview::class)
-        ->setMethods(['getEditObjectId'])
-        ->getMock();
+            ->setMethods(['getEditObjectId'])
+            ->getMock();
         $controller->expects($this->any())->method('getEditObjectId')->willReturn('test');
         $result = $controller->isCredentialsValid();
         $this->assertTrue($result);

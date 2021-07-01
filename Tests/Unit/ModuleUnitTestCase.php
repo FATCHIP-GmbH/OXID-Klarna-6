@@ -33,7 +33,7 @@ class ModuleUnitTestCase extends UnitTestCase
     /** @var TestConfig  */
     protected $testConfig;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -72,7 +72,7 @@ class ModuleUnitTestCase extends UnitTestCase
         return $url;
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -199,4 +199,21 @@ class ModuleUnitTestCase extends UnitTestCase
         return $method;
     }
 
+    protected function doAssertContains($needle, $haystack, $message = '')
+    {
+        if (method_exists($this, 'assertStringContainsString')) {
+            parent::assertStringContainsString($needle, $haystack, $message);
+        } else {
+            parent::assertContains($needle, $haystack, $message);
+        }
+    }
+
+    protected function doAssertNotContains($needle, $haystack, $message = '')
+    {
+        if (method_exists($this, 'assertStringNotContainsString')) {
+            parent::assertStringNotContainsString($needle, $haystack, $message);
+        } else {
+            parent::assertNotContains($needle, $haystack, $message);
+        }
+    }
 }

@@ -23,7 +23,7 @@ use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 class KlarnaUserTest extends ModuleUnitTestCase
 {
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
     }
@@ -450,7 +450,7 @@ class KlarnaUserTest extends ModuleUnitTestCase
     {
         return [
             [false, ['content_type' => 'application/vnd.klarna.internal.emd-v2+json',
-                     'body'         => json_encode(['one', 'two'])]],
+                'body'         => json_encode(['one', 'two'])]],
             [true, null],
         ];
     }
@@ -500,12 +500,12 @@ class KlarnaUserTest extends ModuleUnitTestCase
         $oUser->save();
 
         $aInvAdress = array('oxuser__oxfname'     => 'xxx',
-                            'oxuser__oxlname'     => 'yyy',
-                            'oxuser__oxstreetnr'  => '11',
-                            'oxuser__oxstreet'    => 'zzz',
-                            'oxuser__oxzip'       => '22',
-                            'oxuser__oxcity'      => 'ooo',
-                            'oxuser__oxcountryid' => 'a7c40f631fc920687.20179984');
+            'oxuser__oxlname'     => 'yyy',
+            'oxuser__oxstreetnr'  => '11',
+            'oxuser__oxstreet'    => 'zzz',
+            'oxuser__oxzip'       => '22',
+            'oxuser__oxcity'      => 'ooo',
+            'oxuser__oxcountryid' => 'a7c40f631fc920687.20179984');
 
         $oUser->changeUserData($oUser->oxuser__oxusername->value, $oUser->oxuser__oxpassword->value, $oUser->oxuser__oxpassword->value, $aInvAdress, array());
         $this->assertEquals($expectedResult, $this->getSessionParam('sCountryISO'));

@@ -55,28 +55,28 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
 
         return [
             ['KCO', false, null, 'DE', null,
-             [null, true, $redirectUrl],
+                [null, true, $redirectUrl],
             ],
             ['KP', false, null, 'DE', null,
-             [null, true, null],
+                [null, true, null],
             ],
             ['KCO', false, null, 'AF', null,
-             [null, true, null],
+                [null, true, null],
             ],
             ['KCO', $oUser, null, null, null,
-             [null, true, $redirectUrl],
+                [null, true, $redirectUrl],
             ],
             ['KCO', $oUser, null, null, 'nonKCORequest',
-             [null, true, null],
+                [null, true, null],
             ],
             ['KCO', $oUserAT, 'amazonRef', null, null,
-             ['AT', false, null],
+                ['AT', false, null],
             ],
             ['KCO', $oUserDE, null, null, null,
-             ['DE', true, $redirectUrl],
+                ['DE', true, $redirectUrl],
             ],
             ['KCO', $oUserAF, null, null, null,
-             ['AF', true, null],
+                ['AF', true, null],
             ],
         ];
     }
@@ -110,7 +110,7 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
     {
         $oPaymentController = oxNew(PaymentController::class);
         $result             = $oPaymentController->removeKlarnaPrefix('Klarna String');
-        $this->assertNotContains('Klarna ', $result);
+        $this->doAssertNotContains('Klarna ', $result);
     }
 
     public function testIncludeKPWidget()
@@ -413,23 +413,23 @@ class KlarnaPaymentControllerTest extends ModuleUnitTestCase
         return [
             // authorized (requires finalization)
             ['klarna_pay_later', true, null, self::COUNTRIES['DE'],
-             ['KP_data'], 'order'],
+                ['KP_data'], 'order'],
 
             // authorized (token present)
             ['klarna_pay_now', null, 'authToken', self::COUNTRIES['DE'],
-             ['KP_data'], 'order'],
+                ['KP_data'], 'order'],
 
             // error - not available in this country
             ['klarna_pay_now', null, 'authToken', self::COUNTRIES['AF'],
-             ['KP_data'], null],
+                ['KP_data'], null],
 
             // not authorized and no error
             ['klarna_slice_it', null, null, null,
-             ['KP_data'], null],
+                ['KP_data'], null],
 
             // not KP
             ['other', null, null, null,
-            null, 'order']
+                null, 'order']
         ];
     }
 

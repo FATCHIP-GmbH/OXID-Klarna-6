@@ -136,7 +136,7 @@ class Kco extends Page
      * @param AcceptanceTester $I
      * @throws \Exception
      */
-    public function fillKcoShippingForm() {
+    public function fillKcoShippingForm($shippingMethod = 'UPS 48') {
         $I = $this->user;
         $I->wait(4); // wait for loaders and overlays to be hidden
         $I->click('//*[@id="klarna-checkout-shipping-details"]//*[@id="preview__link"]');
@@ -152,7 +152,7 @@ class Kco extends Page
         $I->switchToIFrame();
         $I->switchToIFrame($this->frames['main']);
         $I->wait(5);
-        $I->selectOption('#SHIPMO-container input[name=radio]', 'UPS 48');
+        $I->selectOption('#SHIPMO-container input[name=radio]', $shippingMethod);
         $I->wait(3);
     }
     

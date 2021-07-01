@@ -73,7 +73,7 @@ $aLang = array(
 
     'TCKLARNA_PAYMENTS_DESC' => 'Klarna offers three payment solutions. Pay now, Pay later and Financing. This allows your consumers to try before they buy, finance purchases in your store, or make use of other payment options made available by Klarna.',
     'TCKLARNA_EASY_AND_SECURE_SHOPPING' => 'The most popular payment methods. Secured and easy to integrate.',
-    'TCKLARNA_WELCOME_TO_CONFIGURATION' => 'Welcome to Klarna’s configuration side. Here you can find everything you need to activate Klarna Payments or Klarna Checkout. Click on the Klarna sub-categories to complete the installation of this module.',
+    'TCKLARNA_WELCOME_TO_CONFIGURATION' => 'Welcome to Klarna’s configuration section. Here you can find everything you need to activate Klarna Payments or Klarna Checkout. Click on the Klarna sub-categories to complete the installation of this module.',
 
     'TCKLARNA_CREATE_USER_ACCOUNT'               => 'Create Customer Account',
     'TCKLARNA_SUBSCRIBE_TO_NEWSLETTER'           => 'Subscribe to Newsletter',
@@ -137,7 +137,7 @@ $aLang = array(
     'TCKLARNA_PAY_LATER_TEXT'    => 'The option to pay later makes buying quicker and easier for customers: no need to fill out lengthy personal details or card number online.',
     'TCKLARNA_SLICE_IT'          => 'Financing',
     'TCKLARNA_SLICE_IT.'         => 'Financing.',
-    'TCKLARNA_SLICE_IT_START'    => 'Increase your shoppers purchase power by letting them slice their payments. Customers can chose between fixed and flexible payments splitted in 6 - 36 month.',
+    'TCKLARNA_SLICE_IT_START'    => 'Increase your shoppers purchase power by letting them slice their payments. Customers can choose between fixed and flexible payments split in 6 - 36 months.',
     'TCKLARNA_SLICE_IT_TEXT'     => 'Your customers can spread the cost of their purchases at a low interest rate, giving them flexibility and increased purchasing power. Our unique credit application requires minimal information and takes just seconds to complete.',
     'TCKLARNA_PAY_NOW'           => 'Pay Now',
     'TCKLARNA_PAY_NOW.'          => 'Pay now.',

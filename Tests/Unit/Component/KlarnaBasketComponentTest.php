@@ -17,7 +17,7 @@ use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
  */
 class KlarnaBasketComponentTest extends ModuleUnitTestCase {
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
     }
 

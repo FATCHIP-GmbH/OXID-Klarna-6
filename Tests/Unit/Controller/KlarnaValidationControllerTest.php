@@ -18,13 +18,13 @@ use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 class KlarnaValidationControllerTest extends ModuleUnitTestCase
 {
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->setModuleConfVar('blKlarnaLoggingEnabled', true, 'bool');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         $this->setModuleConfVar('blKlarnaLoggingEnabled', false, 'bool');
@@ -114,7 +114,7 @@ class KlarnaValidationControllerTest extends ModuleUnitTestCase
         $this->assertNotEmpty($result->count());
 
         $this->assertEquals(303, \oxUtilsHelper::$iCode);
-        $this->assertContains('klarnaInvalid=1&MY_ERROR=33&CANT_BUY=10', \oxUtilsHelper::$sRedirectUrl);
+        $this->doAssertContains('klarnaInvalid=1&MY_ERROR=33&CANT_BUY=10', \oxUtilsHelper::$sRedirectUrl);
     }
 
 

@@ -497,7 +497,19 @@ class KlarnaBasket extends KlarnaBasket_parent
      */
     public function tcklarna_calculateDeliveryCost()
     {
+        $oDeliveryList = oxNew(DeliveryList::class);
+        Registry::set(DeliveryList::class, $oDeliveryList);
+
         return parent::_calcDeliveryCost();
+    }
+
+    /**
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
+     * @return object
+     */
+    protected function _calcDeliveryCost()
+    {
+        return KlarnaUtils::isKlarnaPaymentsEnabled()?$this->tcklarna_calculateDeliveryCost():parent::_calcDeliveryCost();
     }
 
     /**

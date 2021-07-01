@@ -1,3 +1,9 @@
+### 5.5.1
+* Fix spelling on new Klarna admin start page DE/EN
+* Bugfix: Shipping costs add up
+* Update tests to be compatible with OXID 6.3.x
+* Update tests to be compatible with PHPUnit8 as well as older versions.
+
 ### 5.5.0
 * Remove Instant Shopping
 * Backend Rebranding
