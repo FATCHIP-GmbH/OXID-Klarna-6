@@ -35,9 +35,10 @@ class PaymentHandler implements PaymentHandlerInterface
         // returns success response or false
         // errors are added automatically to the view by httpClient
         $response = $this->httpClient->initOrder($this->context)->createNewOrder();
-        $result = $this->checkFraudStatus($response);
+        $result = is_array($response) ? $this->checkFraudStatus($response) : false;
         if ($result) {
             $this->updateOrder($oOrder, $response);
+            //TODO: don't use config
             Registry::getConfig()->setConfigParam('kp_order_id', $response['order_id']);
         }
 
@@ -52,7 +53,11 @@ class PaymentHandler implements PaymentHandlerInterface
 
     protected function checkFraudStatus(array $createResponse)
     {
-        if($createResponse['fraud_status'] !== 'ACCEPTED') {
+        if (!array_key_exists('fraud_status', $createResponse) ) {
+            $createResponse['fraud_status'] = 'FRAUD_STATUS_INFO_MISSING';
+        }
+
+        if ($createResponse['fraud_status'] !== 'ACCEPTED') {
             $this->error = 'fraud_status=' . $createResponse['fraud_status'];
             return false;
         }
