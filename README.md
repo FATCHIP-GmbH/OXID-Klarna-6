@@ -6,7 +6,7 @@ Klarna Checkout and Klarna Payments Module for the OXID eShop
 ### Title: Klarna Checkout and Klarna Payments Module for the OXID eShop
 ### Author: cgrd GmbH, https://www.cgrd.de/oxid-eshop
 ### Prefix: tcklarna
-### Version: 5.5.1
+### Version: 5.5.2
 ### Link: https://www.klarna.com/de/verkaeufer/plattformen-und-partner/oxid/
 ### Mail: oxid@klarna.com
 
