@@ -206,8 +206,6 @@ abstract class KlarnaClientBase extends Base
         $php    = phpversion();
         $phpVer = 'PHP' . $php;
 
-        $shopName = self::$instance->getConfig()->getActiveShop()->oxshops__oxname->value;
-
         $shopEdition = self::$instance->getConfig()->getActiveShop()->oxshops__oxedition->value;
         $shopRev     = self::$instance->getConfig()->getActiveShop()->oxshops__oxversion->value;
         $shopVer     = 'OXID_' . $shopEdition . '_' . $shopRev;
@@ -225,7 +223,7 @@ abstract class KlarnaClientBase extends Base
         return array(
             'Authorization' => 'Basic ' . base64_encode("{$this->aCredentials['mid']}:{$this->aCredentials['password']}"),
             'Content-Type' => 'application/json',
-            'User-Agent' => 'OS/' . $os . ' Language/' . $phpVer . ' Cart/' . $shopVer . '-' . $shopName . ' Plugin/' . $moduleInfo
+            'User-Agent' => 'OS/' . $os . ' Language/' . $phpVer . ' Cart/' . $shopVer . '-' . ' Plugin/' . $moduleInfo
         );
     }
 
