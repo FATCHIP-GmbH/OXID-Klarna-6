@@ -308,7 +308,7 @@ oder wenden Sie sich an den Klarna Integration Support.',
     'TCKLARNA_LEARN_MORE_BUTTON'            => 'Mehr erfahren',
 
     'TCKLARNA_CUSTOMER_TYPE'         => 'Unterstützte Kundenarten',
-    'TCKLARNA_CUSTOMER_TYPE_TOOLTIP' => 'Hier können Sie einstellen, ob der Shop ausschließlich B2C Transaktionen (Standard-Einstellung). nur B2B Transaktionen oder sowohl B2C als auch B2B Transaktionen akzeptieren soll.',
+    'TCKLARNA_CUSTOMER_TYPE_TOOLTIP' => 'Hier können Sie einstellen, ob der Shop ausschließlich B2C Transaktionen (Standard-Einstellung). nur B2B Transaktionen oder sowohl B2C als auch B2B Transaktionen akzeptieren soll. <br> Hinweis: Nach dem Umstellen der Kundenarten muss der Session cache des Browsers gelöscht werden, damit die Bezahlung getestet werden kann.',
     'TCKLARNA_B2C'                   => 'Nur B2C Kunden',
     'TCKLARNA_B2B'                   => 'Nur B2B Kunden',
     'TCKLARNA_B2B_B2C'               => 'Hauptsächlich B2B Kunden, aber auch B2C Kunden',
