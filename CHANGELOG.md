@@ -1,3 +1,6 @@
+### 5.5.2
+* Reimplementation of Klarna Express (formerly Klarna Instant Shopping)
+
 ### 5.5.1
 * Fix spelling on new Klarna admin start page DE/EN
 * Bugfix: Shipping costs add up
