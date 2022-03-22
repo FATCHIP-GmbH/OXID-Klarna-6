@@ -25,7 +25,7 @@ In the shop's main folder ( the one with composer.json file) run this command:
 
 or add the following line within the "require" section to your composer.json file:
 
-  "topconcepts/oxid-klarna-6": "v5.5.1"
+  "topconcepts/oxid-klarna-6": "v5.5.2"
 
 and run 
 
@@ -36,5 +36,5 @@ and run
 
 See folder /Documentation in this package or download latest manuals here:
 
-### In English: https://www.cgrd.de/customer/klarna/docs/klarna-module-for-oxid-en-5.5.1.pdf
-### In German: https://www.cgrd.de/customer/klarna/docs/klarna-module-for-oxid-de-5.5.1.pdf
+### In English: https://www.cgrd.de/customer/klarna/docs/klarna-module-for-oxid-en-5.5.2.pdf
+### In German: https://www.cgrd.de/customer/klarna/docs/klarna-module-for-oxid-de-5.5.2.pdf

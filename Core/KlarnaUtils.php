@@ -21,7 +21,6 @@ namespace TopConcepts\Klarna\Core;
 use OxidEsales\Eshop\Application\Model\BasketItem;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\Field;
-use OxidEsales\Eshop\Core\Price;
 use OxidEsales\Eshop\Core\UtilsObject;
 use TopConcepts\Klarna\Model\KlarnaCountryList;
 use TopConcepts\Klarna\Model\KlarnaUser;
