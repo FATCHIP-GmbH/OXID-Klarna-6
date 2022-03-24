@@ -223,14 +223,6 @@ class KlarnaPayment extends KlarnaPayment_parent
     {
         $klName = $this->getPaymentCategoryName();
 
-        $oSession = Registry::getSession();
-        if ($sessionData = $oSession->getVariable('klarna_session_data')) {
-            $methodData = array_search($klName, array_column($sessionData['payment_method_categories'], 'identifier'));
-            if ($methodData !== null) {
-
-                return $sessionData['payment_method_categories'][$methodData]['asset_urls'][$variant];
-            }
-        }
         $from   = '/' . preg_quote('-', '/') . '/';
         $locale = preg_replace($from, '_', strtolower(KlarnaConsts::getLocale()), 1);
 
