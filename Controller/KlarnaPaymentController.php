@@ -212,6 +212,17 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
             }
         }
 
+        foreach ($this->aPaymentList as $payid => $oxPayment) {
+            if($oxPayment->isKlarnaPayment($payid)) {
+                if ($oxPayment->_aUserData['billing_address']['organization_name'] && !$oxPayment->b2bAllowed) {
+                    unset($this->aPaymentList[$payid]);
+                }
+                if (empty($oxPayment->_aUserData['billing_address']['organization_name']) && !$oxPayment->b2cAllowed) {
+                    unset($this->aPaymentList[$payid]);
+                }
+            }
+        }
+
         return $this->aPaymentList;
     }
 
