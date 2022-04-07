@@ -95,26 +95,19 @@ class ANavigationFrontendKpCest
 
                 $this->fillFieldSpecial('//*[@id="purchase-approval-form-national-identification-number"]',$number, $I);
                 $this->fillFieldSpecial('//*[@id="purchase-approval-form-phone-number"]',$phone, $I);
-                $I->click('//*[@id="purchase-approval-form-continue-button"]');
+                $this->waitAndClick('//*[@id="invoice_kp-purchase-review-continue-button"]',$I);
             } else {
-                $bday = null;
-                if($data['country'] == 'AT') {
-                    $bday = '14041988';
-                }
                 $I->wait(2);
                 if($data['country'] == 'NL') {
                     $I->wait(2);
                     $I->switchToIFrame();
                     $I->wait(1);
                     $I->switchToIFrame($data['iframe']);
-                    $this->fillFieldSpecial('//*[@id="invoice_kp-purchase-approval-form-date-of-birth"]',$I->getKlarnaDataByName('sKlarnaBDate'), $I);
-                    $this->fillFieldSpecial('//*[@id="invoice_kp-purchase-approval-form-phone-number"]',$I->getKlarnaDataByName('sKlarnaPhoneNumber'), $I);
-                    $I->click('//*[@id="invoice_kp-purchase-approval-form-continue-button"]');
+                    $this->confirmInIFrame($I);
                 } else {
-                    $this->fillFieldSpecial('//*[@id="purchase-approval-form-date-of-birth"]',$bday != null?$bday:$I->getKlarnaDataByName('sKlarnaBDate'), $I);
-                    $this->fillFieldSpecial('//*[@id="purchase-approval-form-phone-number"]',$I->getKlarnaDataByName('sKlarnaPhoneNumber'), $I);
-                    $I->click('//*[@id="purchase-approval-form-continue-button"]');
+                    $this->confirmInIFrame($I);
                 }
+                $this->waitAndClick('//*[@id="invoice_kp-purchase-review-continue-button"]',$I);
             }
         }
 
@@ -145,7 +138,7 @@ class ANavigationFrontendKpCest
             }
         }
 
-        $I->wait(8);
+        $I->wait(4);
         $I->switchToIFrame();
         $I->click(".nextStep");
         $I->waitForPageLoad();
@@ -197,7 +190,7 @@ class ANavigationFrontendKpCest
         $I->wait(3);
         $this->fillFieldSpecial('//*[@id="purchase-approval-form-date-of-birth"]',$I->getKlarnaDataByName('sKlarnaBDate'), $I);
         $this->fillFieldSpecial('//*[@id="purchase-approval-form-phone-number"]',$I->getKlarnaDataByName('sKlarnaPhoneNumber'), $I);
-        $I->click('//*[@id="purchase-approval-form-continue-button"]');
+        $I->click('//*[@id="invoice_kp-purchase-review-continue-button"]');
         $I->wait(8);
         $I->switchToIFrame();
         $I->wait(2);
@@ -329,18 +322,25 @@ class ANavigationFrontendKpCest
      * @param AcceptanceTester $I
      * @return void
      */
-    protected function confirmInIFrame(AcceptanceTester $I)
+    protected function confirmInIFrame(AcceptanceTester $I,$isKP = false)
     {
         $this->waitAndFill('//*[@id="email_or_phone"]', '+4915201111111', $I);
         $this->waitAndClick('//*[@id="onContinue"]',$I);
         $this->waitAndFill('//*[@id="otp_field"]', "123456", $I);
         $this->waitAndFill('//*[@id="otp_field"]', "123456", $I);
+    }
 
-        //depends on cache
+    /**
+     * @param AcceptanceTester $I
+     * @return void
+     */
+    protected function fillIBAN(AcceptanceTester $I)
+    {
+//depends on cache
         try {
-            $this->waitAndClick('//*[@id="address-module"]',$I);
+            $this->waitAndClick('//*[@id="address-module"]', $I);
             $I->fillField('//*[@id="addressCollector-date_of_birth"]', "04121999");
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             try {
                 //Check if IBAN needs to be filled
                 $I->seeElement('//*[@id="iban"]');
