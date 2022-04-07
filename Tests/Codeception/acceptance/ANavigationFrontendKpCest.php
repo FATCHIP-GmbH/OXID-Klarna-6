@@ -345,7 +345,7 @@ class ANavigationFrontendKpCest
                 //Check if IBAN needs to be filled
                 $I->seeElement('//*[@id="iban"]');
                 $I->waitForElementClickable('//*[@id="iban"]');
-                $this->fillFieldSpecial('//*[@id="iban"]', $I->getKlarnaDataByName('sKlarnaPayNowIbanDE'), $I);
+                $this->fillFieldSpecial('//*[@id="iban"]', 'DE11520513735120710131', $I);
                 $I->click('//*[@id="aligned-content__button__0"]');
                 $I->wait(1);
                 $I->waitForElementClickable('//*[@id="aligned-content__button__0"]');
