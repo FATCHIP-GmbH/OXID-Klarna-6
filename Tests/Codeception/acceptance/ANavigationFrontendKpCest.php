@@ -20,34 +20,15 @@ class ANavigationFrontendKpCest
         $I->clearShopCache();
         $I->loadKlarnaAdminConfig('KP');
 
-        //Navigate untill step 3
+        //Navigate until step 3
         $this->navigateToPay($I);
         //Wait for Klarna page to load
-        $I->wait(6);
+        $I->wait(3);
         $I->selectOption('form input[name=paymentid]', 'Pay Now');
-        $I->switchToIFrame("klarna-pay-now-main");
-        $I->click('//*[@id="installments-direct_debit|-1"]');
-        $I->wait(2);
-        $I->switchToIFrame();
         $I->click(".nextStep");
         $I->wait(2);
         $I->switchToIFrame('klarna-pay-now-fullscreen');
-        $this->fillFieldSpecial('//*[@id="purchase-approval-form-date-of-birth"]',$I->getKlarnaDataByName('sKlarnaBDate'), $I);
-        $this->fillFieldSpecial('//*[@id="purchase-approval-form-phone-number"]',$I->getKlarnaDataByName('sKlarnaPhoneNumber'), $I);
-        $I->click('//*[@id="purchase-approval-form-continue-button"]');
-        $I->wait(2);
-
-        try {
-            //Check if IBAN needs to be filled
-            $I->seeElement('//*[@id="iban"]');
-            $I->waitForElementClickable('//*[@id="iban"]');
-            $this->fillFieldSpecial('//*[@id="iban"]', $I->getKlarnaDataByName('sKlarnaPayNowIbanDE'), $I);
-            $I->click('//*[@id="mandate-signup-sepa-iban__footer-button-wrapper"]');
-            $I->waitForElementClickable('//*[@id="mandate-signup-sepa-details-confirmation__footer-button-wrapper"]');
-            $I->click('//*[@id="mandate-signup-sepa-details-confirmation__footer-button-wrapper"]');
-        } catch (Exception $e) {
-            $I->click('//*[@id="mandate-review__confirmation-button"]');
-        }
+        $this->confirmInIFrame($I);
 
         $I->wait(5);
         $I->switchToIFrame();
@@ -81,7 +62,7 @@ class ANavigationFrontendKpCest
 
         //step 3
         //Wait for Klarna page to load
-        $I->wait(6);
+        $I->wait(3);
         $I->click("//input[@value='".$data['radio']."']");
 
         $I->click(".nextStep");
@@ -243,22 +224,7 @@ class ANavigationFrontendKpCest
         $I->click(".nextStep");
         $I->wait(2);
         $I->switchToIFrame('klarna-direct-debit-fullscreen');
-        $this->fillFieldSpecial('//*[@id="purchase-approval-form-date-of-birth"]',$I->getKlarnaDataByName('sKlarnaBDate'), $I);
-        $this->fillFieldSpecial('//*[@id="purchase-approval-form-phone-number"]',$I->getKlarnaDataByName('sKlarnaPhoneNumber'), $I);
-
-        $I->click('//*[@id="purchase-approval-form-continue-button"]');
-        $I->wait(2);
-        try {
-            //Check if IBAN needs to be filled
-            $I->seeElement('//*[@id="iban"]');
-            $I->waitForElementClickable('//*[@id="iban"]');
-            $this->fillFieldSpecial('//*[@id="iban"]', $I->getKlarnaDataByName('sKlarnaPayNowIbanDE'), $I);
-            $I->click('//*[@id="mandate-signup-sepa-iban__footer-button-wrapper"]');
-            $I->waitForElementClickable('//*[@id="mandate-signup-sepa-details-confirmation__footer-button-wrapper"]');
-            $I->click('//*[@id="mandate-signup-sepa-details-confirmation__footer-button-wrapper"]');
-        } catch (Exception $e) {
-            $I->click('//*[@id="mandate-review__confirmation-button"]');
-        }
+        $this->confirmInIFrame($I);
         $I->wait(7);
 
         $I->switchToIFrame();
@@ -346,6 +312,47 @@ class ANavigationFrontendKpCest
     {
         foreach (str_split($msg) as $key) {
             $I->pressKey($input, $key);
+        }
+    }
+
+    protected function waitAndFill($input,$msg,$I) {
+        $I->waitForElementVisible($input);
+        $this->fillFieldSpecial($input,$msg,$I);
+    }
+
+    protected function waitAndClick($input,$I) {
+        $I->waitForElementVisible($input);
+        $I->click($input);
+    }
+
+    /**
+     * @param AcceptanceTester $I
+     * @return void
+     */
+    protected function confirmInIFrame(AcceptanceTester $I)
+    {
+        $this->waitAndFill('//*[@id="email_or_phone"]', '+4915201111111', $I);
+        $this->waitAndClick('//*[@id="onContinue"]',$I);
+        $this->waitAndFill('//*[@id="otp_field"]', "123456", $I);
+        $this->waitAndFill('//*[@id="otp_field"]', "123456", $I);
+
+        //depends on cache
+        try {
+            $this->waitAndClick('//*[@id="address-module"]',$I);
+            $I->fillField('//*[@id="addressCollector-date_of_birth"]', "04121999");
+        }catch (Exception $e) {
+            try {
+                //Check if IBAN needs to be filled
+                $I->seeElement('//*[@id="iban"]');
+                $I->waitForElementClickable('//*[@id="iban"]');
+                $this->fillFieldSpecial('//*[@id="iban"]', $I->getKlarnaDataByName('sKlarnaPayNowIbanDE'), $I);
+                $I->click('//*[@id="aligned-content__button__0"]');
+                $I->wait(1);
+                $I->waitForElementClickable('//*[@id="aligned-content__button__0"]');
+                $I->click('//*[@id="aligned-content__button__0"]');
+            } catch (Exception $e) {
+                $I->click('//*[@id="mandate-review__confirmation-button"]');
+            }
         }
     }
 }
