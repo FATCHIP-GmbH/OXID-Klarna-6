@@ -21,11 +21,11 @@ OXID eShop Plugin to integrate Klarna Checkout and Klarna Payments to OXID eShop
 
 In the shop's main folder ( the one with composer.json file) run this command:
 
-  composer require topconcepts/oxid-klarna-6:v5.5.1
+  composer require fatchip-gmbh/oxid-klarna-6:v5.5.1
 
 or add the following line within the "require" section to your composer.json file:
 
-  "topconcepts/oxid-klarna-6": "v5.5.1"
+  "fatchip-gmbh/oxid-klarna-6": "v5.5.1"
 
 and run 
 
