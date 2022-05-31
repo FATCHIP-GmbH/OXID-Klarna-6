@@ -204,6 +204,7 @@ class KlarnaPayment extends BaseModel
         $append = array();
         if ($this->isB2B()) {
             $append['customer']['type'] = 'organization';
+            $this->_aUserData['customer']['type'] = 'organization';
         } else {
             $append['customer']['type'] = 'person';
         }
