@@ -185,7 +185,9 @@ For a detailed description of the different settings please see the tool-tip fun
     'TCKLARNA_IMAGE_URI_EXT_CHECKOUT'  => 'Image URI external checkout',
     'TCKLARNA_IMAGE_TIP_69x24'         => 'Dimensions: 69x24 Pixel',
     'TCKLARNA_IMAGE_TIP_276x48'        => 'Dimensions: 276x48 Pixel',
-    'TCKLARNA_USER_GUIDE_DESCRIPTION'  => 'Click here for download of latest documentation PDF of Klarna extension for OXID eShop',
+    'TCKLARNA_USER_GUIDE_DESCRIPTION'  => 'View the user manual for the Klarna module for OXID eShop here.',
+    'TCKLARNA_USER_GUIDE_LINK'         => 'https://wiki.fatchip.de/public/klarna-de',
+    'TCKLARNA_USER_GUIDE_BUTTON'         => 'User guide',
 
     'TCKLARNA_CHOOSE' => 'Choose',
 

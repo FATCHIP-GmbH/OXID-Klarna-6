@@ -67,8 +67,8 @@
                 <p>[{"TCKLARNA_USER_GUIDE_DESCRIPTION"|oxmultilangassign}]</p>
             </div>
             <div class="user-guide-download">
-                <a href="[{$oView->getManualDownloadLink()}]" target="_blank">
-                    <button class="btn-save">Download</button>
+                <a href="[{"TCKLARNA_USER_GUIDE_LINK"|oxmultilangassign}]" target="_blank">
+                    <button class="btn-save">[{"TCKLARNA_USER_GUIDE_BUTTON"|oxmultilangassign}]</button>
                 </a>
             </div>
             <div class="user-guide-country">
