@@ -231,6 +231,7 @@ class KlarnaPayment extends KlarnaPayment_parent
                 return $sessionData['payment_method_categories'][$methodData]['asset_urls'][$variant];
             }
         }
+
         $from   = '/' . preg_quote('-', '/') . '/';
         $locale = preg_replace($from, '_', strtolower(KlarnaConsts::getLocale()), 1);
 
