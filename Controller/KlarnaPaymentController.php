@@ -212,6 +212,32 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
             }
         }
 
+        if($user = $this->getUser()) {
+            $b2bAllowed = false;
+            $b2cAllowed = true;
+            $activeB2Option = KlarnaUtils::getShopConfVar('sKlarnaB2Option');
+
+            if (strpos($activeB2Option, 'B2B') !== false) {
+                $b2bAllowed = in_array($user->getCountryISO(), KlarnaConsts::getKlarnaKPB2BCountries());
+            }
+
+            if($activeB2Option === 'B2B'){
+                $b2cAllowed = false;
+            }
+
+            foreach ($this->aPaymentList as $payid => $oxPayment) {
+                if($oxPayment->isKlarnaPayment($payid)) {
+
+                    if ($user->oxuser__oxcompany->value && !$b2bAllowed) {
+                        unset($this->aPaymentList[$payid]);
+                    }
+                    if (!$user->oxuser__oxcompany->value && !$b2cAllowed) {
+                        unset($this->aPaymentList[$payid]);
+                    }
+                }
+            }
+        }
+
         return $this->aPaymentList;
     }
 

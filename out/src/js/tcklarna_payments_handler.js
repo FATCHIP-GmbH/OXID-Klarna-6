@@ -269,6 +269,12 @@ window.klarnaAsyncCallback = function () {
                 delete $kpRadio.active;
                 $('.kp-method').hide(600);
             });
+            
+            // react to aggrosoft paypal plus changes
+            $('body').on('ppplus-payment-selected', function() {
+               delete $kpRadio.active;
+               $('.kp-method').hide(600);
+            });
 
             // order step4 click
             $('#orderStep').attr('href', 'javascript:document.getElementById("paymentNextStepBottom").click();');
@@ -276,8 +282,8 @@ window.klarnaAsyncCallback = function () {
 
         // Override form submission
         $sbmButton.click(function (event) {
-            event.preventDefault();
             if ($kpRadio.active && $form.attr('id') === 'payment') {
+                event.preventDefault();
                 if (!$kpRadio.active.hasError) {
                     $('.loading').show(600);
                     klarnaSendXHR({
@@ -294,6 +300,7 @@ window.klarnaAsyncCallback = function () {
                 }
 
             } else if ($form.attr('id') === 'orderConfirmAgbBottom') {
+                event.preventDefault();
                 $('.loading').show(600);
                 var downloadItemAgreement = $('input[type=checkbox][name="oxdownloadableproductsagreement"]').get(0);
                 if(downloadItemAgreement && downloadItemAgreement.checked === false){
@@ -306,8 +313,6 @@ window.klarnaAsyncCallback = function () {
                     client_token: tcKlarnaClientToken
                 });
 
-            } else {
-                $form.submit();
             }
         });
 

@@ -2,6 +2,7 @@
   "name": "fatchip-gmbh/oxid-klarna-6",
   "description": "Klarna module for OXID eShop version 6.X",
   "type": "oxideshop-module",
+  "license": "Apache-2.0",
   "extra": {
     "oxideshop": {
       "blacklist-filter": [
