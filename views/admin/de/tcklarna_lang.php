@@ -188,7 +188,7 @@ oder wenden Sie sich an den Klarna Integration Support.',
     'TCKLARNA_IMAGE_TIP_69x24'                => 'Bildgröße: 69x24 Pixel',
     'TCKLARNA_IMAGE_TIP_276x48'               => 'Bildgröße: 276x48 Pixel',
     'TCKLARNA_USER_GUIDE_DESCRIPTION'         => 'Das Benutzerhandbuch für das Klarna Modul für den OXID eShop können Sie hier einsehen.',
-    'TCKLARNA_USER_GUIDE_LINK'         => 'https://wiki.fatchip.de/public/klarna-de',
+    'TCKLARNA_USER_GUIDE_LINK'         => 'https://wiki.fatchip.de/public/faqklarna',
     'TCKLARNA_USER_GUIDE_BUTTON'         => 'Benutzerhandbuch',
 
     'TCKLARNA_CHOOSE' => 'Wählen',
