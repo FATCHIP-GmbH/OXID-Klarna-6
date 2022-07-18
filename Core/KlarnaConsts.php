@@ -84,7 +84,7 @@ class KlarnaConsts
      */
     public static function getKlarnaCoreCountries()
     {
-        return array('SE', 'NO', 'FI', 'DE', 'AT', 'NL', 'GB', 'DK', 'CH', 'ES', 'FR', 'BE', 'IT');
+        return array('SE', 'NO', 'FI', 'DE', 'AT', 'NL', 'GB', 'DK', 'CH', 'ES', 'FR', 'BE', 'IT', 'IE');
     }
 
     /**
@@ -124,7 +124,8 @@ class KlarnaConsts
             'BE' => 'EUR',
             'FR' => 'EUR',
             'ES' => 'EUR',
-            'IT' => 'EUR'
+            'IT' => 'EUR',
+            'IE' => 'EUR',
         );
     }
 
@@ -215,7 +216,8 @@ class KlarnaConsts
             'be' => 'fr-BE',
             'fr' => 'fr-fr',
             'es' => 'es-ES',
-            'it' => 'it-IT'
+            'it' => 'it-IT',
+            'ie' => 'en-IE',
         ];
 
         if(isAdmin() && $default === true) {
