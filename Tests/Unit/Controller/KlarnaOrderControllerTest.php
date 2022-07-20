@@ -134,7 +134,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $user->expects($this->once())->method('onOrderExecute')->willReturn(true);
 
         $oBasket = $this->getMockBuilder(KlarnaBasket::class)->setMethods(['getPaymentId', 'calculateBasket'])->getMock();
-        $oBasket->expects($this->once())->method('getPaymentId')->willReturn('klarna_checkout');
+        $oBasket->expects($this->atLeastOnce())->method('getPaymentId')->willReturn('klarna_checkout');
         $oBasket->expects($this->once())->method('calculateBasket')->willReturn(true);
         $sut = $this->getMockBuilder(OrderController::class)
             ->setMethods(['kcoBeforeExecute', 'getDeliveryAddressMD5', 'klarnaCheckoutSecurityCheck'])
@@ -185,7 +185,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
     public function testExecuteFails($sGetChallenge, $requestId, $sessionId, $statusData, $kcoExecuteCount, $expectedResult)
     {
         $oBasket = $this->getMockBuilder(KlarnaBasket::class)->setMethods(['getPaymentId'])->getMock();
-        $oBasket->expects($this->once())->method('getPaymentId')->willReturn('klarna_checkout');
+        $oBasket->expects($this->atLeastOnce())->method('getPaymentId')->willReturn('klarna_checkout');
         $sut = $this->getMockBuilder(OrderController::class)->setMethods(['kcoBeforeExecute', 'kcoExecute'])->getMock();
         $sut->expects($this->exactly($kcoExecuteCount))->method('kcoBeforeExecute');
         $sut->expects($this->exactly($kcoExecuteCount))->method('kcoExecute');
