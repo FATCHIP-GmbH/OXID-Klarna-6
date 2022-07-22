@@ -1,3 +1,14 @@
+### 5.5.3
+* Removed the shop name from the 'User-Agent' in the request
+* Added ireland as core country
+* Moved documentation to https://wiki.fatchip.de/public/faqklarna
+* Added compatibility with Aggrosoft PayPal Plus
+* Added license to composer.json
+* Move submit event interception to avoid breaking the chain
+
+### 5.5.2
+* PHP 8 compatibility for OXID 6.4 use
+
 ### 5.5.1
 * Fix spelling on new Klarna admin start page DE/EN
 * Bugfix: Shipping costs add up
