@@ -781,27 +781,28 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
 
     public function updateKlarnaOrderDataProvider()
     {
-        $oUser = oxNew(User::class);
-        $aOrderData = [
+        $orderData = [
             'billing_address' => 'testValue_1',
             'shipping_address' => 'testValue_2'
         ];
 
         return [
-            [$oUser, 1, $aOrderData],
-            [$oUser, 1, []],
-            [null, 0, $aOrderData],
+            ['user', 1, $orderData],
+            ['user', 1, []],
+            [null, 0, $orderData],
         ];
     }
 
     /**
      * @dataProvider updateKlarnaOrderDataProvider
-     * @param $oUser
+     * @param string $setUser
      * @param $updatedCallsCount
      * @param $aOrderData
      */
-    public function testUpdateKlarnaOrder($oUser, $updatedCallsCount, $aOrderData)
+    public function testUpdateKlarnaOrder($setUser, $updatedCallsCount, $aOrderData)
     {
+        $oUser = ('user' === $setUser) ? oxNew(User::class) : null;
+
         // tested by calling updateKlarnaAjax
         $oClient = $this->getMockBuilder(KlarnaCheckoutClient::class)->setMethods(['createOrUpdateOrder'])->getMock();
         $oClient->expects($this->exactly($updatedCallsCount))->method('createOrUpdateOrder')->with(
@@ -959,7 +960,7 @@ class KlarnaOrderControllerTest extends ModuleUnitTestCase
         $user = $this->getMockBuilder(KlarnaUser::class)->setMethods(['resolveCountry'])->getMock();
         $user->expects($this->once())->method('resolveCountry')->willReturn('DE');
         $sut = $this->getMockBuilder(KlarnaOrderController::class)->setMethods(['getUser', 'getJsonRequest'])->getMock();
-                $sut->expects($this->once())->method('getUser')->willReturn($user);
+        $sut->expects($this->once())->method('getUser')->willReturn($user);
         $sut->expects($this->once())->method('getJsonRequest')->willReturn(['action' => 'checkOrderStatus']);
 
         $sut->updateKlarnaAjax();
