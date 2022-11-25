@@ -23,6 +23,7 @@ use OxidEsales\Eshop\Application\Model\Actions;
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\DbMetaDataHandler;
+use OxidEsales\Eshop\Core\Model\BaseModel;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Database\Adapter\Doctrine\Database;
@@ -198,26 +199,28 @@ class KlarnaInstaller extends ShopConfiguration
      */
     protected function addKlarnaPaymentsMethods()
     {
-        $oPayment = oxNew(Payment::class);
+        $oPayment = oxNew(BaseModel::class);
+        $oPayment->init('oxpayments');
 
         $oPayment->load('oxidinvoice');
         $de_prefix = $oPayment->getFieldData('oxdesc') === 'Rechnung' ? 0 : 1;
         $en_prefix = $de_prefix === 1 ? 0 : 1;
 
-        $newPayments = array(KlarnaPayment::KLARNA_PAYMENT_CHECKOUT_ID  =>
-                                 array($de_prefix => 'Klarna Checkout', $en_prefix => 'Klarna Checkout'),
-                             KlarnaPayment::KLARNA_PAYMENT_PAY_LATER_ID =>
-                                 array($de_prefix => 'Klarna Rechnung', $en_prefix => 'Klarna Pay Later'),
-                             KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID  =>
-                                 array($de_prefix => 'Klarna Ratenkauf', $en_prefix => 'Klarna Financing'),
-                             KlarnaPayment::KLARNA_PAYMENT_PAY_NOW =>
-                                 array($de_prefix => 'Klarna Sofort bezahlen', $en_prefix => 'Klarna Pay Now'),
-                             KlarnaPayment::KLARNA_DIRECTDEBIT =>
-                                 array($de_prefix => 'Klarna Lastschrift', $en_prefix => 'Klarna Direct Debit'),
-                             KlarnaPayment::KLARNA_CARD =>
-                                 array($de_prefix => 'Klarna Kreditkarte', $en_prefix => 'Klarna Card'),
-                             KlarnaPayment::KLARNA_SOFORT =>
-                                 array($de_prefix => 'Klarna Sofortüberweisung', $en_prefix => 'Klarna Online Bank Transfer'),
+        $newPayments = array(
+            KlarnaPaymentTypes::KLARNA_PAYMENT_CHECKOUT_ID  =>
+                array($de_prefix => 'Klarna Checkout', $en_prefix => 'Klarna Checkout'),
+            KlarnaPaymentTypes::KLARNA_PAYMENT_PAY_LATER_ID =>
+                array($de_prefix => 'Klarna Rechnung', $en_prefix => 'Klarna Pay Later'),
+            KlarnaPaymentTypes::KLARNA_PAYMENT_SLICE_IT_ID  =>
+                array($de_prefix => 'Klarna Ratenkauf', $en_prefix => 'Klarna Financing'),
+            KlarnaPaymentTypes::KLARNA_PAYMENT_PAY_NOW =>
+                array($de_prefix => 'Klarna Sofort bezahlen', $en_prefix => 'Klarna Pay Now'),
+            KlarnaPaymentTypes::KLARNA_DIRECTDEBIT =>
+                array($de_prefix => 'Klarna Lastschrift', $en_prefix => 'Klarna Direct Debit'),
+            KlarnaPaymentTypes::KLARNA_CARD =>
+                array($de_prefix => 'Klarna Kreditkarte', $en_prefix => 'Klarna Card'),
+            KlarnaPaymentTypes::KLARNA_SOFORT =>
+                array($de_prefix => 'Klarna Sofortüberweisung', $en_prefix => 'Klarna Online Bank Transfer'),
         );
 
         $sort   = -350;
@@ -226,7 +229,9 @@ class KlarnaInstaller extends ShopConfiguration
         if ($aLangs) {
             foreach ($newPayments as $oxid => $aTitle) {
                 /** @var Payment $oPayment */
-                $oPayment = oxNew(Payment::class);
+                $oPayment = oxNew(BaseModel::class);
+                $oPayment->init('oxpayments');
+
                 $oPayment->load($oxid);
                 if ($oPayment->isLoaded()) {
                     $oPayment->oxpayments__oxactive = new Field(1, Field::T_RAW);
@@ -234,7 +239,7 @@ class KlarnaInstaller extends ShopConfiguration
 
                     continue;
                 }
-                $oPayment->setEnableMultilang(false);
+//                $oPayment->setEnableMultilang(false);
                 $oPayment->setId($oxid);
                 $oPayment->oxpayments__oxactive      = new Field(1, Field::T_RAW);
                 $oPayment->oxpayments__oxaddsum      = new Field(0, Field::T_RAW);
