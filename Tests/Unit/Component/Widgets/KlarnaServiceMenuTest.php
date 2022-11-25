@@ -10,8 +10,8 @@ namespace TopConcepts\Klarna\Tests\Unit\Component\Widgets;
 
 
 use OxidEsales\Eshop\Application\Component\Widget\ServiceMenu;
+use OxidEsales\Eshop\Application\Controller\FrontendController;
 use OxidEsales\Eshop\Core\Config;
-use OxidEsales\PayPalModule\Controller\FrontendController;
 use TopConcepts\Klarna\Tests\Unit\ModuleUnitTestCase;
 
 class KlarnaServiceMenuTest extends ModuleUnitTestCase {
