@@ -21,7 +21,7 @@
   },
   "autoload": {
     "psr-4": {
-      "TopConcepts\\Klarna\\": "./"
+      "TopConcepts\\Klarna\\": "../../../source/modules/tc/tcklarna"
     }
   }
 }
