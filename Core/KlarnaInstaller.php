@@ -209,18 +209,8 @@ class KlarnaInstaller extends ShopConfiguration
         $newPayments = array(
             KlarnaPaymentTypes::KLARNA_PAYMENT_CHECKOUT_ID  =>
                 array($de_prefix => 'Klarna Checkout', $en_prefix => 'Klarna Checkout'),
-            KlarnaPaymentTypes::KLARNA_PAYMENT_PAY_LATER_ID =>
-                array($de_prefix => 'Klarna Rechnung', $en_prefix => 'Klarna Pay Later'),
-            KlarnaPaymentTypes::KLARNA_PAYMENT_SLICE_IT_ID  =>
-                array($de_prefix => 'Klarna Ratenkauf', $en_prefix => 'Klarna Financing'),
-            KlarnaPaymentTypes::KLARNA_PAYMENT_PAY_NOW =>
-                array($de_prefix => 'Klarna Sofort bezahlen', $en_prefix => 'Klarna Pay Now'),
-            KlarnaPaymentTypes::KLARNA_DIRECTDEBIT =>
-                array($de_prefix => 'Klarna Lastschrift', $en_prefix => 'Klarna Direct Debit'),
-            KlarnaPaymentTypes::KLARNA_CARD =>
-                array($de_prefix => 'Klarna Kreditkarte', $en_prefix => 'Klarna Card'),
-            KlarnaPaymentTypes::KLARNA_SOFORT =>
-                array($de_prefix => 'Klarna Sofortüberweisung', $en_prefix => 'Klarna Online Bank Transfer'),
+            KlarnaPaymentTypes::KLARNA_PAYMENT_ID  =>
+                array($de_prefix => 'One Klarna', $en_prefix => 'One Klarna'),
         );
 
         $sort   = -350;

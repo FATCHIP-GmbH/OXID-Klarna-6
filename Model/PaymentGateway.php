@@ -17,12 +17,7 @@ use TopConcepts\Klarna\Core\PaymentHandlerInterface;
 class PaymentGateway extends PaymentGateway_parent
 {
     protected $paymentHandlerMap = [
-        KlarnaPayment::KLARNA_PAYMENT_SLICE_IT_ID  => KPHandler::class,
-        KlarnaPayment::KLARNA_PAYMENT_PAY_LATER_ID => KPHandler::class,
-        KlarnaPayment::KLARNA_PAYMENT_PAY_NOW      => KPHandler::class,
-        KlarnaPayment::KLARNA_DIRECTDEBIT          => KPHandler::class,
-        KlarnaPayment::KLARNA_CARD                 => KPHandler::class,
-        KlarnaPayment::KLARNA_SOFORT               => KPHandler::class,
+        KlarnaPayment::KLARNA_PAYMENT_ID  => KPHandler::class,
     ];
 
     public function executePayment($dAmount, & $oOrder)

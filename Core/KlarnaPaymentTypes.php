@@ -20,18 +20,11 @@ namespace TopConcepts\Klarna\Core;
 class KlarnaPaymentTypes extends KlarnaClientBase
 {
     /**
-     * Oxid value of Klarna Part payment
+     * Oxid value of Klarna One payment
      *
      * @var string
      */
-    const KLARNA_PAYMENT_SLICE_IT_ID = 'klarna_slice_it';
-
-    /**
-     * Oxid value of Klarna Invoice payment
-     *
-     * @var string
-     */
-    const KLARNA_PAYMENT_PAY_LATER_ID = 'klarna_pay_later';
+    const KLARNA_PAYMENT_ID = 'klarna';
 
     /**
      * Oxid value of Klarna Checkout payment
@@ -39,32 +32,4 @@ class KlarnaPaymentTypes extends KlarnaClientBase
      * @var string
      */
     const KLARNA_PAYMENT_CHECKOUT_ID = 'klarna_checkout';
-
-    /**
-     * Oxid value of Klarna Pay Now payment
-     *
-     * @var string
-     */
-    const KLARNA_PAYMENT_PAY_NOW = 'klarna_pay_now';
-
-    /**
-     * Oxid value of Klarna Pay Now payment
-     *
-     * @var string
-     */
-    const KLARNA_DIRECTDEBIT = 'klarna_directdebit';
-
-    /**
-     * Oxid value of Klarna card
-     *
-     * @var string
-     */
-    const KLARNA_CARD = 'klarna_card';
-
-    /**
-     * Oxid value of Klarna Pay Now payment
-     *
-     * @var string
-     */
-    const KLARNA_SOFORT = 'klarna_sofort';
 }

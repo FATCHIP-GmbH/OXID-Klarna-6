@@ -77,9 +77,7 @@ $aLang = array(
     'TCKLARNA_ERROR_NOT_ENOUGH_IN_STOCK'        => 'Not enough items of product %s in stock.',
     'TCKLARNA_ERROR_NO_SHIPPING_METHODS_SET_UP' => 'Currently we have no shipping method set up for this country: %s',
 
-    'TCKLARNA_PAY_LATER_SUBTITLE'    => 'Pay X days after delivery',
-    'TCKLARNA_SLICE_IT_SUBTITLE'     => 'Pay over time',
-    'TCKLARNA_PAY_NOW_SUBTITLE'      => 'Easy and direct payment',
+    'TCKLARNA_KP_SUBTITLE'           => 'Pay with Klarna',
     'TCKLARNA_ORDER_AMOUNT_TOO_HIGH' => 'The order amount is too high.',
 
     'TCKLARNA_ANONYMIZED_PRODUCT'                  => 'Anonymized product title:',

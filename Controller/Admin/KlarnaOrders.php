@@ -14,6 +14,7 @@ use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\UtilsView;
 use TopConcepts\Klarna\Model\KlarnaOrder;
+use TopConcepts\Klarna\Model\KlarnaPayment;
 
 class KlarnaOrders extends AdminDetailsController
 {
@@ -117,7 +118,7 @@ class KlarnaOrders extends AdminDetailsController
     }
 
     /**
-     * Method checks is order was made with Klarna module
+     * Method checks if order was made with Klarna module
      *
      * @return bool
      */
@@ -125,8 +126,13 @@ class KlarnaOrders extends AdminDetailsController
     {
         $blActive = false;
 
-        if ($this->getEditObject() && stripos($this->getEditObject()->getFieldData('oxpaymenttype'), 'klarna_') !== false) {
-            $blActive = true;
+        if($this->getEditObject()) {
+            $klarnaPaymentIds = KlarnaPayment::getKlarnaPaymentsIds();
+            $paymentType = $this->getEditObject()->getFieldData('oxpaymenttype');
+
+            if(in_array($paymentType,$klarnaPaymentIds)) {
+                $blActive = true;
+            }
         }
 
         return $blActive;
@@ -177,7 +183,7 @@ class KlarnaOrders extends AdminDetailsController
     public function formatPrice($price)
     {
         return Registry::getLang()->formatCurrency($price / 100, $this->getEditObject()->getOrderCurrency())
-               . " {$this->getEditObject()->oxorder__oxcurrency->value}";
+            . " {$this->getEditObject()->oxorder__oxcurrency->value}";
     }
 
     /**
@@ -200,7 +206,7 @@ class KlarnaOrders extends AdminDetailsController
             Registry::get("oxUtilsView")->addErrorToDisplay($e->getMessage());
         }
 
-        $this->getSession()->setVariable($this->getEditObjectId().'orderRefund', $result);
+        Registry::getSession()->setVariable($this->getEditObjectId().'orderRefund', $result);
     }
 
     /**
@@ -214,7 +220,7 @@ class KlarnaOrders extends AdminDetailsController
             $oOrder->cancelOrder();
         }
 
-        $this->getSession()->setVariable($oOrder->getId().'orderCancel', $result);
+        Registry::getSession()->setVariable($oOrder->getId().'orderCancel', $result);
     }
 
     /**
