@@ -241,7 +241,6 @@ final class Version20230323131941 extends AbstractMigration
             $first = true;
 
             foreach ($aColumns as $sColumnName => $queryPart) {
-                var_dump($schema->getTable($sTableName));
                 if(!$schema->getTable($sTableName)->hasColumn($sColumnName)) {
                     if (!$first) {
                         $query .= ', ';
