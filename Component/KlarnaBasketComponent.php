@@ -114,7 +114,7 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
         $orderLines = Registry::getSession()->getBasket()->getKlarnaOrderLines();
         $oClient    = $this->getKlarnaCheckoutClient();
 
-        return $oClient->createOrUpdateOrder(json_encode($orderLines), $oClient->getOrderId());
+        return $oClient->createOrUpdateOrder(json_encode($orderLines));
     }
 
     /**

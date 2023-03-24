@@ -41,7 +41,6 @@ class KlarnaUserManager
         if ('EE' == $facts->getEdition()) {
             $oUser->oxuser__oxustidstatus = new Field(0, Field::T_RAW);
         }
-        //TODO: this part requires update after merging paypal fixes - KlarnaFormatter is updated in that branch
         $aUserData = KlarnaFormatter::klarnaToOxidAddress($orderData, 'billing_address');
         $nonEmptyFields = array_filter(
             $aUserData,

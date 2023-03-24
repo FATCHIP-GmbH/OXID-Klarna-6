@@ -145,7 +145,10 @@ class KlarnaOrder extends KlarnaOrder_parent
      */
     public function isKlarnaOrder()
     {
-        if (strstr($this->getFieldData('oxpaymenttype'), 'klarna_')) {
+        $klarnaPaymentIds = KlarnaPayment::getKlarnaPaymentsIds();
+        $paymentType = $this->oxorder__oxpaymenttype->value;
+
+        if(in_array($paymentType,$klarnaPaymentIds)) {
             return true;
         }
 
