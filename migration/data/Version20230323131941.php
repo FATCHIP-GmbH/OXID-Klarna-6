@@ -26,14 +26,12 @@ final class Version20230323131941 extends AbstractMigration
             "klarna_directdebit",
             "klarna_card",
             "klarna_sofort",
+            "klarna_pay_later",
+            "klarna_slice_it",
         ];
 
-        $paymentsTable = $schema->getTable('oxpayments');
         foreach ($oldPaymentIDs as $oldPaymentID) {
-            if ($paymentsTable->hasColumn($oldPaymentID)) {
-                echo "adding sql";
-                $this->addSql("UPDATE `oxpayments` SET OXACTIVE = 0 WHERE OXID = :oxid",["oxid" => $oldPaymentID]);
-            }
+            $this->addSql("UPDATE `oxpayments` SET OXACTIVE = 0 WHERE OXID = :oxid",["oxid" => $oldPaymentID]);
         }
 
         $this->extendDbTables($schema);
