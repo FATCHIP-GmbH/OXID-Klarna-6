@@ -67,4 +67,11 @@ class KlarnaPaymentTypes extends KlarnaClientBase
      * @var string
      */
     const KLARNA_PAYMENT_PAY_LATER_ID = 'klarna_pay_later';
+
+    /**
+     * Oxid value of Klarna Part payment
+     *
+     * @var string
+     */
+    const KLARNA_PAYMENT_SLICE_IT_ID = 'klarna_slice_it';
 }
