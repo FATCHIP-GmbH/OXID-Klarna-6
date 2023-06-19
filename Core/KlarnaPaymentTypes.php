@@ -60,4 +60,11 @@ class KlarnaPaymentTypes extends KlarnaClientBase
      * @var string
      */
     const KLARNA_SOFORT = 'klarna_sofort';
+
+    /**
+     * Oxid value of Klarna Invoice payment
+     *
+     * @var string
+     */
+    const KLARNA_PAYMENT_PAY_LATER_ID = 'klarna_pay_later';
 }
