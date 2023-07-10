@@ -57,7 +57,7 @@ final class Version20230323131941 extends AbstractMigration
             KlarnaPaymentTypes::KLARNA_PAYMENT_CHECKOUT_ID  =>
                 array($de_prefix => 'Klarna Checkout', $en_prefix => 'Klarna Checkout'),
             KlarnaPaymentTypes::KLARNA_PAYMENT_ID  =>
-                array($de_prefix => 'One Klarna', $en_prefix => 'One Klarna'),
+                array($de_prefix => 'Mit Klarna bezahlen', $en_prefix => 'Pay with Klarna'),
         );
 
         $sort   = -350;
