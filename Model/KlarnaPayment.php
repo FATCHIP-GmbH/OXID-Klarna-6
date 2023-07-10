@@ -99,12 +99,24 @@ class KlarnaPayment extends KlarnaPayment_parent
         if ($filter === 'KP') {
             return array(
                 self::KLARNA_PAYMENT_ID,
+                self::KLARNA_PAYMENT_SLICE_IT_ID,
+                self::KLARNA_PAYMENT_PAY_LATER_ID,
+                self::KLARNA_PAYMENT_PAY_NOW,
+                self::KLARNA_DIRECTDEBIT,
+                self::KLARNA_CARD,
+                self::KLARNA_SOFORT,
             );
         }
 
         $allPayments = array(
             self::KLARNA_PAYMENT_CHECKOUT_ID,
             self::KLARNA_PAYMENT_ID,
+            self::KLARNA_PAYMENT_SLICE_IT_ID,
+            self::KLARNA_PAYMENT_PAY_LATER_ID,
+            self::KLARNA_PAYMENT_PAY_NOW,
+            self::KLARNA_DIRECTDEBIT,
+            self::KLARNA_CARD,
+            self::KLARNA_SOFORT,
         );
 
         return $filter === null ? $allPayments : [];
