@@ -26,6 +26,7 @@ use TopConcepts\Klarna\Model\KlarnaPayment as KlarnaPaymentModel;
 use TopConcepts\Klarna\Core\KlarnaConsts;
 use TopConcepts\Klarna\Core\KlarnaPayment;
 use TopConcepts\Klarna\Core\KlarnaUtils;
+use TopConcepts\Klarna\Model\KlarnaPaymentHelper;
 use TopConcepts\Klarna\Model\KlarnaUser;
 use OxidEsales\Eshop\Application\Model\DeliverySetList;
 use OxidEsales\Eshop\Application\Model\User;
@@ -204,7 +205,14 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
             $allKlarnaPaymentIds = KlarnaPaymentModel::getKlarnaPaymentsIds();
             $toRemove = $allKlarnaPaymentIds;
             if (KlarnaUtils::isKlarnaPaymentsEnabled()) {
-                $KPPaymentIds = KlarnaPaymentModel::getKlarnaPaymentsIds('KP');
+
+                //If One Klarna is Active, no other KP Payments should be displayed
+                if(KlarnaUtils::getIsOneKlarnaActive()) {
+                    $KPPaymentIds = [KlarnaPaymentHelper::KLARNA_PAYMENT_ID];
+                }else {
+                    $KPPaymentIds = KlarnaPaymentModel::getKlarnaPaymentsIds('KP');
+                }
+
                 $toRemove = array_diff($allKlarnaPaymentIds, $KPPaymentIds);
             }
             foreach ($toRemove as $paymentId) {
