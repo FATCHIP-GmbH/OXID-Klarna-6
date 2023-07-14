@@ -32,6 +32,7 @@ $aLang = array(
     'TCKLARNA_EXTERNAL_PAYMENTS'   => 'External Payment Methods',
     'TCKLARNA_EXTRA_MERCHANT_DATA' => 'Extra Merchant Data',
     'TCKLARNA_BASIC_SETTINGS'      => 'basic settings',
+    'TCKLARNA_KP_OPTIONS_REMOVAL'  => 'Sofort bezahlen, Pay Later und Ratenkauf sind jetzt in einer Zahlungsmethode kombiniert: Bezahlen mit Klarna. Diese Konfiguration wird nicht mehr benötigt und wird in einer zukünftigen Version entfernt.',
     'TCKLARNA_DISCOUNT_TITLE'      => 'Rabatt',
 
     'tcklarna_tbclklarna_orders' => 'Klarna',

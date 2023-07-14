@@ -32,6 +32,7 @@ $aLang = array(
     'TCKLARNA_EXTERNAL_PAYMENTS'   => 'External Payment Methods',
     'TCKLARNA_EXTRA_MERCHANT_DATA' => 'Extra Merchant Data',
     'TCKLARNA_BASIC_SETTINGS'      => 'basic settings',
+    'TCKLARNA_KP_OPTIONS_REMOVAL'  => 'Pay later, Financing and Pay Now are now combined into one payment method: Pay with Klarna. This configuration is deprecated and will be removed in a future version.',
     'TCKLARNA_DISCOUNT_TITLE'      => 'Discount',
 
     'tcklarna_tbclklarna_orders'     => 'Klarna',
