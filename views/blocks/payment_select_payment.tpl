@@ -8,7 +8,7 @@
     [{if $sPaymentID == "klarna"}]
         <div class="well well-sm kp-outer">
             <dl>
-                <dt>
+                <dt style="padding-bottom: 12px">
                     <input class="kp-radio" id="kp-pl" data-payment_id="pay_later" type="radio" name="paymentid"
                            value="[{$sPaymentID}]"
                            [{if $is_checked}]checked[{/if}]>
