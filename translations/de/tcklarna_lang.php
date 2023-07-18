@@ -78,7 +78,6 @@ $aLang = array(
     'TCKLARNA_PAY_LATER_SUBTITLE'    => 'Erst kaufen, dann bezahlen',
     'TCKLARNA_SLICE_IT_SUBTITLE'     => 'Bequem in Raten zahlen',
     'TCKLARNA_PAY_NOW_SUBTITLE'      => 'Einfach und direkt bezahlen',
-    'TCKLARNA_KP_SUBTITLE'           => 'Mit Klarna bezahlen',
     'TCKLARNA_ORDER_AMOUNT_TOO_HIGH' => 'Der Bestellwert ist zu hoch.',
 
     'TCKLARNA_ANONYMIZED_PRODUCT'                  => 'Anonymisierter Produkttitel:',

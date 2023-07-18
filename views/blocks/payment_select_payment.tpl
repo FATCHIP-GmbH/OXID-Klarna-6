@@ -16,7 +16,6 @@
                     <img src="[{$paymentmethod->getBadgeUrl()}]">
 
                 </dt>
-                <dt style="font-weight: normal">[{oxmultilang ident="TCKLARNA_KP_SUBTITLE"}]</dt>
                 <dt>
                     [{if $kpError }]
                         <div class="kp-method alert alert-info"
