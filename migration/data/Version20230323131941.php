@@ -121,13 +121,19 @@ final class Version20230323131941 extends AbstractMigration
                       `OXID`          CHAR(32)
                                       CHARACTER SET latin1 COLLATE latin1_general_ci
                                    NOT NULL DEFAULT '',
-                    
+                      `TCKLARNA_ORDERID` VARCHAR(128) 
+                                    CHARACTER SET utf8 
+                                    DEFAULT '' NOT NULL,
                       `OXSHOPID`      CHAR(32)
                                       CHARACTER SET latin1 COLLATE latin1_general_ci
                                    NOT NULL DEFAULT '',
+                      `TCKLARNA_MID` VARCHAR(50) 
+                                    CHARACTER SET utf8 NOT NULL,
+                      `TCKLARNA_STATUSCODE` VARCHAR(16) CHARACTER SET utf8 NOT NULL,
                       `TCKLARNA_METHOD`      VARCHAR(128)
                                       CHARACTER SET utf8
                                    NOT NULL DEFAULT '',
+                      `TCKLARNA_URL` VARCHAR(256) CHARACTER SET utf8,
                       `TCKLARNA_REQUESTRAW`  TEXT CHARACTER SET utf8
                                    NOT NULL,
                       `TCKLARNA_RESPONSERAW` TEXT CHARACTER SET utf8
@@ -148,6 +154,7 @@ final class Version20230323131941 extends AbstractMigration
                       `OXID`       VARCHAR(32)
                                    CHARACTER SET latin1 COLLATE latin1_general_ci
                                             NOT NULL,
+                      `TCKLARNA_ORDERID` VARCHAR(128) CHARACTER SET utf8 DEFAULT '' NOT NULL,
                       `KLRECEIVED` DATETIME NOT NULL,
                       PRIMARY KEY (`OXID`)
                     )
@@ -220,15 +227,6 @@ final class Version20230323131941 extends AbstractMigration
             ),
             'oxaddress'       => array(
                 'TCKLARNA_TEMPORARY' => 'ADD COLUMN `TCKLARNA_TEMPORARY` TINYINT(1) UNSIGNED NOT NULL DEFAULT \'0\'',
-            ),
-            'tcklarna_logs'   => array(
-                'TCKLARNA_ORDERID'    => 'ADD COLUMN `TCKLARNA_ORDERID` VARCHAR(128) CHARACTER SET utf8 DEFAULT \'\' NOT NULL AFTER `OXID`',
-                'TCKLARNA_MID'        => 'ADD COLUMN `TCKLARNA_MID` VARCHAR(50) CHARACTER SET utf8 NOT NULL AFTER `OXSHOPID`',
-                'TCKLARNA_STATUSCODE' => 'ADD COLUMN `TCKLARNA_STATUSCODE` VARCHAR(16) CHARACTER SET utf8 NOT NULL AFTER `TCKLARNA_MID`',
-                'TCKLARNA_URL'        => 'ADD COLUMN `TCKLARNA_URL` VARCHAR(256) CHARACTER SET utf8 AFTER `TCKLARNA_METHOD`',
-            ),
-            'tcklarna_ack'    => array(
-                'TCKLARNA_ORDERID' => 'ADD COLUMN `TCKLARNA_ORDERID` VARCHAR(128) CHARACTER SET utf8 DEFAULT \'\' NOT NULL AFTER `OXID`, ADD KEY `TCKLARNA_ORDERID` (`TCKLARNA_ORDERID`)',
             ),
         );
 
