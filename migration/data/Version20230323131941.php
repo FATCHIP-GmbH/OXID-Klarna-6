@@ -10,6 +10,7 @@ use OxidEsales\Eshop\Core\Field;
 use OxidEsales\EshopCommunity\Core\Registry;
 use TopConcepts\Klarna\Core\KlarnaPaymentTypes;
 use OxidEsales\Eshop\Core\Model\BaseModel;
+use OxidEsales\Eshop\Core\DbMetaDataHandler;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
@@ -38,6 +39,9 @@ final class Version20230323131941 extends AbstractMigration
         $this->addAlterTables($schema);
 
         $this->addKlarnaPaymentsMethods();
+
+        $oMetaData = oxNew(DbMetaDataHandler::class);
+        $oMetaData->updateViews();
     }
 
     /**
