@@ -75,15 +75,15 @@ class KlarnaInstaller extends ShopConfiguration
      */
     public static function onActivate()
     {
-        $oMetaData = oxNew(DbMetaDataHandler::class);
-        $oMetaData->updateViews();
-
         $instance = self::getInstance();
 
         $instance->checkAndUpdate();
         $instance->addConfigVars();
 
         $instance->executeModuleMigrations();
+
+        $oMetaData = oxNew(DbMetaDataHandler::class);
+        $oMetaData->updateViews();
     }
 
     /**

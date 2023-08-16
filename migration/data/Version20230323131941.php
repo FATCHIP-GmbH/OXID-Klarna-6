@@ -39,9 +39,6 @@ final class Version20230323131941 extends AbstractMigration
         $this->addAlterTables($schema);
 
         $this->addKlarnaPaymentsMethods();
-
-        $oMetaData = oxNew(DbMetaDataHandler::class);
-        $oMetaData->updateViews();
     }
 
     /**
