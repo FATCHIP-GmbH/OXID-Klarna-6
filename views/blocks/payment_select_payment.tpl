@@ -12,7 +12,7 @@
                     <input class="kp-radio" id="kp-pl" data-payment_id="pay_later" type="radio" name="paymentid"
                            value="[{$sPaymentID}]"
                            [{if $is_checked}]checked[{/if}]>
-                    <label for="kp-pl"><b>[{$oView->removeKlarnaPrefix($paymentmethod->oxpayments__oxdesc->value)}]</b></label>
+                    <label for="kp-pl"><b>[{$paymentmethod->oxpayments__oxdesc->value}]</b></label>
                     <img src="[{$paymentmethod->getBadgeUrl()}]">
 
                 </dt>
