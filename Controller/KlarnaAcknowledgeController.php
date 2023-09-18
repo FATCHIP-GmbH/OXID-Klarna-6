@@ -60,8 +60,6 @@ class KlarnaAcknowledgeController extends FrontendController
             $countryISO = KlarnaUtils::getCountryISO($oOrder->oxorder__oxbillcountryid->value);
             if ($oOrder->isLoaded()) {
                 $this->getKlarnaClient($countryISO)->acknowledgeOrder($orderId);
-            } elseif ($this->getKlarnaAckCount($orderId) > 1) {
-                $this->getKlarnaClient($countryISO)->cancelOrder($orderId);
             }
         } catch (StandardException $e) {
             KlarnaUtils::logException($e);
