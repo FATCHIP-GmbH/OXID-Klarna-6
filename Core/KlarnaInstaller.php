@@ -75,15 +75,15 @@ class KlarnaInstaller extends ShopConfiguration
      */
     public static function onActivate()
     {
-        $oMetaData = oxNew(DbMetaDataHandler::class);
-        $oMetaData->updateViews();
-
         $instance = self::getInstance();
 
         $instance->checkAndUpdate();
         $instance->addConfigVars();
 
         $instance->executeModuleMigrations();
+
+        $oMetaData = oxNew(DbMetaDataHandler::class);
+        $oMetaData->updateViews();
     }
 
     /**
@@ -145,7 +145,7 @@ class KlarnaInstaller extends ShopConfiguration
                 'blKlarnaPreFillNotification'          => 1,
             ),
             'str'    => array(
-                'sKlarnaActiveMode'                => KlarnaConsts::MODULE_MODE_KCO,
+                'sKlarnaActiveMode'                => KlarnaConsts::MODULE_MODE_KP,
                 'sKlarnaMerchantId'                => '',
                 'sKlarnaPassword'                  => '',
                 'sKlarnaDefaultCountry'            => 'DE',

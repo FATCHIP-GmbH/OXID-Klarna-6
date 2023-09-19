@@ -46,6 +46,47 @@ class KlarnaPayment extends KlarnaPayment_parent
      */
     const KLARNA_PAYMENT_CHECKOUT_ID = 'klarna_checkout';
 
+    /**
+     * Oxid value of Klarna Part payment
+     *
+     * @var string
+     */
+    const KLARNA_PAYMENT_SLICE_IT_ID = 'klarna_slice_it';
+
+    /**
+     * Oxid value of Klarna Invoice payment
+     *
+     * @var string
+     */
+    const KLARNA_PAYMENT_PAY_LATER_ID = 'klarna_pay_later';
+
+    /**
+     * Oxid value of Klarna Pay Now payment
+     *
+     * @var string
+     */
+    const KLARNA_PAYMENT_PAY_NOW = 'klarna_pay_now';
+
+    /**
+     * Oxid value of Klarna Pay Now payment
+     *
+     * @var string
+     */
+    const KLARNA_DIRECTDEBIT = 'klarna_directdebit';
+
+    /**
+     * Oxid value of Klarna card
+     *
+     * @var string
+     */
+    const KLARNA_CARD = 'klarna_card';
+
+    /**
+     * Oxid value of Klarna Pay Now payment
+     *
+     * @var string
+     */
+    const KLARNA_SOFORT = 'klarna_sofort';
 
     /**
      * Get list of Klarna payments ids
@@ -58,12 +99,24 @@ class KlarnaPayment extends KlarnaPayment_parent
         if ($filter === 'KP') {
             return array(
                 self::KLARNA_PAYMENT_ID,
+                self::KLARNA_PAYMENT_SLICE_IT_ID,
+                self::KLARNA_PAYMENT_PAY_LATER_ID,
+                self::KLARNA_PAYMENT_PAY_NOW,
+                self::KLARNA_DIRECTDEBIT,
+                self::KLARNA_CARD,
+                self::KLARNA_SOFORT,
             );
         }
 
         $allPayments = array(
             self::KLARNA_PAYMENT_CHECKOUT_ID,
             self::KLARNA_PAYMENT_ID,
+            self::KLARNA_PAYMENT_SLICE_IT_ID,
+            self::KLARNA_PAYMENT_PAY_LATER_ID,
+            self::KLARNA_PAYMENT_PAY_NOW,
+            self::KLARNA_DIRECTDEBIT,
+            self::KLARNA_CARD,
+            self::KLARNA_SOFORT,
         );
 
         return $filter === null ? $allPayments : [];
@@ -78,6 +131,12 @@ class KlarnaPayment extends KlarnaPayment_parent
         if (in_array($this->getId(), self::getKlarnaPaymentsIds('KP'))) {
             $names = array(
                 self::KLARNA_PAYMENT_ID  => 'klarna',
+                self::KLARNA_PAYMENT_SLICE_IT_ID  => 'pay_over_time',
+                self::KLARNA_PAYMENT_PAY_LATER_ID => 'pay_later',
+                self::KLARNA_PAYMENT_PAY_NOW      => 'pay_now',
+                self::KLARNA_DIRECTDEBIT          => 'direct_debit',
+                self::KLARNA_CARD                 => 'card',
+                self::KLARNA_SOFORT               => 'direct_bank_transfer',
             );
 
             return $names[$this->getId()];
@@ -139,7 +198,29 @@ class KlarnaPayment extends KlarnaPayment_parent
             $this->load($oxId);
             $this->oxpayments__oxactive = new Field($value, Field::T_RAW);
             $this->save();
+            if($oxId == "klarna_pay_now") {
+                $this->updatePayNowSubPayments($value);
+            }
         }
+    }
+
+    /**
+     * Activate/Deactivate Pay now sub payments
+     * @param $value
+     */
+    protected function updatePayNowSubPayments($value)
+    {
+        $this->load("klarna_directdebit");
+        $this->oxpayments__oxactive = new Field($value, Field::T_RAW);
+        $this->save();
+
+        $this->load("klarna_sofort");
+        $this->oxpayments__oxactive = new Field($value, Field::T_RAW);
+        $this->save();
+
+        $this->load("klarna_card");
+        $this->oxpayments__oxactive = new Field($value, Field::T_RAW);
+        $this->save();
     }
 
     /**

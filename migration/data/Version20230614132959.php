@@ -10,30 +10,15 @@ use OxidEsales\Eshop\Core\Field;
 use OxidEsales\EshopCommunity\Core\Registry;
 use TopConcepts\Klarna\Core\KlarnaPaymentTypes;
 use OxidEsales\Eshop\Core\Model\BaseModel;
-use OxidEsales\Eshop\Core\DbMetaDataHandler;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20230323131941 extends AbstractMigration
+final class Version20230614132959 extends AbstractMigration
 {
     public function up(Schema $schema) : void
     {
         $this->connection->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
-
-        //deactivate old payments. Removing them would cause issues when displaying old orders.
-        $oldPaymentIDs = [
-            "klarna_pay_now",
-            "klarna_directdebit",
-            "klarna_card",
-            "klarna_sofort",
-            "klarna_pay_later",
-            "klarna_slice_it",
-        ];
-
-        foreach ($oldPaymentIDs as $oldPaymentID) {
-            $this->addSql("UPDATE `oxpayments` SET OXACTIVE = 0 WHERE OXID = :oxid",["oxid" => $oldPaymentID]);
-        }
 
         $this->extendDbTables($schema);
         $this->addAlterTables($schema);
@@ -59,6 +44,18 @@ final class Version20230323131941 extends AbstractMigration
                 array($de_prefix => 'Klarna Checkout', $en_prefix => 'Klarna Checkout'),
             KlarnaPaymentTypes::KLARNA_PAYMENT_ID  =>
                 array($de_prefix => 'Mit Klarna bezahlen', $en_prefix => 'Pay with Klarna'),
+            KlarnaPaymentTypes::KLARNA_PAYMENT_PAY_LATER_ID =>
+                array($de_prefix => 'Klarna Rechnung', $en_prefix => 'Klarna Pay Later'),
+            KlarnaPaymentTypes::KLARNA_PAYMENT_SLICE_IT_ID  =>
+                array($de_prefix => 'Klarna Ratenkauf', $en_prefix => 'Klarna Financing'),
+            KlarnaPaymentTypes::KLARNA_PAYMENT_PAY_NOW =>
+                array($de_prefix => 'Klarna Sofort bezahlen', $en_prefix => 'Klarna Pay Now'),
+            KlarnaPaymentTypes::KLARNA_DIRECTDEBIT =>
+                array($de_prefix => 'Klarna Lastschrift', $en_prefix => 'Klarna Direct Debit'),
+            KlarnaPaymentTypes::KLARNA_CARD =>
+                array($de_prefix => 'Klarna Kreditkarte', $en_prefix => 'Klarna Card'),
+            KlarnaPaymentTypes::KLARNA_SOFORT =>
+                array($de_prefix => 'Klarna Sofortüberweisung', $en_prefix => 'Klarna Online Bank Transfer'),
         );
 
         $sort   = -350;
@@ -122,19 +119,13 @@ final class Version20230323131941 extends AbstractMigration
                       `OXID`          CHAR(32)
                                       CHARACTER SET latin1 COLLATE latin1_general_ci
                                    NOT NULL DEFAULT '',
-                      `TCKLARNA_ORDERID` VARCHAR(128) 
-                                    CHARACTER SET utf8 
-                                    DEFAULT '' NOT NULL,
+                    
                       `OXSHOPID`      CHAR(32)
                                       CHARACTER SET latin1 COLLATE latin1_general_ci
                                    NOT NULL DEFAULT '',
-                      `TCKLARNA_MID` VARCHAR(50) 
-                                    CHARACTER SET utf8 NOT NULL,
-                      `TCKLARNA_STATUSCODE` VARCHAR(16) CHARACTER SET utf8 NOT NULL,
                       `TCKLARNA_METHOD`      VARCHAR(128)
                                       CHARACTER SET utf8
                                    NOT NULL DEFAULT '',
-                      `TCKLARNA_URL` VARCHAR(256) CHARACTER SET utf8,
                       `TCKLARNA_REQUESTRAW`  TEXT CHARACTER SET utf8
                                    NOT NULL,
                       `TCKLARNA_RESPONSERAW` TEXT CHARACTER SET utf8
@@ -155,7 +146,6 @@ final class Version20230323131941 extends AbstractMigration
                       `OXID`       VARCHAR(32)
                                    CHARACTER SET latin1 COLLATE latin1_general_ci
                                             NOT NULL,
-                      `TCKLARNA_ORDERID` VARCHAR(128) CHARACTER SET utf8 DEFAULT '' NOT NULL,
                       `KLRECEIVED` DATETIME NOT NULL,
                       PRIMARY KEY (`OXID`)
                     )
@@ -228,6 +218,15 @@ final class Version20230323131941 extends AbstractMigration
             ),
             'oxaddress'       => array(
                 'TCKLARNA_TEMPORARY' => 'ADD COLUMN `TCKLARNA_TEMPORARY` TINYINT(1) UNSIGNED NOT NULL DEFAULT \'0\'',
+            ),
+            'tcklarna_logs'   => array(
+                'TCKLARNA_ORDERID'    => 'ADD COLUMN `TCKLARNA_ORDERID` VARCHAR(128) CHARACTER SET utf8 DEFAULT \'\' NOT NULL AFTER `OXID`',
+                'TCKLARNA_MID'        => 'ADD COLUMN `TCKLARNA_MID` VARCHAR(50) CHARACTER SET utf8 NOT NULL AFTER `OXSHOPID`',
+                'TCKLARNA_STATUSCODE' => 'ADD COLUMN `TCKLARNA_STATUSCODE` VARCHAR(16) CHARACTER SET utf8 NOT NULL AFTER `TCKLARNA_MID`',
+                'TCKLARNA_URL'        => 'ADD COLUMN `TCKLARNA_URL` VARCHAR(256) CHARACTER SET utf8 AFTER `TCKLARNA_METHOD`',
+            ),
+            'tcklarna_ack'    => array(
+                'TCKLARNA_ORDERID' => 'ADD COLUMN `TCKLARNA_ORDERID` VARCHAR(128) CHARACTER SET utf8 DEFAULT \'\' NOT NULL AFTER `OXID`, ADD KEY `TCKLARNA_ORDERID` (`TCKLARNA_ORDERID`)',
             ),
         );
 

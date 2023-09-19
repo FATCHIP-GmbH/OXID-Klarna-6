@@ -32,4 +32,46 @@ class KlarnaPaymentTypes extends KlarnaClientBase
      * @var string
      */
     const KLARNA_PAYMENT_CHECKOUT_ID = 'klarna_checkout';
+
+    /**
+     * Oxid value of Klarna Pay Now payment
+     *
+     * @var string
+     */
+    const KLARNA_PAYMENT_PAY_NOW = 'klarna_pay_now';
+
+    /**
+     * Oxid value of Klarna Pay Now payment
+     *
+     * @var string
+     */
+    const KLARNA_DIRECTDEBIT = 'klarna_directdebit';
+
+    /**
+     * Oxid value of Klarna card
+     *
+     * @var string
+     */
+    const KLARNA_CARD = 'klarna_card';
+
+    /**
+     * Oxid value of Klarna Pay Now payment
+     *
+     * @var string
+     */
+    const KLARNA_SOFORT = 'klarna_sofort';
+
+    /**
+     * Oxid value of Klarna Invoice payment
+     *
+     * @var string
+     */
+    const KLARNA_PAYMENT_PAY_LATER_ID = 'klarna_pay_later';
+
+    /**
+     * Oxid value of Klarna Part payment
+     *
+     * @var string
+     */
+    const KLARNA_PAYMENT_SLICE_IT_ID = 'klarna_slice_it';
 }
