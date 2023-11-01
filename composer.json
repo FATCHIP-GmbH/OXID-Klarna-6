@@ -19,6 +19,9 @@
     "phpunit/phpunit": "*",
     "phpunit/phpunit-selenium": ">=1.2"
   },
+  "replace": {
+    "topconcepts/oxid-klarna-6": "*"
+  },
   "autoload": {
     "psr-4": {
       "TopConcepts\\Klarna\\": "./"
