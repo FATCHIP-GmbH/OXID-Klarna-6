@@ -32,7 +32,7 @@ $aLang = array(
     'TCKLARNA_EXTERNAL_PAYMENTS'   => 'External Payment Methods',
     'TCKLARNA_EXTRA_MERCHANT_DATA' => 'Extra Merchant Data',
     'TCKLARNA_BASIC_SETTINGS'      => 'basic settings',
-    'TCKLARNA_KP_OPTIONS_REMOVAL'  => 'Pay later, Financing and Pay Now will be combined into one payment method in the future: Pay with Klarna. This configuration will no longer be needed and will be removed in a future version.<br>In order to be able to use the payment method "Pay with Klarna", the payment method must be activated for you in your merchant account. Please contact XXXXXXX regarding the activation.',
+    'TCKLARNA_KP_OPTIONS_REMOVAL'  => 'Pay later, Financing and Pay Now will be combined into one payment method in the future: Pay with Klarna. This configuration will no longer be needed and will be removed in a future version.<br>In order to be able to use the payment method "Pay with Klarna", the payment method must be activated for you in your merchant account. Please contact the merchant support (shop@klarna.de) regarding the activation.',
     'TCKLARNA_DISCOUNT_TITLE'      => 'Discount',
 
     'tcklarna_tbclklarna_orders'     => 'Klarna',
