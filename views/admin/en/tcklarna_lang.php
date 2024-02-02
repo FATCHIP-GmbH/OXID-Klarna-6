@@ -158,26 +158,26 @@ $aLang = array(
     'TCKLARNA_EXTERNAL_PAYMENTS_ADMIN_DESC'   =>
         'Here you can configure External Payment Methods and External Checkouts to be included inside the Klarna Checkout Iframe. 
         For a detailed description of the different settings please see the tool-tip function 
-<i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s" target="_blank">documentation</a> 
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="https://wiki.fatchip.de/public/faqklarna" target="_blank">documentation</a> 
 or contact Klarna Integration Support.',
     'TCKLARNA_EXTRA_MERCHANT_DATA_ADMIN_DESC' => 'Here you can configure the Extra Merchant Data to use with the Klarna extension 
 for OXID. For a detailed description of the different settings please see the tool-tip function 
-<i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s" target="_blank">documentation</a> 
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="https://wiki.fatchip.de/public/faqklarna" target="_blank">documentation</a> 
 or contact Klarna Integration Support.',
     'TCKLARNA_DESIGN_SETTINGS_ADMIN_DESC'     => 'Here you can configure the Design Settings to use with the Klarna extension 
 for OXID. For a detailed description of the different settings please see the tool-tip function 
-<i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s" target="_blank">documentation</a> 
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="https://wiki.fatchip.de/public/faqklarna" target="_blank">documentation</a> 
 or contact Klarna Integration Support.',
     'TCKLARNA_GENERAL_SETTINGS_ADMIN_DESC'    => 'Choose between Klarna Checkout and Klarna Payments, and make some overall settings. 
 For a detailed description of the different settings please see the tool-tip function
-<i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s" target="_blank">documentation</a> or contact Klarna Integration Support.',
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="https://wiki.fatchip.de/public/faqklarna" target="_blank">documentation</a> or contact Klarna Integration Support.',
     'TCKLARNA_CONFIGURATION_KCO_ADMIN_DESC'   => 'On this page you can configure the Klarna Checkout specific settings. 
 For a detailed description of the different settings please see the tool-tip function 
-<i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s" target="_blank">documentation</a> 
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="https://wiki.fatchip.de/public/faqklarna" target="_blank">documentation</a> 
 or contact Klarna Integration Support.',
     'TCKLARNA_CONFIGURATION_KP_ADMIN_DESC'    => 'On this page you can choose which Klarna Payments you want to offer. 
 For a detailed description of the different settings please see the tool-tip function 
-<i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s" target="_blank">documentation</a> or contact Klarna Integration Support.',
+<i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="https://wiki.fatchip.de/public/faqklarna" target="_blank">documentation</a> or contact Klarna Integration Support.',
 
     'TCKLARNA_PAYMENT_METHOD'          => 'Payment method',
     'TCKLARNA_EXTERNAL_PAYMENT_METHOD' => 'External Payment Method',
