@@ -404,13 +404,6 @@ class KlarnaPayment extends BaseModel
      */
     public function validateKlarnaUserData()
     {
-        $fieldNamesToCheck = array('country', 'given_name', 'family_name');
-        foreach ($fieldNamesToCheck as $fName) {
-            if ($this->_aUserData['billing_address'][$fName] !== $this->_aUserData['shipping_address'][$fName]) {
-                $this->addErrorMessage('TCKLARNA_KP_MATCH_ERROR');
-                break;
-            }
-        }
         if ($this->_aUserData['billing_address']['organization_name'] && !$this->b2bAllowed) {       // oxid fieldName invadr[oxuser__oxcompany]
             $this->addErrorMessage('KP_AVAILABLE_FOR_PRIVATE_ONLY');
         }

@@ -62,7 +62,6 @@ $aLang = array(
     'KLARNA_SEE_ORDER_IN_PORTAL'           => '<a href="%s" target="_blank" class="alert-link">Diese Bestellung im Klarna Merchant Portal aufrufen.</a>',
     'KLARNA_WENT_WRONG_TRY_AGAIN'          => 'Ein Fehler ist aufgetreten. Bitte noch einmal versuchen.',
     'KLARNA_WRONG_URLS_CONFIG'             => 'Fehler in der Konfiguration - prüfen Sie die URLs zu AGBs und Widerrufsrecht',
-    'TCKLARNA_KP_MATCH_ERROR'                    => 'Um diese Klarna Zahlungsart zu verwenden, müssen die Person und das Land in Rechnungs- und Lieferanschrift übereinstimmen.',
     'TCKLARNA_KP_INVALID_TOKEN'                  => 'Ungültiger Authorization Token. Bitte probieren Sie es noch einmal.',
     'TCKLARNA_KP_ORDER_DATA_CHANGED'             => 'Bestelldaten haben sich geändert.',
     'TCKLARNA_KP_CURRENCY_DONT_MATCH'            => 'Um eine Klarna Zahlungsart verwenden zu können, muss die gewählte Währung mit der offiziellen Währung Ihres Rechnungs-/Lieferland übereinstimmen.',
