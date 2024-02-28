@@ -96,6 +96,20 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
         }
     }
 
+    public function changeUserWithoutRedirect()
+    {
+        if ($user = $this->getUser()) {
+            $aInvAddress = Registry::getRequest()->getRequestEscapedParameter("invadr");
+
+            if ($user->oxuser__oxcompany->value !== $aInvAddress["oxuser__oxcompany"]) {
+                Registry::getSession()->setVariable("klarnaB2BSessionWasChanged",true);
+                KlarnaUtils::fullyResetKlarnaSession();
+            }
+        }
+
+        return parent::changeUserWithoutRedirect();
+    }
+
     /**
      * @return string
      */

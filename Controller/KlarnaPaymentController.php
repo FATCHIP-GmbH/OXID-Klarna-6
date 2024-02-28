@@ -144,6 +144,12 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
                 KlarnaPayment::cleanUpSession();
             }
 
+            if (Registry::getSession()->getVariable("klarnaB2BSessionWasChanged")) {
+                Registry::getSession()->deleteVariable("klarnaB2BSessionWasChanged");
+                KlarnaPayment::cleanUpSession();
+                $this->render();
+            }
+
             $errors = $this->oKlarnaPayment->getError();
             if (!$errors) {
                 try {
