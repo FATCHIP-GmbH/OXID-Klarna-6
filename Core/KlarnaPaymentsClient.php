@@ -189,7 +189,10 @@ class KlarnaPaymentsClient extends KlarnaClientBase
      */
     public function createNewOrder()
     {
-        $sAuthToken         = Registry::getSession()->getVariable('sAuthToken');
+        if (!$sAuthToken = Registry::getSession()->getVariable('sAuthToken')) {
+            $sAuthToken = KlarnaUtils::getAuthToken($this->getSessionId());
+        }
+
         $url                = sprintf(self::PAYMENTS_AUTHORIZATION_ENDPOINT, $sAuthToken . '/order');
         $currentSessionData = json_encode(
             array_merge(

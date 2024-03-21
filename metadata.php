@@ -19,6 +19,7 @@ use TopConcepts\Klarna\Controller\Admin\KlarnaOrders;
 use TopConcepts\Klarna\Controller\Admin\KlarnaPaymentMain;
 use TopConcepts\Klarna\Controller\Admin\KlarnaShipping;
 use TopConcepts\Klarna\Controller\Admin\KlarnaStart;
+use TopConcepts\Klarna\Controller\KlarnaAuthCallbackEndpoint;
 use TopConcepts\Klarna\Controller\KlarnaUserController;
 use TopConcepts\Klarna\Controller\KlarnaAcknowledgeController;
 use TopConcepts\Klarna\Controller\KlarnaAjaxController;
@@ -87,21 +88,22 @@ $aModule = array(
 
     'controllers' => array(
         // klarna admin
-        'KlarnaStart'            => KlarnaStart::class,
-        'KlarnaGeneral'          => KlarnaGeneral::class,
-        'KlarnaConfiguration'    => KlarnaConfiguration::class,
-        'KlarnaDesign'           => KlarnaDesign::class,
-        'KlarnaExternalPayments' => KlarnaExternalPayments::class,
-        'KlarnaEmdAdmin'         => KlarnaEmdAdmin::class,
-        'KlarnaOrders'           => KlarnaOrders::class,
-        'KlarnaMessaging'        => KlarnaMessaging::class,
-        'KlarnaShipping'         => KlarnaShipping::class,
+        'KlarnaStart'                   => KlarnaStart::class,
+        'KlarnaGeneral'                 => KlarnaGeneral::class,
+        'KlarnaConfiguration'           => KlarnaConfiguration::class,
+        'KlarnaDesign'                  => KlarnaDesign::class,
+        'KlarnaExternalPayments'        => KlarnaExternalPayments::class,
+        'KlarnaEmdAdmin'                => KlarnaEmdAdmin::class,
+        'KlarnaOrders'                  => KlarnaOrders::class,
+        'KlarnaMessaging'               => KlarnaMessaging::class,
+        'KlarnaShipping'                => KlarnaShipping::class,
         // controllers
-        'KlarnaExpress'          => KlarnaExpressController::class,
-        'KlarnaAjax'             => KlarnaAjaxController::class,
-        'KlarnaEpmDispatcher'    => KlarnaEpmDispatcher::class,
-        'KlarnaAcknowledge'      => KlarnaAcknowledgeController::class,
-        'KlarnaValidate'         => KlarnaValidationController::class,
+        'KlarnaExpress'                 => KlarnaExpressController::class,
+        'KlarnaAjax'                    => KlarnaAjaxController::class,
+        'KlarnaEpmDispatcher'           => KlarnaEpmDispatcher::class,
+        'KlarnaAcknowledge'             => KlarnaAcknowledgeController::class,
+        'KlarnaValidate'                => KlarnaValidationController::class,
+        'KlarnaAuthCallbackEndpoint'    => KlarnaAuthCallbackEndpoint::class,
     ),
     'extend'      => array(
         // models

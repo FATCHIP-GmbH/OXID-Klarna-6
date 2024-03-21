@@ -160,6 +160,7 @@ class KlarnaPayment extends BaseModel
             "purchase_currency" => $currencyISO,
             "merchant_urls"     => array(
                 "confirmation" => Registry::getConfig()->getSslShopUrl() . '?cl=thankyou' . $shopUrlParam,
+                "authorization" => Registry::getConfig()->getSslShopUrl() . '?cl=KlarnaAuthCallbackEndpoint' . $shopUrlParam,
             ),
         );
 
@@ -269,11 +270,18 @@ class KlarnaPayment extends BaseModel
      */
     public function isAuthorized()
     {
-        return Registry::getSession()->hasVariable('sAuthToken') || $this->requiresFinalization();
+        /**
+         * @var KlarnaPaymentsClient $paymentsClient
+         */
+        $paymentsClient = KlarnaPaymentsClient::getInstance();
+        $sessionId = $paymentsClient->getSessionId();
+        return Registry::getSession()->hasVariable('sAuthToken')
+            || KlarnaUtils::getAuthToken($sessionId)
+            || $this->requiresFinalization();
     }
 
     /**
-     * Checks order state. returns true if there is something too update
+     * Checks order state. returns true if there is something to update
      * @return bool
      */
     public function isOrderStateChanged()
