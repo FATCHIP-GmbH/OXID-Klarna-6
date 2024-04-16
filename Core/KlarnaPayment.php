@@ -155,12 +155,13 @@ class KlarnaPayment extends BaseModel
             $this->currencyToCountryMatch = false;
         }
 
+        $userid = $oUser->getId();
         $this->_aOrderData = array(
             "purchase_country"  => $sCountryISO,
             "purchase_currency" => $currencyISO,
             "merchant_urls"     => array(
                 "confirmation" => Registry::getConfig()->getSslShopUrl() . '?cl=thankyou' . $shopUrlParam,
-                "authorization" => Registry::getConfig()->getSslShopUrl() . '?cl=KlarnaAuthCallbackEndpoint' . $shopUrlParam,
+                "authorization" => Registry::getConfig()->getSslShopUrl() . "cl=KlarnaAuthCallbackEndpoint$shopUrlParam&secret=$userid",
             ),
         );
 

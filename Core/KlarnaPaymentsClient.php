@@ -277,6 +277,11 @@ class KlarnaPaymentsClient extends KlarnaClientBase
                 if ($aChangedData) {
                     $splitted = $this->splitUserData($aChangedData);
 
+                    //add auth callback to update URL
+                    $userId = $this->getUser()->getId();
+                    $aChangedData["merchant_urls"]["authorization"]
+                        = Registry::getConfig()->getSslShopUrl() . "cl=KlarnaAuthCallbackEndpoint&secret=$userId";
+
                     // update order data
                     return array(json_encode($aChangedData), $splitted);
                 }
