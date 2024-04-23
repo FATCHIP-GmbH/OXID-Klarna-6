@@ -410,6 +410,22 @@ class KlarnaUtils
         return DatabaseProvider::getDb()->getOne($sql, array($orderId));
     }
 
+    public static function addAuthToken($sessionId, $authtoken)
+    {
+        $sql = 'INSERT INTO tcklarna_authtokens (oxid, tcklarna_authtoken, tcklarna_sessionid) VALUES (?,?,?)';
+        DatabaseProvider::getDb()->Execute(
+            $sql,
+            array(UtilsObject::getInstance()->generateUID(), $authtoken, $sessionId)
+        );
+    }
+
+    public static function getAuthToken($sessionId)
+    {
+        $sql = 'SELECT * FROM tcklarna_authtokens WHERE tcklarna_sessionid = ?';
+
+        return DatabaseProvider::getDb()->getOne($sql, array($sessionId));
+    }
+
     public static function getIsOneKlarnaActive()
     {
         $payment = oxNew(Payment::class);
