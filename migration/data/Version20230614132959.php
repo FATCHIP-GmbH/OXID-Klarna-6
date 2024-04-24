@@ -42,8 +42,8 @@ final class Version20230614132959 extends AbstractMigration
         $newPayments = array(
             KlarnaPaymentTypes::KLARNA_PAYMENT_CHECKOUT_ID  =>
                 array($de_prefix => 'Klarna Checkout', $en_prefix => 'Klarna Checkout'),
-            KlarnaPaymentTypes::KLARNA_PAYMENT_ID  =>
-                array($de_prefix => 'Mit Klarna bezahlen', $en_prefix => 'Pay with Klarna'),
+//            KlarnaPaymentTypes::KLARNA_PAYMENT_ID  =>
+//                array($de_prefix => 'Mit Klarna bezahlen', $en_prefix => 'Pay with Klarna'),
             KlarnaPaymentTypes::KLARNA_PAYMENT_PAY_LATER_ID =>
                 array($de_prefix => 'Klarna Rechnung', $en_prefix => 'Klarna Pay Later'),
             KlarnaPaymentTypes::KLARNA_PAYMENT_SLICE_IT_ID  =>
