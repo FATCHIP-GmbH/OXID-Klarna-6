@@ -1,3 +1,10 @@
+### 5.5.4
+* Added migrations 
+* Added authorization callback URL for initiate and update session requests
+* Fix KCO not working if all countries are assigned implicitly
+* Removed constraint for billing and delivery address having to be the same
+* Fixed session behavior for B2B
+
 ### 5.5.3
 * Removed the shop name from the 'User-Agent' in the request
 * Added ireland as core country
