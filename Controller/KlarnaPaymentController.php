@@ -131,9 +131,9 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
         if ($this->countKPMethods() && $this->loadKlarnaPaymentWidget) {
 
             /** @var User|KlarnaUser $oUser */
-            $oUser    = $this->getUser();
-            $oSession = Registry::getSession();
-            $oBasket  = $oSession->getBasket();
+            $oUser      = $this->getUser();
+            $oSession   = Registry::getSession();
+            $oBasket    = $oSession->getBasket();
 
             if (KlarnaPayment::countryWasChanged($oUser)) {
                 KlarnaPayment::cleanUpSession();
@@ -150,6 +150,14 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
                 $this->render();
             }
 
+            $isB2B = $this->oKlarnaPayment->isB2B();
+            if ($isB2B && $this->oKlarnaPayment->isAuthorized()) {
+                if (Registry::getSession()->getVariable('reauthorizeRequired')) {
+                    KlarnaPayment::cleanUpSession();
+                    $this->render();
+                }
+            }
+
             $errors = $this->oKlarnaPayment->getError();
             if (!$errors) {
                 try {
@@ -157,7 +165,7 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
                         ->createOrUpdateSession();
 
                     $sessionData = $oSession->getVariable('klarna_session_data');
-                    $tcKlarnaIsB2B =  $this->oKlarnaPayment->isB2B() ? 'true' : 'false';
+                    $tcKlarnaIsB2B =  $isB2B ? 'true' : 'false';
                     $this->addTplParam("client_token", $sessionData['client_token']);
                     $this->addTplParam("tcKlarnaIsB2B", $tcKlarnaIsB2B);
 
@@ -313,6 +321,8 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
                 $sessionData['payment_method_categories']
             );
         }
+
+        $klarnaIds[] = "klarna";
 
         foreach ($this->aPaymentList as $payid => $oxPayment) {
             $klarnaName = $oxPayment->getPaymentCategoryName();
