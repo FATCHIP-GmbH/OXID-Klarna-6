@@ -64,7 +64,7 @@ class KlarnaPaymentsClient extends KlarnaClientBase
             return $this->aSessionData;        // nothing to update
         }
 
-        if ($this->sSessionId && count($this->aSessionData['payment_method_categories']) > 0) {
+        if ($this->sSessionId && is_array($this->aSessionData) && count($this->aSessionData['payment_method_categories']) > 0) {
             try {
                 // update existing order
                 $this->aSessionData = $this->updateSession($requestBody);

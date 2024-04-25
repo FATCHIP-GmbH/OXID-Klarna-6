@@ -154,7 +154,12 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
             if ($isB2B && $this->oKlarnaPayment->isAuthorized()) {
                 if (Registry::getSession()->getVariable('reauthorizeRequired')) {
                     KlarnaPayment::cleanUpSession();
-                    $this->render();
+                    $this->client->resetInstance();
+
+                    Registry::getUtils()->redirect(
+                        $this->getConfig()->getShopSecureHomeUrl() . 'cl=payment',
+                        false
+                    );
                 }
             }
 
