@@ -19,6 +19,7 @@ use TopConcepts\Klarna\Controller\Admin\KlarnaOrders;
 use TopConcepts\Klarna\Controller\Admin\KlarnaPaymentMain;
 use TopConcepts\Klarna\Controller\Admin\KlarnaShipping;
 use TopConcepts\Klarna\Controller\Admin\KlarnaStart;
+use TopConcepts\Klarna\Controller\KlarnaAuthCallbackEndpoint;
 use TopConcepts\Klarna\Controller\KlarnaUserController;
 use TopConcepts\Klarna\Controller\KlarnaAcknowledgeController;
 use TopConcepts\Klarna\Controller\KlarnaAjaxController;
@@ -79,7 +80,7 @@ $aModule = array(
         'de' => 'Egal was Sie verkaufen, unsere Produkte sind dafür gemacht, Ihren Kunden das beste Erlebnis zu bereiten. Das gefällt nicht nur Ihnen, sondern auch uns! Die Klarna Plugins werden stets auf Herz und Nieren geprüft und können ganz einfach durch Sie oder Ihre technischen Ansprechpartner aktiviert werden. Das nennen wir smoooth. Hier können Sie sowohl Klarna Payments aktivieren und anschließend genau die Zahlarten auswählen, die Sie wünschen oder mit der Komplettlösung, dem Klarna Checkout, Ihre Customer Journey optimieren. Erfahren Sie hier mehr zu Klarna für OXID: <a href="https://www.klarna.com/de/verkaeufer/oxid/">https://www.klarna.com/de/verkaeufer/oxid/</a> Und so einfach ist die Integration: <a href="https://hello.klarna.com/rs/778-XGY-327/images/How_to_OXID.mp4" target="_blank">Zum Video</a>',
         'en' => 'No matter what you sell, our products are made to give your customers the best purchase experience. This is not only smoooth for you - it is smoooth for us, too! Klarna plugins are always tested and can be activated by you or your technical contact with just a few clicks. That is smoooth. Here you can activate Klarna Payments and then select exactly the payment methods you want or optimize your customer journey with the complete Klarna Checkout solution. Find out more about Klarna for OXID: <a href="https://www.klarna.com/de/verkaeufer/oxid/" target="_blank">https://www.klarna.com/de/verkaeufer/oxid/</a> Integrating Klarna at OXID is easy as pie: <a href="https://hello.klarna.com/rs/778-XGY-327/images/How_to_OXID.mp4" target="_blank">to the video (click)</a>'
     ),
-    'version'     => '5.5.3',
+    'version'     => '5.5.4.rc-1',
     'author'      => '<a href="https://www.fatchip.de" target="_blank">FATCHIP GmbH</a>',
     'thumbnail'   => '/out/admin/src/img/klarna_lockup_black.jpg',
     'url'         => 'https://www.klarna.com/de/verkaeufer/plattformen-und-partner/oxid/',
@@ -87,21 +88,22 @@ $aModule = array(
 
     'controllers' => array(
         // klarna admin
-        'KlarnaStart'            => KlarnaStart::class,
-        'KlarnaGeneral'          => KlarnaGeneral::class,
-        'KlarnaConfiguration'    => KlarnaConfiguration::class,
-        'KlarnaDesign'           => KlarnaDesign::class,
-        'KlarnaExternalPayments' => KlarnaExternalPayments::class,
-        'KlarnaEmdAdmin'         => KlarnaEmdAdmin::class,
-        'KlarnaOrders'           => KlarnaOrders::class,
-        'KlarnaMessaging'        => KlarnaMessaging::class,
-        'KlarnaShipping'         => KlarnaShipping::class,
+        'KlarnaStart'                   => KlarnaStart::class,
+        'KlarnaGeneral'                 => KlarnaGeneral::class,
+        'KlarnaConfiguration'           => KlarnaConfiguration::class,
+        'KlarnaDesign'                  => KlarnaDesign::class,
+        'KlarnaExternalPayments'        => KlarnaExternalPayments::class,
+        'KlarnaEmdAdmin'                => KlarnaEmdAdmin::class,
+        'KlarnaOrders'                  => KlarnaOrders::class,
+        'KlarnaMessaging'               => KlarnaMessaging::class,
+        'KlarnaShipping'                => KlarnaShipping::class,
         // controllers
-        'KlarnaExpress'          => KlarnaExpressController::class,
-        'KlarnaAjax'             => KlarnaAjaxController::class,
-        'KlarnaEpmDispatcher'    => KlarnaEpmDispatcher::class,
-        'KlarnaAcknowledge'      => KlarnaAcknowledgeController::class,
-        'KlarnaValidate'         => KlarnaValidationController::class,
+        'KlarnaExpress'                 => KlarnaExpressController::class,
+        'KlarnaAjax'                    => KlarnaAjaxController::class,
+        'KlarnaEpmDispatcher'           => KlarnaEpmDispatcher::class,
+        'KlarnaAcknowledge'             => KlarnaAcknowledgeController::class,
+        'KlarnaValidate'                => KlarnaValidationController::class,
+        'KlarnaAuthCallbackEndpoint'    => KlarnaAuthCallbackEndpoint::class,
     ),
     'extend'      => array(
         // models

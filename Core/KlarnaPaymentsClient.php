@@ -189,7 +189,10 @@ class KlarnaPaymentsClient extends KlarnaClientBase
      */
     public function createNewOrder()
     {
-        $sAuthToken         = Registry::getSession()->getVariable('sAuthToken');
+        if (!$sAuthToken = Registry::getSession()->getVariable('sAuthToken')) {
+            $sAuthToken = KlarnaUtils::getAuthToken($this->getSessionId());
+        }
+
         $url                = sprintf(self::PAYMENTS_AUTHORIZATION_ENDPOINT, $sAuthToken . '/order');
         $currentSessionData = json_encode(
             array_merge(
@@ -273,6 +276,11 @@ class KlarnaPaymentsClient extends KlarnaClientBase
                 $aChangedData = $this->_oKlarnaOrder->getChangedData();
                 if ($aChangedData) {
                     $splitted = $this->splitUserData($aChangedData);
+
+                    //add auth callback to update URL
+                    $userId = $this->getUser()->getId();
+                    $aChangedData["merchant_urls"]["authorization"]
+                        = Registry::getConfig()->getSslShopUrl() . "cl=KlarnaAuthCallbackEndpoint&secret=$userId";
 
                     // update order data
                     return array(json_encode($aChangedData), $splitted);

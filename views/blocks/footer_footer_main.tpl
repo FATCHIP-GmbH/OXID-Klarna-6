@@ -45,22 +45,25 @@
         function embedKlarnaLogo(content) {
             var theme = '[{$oViewConf->getActiveTheme()}]';
             var $content = $(content)
-            if(theme === 'flow'){
-                $('.footer-right-part div:first').append($content);
-            }
-            if(theme === 'wave'){
-                $('.footer-box-newsletter').append($content);
-            }
-            if(theme === 'azure'){
-                $('#footerCategories .list.categories').append($content);
-            }
 
-            // get logo in natural size
-            var $img = $content.find('img');
-            var parsedUrl = $img.attr('src').split('width=');
-            if(parsedUrl.length > 1) {
-                var prevStyle = getComputedStyle($content.prev().children().first()[0]);
-                $img.attr('src', parsedUrl[0] + 'width=' + parseInt(prevStyle.width));
+            if($content.length < 0) {
+                if(theme === 'flow'){
+                    $('.footer-right-part div:first').append($content);
+                }
+                if(theme === 'wave'){
+                    $('.footer-box-newsletter').append($content);
+                }
+                if(theme === 'azure'){
+                    $('#footerCategories .list.categories').append($content);
+                }
+
+                // get logo in natural size
+                var $img = $content.find('img');
+                var parsedUrl = $img.attr('src').split('width=');
+                if(parsedUrl.length > 1) {
+                    var prevStyle = getComputedStyle($content.prev().children().first()[0]);
+                    $img.attr('src', parsedUrl[0] + 'width=' + parseInt(prevStyle.width));
+                }
             }
         }
     </script>

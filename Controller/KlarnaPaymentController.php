@@ -26,6 +26,7 @@ use TopConcepts\Klarna\Model\KlarnaPayment as KlarnaPaymentModel;
 use TopConcepts\Klarna\Core\KlarnaConsts;
 use TopConcepts\Klarna\Core\KlarnaPayment;
 use TopConcepts\Klarna\Core\KlarnaUtils;
+use TopConcepts\Klarna\Model\KlarnaPaymentHelper;
 use TopConcepts\Klarna\Model\KlarnaUser;
 use OxidEsales\Eshop\Application\Model\DeliverySetList;
 use OxidEsales\Eshop\Application\Model\User;
@@ -130,9 +131,9 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
         if ($this->countKPMethods() && $this->loadKlarnaPaymentWidget) {
 
             /** @var User|KlarnaUser $oUser */
-            $oUser    = $this->getUser();
-            $oSession = Registry::getSession();
-            $oBasket  = $oSession->getBasket();
+            $oUser      = $this->getUser();
+            $oSession   = Registry::getSession();
+            $oBasket    = $oSession->getBasket();
 
             if (KlarnaPayment::countryWasChanged($oUser)) {
                 KlarnaPayment::cleanUpSession();
@@ -143,6 +144,20 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
                 KlarnaPayment::cleanUpSession();
             }
 
+            if (Registry::getSession()->getVariable("klarnaB2BSessionWasChanged")) {
+                Registry::getSession()->deleteVariable("klarnaB2BSessionWasChanged");
+                KlarnaPayment::cleanUpSession();
+                $this->render();
+            }
+
+            $isB2B = $this->oKlarnaPayment->isB2B();
+            if ($isB2B && $this->oKlarnaPayment->isAuthorized()) {
+                if (Registry::getSession()->getVariable('reauthorizeRequired')) {
+                    KlarnaPayment::cleanUpSession();
+                    $this->render();
+                }
+            }
+
             $errors = $this->oKlarnaPayment->getError();
             if (!$errors) {
                 try {
@@ -150,7 +165,7 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
                         ->createOrUpdateSession();
 
                     $sessionData = $oSession->getVariable('klarna_session_data');
-                    $tcKlarnaIsB2B =  $this->oKlarnaPayment->isB2B() ? 'true' : 'false';
+                    $tcKlarnaIsB2B =  $isB2B ? 'true' : 'false';
                     $this->addTplParam("client_token", $sessionData['client_token']);
                     $this->addTplParam("tcKlarnaIsB2B", $tcKlarnaIsB2B);
 
@@ -204,7 +219,14 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
             $allKlarnaPaymentIds = KlarnaPaymentModel::getKlarnaPaymentsIds();
             $toRemove = $allKlarnaPaymentIds;
             if (KlarnaUtils::isKlarnaPaymentsEnabled()) {
-                $KPPaymentIds = KlarnaPaymentModel::getKlarnaPaymentsIds('KP');
+
+                //If One Klarna is Active, no other KP Payments should be displayed
+                if(KlarnaUtils::getIsOneKlarnaActive()) {
+                    $KPPaymentIds = [KlarnaPaymentHelper::KLARNA_PAYMENT_ID];
+                }else {
+                    $KPPaymentIds = KlarnaPaymentModel::getKlarnaPaymentsIds('KP');
+                }
+
                 $toRemove = array_diff($allKlarnaPaymentIds, $KPPaymentIds);
             }
             foreach ($toRemove as $paymentId) {
@@ -299,6 +321,8 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
                 $sessionData['payment_method_categories']
             );
         }
+
+        $klarnaIds[] = "klarna";
 
         foreach ($this->aPaymentList as $payid => $oxPayment) {
             $klarnaName = $oxPayment->getPaymentCategoryName();

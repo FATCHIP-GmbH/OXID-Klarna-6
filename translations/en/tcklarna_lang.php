@@ -65,7 +65,6 @@ $aLang = array(
     'KLARNA_WRONG_URLS_CONFIG'    => 'Configuration error - check terms/cancellation terms settings',
 
     'TCKLARNA_KP_CURRENCY_DONT_MATCH'      => 'In order to being able to use Klarna payments, the selected currency has to match the official currency of your billing country.',
-    'TCKLARNA_KP_MATCH_ERROR'              => 'In order to being able to use Klarna payments, both person and country in billing and shipping address must match.',
     'TCKLARNA_KP_INVALID_TOKEN'            => 'Invalid authorization token. Please try again.',
     'TCKLARNA_KP_ORDER_DATA_CHANGED'       => 'Order data have been changed. Please try again.',
     'KP_NOT_AVAILABLE_FOR_COMPANIES'  => 'Payment with this Klarna payment method is currently not available for companies.',

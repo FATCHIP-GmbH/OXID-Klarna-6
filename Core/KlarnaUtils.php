@@ -24,6 +24,7 @@ use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Price;
 use OxidEsales\Eshop\Core\UtilsObject;
 use TopConcepts\Klarna\Model\KlarnaCountryList;
+use TopConcepts\Klarna\Model\KlarnaPaymentHelper;
 use TopConcepts\Klarna\Model\KlarnaUser;
 use OxidEsales\Eshop\Application\Model\Category;
 use OxidEsales\Eshop\Application\Model\Country;
@@ -407,6 +408,30 @@ class KlarnaUtils
         $sql = 'SELECT COUNT(*) FROM `tcklarna_ack` WHERE `tcklarna_orderid` = ?';
 
         return DatabaseProvider::getDb()->getOne($sql, array($orderId));
+    }
+
+    public static function addAuthToken($sessionId, $authtoken)
+    {
+        $sql = 'INSERT INTO tcklarna_authtokens (oxid, tcklarna_authtoken, tcklarna_sessionid) VALUES (?,?,?)';
+        DatabaseProvider::getDb()->Execute(
+            $sql,
+            array(UtilsObject::getInstance()->generateUID(), $authtoken, $sessionId)
+        );
+    }
+
+    public static function getAuthToken($sessionId)
+    {
+        $sql = 'SELECT * FROM tcklarna_authtokens WHERE tcklarna_sessionid = ?';
+
+        return DatabaseProvider::getDb()->getOne($sql, array($sessionId));
+    }
+
+    public static function getIsOneKlarnaActive()
+    {
+        $payment = oxNew(Payment::class);
+        $payment->load(KlarnaPaymentHelper::KLARNA_PAYMENT_ID);
+
+        return $payment->oxpayments__oxactive->value == 1;
     }
 
     /**

@@ -25,6 +25,7 @@ class KlarnaCountryList extends KlarnaCountryList_parent
 {
     /**
      * Selects and loads all active countries that are assigned to klarna_checkout
+     * loads all active countries if none are assigned
      *
      * @param integer $iLang language
      * @param bool $filterKcoList
@@ -46,6 +47,14 @@ class KlarnaCountryList extends KlarnaCountryList_parent
         }
 
         $this->selectString($sSelect);
+
+        if(!count($this)) {
+            $sSelect = "SELECT {$sViewName}.oxid, {$sViewName}.oxtitle, {$sViewName}.oxisoalpha2 
+                        FROM {$sViewName}
+                        WHERE {$sViewName}.oxactive=1";
+
+            $this->selectString($sSelect);
+        }
     }
 
     /**
