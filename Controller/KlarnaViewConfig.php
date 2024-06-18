@@ -140,9 +140,9 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
     /**
      *
      */
-    public function addBuyNow()
+    public function displayExpressButton()
     {
-        return KlarnaUtils::getShopConfVar('blKlarnaDisplayBuyNow');
+        return KlarnaUtils::getShopConfVar('blKlarnaDisplayExpressButton');
     }
 
     /**

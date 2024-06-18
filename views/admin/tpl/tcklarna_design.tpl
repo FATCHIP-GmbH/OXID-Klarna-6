@@ -1,15 +1,15 @@
 [{assign var="lang_tag" value=$languages.$editlanguage->abbr|oxupper}]
 
 <link rel="stylesheet" href="[{$oViewConf->getResourceUrl()}]main.css">
-<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tcklarna_admin2.css')}]">
-<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster.bundle.min.css')}]">
+<link rel="stylesheet" href="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tcklarna_admin2.css')}]">
+<link rel="stylesheet" href="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster.bundle.min.css')}]">
 <link rel="stylesheet"
-      href="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster-sideTip-light.min.css')}]">
+      href="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster-sideTip-light.min.css')}]">
 <script type="text/javascript"
-        src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/jquery-1.12.4.min.js')}]"></script>
+        src="[{$oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/jquery-1.12.4.min.js')}]"></script>
 <script type="text/javascript"
-        src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/tooltipster.bundle.min.js')}]"></script>
-<script src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/jscolor/jscolor.js')}]"></script>
+        src="[{$oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/tooltipster.bundle.min.js')}]"></script>
+<script src="[{$oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/jscolor/jscolor.js')}]"></script>
 
 <div class="[{$box|default:'box'}]" style="[{if !$box && !$bottom_buttons}]height: 100%;[{/if}]">
     <div class="main-container">
@@ -59,7 +59,7 @@
                                                                 <input type="checkbox" class="toggle_input radio_type"
                                                                        name="confstrs[sKlarnaFooterDisplay]"
                                                                        value="1" id="FooterDisplay"
-                                                                       [{if ($confstrs.sKlarnaFooterDisplay === '1')}]checked[{/if}] [{ $readonly}]/>
+                                                                       [{if ($confstrs.sKlarnaFooterDisplay === '1')}]checked[{/if}] [{$readonly}]/>
                                                                 <div class="toggle-control"></div>
                                                             </label>
                                                         </div>
@@ -88,7 +88,7 @@
                                                             <input type="checkbox" class="toggle_input radio_type"
                                                                    name="confstrs[sKlarnaFooterDisplay]"
                                                                    value="2" id="FooterDisplay1"
-                                                                   [{if ($confstrs.sKlarnaFooterDisplay === '2')}]checked[{/if}] [{ $readonly}]/>
+                                                                   [{if ($confstrs.sKlarnaFooterDisplay === '2')}]checked[{/if}] [{$readonly}]/>
                                                             <div class="toggle-control"></div>
                                                         </label>
                                                     </div>
@@ -129,7 +129,7 @@
                                                                [{if ($confstrs.sKlarnaFooterValue === 'longBlack')}]checked[{/if}]>
                                                         <label class="kl-logo white" for="long-black">
                                                             <div class="">
-                                                                <img src="[{ $locale|string_format:$aKlarnaFooterImgUrls.longBlack}]">
+                                                                <img src="[{$locale|string_format:$aKlarnaFooterImgUrls.longBlack}]">
                                                             </div>
                                                         </label>
                                                     </td>
@@ -139,7 +139,7 @@
                                                                [{if $confstrs.sKlarnaFooterValue == 'longWhite'}]checked[{/if}]>
                                                         <label class="kl-logo black" for="long-white">
                                                             <div class="">
-                                                                <img src="[{ $locale|string_format:$aKlarnaFooterImgUrls.longWhite}]">
+                                                                <img src="[{$locale|string_format:$aKlarnaFooterImgUrls.longWhite}]">
                                                             </div>
                                                         </label>
                                                     </td>
@@ -156,7 +156,7 @@
                                                                [{if $confstrs.sKlarnaFooterValue == 'shortBlack'}]checked[{/if}]>
                                                         <label class="kl-logo white" for="short-black">
                                                             <div class="">
-                                                                <img src="[{ $locale|string_format:$aKlarnaFooterImgUrls.shortBlack}]">
+                                                                <img src="[{$locale|string_format:$aKlarnaFooterImgUrls.shortBlack}]">
                                                             </div>
                                                         </label>
                                                     </td>
@@ -166,7 +166,7 @@
                                                                [{if $confstrs.sKlarnaFooterValue == 'shortWhite'}]checked[{/if}]>
                                                         <label class="kl-logo black" for="short-white">
                                                             <div class="">
-                                                                <img src="[{ $locale|string_format:$aKlarnaFooterImgUrls.shortWhite}]">
+                                                                <img src="[{$locale|string_format:$aKlarnaFooterImgUrls.shortWhite}]">
                                                             </div>
                                                         </label>
                                                     </td>
@@ -204,7 +204,7 @@
                                                        [{if $confstrs.sKlarnaFooterValue == 'logoBlack'}]checked="checked"[{/if}]>
                                                 <label class="kl-logo white" for="logo-black">
                                                     <div class="kl-logo-inner">
-                                                        <img class="" src="[{ $aKlarnaFooterImgUrls.logoBlack}]">
+                                                        <img class="" src="[{$aKlarnaFooterImgUrls.logoBlack}]">
                                                     </div>
                                                 </label>
                                             </td>
@@ -214,7 +214,7 @@
                                                        [{if $confstrs.sKlarnaFooterValue == 'logoWhite'}]checked[{/if}]>
                                                 <label class="kl-logo black" for="logo-white">
                                                     <div class="kl-logo-inner">
-                                                        <img class="" src="[{ $aKlarnaFooterImgUrls.logoWhite}]">
+                                                        <img class="" src="[{$aKlarnaFooterImgUrls.logoWhite}]">
                                                     </div>
                                                 </label>
                                             </td>
@@ -243,7 +243,7 @@
                                                            value="logoFooter"
                                                            [{if $confstrs.sKlarnaFooterValue == 'logoFooter'}]checked="checked"[{/if}]>
                                                     <label for="logo-footer">
-                                                        <img width="135" height="75" class="" src="[{ $aKlarnaFooterImgUrls.logoFooter}]">
+                                                        <img width="135" height="75" class="" src="[{$aKlarnaFooterImgUrls.logoFooter}]">
                                                     </label>
                                                 </td>
                                             </tr>
@@ -259,7 +259,7 @@
                 </div>
 
                 <!-- Product details page and basket -->
-                [{if $mode === 'KCO'}]
+                [{if $mode === 'KP'}]
                     <div class="klarna-row">
                         <div class="row-label">
                             <div class="sign plus"></div>
@@ -271,88 +271,13 @@
                         <div class="rows-wrapper">
                             <table class="config-options">
                                 <tbody>
-                                [{assign var="showKPWidgetOptions" value=false}]
-                                [{if $showKPWidgetOptions}]
-                                    [{* Klarna Payment Method Widget *}]
-                                    <tr class="no-t-border">
-                                        <td>
-                                            <table class="inner">
-                                                <tbody>
-                                                <tr class="dark">
-                                                    <td class="name-bold" colspan="3">
-                                                        [{oxmultilang ident="TCKLARNA_DISPLAY_PAYMENT_WIDGET"}]
-                                                    </td>
-                                                </tr>
-                                                <tr class="dark">
-                                                    <td class="name">
-                                                        [{oxmultilang ident="TCKLARNA_ON_PROD_PAGE"}]
-                                                    </td>
-                                                    <td class="input w460">
-                                                        <div class="input">
-                                                            <div class="display">
-                                                                <label class="label toggle"
-                                                                       for="DisplayWidgetOnProdPage">
-                                                                    <input type="hidden"
-                                                                           name="confbools[tcklarna_blKlarnaDisplayWidgetOnProdPage]"
-                                                                           value="0">
-                                                                    <input type="checkbox" class="toggle_input"
-                                                                           name="confbools[tcklarna_blKlarnaDisplayWidgetOnProdPage]"
-                                                                           value="1"
-                                                                           [{if ($confbools.tcklarna_blKlarnaDisplayWidgetOnProdPage)}]checked[{/if}] [{ $readonly}]/>
-                                                                    <div class="toggle-control"
-                                                                         id="DisplayWidgetOnProdPage"></div>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td class="info-block">
-                                                        <span class="kl-tooltip"
-                                                              title="[{oxmultilang ident="TCKLARNA_WIDGET_ON_BASKET_PAGE_TOOLTIP"}]">
-                                                            <i class="fa fa-question fa-lg" aria-hidden="true"></i>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                                <tr class="dark">
-                                                    <td class="name">
-                                                        [{oxmultilang ident="TCKLARNA_ON_BASKET_PAGE"}]
-                                                    </td>
-                                                    <td class="input w460">
-                                                        <div class="input">
-                                                            <div class="display">
-                                                                <label class="label toggle"
-                                                                       for="DisplayWidgetOnBasketPage">
-                                                                    <input type="hidden"
-                                                                           name="confbools[tcklarna_blKlarnaDisplayWidgetOnBasketPage]"
-                                                                           value="0">
-                                                                    <input type="checkbox" class="toggle_input"
-                                                                           name="confbools[tcklarna_blKlarnaDisplayWidgetOnBasketPage]"
-                                                                           value="1" id="DisplayWidgetOnBasketPage"
-                                                                           [{if ($confbools.tcklarna_blKlarnaDisplayWidgetOnBasketPage)}]checked[{/if}] [{ $readonly}]/>
-                                                                    <div class="toggle-control"></div>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td class="info-block">
-                                                        <span class="kl-tooltip"
-                                                              title="[{oxmultilang ident="TCKLARNA_WIDGET_ON_PROD_PAGE_TOOLTIP"}]">
-                                                            <i class="fa fa-question fa-lg" aria-hidden="true"></i>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                [{/if}]
-
                                 <tr class="no-t-border no-b-border">
                                     <td>
                                         <table class="inner">
                                             <tbody>
                                             <tr class="dark">
                                                 <td class="name-bold" colspan="3">
-                                                    [{oxmultilang ident="TCKLARNA_DISPLAY_BUY_NOW"}]
+                                                    [{oxmultilang ident="TCKLARNA_DISPLAY_EXPRESS_BUTTON"}]
                                                 </td>
                                             </tr>
                                             <tr class="dark">
@@ -362,14 +287,14 @@
                                                 <td class="input w460">
                                                     <div class="input">
                                                         <div class="display">
-                                                            <label class="label toggle" for="DisplayBuyNow">
+                                                            <label class="label toggle" for="DisplayExpressButton">
                                                                 <input type="hidden"
-                                                                       name="confbools[blKlarnaDisplayBuyNow]"
+                                                                       name="confbools[blKlarnaDisplayExpressButton]"
                                                                        value="0">
                                                                 <input type="checkbox" class="toggle_input"
-                                                                       name="confbools[blKlarnaDisplayBuyNow]"
-                                                                       value="1" id="DisplayBuyNow"
-                                                                       [{if ($confbools.blKlarnaDisplayBuyNow)}]checked[{/if}] [{ $readonly}]/>
+                                                                       name="confbools[blKlarnaDisplayExpressButton]"
+                                                                       value="1" id="DisplayExpressButton"
+                                                                       [{if ($confbools.blKlarnaDisplayExpressButton)}]checked[{/if}] [{$readonly}]/>
                                                                 <div class="toggle-control"></div>
                                                             </label>
                                                         </div>
@@ -422,7 +347,7 @@
                                         <div class="input color-picker">
                                             <input class="color {hash:true,required:false}"
                                                    name="confaarrs[aKlarnaDesignKP][color_border]"
-                                                   value="[{ $confaarrs.aKlarnaDesignKP.color_border}]">
+                                                   value="[{$confaarrs.aKlarnaDesignKP.color_border}]">
                                         </div>
                                     </td>
                                     <td class="info-block">
@@ -439,7 +364,7 @@
                                         <div class="color-picker">
                                             <input class="color {hash:true,required:false}"
                                                    name="confaarrs[aKlarnaDesignKP][color_border_selected]"
-                                                   value="[{ $confaarrs.aKlarnaDesignKP.color_border_selected}]">
+                                                   value="[{$confaarrs.aKlarnaDesignKP.color_border_selected}]">
                                         </div>
                                     </td>
                                     <td class="info-block">
@@ -457,7 +382,7 @@
                                     <div class="color-picker">
                                         <input class="color {hash:true,required:false}"
                                                name="confaarrs[aKlarnaDesign][color_button]"
-                                               value="[{ $confaarrs.aKlarnaDesign.color_button}]">
+                                               value="[{$confaarrs.aKlarnaDesign.color_button}]">
                                     </div>
                                 </td>
                                 <td class="info-block">
@@ -475,7 +400,7 @@
                                     <div class="color-picker">
                                         <input class="color {hash:true,required:false}"
                                                name="confaarrs[aKlarnaDesign][color_button_text]"
-                                               value="[{ $confaarrs.aKlarnaDesign.color_button_text}]">
+                                               value="[{$confaarrs.aKlarnaDesign.color_button_text}]">
                                     </div>
                                 </td>
                                 <td class="info-block">
@@ -493,7 +418,7 @@
                                     <div class="color-picker">
                                         <input class="color {hash:true,required:false}"
                                                name="confaarrs[aKlarnaDesign][color_checkbox]"
-                                               value="[{ $confaarrs.aKlarnaDesign.color_checkbox}]">
+                                               value="[{$confaarrs.aKlarnaDesign.color_checkbox}]">
                                     </div>
                                 </td>
                                 <td class="info-block">
@@ -511,7 +436,7 @@
                                     <div class="color-picker">
                                         <input class="color {hash:true,required:false}"
                                                name="confaarrs[aKlarnaDesign][color_checkbox_checkmark]"
-                                               value="[{ $confaarrs.aKlarnaDesign.color_checkbox_checkmark}]">
+                                               value="[{$confaarrs.aKlarnaDesign.color_checkbox_checkmark}]">
                                     </div>
                                 </td>
                                 <td class="info-block">
@@ -530,7 +455,7 @@
                                         <div class="color-picker">
                                             <input class="color {hash:true,required:false}"
                                                    name="confaarrs[aKlarnaDesignKP][color_details]"
-                                                   value="[{ $confaarrs.aKlarnaDesignKP.color_details}]">
+                                                   value="[{$confaarrs.aKlarnaDesignKP.color_details}]">
                                         </div>
                                     </td>
                                     <td class="info-block">
@@ -548,7 +473,7 @@
                                     <div class="color-picker">
                                         <input class="color {hash:true,required:false}"
                                                name="confaarrs[aKlarnaDesign][color_header]"
-                                               value="[{ $confaarrs.aKlarnaDesign.color_header}]">
+                                               value="[{$confaarrs.aKlarnaDesign.color_header}]">
                                     </div>
                                 </td>
                                 <td class="info-block">
@@ -566,7 +491,7 @@
                                     <div class="color-picker">
                                         <input class="color {hash:true,required:false}"
                                                name="confaarrs[aKlarnaDesign][color_link]"
-                                               value="[{ $confaarrs.aKlarnaDesign.color_link}]">
+                                               value="[{$confaarrs.aKlarnaDesign.color_link}]">
                                     </div>
                                 </td>
                                 <td class="info-block">
@@ -585,7 +510,7 @@
                                         <div class="color-picker">
                                             <input class="color {hash:true,required:false}"
                                                    name="confaarrs[aKlarnaDesignKP][color_text]"
-                                                   value="[{ $confaarrs.aKlarnaDesignKP.color_text}]">
+                                                   value="[{$confaarrs.aKlarnaDesignKP.color_text}]">
                                         </div>
                                     </td>
                                     <td class="info-block">
@@ -602,7 +527,7 @@
                                         <div class="color-picker">
                                             <input class="color {hash:true,required:false}"
                                                    name="confaarrs[aKlarnaDesignKP][color_text_secondary]"
-                                                   value="[{ $confaarrs.aKlarnaDesignKP.color_text_secondary}]">
+                                                   value="[{$confaarrs.aKlarnaDesignKP.color_text_secondary}]">
                                         </div>
                                     </td>
                                     <td class="info-block">
@@ -630,7 +555,7 @@
                                         <input class="radius small pull-left" maxlength="4"
                                                name="confaarrs[aKlarnaDesign][radius_border]"
                                                style="border-radius: [{$confaarrs.aKlarnaDesign.radius_border}];"
-                                               value="[{ $confaarrs.aKlarnaDesign.radius_border}]">
+                                               value="[{$confaarrs.aKlarnaDesign.radius_border}]">
                                         <input class="range small pull-left" type="range" min="0" max="20"
                                                value="[{$confaarrs.aKlarnaDesign.radius_border|substr:0:-2}]"/>
                                     </div>
@@ -682,7 +607,7 @@
         </div>
     </div>
 </div>
-<script src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_lib.js')}]"></script>
-<script src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_design.js')}]"></script>
+<script src="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_lib.js')}]"></script>
+<script src="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_design.js')}]"></script>
 
 
