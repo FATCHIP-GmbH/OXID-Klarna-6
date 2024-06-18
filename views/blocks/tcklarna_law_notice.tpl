@@ -3,7 +3,7 @@
 [{if $oViewConf->getActiveTheme() === 'azure'}]
     [{oxscript include=$oViewConf->getModuleUrl('tcklarna', 'out/src/js/azure_patch.js') priority=3}]
 [{/if}]
-[{if $oViewConf->showCheckoutTerms() }]
+[{if $oViewConf->showCheckoutTerms()}]
     [{assign var=klarnaLawNotifUrl value=$oViewConf->getLawNotificationsLinkKco()}]
     <style>
         #legalModal iframe {
@@ -58,7 +58,7 @@
             </div>
         </div>
     </div>
-    [{ capture assign=lawNoticeTemplate }]
+    [{capture assign=lawNoticeTemplate}]
         <div class="klarna-law-notice">
             [{assign var="klarnaLawNoticeMessage" value="TCKLARNA_LAW_NOTICE"|oxmultilangassign:$oViewConf->getLawNotificationsLinkKco()}]
             [{$klarnaLawNoticeMessage}]

@@ -1,4 +1,4 @@
-[{if $oViewConf->isCheckoutNonKlarnaCountry() && $oView->getIsOrderStep() }]
+[{if $oViewConf->isCheckoutNonKlarnaCountry() && $oView->getIsOrderStep()}]
     <div class="form-group[{if $aErrors.oxaddress__oxcountryid}] oxInValid[{/if}]">
         <label class="control-label col-lg-3[{if $oView->isFieldRequired(oxaddress__oxcountryid)}] req[{/if}]"
                for="delCountrySelect">[{oxmultilang ident="COUNTRY"}]</label>

@@ -15,7 +15,7 @@
                         <input type="hidden" name="cl" value="KlarnaExpress">
                         <input type="hidden" name="selected-country" value="">
                     </div>
-                    [{foreach from=$oView->getKlarnaModalFlagCountries() item="country" name="flagCountries" }]
+                    [{foreach from=$oView->getKlarnaModalFlagCountries() item="country" name="flagCountries"}]
                         <button type="button"
                                 class="btn btn-default" value="[{$country->oxcountry__oxisoalpha2->value}]">
                             <div class="klarna-flag [{$country->oxcountry__oxisoalpha2->value|lower}]"></div>
@@ -28,7 +28,7 @@
                         <select class="form-control js-country-select" id="other-countries">
                             <option disabled selected>[{oxmultilang ident="TCKLARNA_MORE_COUNTRIES"}]</option>
                             [{assign var="shopCountriesCount" value=0}]
-                            [{foreach from=$oView->getActiveShopCountries() item="country" name="otherCountries" }]
+                            [{foreach from=$oView->getActiveShopCountries() item="country" name="otherCountries"}]
                                 [{counter assign="shopCountriesCount"}]
                                 <option value="[{$country->oxcountry__oxisoalpha2->value}]">[{$country->oxcountry__oxtitle->value}]</option>
                             [{/foreach}]

@@ -1,15 +1,15 @@
 <link rel="stylesheet" href="[{$oViewConf->getResourceUrl()}]main.css">
-<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tcklarna_admin2.css') }]">
-<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster.bundle.min.css') }]">
-<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster-sideTip-light.min.css') }]">
-<script type="text/javascript" src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/jquery-1.12.4.min.js') }]"></script>
-<script type="text/javascript" src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/tooltipster.bundle.min.js') }]"></script>
+<link rel="stylesheet" href="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tcklarna_admin2.css')}]">
+<link rel="stylesheet" href="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster.bundle.min.css')}]">
+<link rel="stylesheet" href="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster-sideTip-light.min.css')}]">
+<script type="text/javascript" src="[{$oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/jquery-1.12.4.min.js')}]"></script>
+<script type="text/javascript" src="[{$oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/tooltipster.bundle.min.js')}]"></script>
 
 <div class="[{$box|default:'box'}]" style="[{if !$box && !$bottom_buttons}]height: 100%;[{/if}]">
     <div class="main-container">
-        [{include file="tcklarna_header.tpl" title="TCKLARNA_EXTERNAL_PAYMENTS"|oxmultilangassign desc="TCKLARNA_EXTERNAL_PAYMENTS_ADMIN_DESC"|oxmultilangassign }]
+        [{include file="tcklarna_header.tpl" title="TCKLARNA_EXTERNAL_PAYMENTS"|oxmultilangassign desc="TCKLARNA_EXTERNAL_PAYMENTS_ADMIN_DESC"|oxmultilangassign}]
         <hr>
-        [{ if $mode === 'KCO' }]
+        [{if $mode === 'KCO'}]
         <div class="klarna-expandable-list">
             <form name="myedit" id="myedit" method="post" action="[{$oViewConf->getSelfLink()}]" enctype="multipart/form-data">
                 <input type="hidden" name="MAX_FILE_SIZE" value="[{$iMaxUploadFileSize}]">
@@ -17,8 +17,8 @@
                 <input type="hidden" name="cl" value="KlarnaExternalPayments">
                 <input type="hidden" name="fnc" value="save">
                 [{foreach from=$activePayments item=payment}]
-                    [{assign var="paymentOn" value=$payment.tcklarna_externalpayment|intval }]
-                    [{assign var="checkoutOn" value=$payment.tcklarna_externalcheckout|intval }]
+                    [{assign var="paymentOn" value=$payment.tcklarna_externalpayment|intval}]
+                    [{assign var="checkoutOn" value=$payment.tcklarna_externalcheckout|intval}]
 
                     <div class="klarna-row">
                         <div class="row-label">
@@ -88,7 +88,7 @@
                                                                            name="payments[[{$payment.oxid}]][oxpayments__tcklarna_externalpayment]"
                                                                            data-payment-id="[{$payment.oxid}]"
                                                                            value="1" id="[{$payment.oxid}]"
-                                                                           [{if $paymentOn }]checked[{/if}] [{ $readonly}]>
+                                                                           [{if $paymentOn}]checked[{/if}] [{$readonly}]>
                                                                     <div class="toggle-control js-enable-payment"
                                                                          data-payment-id="[{$payment.oxid}]"
                                                                          data-column="payment">
@@ -104,7 +104,7 @@
                                                         </span>
                                                     </td>
                                                 </tr>
-                                                [{if $payment.isCheckout }]
+                                                [{if $payment.isCheckout}]
                                                     <tr class="bg-light">
                                                         <td class="name-bold">
                                                             [{oxmultilang ident="TCKLARNA_EXTERNAL_CHECKOUT"}]
@@ -121,7 +121,7 @@
                                                                                name="payments[[{$payment.oxid}]][oxpayments__tcklarna_externalcheckout]"
                                                                                data-payment-id="[{$payment.oxid}]"
                                                                                value="1" id="[{$payment.oxid}]1"
-                                                                               [{if $checkoutOn }]checked[{/if}] [{ $readonly}]>
+                                                                               [{if $checkoutOn}]checked[{/if}] [{$readonly}]>
                                                                         <div class="toggle-control js-enable-payment"
                                                                              data-payment-id="[{$payment.oxid}]"
                                                                              data-column="checkout">
@@ -147,7 +147,7 @@
                                                 <table class="inner-table">
                                                     <tr class="bg-light">
                                                         <td class="name-bold">
-                                                            [{ oxmultilang ident="GENERAL_LANGUAGE" }]
+                                                            [{oxmultilang ident="GENERAL_LANGUAGE"}]
                                                         </td>
                                                         <td>
                                                             <div class="selector langSelector" data-payment-id="[{$payment.oxid}]">
@@ -155,8 +155,8 @@
                                                                     <ul class="selector__choices">
                                                                         [{foreach from=$languages key=lang item=olang}]
                                                                             <li class="selector__item[{if $lang == $adminlang}]--selected[{/if}]"
-                                                                                data-value="[{ $lang }]">
-                                                                                <a href="#">[{ $olang->name }]</a>
+                                                                                data-value="[{$lang}]">
+                                                                                <a href="#">[{$olang->name}]</a>
                                                                             </li>
                                                                         [{/foreach}]
                                                                     </ul>
@@ -169,23 +169,23 @@
                                                     <tr class="bg-light">
                                                         <td colspan="3">
                                                             <div class="rows-wrapper"
-                                                                 [{ assign var="patternPrefix" value="data-"}]
-                                                                 [{if $paymentOn }]
+                                                                 [{assign var="patternPrefix" value="data-"}]
+                                                                 [{if $paymentOn}]
                                                                     style="display: block"
-                                                                    [{ assign var="patternPrefix" value=""}]
+                                                                    [{assign var="patternPrefix" value=""}]
                                                                 [{/if}]>
                                                                 <table class="inner-table">
                                                                     <tr class="bg-dark js-payment-img"
                                                                         [{if $adminlang != 0}]
-                                                                            [{ assign var="suffix" value="_"|cat:$adminlang }]
+                                                                            [{assign var="suffix" value="_"|cat:$adminlang}]
 
                                                                         [{else}]
-                                                                            [{ assign var="suffix" value=""}]
+                                                                            [{assign var="suffix" value=""}]
                                                                         [{/if}]
                                                                     >
                                                                         <td>
-                                                                            <div class="name-bold">[{ oxmultilang ident="TCKLARNA_IMAGE_URI_EXT_PAYMENT" }]</div>
-                                                                            <div class="dimensions-tip">[{ oxmultilang ident="TCKLARNA_IMAGE_TIP_69x24" }]</div>
+                                                                            <div class="name-bold">[{oxmultilang ident="TCKLARNA_IMAGE_URI_EXT_PAYMENT"}]</div>
+                                                                            <div class="dimensions-tip">[{oxmultilang ident="TCKLARNA_IMAGE_TIP_69x24"}]</div>
                                                                         </td>
                                                                         <td>
                                                                             <div class="input relative">
@@ -198,7 +198,7 @@
                                                                                        value="[{$payment.tcklarna_paymentimageurl}]">
                                                                                 [{if $payment.tcklarna_paymentimageurl}]
                                                                                     <div class="preview_69_24">
-                                                                                        <img src="[{ $payment.tcklarna_paymentimageurl }]"
+                                                                                        <img src="[{$payment.tcklarna_paymentimageurl}]"
                                                                                              width="69" height="24">
                                                                                     </div>
                                                                                 [{/if}]
@@ -213,18 +213,18 @@
                                                                     </tr>
                                                                 </table>
                                                             </div>
-                                                            [{if $payment.isCheckout }]
+                                                            [{if $payment.isCheckout}]
                                                                 <div class="rows-wrapper"
-                                                                    [{ assign var="patternPrefix" value="data-"}]
-                                                                    [{if $checkoutOn }]
+                                                                    [{assign var="patternPrefix" value="data-"}]
+                                                                    [{if $checkoutOn}]
                                                                         style="display: block"
-                                                                    [{ assign var="patternPrefix" value=""}]
+                                                                    [{assign var="patternPrefix" value=""}]
                                                                     [{/if}]>
                                                                 <table class="inner-table">
                                                                         <tr class="bg-dark js-checkout-img">
                                                                             <td>
-                                                                                <div class="name-bold">[{ oxmultilang ident="TCKLARNA_IMAGE_URI_EXT_CHECKOUT" }]</div>
-                                                                                <div class="dimensions-tip">[{ oxmultilang ident="TCKLARNA_IMAGE_TIP_276x48" }]</div>
+                                                                                <div class="name-bold">[{oxmultilang ident="TCKLARNA_IMAGE_URI_EXT_CHECKOUT"}]</div>
+                                                                                <div class="dimensions-tip">[{oxmultilang ident="TCKLARNA_IMAGE_TIP_276x48"}]</div>
                                                                             </td>
                                                                             <td>
                                                                                 <div class="input relative">
@@ -233,12 +233,12 @@
                                                                                            data-payment-id="[{$payment.oxid}]"
                                                                                            data-field-name="oxpayments__tcklarna_checkoutimageurl"
                                                                                            name="payments[[{$payment.oxid}]][oxpayments__tcklarna_checkoutimageurl[{$suffix}]]"
-                                                                                           [{ if $checkoutOn }] required [{/if}]
+                                                                                           [{if $checkoutOn}] required [{/if}]
                                                                                            value="[{$payment.tcklarna_checkoutimageurl}]">
 
                                                                                     [{if $payment.tcklarna_checkoutimageurl}]
                                                                                         <div class="preview_276_48">
-                                                                                            <img src="[{ $payment.tcklarna_checkoutimageurl }]"
+                                                                                            <img src="[{$payment.tcklarna_checkoutimageurl}]"
                                                                                                  width="276" height="48">
                                                                                         </div>
                                                                                     [{/if}]
@@ -274,11 +274,11 @@
                            id="form-save-button" [{$readonly}]>
                 </div>
             </form>
-            <script src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_lib.js') }]"></script>
-            <script src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_external_payments.js') }]"></script>
+            <script src="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_lib.js')}]"></script>
+            <script src="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_external_payments.js')}]"></script>
         </div>
-        [{ else }]
-            [{ "TCKLARNA_NO_OPTIONS_MODE"|oxmultilangassign }]
+        [{else}]
+            [{"TCKLARNA_NO_OPTIONS_MODE"|oxmultilangassign}]
         [{/if}]
     </div>
 </div>

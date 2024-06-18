@@ -130,49 +130,49 @@
         margin: 5px 0 0 0;
     }
 </style>
-[{ if $readonly}]
+[{if $readonly}]
     [{assign var="readonly" value="readonly disabled"}]
 [{else}]
     [{assign var="readonly" value=""}]
 [{/if}]
 
-<form name="transfer" id="transfer" action="[{ $oViewConf->getSelfLink() }]" method="post">
-    [{ $oViewConf->getHiddenSid() }]
-    <input type="hidden" name="oxid" value="[{ $oxid }]">
+<form name="transfer" id="transfer" action="[{$oViewConf->getSelfLink()}]" method="post">
+    [{$oViewConf->getHiddenSid()}]
+    <input type="hidden" name="oxid" value="[{$oxid}]">
     <input type="hidden" name="cl" value="KlarnaOrders">
 </form>
 [{if $wrongCredentials}]
-    [{assign var=alertMessage value=$wrongCredentials }]
+    [{assign var=alertMessage value=$wrongCredentials}]
     [{assign var=alertClass value="alert-warning"}]
 [{/if}]
-[{if $oOrder }]
+[{if $oOrder}]
     [{assign var=klarnaLink value=$oView->getKlarnaPortalLink()}]
     [{if $wrongCredentials}]
-        [{assign var=alertMessage value=$wrongCredentials }]
+        [{assign var=alertMessage value=$wrongCredentials}]
         [{assign var=alertClass value="alert-warning"}]
     [{elseif $cancelled}]
-        [{assign var=alertMessage_1 value="KLARNA_ORDER_IS_CANCELLED"|oxmultilangassign }]
-        [{assign var=alertMessage_2 value="KLARNA_SEE_ORDER_IN_PORTAL"|oxmultilangassign:$klarnaLink }]
-        [{assign var=alertMessage value=$alertMessage_1|cat:$alertMessage_2 }]
+        [{assign var=alertMessage_1 value="KLARNA_ORDER_IS_CANCELLED"|oxmultilangassign}]
+        [{assign var=alertMessage_2 value="KLARNA_SEE_ORDER_IN_PORTAL"|oxmultilangassign:$klarnaLink}]
+        [{assign var=alertMessage value=$alertMessage_1|cat:$alertMessage_2}]
         [{assign var=alertClass value="alert-warning"}]
-    [{elseif $unauthorizedRequest }]
-        [{assign var=alertMessage value=$unauthorizedRequest }]
+    [{elseif $unauthorizedRequest}]
+        [{assign var=alertMessage value=$unauthorizedRequest}]
         [{assign var=alertClass value="alert-warning"}]
     [{else}]
         [{if $inSync}]
-            [{assign var=alertMessage value="KLARNA_SEE_ORDER_IN_PORTAL"|oxmultilangassign:$klarnaLink }]
+            [{assign var=alertMessage value="KLARNA_SEE_ORDER_IN_PORTAL"|oxmultilangassign:$klarnaLink}]
             [{assign var=alertClass value="alert-success"}]
         [{else}]
-            [{assign var=alertMessage_1 value="KLARNA_ORDER_NOT_IN_SYNC"|oxmultilangassign }]
-            [{assign var=alertMessage_2 value="KLARNA_SEE_ORDER_IN_PORTAL"|oxmultilangassign:$klarnaLink }]
-            [{assign var=alertMessage value=$alertMessage_1|cat:$alertMessage_2 }]
+            [{assign var=alertMessage_1 value="KLARNA_ORDER_NOT_IN_SYNC"|oxmultilangassign}]
+            [{assign var=alertMessage_2 value="KLARNA_SEE_ORDER_IN_PORTAL"|oxmultilangassign:$klarnaLink}]
+            [{assign var=alertMessage value=$alertMessage_1|cat:$alertMessage_2}]
             [{assign var=alertClass value="alert-warning"}]
         [{/if}]
     [{/if}]
-    <div class="alert [{ $alertClass }]">
+    <div class="alert [{$alertClass}]">
         <span style='float: left'>[{$alertMessage}] [{if !$wrongCredentials}](Merchant Id: [{$sMid}])[{/if}]</span>
         <span style='float: right'>
-            [{if $oOrder->oxorder__tcklarna_orderid->value }]
+            [{if $oOrder->oxorder__tcklarna_orderid->value}]
                 [{assign var=tcklarna_orderid value=$oOrder->oxorder__tcklarna_orderid->value}]
             [{else}]
                 [{assign var=tcklarna_orderid value=" - "}]
@@ -188,13 +188,13 @@
         <div>
             <h2>[{oxmultilang ident="KLARNA_CAPTURES"}]</h2>
             [{if $canRefund and !$aRefunds}]
-                <form name="refund" id="refund" action="[{ $oViewConf->getSelfLink() }]" method="post">
-                    [{ $oViewConf->getHiddenSid() }]
+                <form name="refund" id="refund" action="[{$oViewConf->getSelfLink()}]" method="post">
+                    [{$oViewConf->getHiddenSid()}]
                     <input type="hidden" name="cl" value="KlarnaOrders">
-                    <input type="hidden" name="oxid" value="[{ $oxid }]">
+                    <input type="hidden" name="oxid" value="[{$oxid}]">
                     <input type="hidden" name="fnc" value="refundFullOrder">
 
-                    <input type="submit" value="[{ oxmultilang ident="TCKLARNA_COMPLETE_REFUND" }]" class="alert-warning">
+                    <input type="submit" value="[{oxmultilang ident="TCKLARNA_COMPLETE_REFUND"}]" class="alert-warning">
                 </form>
             [{/if}]
             <table class="table table-condensed table-striped">
@@ -224,7 +224,7 @@
                 [{/foreach}]
             </table>
         </div>
-        [{if $aRefunds }]
+        [{if $aRefunds}]
             <div>
                 <h2>[{oxmultilang ident="KLARNA_REFUNDS"}]</h2>
                 <table class="table table-condensed table-striped">
@@ -251,31 +251,31 @@
                 </table>
             </div>
         [{/if}]
-    [{elseif !$cancelled && !$wrongCredentials && !$unauthorizedRequest && $inSync }]
+    [{elseif !$cancelled && !$wrongCredentials && !$unauthorizedRequest && $inSync}]
         <div class="portal-button">
-            <form name="capture" id="capture" action="[{ $oViewConf->getSelfLink() }]" method="post">
-                [{ $oViewConf->getHiddenSid() }]
+            <form name="capture" id="capture" action="[{$oViewConf->getSelfLink()}]" method="post">
+                [{$oViewConf->getHiddenSid()}]
                 <input type="hidden" name="cl" value="KlarnaOrders">
-                <input type="hidden" name="oxid" value="[{ $oxid }]">
+                <input type="hidden" name="oxid" value="[{$oxid}]">
                 <input type="hidden" name="fnc" value="captureFullOrder">
 
-                <input type="submit" value="[{ oxmultilang ident="KLARNA_CAPTURE_FULL_ORDER" }]" class="alert-success">
+                <input type="submit" value="[{oxmultilang ident="KLARNA_CAPTURE_FULL_ORDER"}]" class="alert-success">
             </form>
         </div>
         <div class="portal-button">
-            <form name="cancel" id="cancel" action="[{ $oViewConf->getSelfLink() }]" method="post">
-                [{ $oViewConf->getHiddenSid() }]
+            <form name="cancel" id="cancel" action="[{$oViewConf->getSelfLink()}]" method="post">
+                [{$oViewConf->getHiddenSid()}]
                 <input type="hidden" name="cl" value="KlarnaOrders">
-                <input type="hidden" name="oxid" value="[{ $oxid }]">
+                <input type="hidden" name="oxid" value="[{$oxid}]">
                 <input type="hidden" name="fnc" value="cancelOrder">
 
-                <input type="submit" value="[{ oxmultilang ident="KLARNA_CANCEL_ORDER" }]" class="alert-warning">
+                <input type="submit" value="[{oxmultilang ident="KLARNA_CANCEL_ORDER"}]" class="alert-warning">
             </form>
         </div>
     [{/if}]
 [{else}]
     [{if $wrongCredentials}]
-        <div class="alert [{ $alertClass }]">
+        <div class="alert [{$alertClass}]">
             [{$alertMessage}]
         </div>
     [{else}]
