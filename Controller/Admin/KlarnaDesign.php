@@ -46,6 +46,9 @@ class KlarnaDesign extends KlarnaBaseConfig
         $this->addTplParam('locale', $locale);
         $this->addTplParam('aKlarnaFooterImgUrls', KlarnaConsts::getFooterImgUrls());
 
+        $this->addTplParam('kebtheme', array('default', 'light', 'outlined'));
+        $this->addTplParam('kebshape', array('default', 'rect', 'pill'));
+
         return $this->_sThisTemplate;
     }
 }

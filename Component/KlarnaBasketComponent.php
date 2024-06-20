@@ -19,7 +19,10 @@ namespace TopConcepts\Klarna\Component;
 
 
 use TopConcepts\Klarna\Core\KlarnaClientBase;
+use TopConcepts\Klarna\Core\KlarnaOrder;
 use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
+use TopConcepts\Klarna\Core\KlarnaPayment;
+use TopConcepts\Klarna\Core\KlarnaPaymentsClient;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
 use OxidEsales\Eshop\Core\Exception\StandardException;
@@ -41,19 +44,55 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
     protected $_sRedirectController = 'KlarnaExpress';
 
     /**
-     * Executing action from details page
+     * Executing Klarna Express checkout from details page
      */
-    public function actionKlarnaExpressCheckoutFromDetailsPage()
+    public function tobasketKEB($sProductId = null, $dAmount = null, $aSel = null, $aPersParam = null, $blOverride = false)
     {
-        // trows exception if adding item to basket fails
-        $this->tobasket();
+        $this->tobasket($sProductId, $dAmount, $aSel, $aPersParam, $blOverride);
 
-        $oConfig = Registry::getConfig();
-        Registry::getUtils()->redirect(
-            $oConfig->getShopSecureHomeUrl() . 'cl=' . $this->_sRedirectController . '',
-            false,
-            302
-        );
+        $oSession       = Registry::getSession();
+        $oBasket        = $oSession->getBasket();
+        $oBasket->calculateBasket(true);
+        $oUser = $this->getUser();
+
+        $oKlarnaOrder   = oxNew(KlarnaOrder::class, $oBasket, $oUser);
+        $oClient        = $this->getKlarnaCheckoutClient();
+        $aOrderData     = $oKlarnaOrder->getOrderData();
+
+        $clientToken = $this->getClientTokenFromSession();
+
+        $payload = [
+            'klarnaSessionData' => $oClient->createOrUpdateOrder(json_encode($aOrderData)),
+            'clientToken'       => $clientToken,
+        ];
+
+        $oof = json_encode($payload);
+
+        Registry::getUtils()->showMessageAndExit(json_encode($payload));
+    }
+
+    protected function getClientTokenFromSession()
+    {
+        $oSession = Registry::getSession();
+
+        $aKPSessionData = $oSession->getVariable('klarna_session_data');
+        if(!$aKPSessionData['client_token']) {
+            $oBasket    = $oSession->getBasket();
+            $oUser      = $this->getUser();
+
+            if ($oBasket->getItemsCount() && $oUser) {
+                /** @var KlarnaPayment $oKlarnaPayment */
+                $oKlarnaPayment = oxNew(KlarnaPayment::class, $oBasket, $oUser);
+                $oKlarnaPayment->setStatus('authorize');
+
+                $this->getKlarnaPaymentsClient()
+                    ->initOrder($oKlarnaPayment)
+                    ->createOrUpdateSession();
+            }
+        }
+
+        $aKPSessionData = $oSession->getVariable('klarna_session_data');
+        return $aKPSessionData['client_token'];
     }
 
     /**
@@ -135,4 +174,12 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
         return KlarnaOrderManagementClient::getInstance();
     }
 
+    /**
+     *
+     * @return KlarnaPaymentsClient|KlarnaClientBase
+     */
+    protected function getKlarnaPaymentsClient()
+    {
+        return KlarnaPaymentsClient::getInstance();
+    }
 }

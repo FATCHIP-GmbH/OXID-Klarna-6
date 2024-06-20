@@ -84,6 +84,11 @@ abstract class KlarnaClientBase extends Base
         static::$instance = null;
     }
 
+    public function setKlarnaOrder($oKlarnaOrder)
+    {
+        $this->_oKlarnaOrder = $oKlarnaOrder;
+    }
+
     /**
      * @param \Requests_Session $session
      */

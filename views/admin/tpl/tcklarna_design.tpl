@@ -275,38 +275,116 @@
                                     <td>
                                         <table class="inner">
                                             <tbody>
-                                            <tr class="dark">
-                                                <td class="name-bold" colspan="3">
-                                                    [{oxmultilang ident="TCKLARNA_DISPLAY_EXPRESS_BUTTON"}]
-                                                </td>
-                                            </tr>
-                                            <tr class="dark">
-                                                <td class="name">
-                                                    [{oxmultilang ident="TCKLARNA_ON_PROD_PAGE"}]
-                                                </td>
-                                                <td class="input w460">
-                                                    <div class="input">
-                                                        <div class="display">
-                                                            <label class="label toggle" for="DisplayExpressButton">
-                                                                <input type="hidden"
-                                                                       name="confbools[blKlarnaDisplayExpressButton]"
-                                                                       value="0">
-                                                                <input type="checkbox" class="toggle_input"
-                                                                       name="confbools[blKlarnaDisplayExpressButton]"
-                                                                       value="1" id="DisplayExpressButton"
-                                                                       [{if ($confbools.blKlarnaDisplayExpressButton)}]checked[{/if}] [{$readonly}]/>
-                                                                <div class="toggle-control"></div>
-                                                            </label>
+                                                <tr class="dark">
+                                                    <td class="name-bold" colspan="3">
+                                                        [{oxmultilang ident="TCKLARNA_DISPLAY_EXPRESS_BUTTON"}]
+                                                    </td>
+                                                </tr>
+                                                <tr class="dark">
+                                                    <td class="name">
+                                                        [{oxmultilang ident="TCKLARNA_ON_PROD_PAGE"}]
+                                                    </td>
+                                                    <td class="input w460">
+                                                        <div class="input">
+                                                            <div class="display">
+                                                                <label class="label toggle" for="DisplayExpressButton">
+                                                                    <input type="hidden"
+                                                                           name="confbools[blKlarnaDisplayExpressButton]"
+                                                                           value="0">
+                                                                    <input type="checkbox" class="toggle_input"
+                                                                           name="confbools[blKlarnaDisplayExpressButton]"
+                                                                           value="1" id="DisplayExpressButton"
+                                                                           [{if ($confbools.blKlarnaDisplayExpressButton)}]checked[{/if}] [{$readonly}]/>
+                                                                    <div class="toggle-control"></div>
+                                                                </label>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </td>
-                                                <td class="info-block">
-                                                <span class="kl-tooltip"
-                                                      title="[{oxmultilang ident="TCKLARNA_BUY_NOW_ON_PROD_PAGE_TOOLTIP"}]">
-                                                    <i class="fa fa-question fa-lg" aria-hidden="true"></i>
-                                                </span>
-                                                </td>
-                                            </tr>
+                                                    </td>
+                                                    <td class="info-block">
+                                                        <span class="kl-tooltip"
+                                                              title="[{oxmultilang ident="TCKLARNA_BUY_NOW_ON_PROD_PAGE_TOOLTIP"}]">
+                                                            <i class="fa fa-question fa-lg" aria-hidden="true"></i>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>[{oxmultilang ident="TCKLARNA_KEB_CLID"}]</td>
+                                                    <td>
+                                                        <div class="input">
+                                                            <input type="text" class="" name="confstrs[sKlarnaExpressButtonClientId]"
+                                                                   value="[{$confstrs.sKlarnaExpressButtonClientId}]">
+                                                        </div>
+                                                    </td>
+                                                    <td class="info-block">
+                                                        <span class="kl-tooltip"
+                                                              title="[{oxmultilang ident="TCKLARNA_KEB_CLID_TOOLTIP"}]">
+                                                            <i class="fa fa-question fa-lg" aria-hidden="true"></i>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+
+                                                <tr class="dark">
+                                                    <td class="name">
+                                                        [{oxmultilang ident="TCKLARNA_KEB_THEME"}]
+                                                    </td>
+                                                    <td>
+                                                        <div class="input">
+                                                            <div class="selector" id="kebthemeSelector">
+                                                                <div class="selector__menu">
+                                                                    <ul class="selector__choices">
+                                                                        [{foreach from=$kebtheme item=name}]
+                                                                            <li class="selector__item[{if $confstrs.sKlarnaKEBTheme == $name}]--selected[{/if}]">
+                                                                                <a href="#" data-value="[{$name}]">
+                                                                                    [{oxmultilang ident="TCKLARNA_KEB_THEME_"|cat:$name}]
+                                                                                </a>
+                                                                            </li>
+                                                                        [{/foreach}]
+                                                                    </ul>
+                                                                    <input type="hidden" name="confstrs[sKlarnaKEBTheme]"
+                                                                           value="[{$confstrs.sKlarnaKEBTheme}]">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+[{*                                                    <td class="info-block">*}]
+[{*                                                        <span class="kl-tooltip"*}]
+[{*                                                              title="[{oxmultilang ident="TCKLARNA_KEB_THEME_TOOLTIP"}]">*}]
+[{*                                                            <i class="fa fa-question fa-lg" aria-hidden="true"></i>*}]
+[{*                                                        </span>*}]
+[{*                                                    </td>*}]
+                                                </tr>
+
+                                                <tr>
+                                                    <td class="name">
+                                                        [{oxmultilang ident="TCKLARNA_KEB_SHAPE"}]
+                                                    </td>
+                                                    <td>
+                                                        <div class="input">
+                                                            <div class="selector" id="kebshapeSelector">
+                                                                <div class="selector__menu">
+                                                                    <ul class="selector__choices">
+                                                                        [{foreach from=$kebshape item=name}]
+                                                                            <li class="selector__item[{if $confstrs.sKlarnaKEBShape == $name}]--selected[{/if}]">
+                                                                                <a href="#" data-value="[{$name}]">
+                                                                                    [{oxmultilang ident="TCKLARNA_KEB_SHAPE_"|cat:$name}]
+                                                                                </a>
+                                                                            </li>
+                                                                        [{/foreach}]
+                                                                    </ul>
+                                                                    <input type="hidden" name="confstrs[sKlarnaKEBShape]"
+                                                                           value="[{$confstrs.sKlarnaKEBShape}]">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+[{*                                                    <td class="info-block">*}]
+[{*                                                        <span class="kl-tooltip"*}]
+[{*                                                              title="[{oxmultilang ident="TCKLARNA_KEB_SHAPE_TOOLTIP"}]">*}]
+[{*                                                            <i class="fa fa-question fa-lg" aria-hidden="true"></i>*}]
+[{*                                                        </span>*}]
+[{*                                                    </td>*}]
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </td>
