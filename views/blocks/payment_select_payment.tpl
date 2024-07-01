@@ -1,11 +1,32 @@
-[{if $oViewConf->isKlarnaPaymentsEnabled() && $oView->loadKlarnaPaymentWidget }]
+[{if $oViewConf->isKlarnaPaymentsEnabled() && $oView->loadKlarnaPaymentWidget}]
     [{if $oView->getCheckedPaymentId() == $paymentmethod->oxpayments__oxid->value}]
         [{assign var="is_checked" value=true}]
     [{else}]
         [{assign var="is_checked" value=false}]
     [{/if}]
 
-    [{if $sPaymentID == "klarna"}]
+    [{if ($sPaymentId == "klarna" || $sPaymentID == "klarna_pay_later") && $tcKlarnaIsB2B}]
+        <div class="well well-sm kp-outer">
+            <dl>
+                <dt style="padding-bottom: 12px">
+                    <input class="kp-radio" id="kp-pl" data-payment_id="pay_later" type="radio" name="paymentid"
+                           value="[{$sPaymentID}]"
+                           [{if $is_checked}]checked[{/if}]>
+                    <label for="kp-pl"><b>[{oxmultilang ident="TCKLARNA_BILLIE_TITLE"}]</b></label>
+                    <img src="[{$paymentmethod->getBadgeUrl()}]">
+                </dt>
+                <dt style="font-weight: normal">[{oxmultilang ident="TCKLARNA_BILLIE_SUBTITLE"}]</dt>
+                <dt>
+                    [{if $kpError}]
+                        <div class="kp-method alert alert-info"
+                             style="[{if !$is_checked}]display: none; [{/if}]max-width:700px">[{$kpError}]</div>
+                    [{else}]
+                        <div id="pay_later" class="kp-method" style="display: none;"></div>
+                    [{/if}]
+                </dt>
+            </dl>
+        </div>
+    [{elseif $sPaymentID == "klarna"}]
         <div class="well well-sm kp-outer">
             <dl>
                 <dt style="padding-bottom: 12px">
@@ -39,9 +60,9 @@
                 </dt>
                 <dt style="font-weight: normal">[{oxmultilang ident="TCKLARNA_PAY_LATER_SUBTITLE"}]</dt>
                 <dt>
-                    [{if $kpError }]
+                    [{if $kpError}]
                         <div class="kp-method alert alert-info"
-                             style="[{if !$is_checked}]display: none; [{/if}]max-width:700px">[{ $kpError }]</div>
+                             style="[{if !$is_checked}]display: none; [{/if}]max-width:700px">[{$kpError}]</div>
                     [{else}]
                         <div id="pay_later" class="kp-method" style="display: none;"></div>
                     [{/if}]
@@ -61,9 +82,9 @@
                 </dt>
                 <dt style="font-weight: normal">[{oxmultilang ident="TCKLARNA_SLICE_IT_SUBTITLE"}]</dt>
                 <dt>
-                    [{if $kpError }]
+                    [{if $kpError}]
                         <div class="kp-method alert alert-info"
-                             style="[{if !$is_checked}]display: none; [{/if}]max-width:700px">[{ $kpError }]</div>
+                             style="[{if !$is_checked}]display: none; [{/if}]max-width:700px">[{$kpError}]</div>
                     [{else}]
                         <div id="pay_over_time" class="kp-method" style="display: none;"></div>
                     [{/if}]
@@ -83,9 +104,9 @@
                 </dt>
                 <dt style="font-weight: normal">[{oxmultilang ident="TCKLARNA_PAY_NOW_SUBTITLE"}]</dt>
                 <dt>
-                    [{if $kpError }]
+                    [{if $kpError}]
                         <div class="kp-method alert alert-info"
-                             style="[{if !$is_checked}]display: none; [{/if}]max-width:700px">[{ $kpError }]</div>
+                             style="[{if !$is_checked}]display: none; [{/if}]max-width:700px">[{$kpError}]</div>
                     [{else}]
                         <div id="direct_debit" class="kp-method" style="display: none;"></div>
                     [{/if}]
@@ -105,9 +126,9 @@
                 </dt>
                 <dt style="font-weight: normal">[{oxmultilang ident="TCKLARNA_PAY_NOW_SUBTITLE"}]</dt>
                 <dt>
-                    [{if $kpError }]
+                    [{if $kpError}]
                         <div class="kp-method alert alert-info"
-                             style="[{if !$is_checked}]display: none; [{/if}]max-width:700px">[{ $kpError }]</div>
+                             style="[{if !$is_checked}]display: none; [{/if}]max-width:700px">[{$kpError}]</div>
                     [{else}]
                         <div id="card" class="kp-method" style="display: none;"></div>
                     [{/if}]
@@ -127,9 +148,9 @@
                 </dt>
                 <dt style="font-weight: normal">[{oxmultilang ident="TCKLARNA_PAY_NOW_SUBTITLE"}]</dt>
                 <dt>
-                    [{if $kpError }]
+                    [{if $kpError}]
                         <div class="kp-method alert alert-info"
-                             style="[{if !$is_checked}]display: none; [{/if}]max-width:700px">[{ $kpError }]</div>
+                             style="[{if !$is_checked}]display: none; [{/if}]max-width:700px">[{$kpError}]</div>
                     [{else}]
                         <div id="direct_bank_transfer" class="kp-method" style="display: none;"></div>
                     [{/if}]
@@ -149,9 +170,9 @@
                 </dt>
                 <dt style="font-weight: normal">[{oxmultilang ident="TCKLARNA_PAY_NOW_SUBTITLE"}]</dt>
                 <dt>
-                    [{if $kpError }]
+                    [{if $kpError}]
                         <div class="kp-method alert alert-info"
-                             style="[{if !$is_checked}]display: none; [{/if}]max-width:700px">[{ $kpError }]</div>
+                             style="[{if !$is_checked}]display: none; [{/if}]max-width:700px">[{$kpError}]</div>
                     [{else}]
                         <div id="pay_now" class="kp-method" style="display: none;"></div>
                     [{/if}]

@@ -79,6 +79,9 @@ $aLang = array(
     'TCKLARNA_PAY_NOW_SUBTITLE'      => 'Einfach und direkt bezahlen',
     'TCKLARNA_ORDER_AMOUNT_TOO_HIGH' => 'Der Bestellwert ist zu hoch.',
 
+    'TCKLARNA_BILLIE_TITLE'     => 'Rechnugskauf',
+    'TCKLARNA_BILLIE_SUBTITLE'  => 'Jetzt kaufen, später bezahlen',
+
     'TCKLARNA_ANONYMIZED_PRODUCT'                  => 'Anonymisierter Produkttitel:',
 
     'TCKLARNA_IS_ERROR_DEFAULT' => 'Something went wrong. Reload the page and try again.',

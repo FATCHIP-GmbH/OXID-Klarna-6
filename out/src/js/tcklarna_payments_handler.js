@@ -49,7 +49,7 @@ window.klarnaAsyncCallback = function () {
                 },
                 function (response) {
                     if (response.show_form === false) {
-                        var $outter = $('#' + id).closest('.kp-outer')
+                        var $outter = $('#' + id).closest('.kp-outer');
                         var $radio = $outter.find('input.kp-radio');
 
                         if (tcKlarnaIsB2B && id !== 'pay_later'){
@@ -226,7 +226,7 @@ window.klarnaAsyncCallback = function () {
                 if (!this.hasError && tcKlarnaClientToken) {
                     loadWidget(this.paymentMethod);
                 }
-                if (this.checked) {
+                if (this.checked && !tcKlarnaIsB2B) {
                     this.$klarnaDiv.show(600);
                     $kpRadio.active = this;
                 }
@@ -246,10 +246,12 @@ window.klarnaAsyncCallback = function () {
                 }
 
                 // show/hide KP methods on payment change
-                $(this)
-                    .closest('.kp-outer')
-                    .find('.kp-method')
-                    .show(600);
+                if (!tcKlarnaIsB2B) {
+                    $(this)
+                        .closest('.kp-outer')
+                        .find('.kp-method')
+                        .show(600);
+                }
 
                 $kpRadio.each((function (i, node) {
                     if (node !== this) {
