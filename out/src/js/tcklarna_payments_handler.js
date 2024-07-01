@@ -229,6 +229,8 @@ window.klarnaAsyncCallback = function () {
                 if (this.checked && !tcKlarnaIsB2B) {
                     this.$klarnaDiv.show(600);
                     $kpRadio.active = this;
+                }else if (this.checked) {
+                    $kpRadio.active = this;
                 }
             });
         }
