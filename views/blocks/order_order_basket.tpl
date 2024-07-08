@@ -4,6 +4,8 @@
     <div class="loading" style="display: none;">Loading&#8230;</div>
     <script>
         var tcKlarnaClientToken = "[{$client_token}]";
+        var kexOrderStatus = JSON.parse([{$kexOrderStatus|json_encode}]);
+        var keborderpayload = JSON.parse([{$keborderpayload|json_encode}]);
     </script>
     [{oxscript include=$oViewConf->getModuleUrl('tcklarna','out/src/js/tcklarna_payments_handler.js')}]
     [{oxscript include="https://x.klarnacdn.net/kp/lib/v1/api.js"}]

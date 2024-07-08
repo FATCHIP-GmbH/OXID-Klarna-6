@@ -80,6 +80,13 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      */
     protected $isExternalCheckout = false;
 
+    protected function getTimeStamp()
+    {
+        $dt = new \DateTime();
+
+        return $dt->getTimestamp();
+    }
+
     /**
      *
      * @return string
@@ -94,6 +101,21 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         //Re-set country to session if empty
         if(empty(Registry::getSession()->getVariable('sCountryISO')) && !empty($this->getUser())) {
             Registry::getSession()->setVariable('sCountryISO', $this->getUser()->getUserCountryISO2());
+        }
+
+        if ($kebauthresponse = json_decode(Registry::getRequest()->getRequestParameter("kebauthresponse"))) {
+            $oSession = Registry::getSession();
+            $klarnaPaymentclient = KlarnaPaymentsClient::getInstance();
+
+            $klarnaPaymentclient->createKEXSession($kebauthresponse->session_id);
+
+            $oSession->deleteVariable('reauthorizeRequired');
+            $oSession->setVariable('sAuthToken', $kebauthresponse->client_token);
+            $oSession->setVariable('finalizeRequired', $kebauthresponse->finalize_required);
+
+            $oSession->setVariable('paymentid', KlarnaPaymentHelper::KLARNA_PAYMENT_PAY_NOW);
+
+            $this->addTplParam("keborderpayload", $oSession->getVariable("keborderpayload"));
         }
 
         if (KlarnaUtils::isKlarnaCheckoutEnabled()) {
@@ -272,7 +294,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     public function execute()
     {
         $oBasket = Registry::getSession()->getBasket();
-        $paymentId = $oBasket->getPaymentId();
+        $paymentId = $oBasket->getPaymentId() ?? Registry::getRequest()->getRequestParameter("kexpaymentid");
 
         if(KlarnaPaymentHelper::isKlarnaPayment($paymentId)){
             /**
@@ -544,7 +566,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
      * @throws \TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException
      * @return string
      */
-    protected function checkOrderStatus($aPost)
+    protected function checkOrderStatus($aPost, $klaraExpress = false)
     {
         if (!KlarnaUtils::isKlarnaPaymentsEnabled()) {
             return $this->jsonResponse(__FUNCTION__, 'submit');
@@ -598,6 +620,14 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             'paymentMethod' => $oKlarnaPayment->getPaymentMethodCategory(),
             'refreshUrl'    => $oKlarnaPayment->refreshUrl,
         );
+
+        if ($klaraExpress) {
+            return json_encode(array(
+                'action' => __METHOD__,
+                'status' => $oKlarnaPayment->getStatus(),
+                'data'   => $responseData,
+            ));
+        }
 
         return $this->jsonResponse(
             __METHOD__,
@@ -1133,9 +1163,9 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         $sDelAddress = $oUser->getEncodedDeliveryAddress();
 
         // delivery address
-        if (\OxidEsales\Eshop\Core\Registry::getSession()->getVariable('deladrid')) {
+        if (Registry::getSession()->getVariable('deladrid')) {
             $oDelAddress = oxNew(\OxidEsales\Eshop\Application\Model\Address::class);
-            $oDelAddress->load(\OxidEsales\Eshop\Core\Registry::getSession()->getVariable('deladrid'));
+            $oDelAddress->load(Registry::getSession()->getVariable('deladrid'));
 
             $sDelAddress .= $oDelAddress->getEncodedDeliveryAddress();
         }

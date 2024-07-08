@@ -152,6 +152,8 @@ class KlarnaOrder extends BaseModel
             $this->_aUserData
         );
 
+        unset($this->_aOrderData["billing_address"]);
+
         //clean up in case of returning to the iframe with an open order
         Registry::getSession()->deleteVariable('externalCheckout');
 

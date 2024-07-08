@@ -85,7 +85,18 @@ window.klarnaAsyncCallback = function () {
             } catch (e) {
                 return console.error(e)
             }
-        } else {
+        } else if (keborderpayload) {
+            try {
+                var options = {
+                    payment_method_category: 'klarna',
+                    auto_finalize: false
+                };
+                Klarna.Payments.authorize(options, {}, authorizationHandler);
+            } catch (e) {
+                return console.error(e)
+            }
+        }
+        else {
             //todo: redirect to payment .. ?
             console.error('Klarna Payment method must be selected.');
         }
@@ -110,6 +121,10 @@ window.klarnaAsyncCallback = function () {
             var options = {
                 payment_method_category: objResponse.data.paymentMethod
             };
+
+            if (keborderpayload) {
+                options = {payment_method_category: 'klarna'}
+            }
             setTimeout(function () {
                 $('.loading').hide(1000);
             }, 3000);
@@ -120,7 +135,6 @@ window.klarnaAsyncCallback = function () {
     }
 
     function authorizationHandler(response) {
-        console.log(response);
         if (response.approved === true) {
 
             // pay now method
@@ -132,20 +146,32 @@ window.klarnaAsyncCallback = function () {
                         value: true
                     }).appendTo($form);
                 }
+                if($form.attr('id') === 'orderConfirmAgbBottom' && keborderpayload){
+                    finalize({data: keborderpayload});
+                    return;
+                }
                 if($form.attr('id') === 'orderConfirmAgbBottom'){
                     finalize({data: recentResponse});
                     return;
                 }
             }
-            $sbmButton.attr('disabled', true);
+
             $('<input>').attr({
                 type: 'hidden',
                 name: 'sAuthToken',
                 value: response.authorization_token
             }).appendTo($form);
 
-            $form.submit();
+            if($form.attr('id') === 'orderConfirmAgbBottom' && keborderpayload){
+                $('<input>').attr({
+                                      type: 'hidden',
+                                      name: 'kexpaymentid',
+                                      value: 'klarna_pay_now'
+                                  }).appendTo($form);
+            }
 
+            $sbmButton.attr('disabled', true);
+            $form.submit();
 
         } else if (response.show_form === false) {
             $($kpRadio.active).closest('.kp-outer').hide(600);
@@ -170,7 +196,6 @@ window.klarnaAsyncCallback = function () {
     }
 
     function handleResponse(objResponse) {
-        console.log(objResponse);
         switch (objResponse.status) {
 
             case 'reauthorize':
@@ -291,14 +316,7 @@ window.klarnaAsyncCallback = function () {
                         paymentId: $kpRadio.active.value,
                         client_token: tcKlarnaClientToken
                     });
-                } else {
-                    // $($kpRadio.active).closest('.kp-outer')
-                    //     .find('.kp-method')
-                    //     .hide(600);
-                    // $kpRadio.active.checked = false;
-                    // delete $kpRadio.active;
                 }
-
             } else if ($form.attr('id') === 'orderConfirmAgbBottom') {
                 event.preventDefault();
                 $('.loading').show(600);
@@ -321,6 +339,9 @@ window.klarnaAsyncCallback = function () {
             console.log('Spinner is hidden.');
         });
 
+        if (keborderpayload) {
+            handleResponse({status: "finalize",data: keborderpayload})
+        }
     })();
 };
 

@@ -3,6 +3,8 @@
     <div id="klarna_express_button" style="display: none"></div>
 
     <script>
+        var keborderpayload = JSON.parse('[{$keborderpayload}]');
+        var userExists = [{$oView->isUserLoggedIn()}];
         var tcKlarnaKebTheme = "[{$kebtheme}]";
         var tcKlarnaKebShape = "[{$kebshape}]";
     </script>
@@ -23,27 +25,9 @@
                         var inputElement = form.find('input[type="hidden"][name="fnc"][value="tobasket"]');
                         inputElement.remove();
 
-                        $.ajax({
-                            type: 'POST',
-                            data: form.serialize(),
-                            dataType: 'json',
-                            url: '?cl=oxwarticledetails&fnc=tobasketKEB',
-                            success: function (response) {
-                                try {
-                                    Klarna.Payments.init({
-                                         client_token: response.clientToken
-                                     });
-                                } catch (e) {
-                                    console.error(e);
-                                }
-
-                                authorize({ auto_finalize: false, collect_shipping_address: true }, response.klarnaSessionData, (result) => {
-                                    console.log(result);
-                                    // Here you will receive customer data and client_token necessary to resume the authorization in your checkout.
-                                })
-                            }
+                        authorize({ auto_finalize: false, collect_shipping_address: true }, keborderpayload, (result) => {
+                            tcKlarnaRedirectToCheckout(result);
                         })
-
 
                     },
                 },
@@ -51,6 +35,22 @@
                     $('#klarna_express_button').show();
                 }
             )
+        }
+
+        function tcKlarnaRedirectToCheckout(kebauthresponse) {
+            var form = document.createElement('form');
+            var token = $('input[name="stoken"]').val();
+            form.method = 'POST';
+            form.action = '?cl=order&redirected=1&stoken='+token;
+
+            var kebauthrespField = document.createElement('input');
+            kebauthrespField.type = 'hidden';
+            kebauthrespField.name = 'kebauthresponse';
+            kebauthrespField.value = JSON.stringify(kebauthresponse);
+            form.appendChild(kebauthrespField);
+
+            document.body.appendChild(form);
+            form.submit();
         }
 
     </script>

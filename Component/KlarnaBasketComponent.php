@@ -52,23 +52,10 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
 
         $oSession       = Registry::getSession();
         $oBasket        = $oSession->getBasket();
+
         $oBasket->calculateBasket(true);
-        $oUser = $this->getUser();
 
-        $oKlarnaOrder   = oxNew(KlarnaOrder::class, $oBasket, $oUser);
-        $oClient        = $this->getKlarnaCheckoutClient();
-        $aOrderData     = $oKlarnaOrder->getOrderData();
-
-        $clientToken = $this->getClientTokenFromSession();
-
-        $payload = [
-            'klarnaSessionData' => $oClient->createOrUpdateOrder(json_encode($aOrderData)),
-            'clientToken'       => $clientToken,
-        ];
-
-        $oof = json_encode($payload);
-
-        Registry::getUtils()->showMessageAndExit(json_encode($payload));
+        Registry::getUtils()->showMessageAndExit("");
     }
 
     protected function getClientTokenFromSession()

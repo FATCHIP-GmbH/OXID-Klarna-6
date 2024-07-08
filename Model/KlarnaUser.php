@@ -123,7 +123,7 @@ class KlarnaUser extends KlarnaUser_parent
         }
 
         $aUserData = array(
-            'billing_address'  => $billingAddress,
+//            'billing_address'  => $billingAddress,
             'shipping_address' => isset($shippingAddress) ? $shippingAddress : $billingAddress,
             'customer'         => $customer,
             'attachment'       => $this->getAttachmentsData(),
