@@ -55,7 +55,7 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
 
         $oBasket->calculateBasket(true);
 
-        Registry::getUtils()->showMessageAndExit("");
+        Registry::getUtils()->showMessageAndExit($this->getKebOrderPayload());
     }
 
     protected function getClientTokenFromSession()
@@ -125,6 +125,40 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
         }
 
         return $result;
+    }
+
+    public function getKebOrderPayload()
+    {
+        $oSession = Registry::getSession();
+        $oBasket = $oSession->getBasket();
+        $oUser = $this->getUser();
+
+        $oKlarnaOrder   = oxNew(KlarnaOrder::class, $oBasket, $oUser);
+        $aOrderData     = $oKlarnaOrder->getOrderData();
+
+        $aOrderData = $this->modifyOrderForKeb($aOrderData, $oBasket, $oUser);
+
+        $orderPayload = json_encode($aOrderData);
+
+        $oSession->setVariable("keborderpayload", $orderPayload);
+
+        return $orderPayload;
+    }
+
+    protected function modifyOrderForKeb(array $aOrderData, $oBasket, $oUser)
+    {
+        if (Registry::getSession()->getVariable("keborderpayload")) {
+            unset($aOrderData["merchant_urls"]);
+            unset($aOrderData["billing_address"]);
+
+            $currencyName = $oBasket->getBasketCurrency()->name;
+            $sCountryISO = $oUser->resolveCountry();
+
+            $aOrderData["purchase_country"] = $sCountryISO;
+            $aOrderData["purchase_currency"] = $currencyName;
+        }
+
+        return $aOrderData;
     }
 
     /**

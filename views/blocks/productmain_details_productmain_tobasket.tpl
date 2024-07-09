@@ -3,7 +3,6 @@
     <div id="klarna_express_button" style="display: none"></div>
 
     <script>
-        var keborderpayload = JSON.parse('[{$keborderpayload}]');
         var userExists = [{$oView->isUserLoggedIn()}];
         var tcKlarnaKebTheme = "[{$kebtheme}]";
         var tcKlarnaKebShape = "[{$kebshape}]";
@@ -25,10 +24,18 @@
                         var inputElement = form.find('input[type="hidden"][name="fnc"][value="tobasket"]');
                         inputElement.remove();
 
-                        authorize({ auto_finalize: false, collect_shipping_address: true }, keborderpayload, (result) => {
-                            tcKlarnaRedirectToCheckout(result);
+                        $.ajax({
+                            type: 'POST',
+                            data: form.serialize(),
+                            dataType: 'json',
+                            url: '?cl=oxwarticledetails&fnc=tobasketKEB',
+                            success: function (keborderpayload) {
+                                alert()
+                                authorize({ auto_finalize: false, collect_shipping_address: true }, keborderpayload, (result) => {
+                                    tcKlarnaRedirectToCheckout(result);
+                                })
+                            }
                         })
-
                     },
                 },
                 function load_callback(loadResult) {
