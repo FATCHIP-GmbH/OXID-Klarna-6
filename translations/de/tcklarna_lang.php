@@ -73,6 +73,8 @@ $aLang = array(
     'TCKLARNA_ERROR_NOT_ENOUGH_IN_STOCK'        => 'Nicht ausreichender Lagerbestand des Produkts %s.',
     'TCKLARNA_ERROR_NO_SHIPPING_METHODS_SET_UP' => 'Derzeit ist keine Versandart für dieses Land definiert: %s',
 
+    'TCKLARNA_ERROR_KEB_USER_EXISTS'         => 'Unter der angegebenen E-Mail existiert bereits ein User im Shop. Bitte melden Sie sich an um die Klarna-Bestellung fortzusetzen.',
+
     'TCKLARNA_PAY_LATER_SUBTITLE'    => 'Erst kaufen, dann bezahlen',
     'TCKLARNA_SLICE_IT_SUBTITLE'     => 'Bequem in Raten zahlen',
     'TCKLARNA_PAY_NOW_SUBTITLE'      => 'Einfach und direkt bezahlen',

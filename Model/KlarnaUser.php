@@ -57,10 +57,9 @@ class KlarnaUser extends KlarnaUser_parent
      */
     public function getKlarnaData()
     {
-        $shippingAddress = null;
         $result          = array();
 
-        if ((bool)KlarnaUtils::getShopConfVar('blKlarnaEnablePreFilling')) {
+        if (KlarnaUtils::getShopConfVar('blKlarnaEnablePreFilling')) {
             $this->preFillAddress($result);
         }
 
@@ -81,11 +80,6 @@ class KlarnaUser extends KlarnaUser_parent
      */
     protected function preFillAddress(&$result)
     {
-        $userBirthDate = $this->getFieldData('oxbirthdate');
-        if ($userBirthDate && $userBirthDate != '0000-00-00') {
-            $customer['date_of_birth'] = $userBirthDate;
-        }
-
         $blShowShippingAddress = (bool)Registry::getSession()->getVariable('blshowshipaddress');
 
         $billingAddress            = KlarnaFormatter::oxidToKlarnaAddress($this);
@@ -521,6 +515,13 @@ class KlarnaUser extends KlarnaUser_parent
         }
 
         return $this->_type = self::NOT_REGISTERED;
+    }
+
+    public function setActiveUser()
+    {
+        if ($this->isFake()) {
+            self::$_oActUser = $this;
+        }
     }
 
     public function tcklrnaHasValidInfo()

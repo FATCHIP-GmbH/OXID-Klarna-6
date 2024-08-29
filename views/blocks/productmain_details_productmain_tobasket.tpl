@@ -30,7 +30,6 @@
                             dataType: 'json',
                             url: '?cl=oxwarticledetails&fnc=tobasketKEB',
                             success: function (keborderpayload) {
-                                alert()
                                 authorize({ auto_finalize: false, collect_shipping_address: true }, keborderpayload, (result) => {
                                     tcKlarnaRedirectToCheckout(result);
                                 })

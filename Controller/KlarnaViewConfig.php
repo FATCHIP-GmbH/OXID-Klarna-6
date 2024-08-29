@@ -163,6 +163,12 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
         return KlarnaUtils::getShopConfVar('sKlarnaActiveMode');
     }
 
+    public function isKebPaymentInProcess()
+    {
+        $payload = Registry::getSession()->getVariable("keborderpayload");
+        return (bool) $payload;
+    }
+
     /**
      * @return bool
      */

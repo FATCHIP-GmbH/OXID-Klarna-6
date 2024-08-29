@@ -18,6 +18,7 @@
 namespace TopConcepts\Klarna\Component;
 
 
+use OxidEsales\Eshop\Core\Field;
 use TopConcepts\Klarna\Core\KlarnaClientBase;
 use TopConcepts\Klarna\Core\KlarnaOrder;
 use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
@@ -48,11 +49,11 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
      */
     public function tobasketKEB($sProductId = null, $dAmount = null, $aSel = null, $aPersParam = null, $blOverride = false)
     {
+        $oSession       = Registry::getSession();
+
         $this->tobasket($sProductId, $dAmount, $aSel, $aPersParam, $blOverride);
 
-        $oSession       = Registry::getSession();
         $oBasket        = $oSession->getBasket();
-
         $oBasket->calculateBasket(true);
 
         Registry::getUtils()->showMessageAndExit($this->getKebOrderPayload());
@@ -132,6 +133,20 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
         $oSession = Registry::getSession();
         $oBasket = $oSession->getBasket();
         $oUser = $this->getUser();
+
+        if (!$oUser) {
+            $tempMail = md5(time());
+
+            $oUser = KlarnaUtils::getFakeUser($tempMail);
+            $oSession->setVariable("kexFakeUser", $oUser);
+            $oSession->setVariable('sShipSet', KlarnaUtils::getShopConfVar("sKlarnaKEBMethod"));
+
+            $oUser->resolveCountry();
+            $countryid = $oUser->getKlarnaDeliveryCountry()->getId();
+            $oUser->oxuser__oxcountryid = new Field($countryid, Field::T_RAW);
+
+            $oUser->save();
+        }
 
         $oKlarnaOrder   = oxNew(KlarnaOrder::class, $oBasket, $oUser);
         $aOrderData     = $oKlarnaOrder->getOrderData();

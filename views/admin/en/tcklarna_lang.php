@@ -96,6 +96,7 @@ $aLang = array(
     'TCKLARNA_DISPLAY_PAYMENT_WIDGET' => 'Display Klarna Payment Method Widget?',
     'TCKLARNA_ON_PROD_PAGE'           => 'On product details page',
     'TCKLARNA_KEB_CLID'               => 'Klarna Express checkout Client identifier',
+    'TCKLARNA_KEB_PAYMENTMETHOD'      => 'Klarna Express checkout Payment Method',
     'TCKLARNA_ON_BASKET_PAGE'         => 'On basket page',
     'TCKLARNA_DISPLAY_EXPRESS_BUTTON' => 'Display Klarna Express checkout Button?',
     'TCKLARNA_PAYMENT_DESIGN'         => 'Klarna Payment design options',

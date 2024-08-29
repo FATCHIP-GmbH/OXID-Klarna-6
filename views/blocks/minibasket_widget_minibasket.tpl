@@ -16,7 +16,9 @@
         [{/if}]
     [{/if}]
 [{else}]
-    [{$smarty.block.parent}]
+    [{if $oViewConf->getActiveClassName() == "oxwminibasket" || !$oViewConf->isKebPaymentInProcess}]
+        [{$smarty.block.parent}]
+    [{/if}]
 [{/if}]
 
 

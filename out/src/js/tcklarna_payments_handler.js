@@ -168,6 +168,8 @@ window.klarnaAsyncCallback = function () {
                                       name: 'kexpaymentid',
                                       value: 'klarna_pay_now'
                                   }).appendTo($form);
+                $('input[name="stoken"]').val(kebordertoken);
+                $('input[name="sDeliveryAddressMD5"]').val(kebordermd5);
             }
 
             $sbmButton.attr('disabled', true);
@@ -340,6 +342,7 @@ window.klarnaAsyncCallback = function () {
         });
 
         if (keborderpayload) {
+            window.waitForKEXFinalize = true;
             handleResponse({status: "finalize",data: keborderpayload})
         }
     })();

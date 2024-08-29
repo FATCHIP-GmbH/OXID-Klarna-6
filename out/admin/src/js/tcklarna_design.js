@@ -53,3 +53,9 @@ var kebshapeSelector =
           id: 'kebshapeSelector',
           fromOptions: false
       });
+
+var kebmethodSelector =
+    new Selector2({
+        id: 'kebmethodSelector',
+        fromOptions: false
+    });

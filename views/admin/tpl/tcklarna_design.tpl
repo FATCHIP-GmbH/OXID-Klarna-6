@@ -326,6 +326,32 @@
 
                                                 <tr class="dark">
                                                     <td class="name">
+                                                        [{oxmultilang ident="TCKLARNA_KEB_PAYMENTMETHOD"}]
+                                                    </td>
+                                                    <td>
+                                                        <div class="input">
+                                                            <div class="selector" id="kebmethodSelector">
+                                                                <div class="selector__menu">
+                                                                    <ul class="selector__choices">
+                                                                        [{$confstrs.sKlarnaKEBMethod|var_dump}]
+                                                                        [{foreach from=$kebshippingmethods key=shippingId item=oDelSet}]
+                                                                            <li class="selector__item[{if $confstrs.sKlarnaKEBMethod == $shippingId}]--selected[{/if}]">
+                                                                                <a href="#" data-value="[{$shippingId}]">
+                                                                                    [{$oDelSet->oxdeliveryset__oxtitle->value}]
+                                                                                </a>
+                                                                            </li>
+                                                                        [{/foreach}]
+                                                                    </ul>
+                                                                    <input type="hidden" name="confstrs[sKlarnaKEBMethod]"
+                                                                           value="[{$confstrs.sKlarnaKEBMethod}]">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <tr class="dark">
+                                                    <td class="name">
                                                         [{oxmultilang ident="TCKLARNA_KEB_THEME"}]
                                                     </td>
                                                     <td>
@@ -347,12 +373,6 @@
                                                             </div>
                                                         </div>
                                                     </td>
-[{*                                                    <td class="info-block">*}]
-[{*                                                        <span class="kl-tooltip"*}]
-[{*                                                              title="[{oxmultilang ident="TCKLARNA_KEB_THEME_TOOLTIP"}]">*}]
-[{*                                                            <i class="fa fa-question fa-lg" aria-hidden="true"></i>*}]
-[{*                                                        </span>*}]
-[{*                                                    </td>*}]
                                                 </tr>
 
                                                 <tr>

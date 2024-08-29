@@ -6,6 +6,8 @@
         var tcKlarnaClientToken = "[{$client_token}]";
         var kexOrderStatus = JSON.parse([{$kexOrderStatus|json_encode}]);
         var keborderpayload = JSON.parse([{$keborderpayload|json_encode}]);
+        var kebordertoken = "[{$oViewConf->getSessionChallengeToken()}]";
+        var kebordermd5 = "[{$oView->getDeliveryAddressMD5()}]";
     </script>
     [{oxscript include=$oViewConf->getModuleUrl('tcklarna','out/src/js/tcklarna_payments_handler.js')}]
     [{oxscript include="https://x.klarnacdn.net/kp/lib/v1/api.js"}]

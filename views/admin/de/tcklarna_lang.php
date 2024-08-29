@@ -95,6 +95,7 @@ $aLang = array(
     'TCKLARNA_DISPLAY_PAYMENT_WIDGET'               => 'Klarna Payment Method Widget anzeigen?',
     'TCKLARNA_ON_PROD_PAGE'                         => 'Auf der Artikel-Detailseite',
     'TCKLARNA_KEB_CLID'                             => 'Klarna Express checkout Client identifier',
+    'TCKLARNA_KEB_PAYMENTMETHOD'                    => 'Klarna Express checkout Zahlart',
     'TCKLARNA_KEB_THEME'                            => 'Klarna Express checkout button theme',
     'TCKLARNA_KEB_THEME_default'                    => 'standard (dunkel)',
     'TCKLARNA_KEB_THEME_light'                      => 'hell',
