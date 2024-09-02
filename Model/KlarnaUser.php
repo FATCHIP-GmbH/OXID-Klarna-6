@@ -114,6 +114,11 @@ class KlarnaUser extends KlarnaUser_parent
             $oAddress = oxNew(Address::class);
             $oAddress->load(Registry::getSession()->getVariable('deladrid'));
             $shippingAddress = KlarnaFormatter::oxidToKlarnaAddress($oAddress);
+
+            //replace mail with the one from the keb auth response
+            if ($kebmail = Registry::getSession()->getVariable('kebmail')) {
+                $shippingAddress["email"] = $kebmail;
+            }
         }
 
         $aUserData = array(

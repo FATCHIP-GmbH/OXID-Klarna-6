@@ -105,10 +105,10 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             Registry::getSession()->setVariable('sCountryISO', $this->getUser()->getUserCountryISO2());
         }
 
+        $oSession = Registry::getSession();
         if ($kebauthresponse = json_decode(Registry::getRequest()->getRequestParameter("kebauthresponse"))) {
-            $oSession = Registry::getSession();
-            $klarnaPaymentclient = KlarnaPaymentsClient::getInstance();
 
+            $klarnaPaymentclient = KlarnaPaymentsClient::getInstance();
             $address = (array)$kebauthresponse->collected_shipping_address;
 
             // create fake user from kebauthresponse
@@ -124,12 +124,16 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
             $oSession->deleteVariable('reauthorizeRequired');
             if ($deladrid) {
+                $oSession->setVariable('kebmail', $address["email"]);
                 $oSession->setVariable('deladrid', $deladrid);
             }
             $oSession->setVariable('sAuthToken', $kebauthresponse->client_token);
             $oSession->setVariable('finalizeRequired', $kebauthresponse->finalize_required);
 
-            $this->addTplParam("keborderpayload", $oSession->getVariable("keborderpayload"));
+        }
+
+        if ($keborderpayload = $oSession->getVariable("keborderpayload")) {
+            $this->addTplParam("keborderpayload", $keborderpayload);
         }
 
         if (KlarnaUtils::isKlarnaCheckoutEnabled()) {
