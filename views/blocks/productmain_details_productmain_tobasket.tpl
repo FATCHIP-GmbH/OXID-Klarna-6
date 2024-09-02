@@ -44,19 +44,23 @@
         }
 
         function tcKlarnaRedirectToCheckout(kebauthresponse) {
-            var form = document.createElement('form');
-            var token = $('input[name="stoken"]').val();
-            form.method = 'POST';
-            form.action = '?cl=order&redirected=1&stoken='+token;
+            if (!kebauthresponse || kebauthresponse.approved === false) {
+                window.location.reload();
+            } else {
+                var form = document.createElement('form');
+                var token = $('input[name="stoken"]').val();
+                form.method = 'POST';
+                form.action = '?cl=order&redirected=1&stoken='+token;
 
-            var kebauthrespField = document.createElement('input');
-            kebauthrespField.type = 'hidden';
-            kebauthrespField.name = 'kebauthresponse';
-            kebauthrespField.value = JSON.stringify(kebauthresponse);
-            form.appendChild(kebauthrespField);
+                var kebauthrespField = document.createElement('input');
+                kebauthrespField.type = 'hidden';
+                kebauthrespField.name = 'kebauthresponse';
+                kebauthrespField.value = JSON.stringify(kebauthresponse);
+                form.appendChild(kebauthrespField);
 
-            document.body.appendChild(form);
-            form.submit();
+                document.body.appendChild(form);
+                form.submit();
+            }
         }
 
     </script>
