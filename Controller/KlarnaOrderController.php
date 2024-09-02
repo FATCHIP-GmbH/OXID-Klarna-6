@@ -20,6 +20,7 @@ namespace TopConcepts\Klarna\Controller;
 
 use OxidEsales\Eshop\Application\Model\Address;
 use OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface;
+use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\PayPalModule\Controller\ExpressCheckoutDispatcher;
 use OxidEsales\PayPalModule\Controller\StandardDispatcher;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
@@ -114,7 +115,9 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             // create fake user from kebauthresponse
             /** @var KlarnaUser $fakeUser */
             $deladrid = null;
-            if ((!$this->getUser() || $this->getUser()->isFake()) && $fakeUser = $oSession->getVariable("kexFakeUser")) {
+            if ((!$this->getUser() || $this->getUser()->isFake()) && $fakeUserId = $oSession->getVariable("kexFakeUserId")) {
+                $fakeUser = oxNew(User::class);
+                $fakeUser->load($fakeUserId);
                 $this->createFakeUserAndAssignAdress($address, $fakeUser);
             } else {
                $deladrid = $this->createShippingAddressAndAssignToUser($address, $this->getUser());
@@ -222,7 +225,9 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
     public function getUser()
     {
-        if (!parent::getUser() && $fakeUser = Registry::getSession()->getVariable("kexFakeUser")) {
+        if (!parent::getUser() && $fakueserID = Registry::getSession()->getVariable("kexFakeUserId")) {
+            $fakeUser = oxNew(User::class);
+            $fakeUser->load($fakueserID);
             return $fakeUser;
         }
 
@@ -1275,13 +1280,14 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
     /**
      * @param array $address
-     * @param KlarnaUser $fakeUser
+     * @param User $fakeUser
      * @return void
      */
-    protected function createFakeUserAndAssignAdress(array $address, KlarnaUser $fakeUser): void
+    protected function createFakeUserAndAssignAdress(array $address, User $fakeUser): void
     {
         //Error message: user already exists
         $user = oxNew(User::class);
+        $oSession = Registry::getSession();
         if ($user->checkIfEmailExists($address["email"])) {
             $errorMessage = Registry::getLang()->translateString("TCKLARNA_ERROR_KEB_USER_EXISTS");
             Registry::get(UtilsView::class)->addErrorToDisplay($errorMessage);
@@ -1304,8 +1310,22 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         //build delivery address from billing address
         Registry::getSession()->setVariable('sDelAddrMD5', $this->getDeliveryAddressMD5());
 
-        $fakeUser->save();
+        //TODO: this error is thrown when a guest/fake user is already registered. This should not happen.
+        try {
+            $fakeUser->save();
+        }catch (DatabaseErrorException $e) {
+            $errorMessage = Registry::getLang()->translateString("TCKLARNA_ERROR_KEB_USER_EXISTS");
+            Registry::get(UtilsView::class)->addErrorToDisplay($errorMessage);
+            Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=start', false);
+        }
         $fakeUser->setActiveUser();
+
+        $oSession->setVariable('paymentid', KlarnaPaymentHelper::KLARNA_PAYMENT_PAY_NOW);
+        /** @var Basket $oBasket */
+        $oBasket = $oSession->getBasket();
+        $oBasket->setShipping(KlarnaUtils::getShopConfVar("sKlarnaKEBMethod"));
+        $oBasket->setPayment(KlarnaPaymentHelper::KLARNA_PAYMENT_PAY_NOW);
+        $oBasket->onUpdate();
     }
 
     /**

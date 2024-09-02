@@ -310,6 +310,11 @@ window.klarnaAsyncCallback = function () {
         // Override form submission
         $sbmButton.click(function (event) {
             if (window.keborderpayload) {
+                $('<input>').attr({
+                      type: 'hidden',
+                      name: 'kexpaymentid',
+                      value: 'klarna_pay_now'
+                  }).appendTo($form);
                 handleResponse({status: "finalize",data: window.keborderpayload})
             } else if ($kpRadio.active && $form.attr('id') === 'payment') {
                 event.preventDefault();

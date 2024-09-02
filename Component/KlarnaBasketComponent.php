@@ -138,7 +138,6 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
             $tempMail = md5(time());
 
             $oUser = KlarnaUtils::getFakeUser($tempMail);
-            $oSession->setVariable("kexFakeUser", $oUser);
             $oSession->setVariable('sShipSet', KlarnaUtils::getShopConfVar("sKlarnaKEBMethod"));
 
             $oUser->resolveCountry();
@@ -146,6 +145,8 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
             $oUser->oxuser__oxcountryid = new Field($countryid, Field::T_RAW);
 
             $oUser->save();
+
+            $oSession->setVariable("kexFakeUserId", $oUser->getId());
         }
 
         $oKlarnaOrder   = oxNew(KlarnaOrder::class, $oBasket, $oUser);

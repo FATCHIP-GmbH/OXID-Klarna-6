@@ -225,11 +225,13 @@ class KlarnaPaymentsClient extends KlarnaClientBase
             $sAuthToken = KlarnaUtils::getAuthToken($this->getSessionId());
         }
 
-        $url                = sprintf(self::PAYMENTS_AUTHORIZATION_ENDPOINT, $sAuthToken . '/order');
+        $url = sprintf(self::PAYMENTS_AUTHORIZATION_ENDPOINT, $sAuthToken . '/order');
+        $user = KlarnaUtils::getUserOrFakeUserFromSession();
+
         $currentSessionData = json_encode(
             array_merge(
                 $this->_oKlarnaOrder->getOrderData(),
-                $this->getUser()->getKlarnaPaymentData()
+                $user->getKlarnaPaymentData()
             )
         );
 
