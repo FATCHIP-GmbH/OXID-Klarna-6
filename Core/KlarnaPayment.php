@@ -227,8 +227,6 @@ class KlarnaPayment extends BaseModel
      */
     public function getOrderData()
     {
-        $oof = $this->_aOrderData;
-
         return $this->_aOrderData;
     }
 
