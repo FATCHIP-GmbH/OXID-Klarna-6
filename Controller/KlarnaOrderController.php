@@ -20,6 +20,7 @@ namespace TopConcepts\Klarna\Controller;
 
 use OxidEsales\Eshop\Application\Model\Address;
 use OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface;
+use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\PayPalModule\Controller\ExpressCheckoutDispatcher;
 use OxidEsales\PayPalModule\Controller\StandardDispatcher;
@@ -120,7 +121,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                 $fakeUser->load($fakeUserId);
                 $this->createFakeUserAndAssignAdress($address, $fakeUser);
             } else {
-               $deladrid = $this->createShippingAddressAndAssignToUser($address, $this->getUser());
+                $deladrid = $this->createShippingAddressAndAssignToUser($address, $this->getUser());
             }
 
             $klarnaPaymentclient->createKEXSession($kebauthresponse->session_id);
@@ -143,7 +144,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
 
             $oConfig = Registry::getConfig();
             $shopParam = method_exists($oConfig, 'mustAddShopIdToRequest')
-                         && $oConfig->mustAddShopIdToRequest()
+            && $oConfig->mustAddShopIdToRequest()
                 ? '&shp=' . $oConfig->getShopId()
                 : '';
             $this->oRequest = Registry::get(Request::class);
@@ -214,8 +215,8 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             'tcklarna_logs__tcklarna_url'         => $url,
             'tcklarna_logs__tcklarna_orderid'     => $order_id,
             'tcklarna_logs__tcklarna_requestraw'  => json_encode($requestBody) .
-                                                     " \nERRORS:" . var_export($errors, true) .
-                                                     " \nHeader Location:" . $redirectUrl,
+                " \nERRORS:" . var_export($errors, true) .
+                " \nHeader Location:" . $redirectUrl,
             'tcklarna_logs__tcklarna_responseraw' => $response,
             'tcklarna_logs__tcklarna_date'        => date("Y-m-d H:i:s"),
         );
@@ -515,7 +516,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         if ($iSuccess === 1) {
             if (
                 ($this->_oUser->getType() === KlarnaUser::NOT_REGISTERED ||
-                 $this->_oUser->getType() === KlarnaUser::NOT_EXISTING) &&
+                    $this->_oUser->getType() === KlarnaUser::NOT_EXISTING) &&
                 $this->isRegisterNewUserNeeded()
             ) {
                 $this->_oUser->save();
@@ -902,7 +903,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         if ($this->_oUser->isWritable()) {
             try {
                 if($this->_oUser->getType() == KlarnaUser::NOT_EXISTING
-                && count($this->_oUser->getUserGroups()) == 0){
+                    && count($this->_oUser->getUserGroups()) == 0){
                     $this->_oUser->addToGroup('oxidnewcustomer');
                 }
                 $this->_oUser->save();
@@ -1215,7 +1216,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
     {
         return new KlarnaOrder($oBasket, $this->_oUser);
     }
-    
+
     public function getPayment() {
         $oPayment = parent::getPayment();
 
@@ -1294,9 +1295,19 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             Registry::getUtils()->redirect(Registry::getConfig()->getShopSecureHomeUrl() . 'cl=start', false);
         }
 
+        //if a guest user with this mail already exists, overwrite it
+        $db = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
+        $sql = "SELECT oxid FROM oxuser where oxusername = ?";
+
+        if ($fakeUserId = $db->getOne($sql,[$fakeUser->oxuser__oxusername->value])) {
+            $fakeUser = oxNew(User::class);
+            $fakeUser->load($fakeUserId);
+        }else {
+            $fakeUser->oxuser__oxusername = new Field($address["email"], Field::T_RAW);
+        }
+
         $fakeUser->oxuser__oxcity = new Field($address["city"], Field::T_RAW);
         $fakeUser->oxuser__oxcountry = new Field($address["country"], Field::T_RAW);
-        $fakeUser->oxuser__oxusername = new Field($address["email"], Field::T_RAW);
         $fakeUser->oxuser__oxlname = new Field($address["family_name"], Field::T_RAW);
         $fakeUser->oxuser__oxfname = new Field($address["given_name"], Field::T_RAW);
         $fakeUser->oxuser__oxfon = new Field($address["phone"], Field::T_RAW);
@@ -1310,7 +1321,6 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         //build delivery address from billing address
         Registry::getSession()->setVariable('sDelAddrMD5', $this->getDeliveryAddressMD5());
 
-        //TODO: this error is thrown when a guest/fake user is already registered. This should not happen.
         try {
             $fakeUser->save();
         }catch (DatabaseErrorException $e) {
