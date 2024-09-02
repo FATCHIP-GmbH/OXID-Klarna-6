@@ -85,7 +85,7 @@ window.klarnaAsyncCallback = function () {
             } catch (e) {
                 return console.error(e)
             }
-        } else if (keborderpayload) {
+        } else if (window.keborderpayload) {
             try {
                 var options = {
                     payment_method_category: 'klarna',
@@ -122,7 +122,7 @@ window.klarnaAsyncCallback = function () {
                 payment_method_category: objResponse.data.paymentMethod
             };
 
-            if (keborderpayload) {
+            if (window.keborderpayload) {
                 options = {payment_method_category: 'klarna'}
             }
             setTimeout(function () {
@@ -146,8 +146,8 @@ window.klarnaAsyncCallback = function () {
                         value: true
                     }).appendTo($form);
                 }
-                if($form.attr('id') === 'orderConfirmAgbBottom' && keborderpayload){
-                    finalize({data: keborderpayload});
+                if($form.attr('id') === 'orderConfirmAgbBottom' && window.keborderpayload){
+                    finalize({data: window.keborderpayload});
                     return;
                 }
                 if($form.attr('id') === 'orderConfirmAgbBottom'){
@@ -162,7 +162,7 @@ window.klarnaAsyncCallback = function () {
                 value: response.authorization_token
             }).appendTo($form);
 
-            if($form.attr('id') === 'orderConfirmAgbBottom' && keborderpayload){
+            if($form.attr('id') === 'orderConfirmAgbBottom' && window.keborderpayload){
                 $('<input>').attr({
                                       type: 'hidden',
                                       name: 'kexpaymentid',
@@ -309,7 +309,9 @@ window.klarnaAsyncCallback = function () {
 
         // Override form submission
         $sbmButton.click(function (event) {
-            if ($kpRadio.active && $form.attr('id') === 'payment') {
+            if (window.keborderpayload) {
+                handleResponse({status: "finalize",data: window.keborderpayload})
+            } else if ($kpRadio.active && $form.attr('id') === 'payment') {
                 event.preventDefault();
                 if (!$kpRadio.active.hasError) {
                     $('.loading').show(600);
@@ -340,11 +342,6 @@ window.klarnaAsyncCallback = function () {
             $('.loading').hide(600);
             console.log('Spinner is hidden.');
         });
-
-        if (keborderpayload) {
-            window.waitForKEXFinalize = true;
-            handleResponse({status: "finalize",data: keborderpayload})
-        }
     })();
 };
 

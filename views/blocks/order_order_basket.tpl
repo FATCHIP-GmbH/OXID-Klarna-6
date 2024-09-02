@@ -5,7 +5,7 @@
     <script>
         var tcKlarnaClientToken = "[{$client_token}]";
         var kexOrderStatus = JSON.parse([{$kexOrderStatus|json_encode}]);
-        var keborderpayload = JSON.parse([{$keborderpayload|json_encode}]);
+        window.keborderpayload = JSON.parse([{$keborderpayload|json_encode}]);
         var kebordertoken = "[{$oViewConf->getSessionChallengeToken()}]";
         var kebordermd5 = "[{$oView->getDeliveryAddressMD5()}]";
     </script>
