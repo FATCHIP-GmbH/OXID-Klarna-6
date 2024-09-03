@@ -6,7 +6,6 @@ namespace TopConcepts\Klarna\Controller\Admin;
 use TopConcepts\Klarna\Core\KlarnaConsts;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use OxidEsales\Eshop\Core\Registry;
-use OxidEsales\Eshop\Application\Model\DeliverySetList;
 
 /**
  * Class Klarna_Config for module configuration in OXID backend
@@ -46,32 +45,7 @@ class KlarnaDesign extends KlarnaBaseConfig
 
         $this->addTplParam('kebtheme', array('default', 'light', 'outlined'));
         $this->addTplParam('kebshape', array('default', 'rect', 'pill'));
-        $this->addTplParam('kebshippingmethods', $this->getShippingMethods());
 
         return $this->_sThisTemplate;
-    }
-
-    public function getShippingMethods() {
-
-        $list = Registry::get(DeliverySetList::class);
-        $viewName = $list->getBaseObject()->getViewName();
-
-        $sql = "
-            select 
-                $viewName.*
-            from
-                $viewName
-            join
-                oxobject2payment o2p 
-                on $viewName.oxid = o2p.oxobjectid
-                and o2p.oxtype = 'oxdelset'
-            where 
-                " . $list->getBaseObject()->getSqlActiveSnippet() . "
-            order by oxpos"
-
-        ;
-        $list->selectString($sql);
-
-        return $list;
     }
 }

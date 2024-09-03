@@ -201,3 +201,9 @@ var modeSelector = new Selector2({
         options: tcklarna_countriesList
     }),
     accComponent = new FormRows(accSelector);
+
+var kebmethodSelector =
+    new Selector2({
+                      id: 'kebmethodSelector',
+                      fromOptions: false
+                  });
