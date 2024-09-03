@@ -1299,9 +1299,10 @@ class KlarnaOrderController extends KlarnaOrderController_parent
         $db = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
         $sql = "SELECT oxid FROM oxuser where oxusername = ?";
 
-        if ($fakeUserId = $db->getOne($sql,[$fakeUser->oxuser__oxusername->value])) {
+        if ([$address['email']] && $fakeUserId = $db->getOne($sql,[$address['email']])) {
             $fakeUser = oxNew(User::class);
             $fakeUser->load($fakeUserId);
+            Registry::getSession()->setVariable("kexFakeUserId",$fakeUserId);
         }else {
             $fakeUser->oxuser__oxusername = new Field($address["email"], Field::T_RAW);
         }
