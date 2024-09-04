@@ -17,7 +17,6 @@
 
 namespace TopConcepts\Klarna\Component\Widgets;
 
-use TopConcepts\Klarna\Core\KlarnaOrder;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use OxidEsales\Eshop\Core\Registry;
 

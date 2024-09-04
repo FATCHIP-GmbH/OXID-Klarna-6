@@ -24,6 +24,7 @@ use TopConcepts\Klarna\Controller\Admin\KlarnaShipping;
 use TopConcepts\Klarna\Core\Exception\KlarnaConfigException;
 use TopConcepts\Klarna\Model\EmdPayload\KlarnaPassThrough;
 use TopConcepts\Klarna\Model\KlarnaEMD;
+use TopConcepts\Klarna\Model\KlarnaPayment;
 use TopConcepts\Klarna\Model\KlarnaUser;
 use OxidEsales\Eshop\Application\Controller\PaymentController;
 use OxidEsales\Eshop\Application\Model\Basket;
@@ -114,7 +115,8 @@ class KlarnaOrder extends BaseModel
         $cancellationTerms = KlarnaUtils::getShopConfVar('sKlarnaCancellationRightsURI_' . $lang);
         $terms             = KlarnaUtils::getShopConfVar('sKlarnaTermsConditionsURI_' . $lang);
 
-        if (empty($cancellationTerms) || empty($terms)) {
+        $kco = KlarnaPayment::KLARNA_PAYMENT_CHECKOUT_ID;
+        if (KlarnaUtils::getShopConfVar('sKlarnaActiveMode') == $kco && (empty($cancellationTerms) || empty($terms))) {
             Registry::getSession()->setVariable('wrong_merchant_urls', true);
 
             return false;
@@ -300,6 +302,7 @@ class KlarnaOrder extends BaseModel
      * @return array
      * @throws KlarnaConfigException
      * @throws \oxSystemComponentException
+     * TODO: When KCO is removed, this can be simplified to only support Klarna Express
      */
     protected function getSupportedShippingMethods(Basket $oBasket)
     {

@@ -472,7 +472,7 @@
                             </div>
                         </td>
                     </tr>
-
+                    [{include file="tcklarna_lang_spec_conf.tpl"}]
                     <tr>
                         <td class="center" colspan="3">
                             <input type="submit" name="save" value="[{oxmultilang ident="GENERAL_SAVE"}]"
