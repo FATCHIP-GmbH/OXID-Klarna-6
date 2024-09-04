@@ -74,3 +74,5 @@
     </div>
     <div class="clear clearfix"></div>
 [{/if}]
+
+<br>
