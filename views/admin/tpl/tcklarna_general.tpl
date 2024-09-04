@@ -449,7 +449,7 @@
 
                     <tr class="dark">
                         <td class="name">
-                            [{oxmultilang ident="TCKLARNA_KEB_PAYMENTMETHOD"}]
+                            [{oxmultilang ident="TCKLARNA_KEB_SHIPPINGMETHOD"}]
                         </td>
                         <td>
                             <div class="input">
