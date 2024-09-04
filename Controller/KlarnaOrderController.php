@@ -1307,8 +1307,13 @@ class KlarnaOrderController extends KlarnaOrderController_parent
             $fakeUser->oxuser__oxusername = new Field($address["email"], Field::T_RAW);
         }
 
+        //generate countryid from country
+        $oCountry = oxNew(Country::class);
+        $countryId = $oCountry->getIdByCode($address["country"]);
+
         $fakeUser->oxuser__oxcity = new Field($address["city"], Field::T_RAW);
         $fakeUser->oxuser__oxcountry = new Field($address["country"], Field::T_RAW);
+        $fakeUser->oxuser__oxcountryid = new Field($countryId, Field::T_RAW);
         $fakeUser->oxuser__oxlname = new Field($address["family_name"], Field::T_RAW);
         $fakeUser->oxuser__oxfname = new Field($address["given_name"], Field::T_RAW);
         $fakeUser->oxuser__oxfon = new Field($address["phone"], Field::T_RAW);
