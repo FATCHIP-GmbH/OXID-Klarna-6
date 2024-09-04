@@ -64,7 +64,6 @@ class KlarnaShipping extends KlarnaBaseConfig
                 oxobject2payment o2p 
                 on $viewName.oxid = o2p.oxobjectid
                 and o2p.oxtype = 'oxdelset'
-                and o2p.oxpaymentid = '$kco'
             where 
                 " . $list->getBaseObject()->getSqlActiveSnippet() . "
             order by oxpos"
