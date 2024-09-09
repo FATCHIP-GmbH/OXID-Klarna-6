@@ -19,6 +19,8 @@ namespace TopConcepts\Klarna\Component;
 
 
 use OxidEsales\Eshop\Core\Field;
+use OxidEsales\EshopCommunity\Application\Model\Basket;
+use OxidEsales\EshopCommunity\Application\Model\BasketItem;
 use TopConcepts\Klarna\Core\KlarnaClientBase;
 use TopConcepts\Klarna\Core\KlarnaOrder;
 use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
@@ -49,14 +51,30 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
      */
     public function tobasketKEB($sProductId = null, $dAmount = null, $aSel = null, $aPersParam = null, $blOverride = false)
     {
-        $oSession       = Registry::getSession();
+        $oSession = Registry::getSession();
 
-        $this->tobasket($sProductId, $dAmount, $aSel, $aPersParam, $blOverride);
+        if (!$this->basketHasProduct($oSession->getBasket(), $sProductId)) {
+            $this->tobasket($sProductId, $dAmount, $aSel, $aPersParam, $blOverride);
 
-        $oBasket        = $oSession->getBasket();
-        $oBasket->calculateBasket(true);
+            $oBasket = $oSession->getBasket();
+            $oBasket->calculateBasket(true);
+        }
 
         Registry::getUtils()->showMessageAndExit($this->getKebOrderPayload());
+    }
+
+    protected function basketHasProduct(Basket $basket, $productId)
+    {
+        if ($basket->getItemsCount() !== 0) {
+            /** @var BasketItem $article */
+            foreach ($basket->getBasketArticles() as $article) {
+                if ($article->getProductId() == $productId) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     protected function getClientTokenFromSession()
