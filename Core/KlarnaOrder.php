@@ -96,7 +96,7 @@ class KlarnaOrder extends BaseModel
      * @param User $oUser
      * @throws SystemComponentException
      */
-    public function __construct(Basket $oBasket, User $oUser)
+    public function __construct(Basket $oBasket, User $oUser, $ignoreMerchantUrls = false)
     {
         parent::__construct();
         $this->_oUser      = $oUser;
@@ -128,7 +128,10 @@ class KlarnaOrder extends BaseModel
             "purchase_country"  => $sCountryISO,
             "purchase_currency" => $currencyName,
             "locale"            => $sLocale,
-            "merchant_urls"     => array(
+        );
+
+        if (!$ignoreMerchantUrls) {
+            $this->_aOrderData["merchant_urls"] = array (
                 "terms"        =>
                     $terms,
                 "checkout"     =>
@@ -137,16 +140,16 @@ class KlarnaOrder extends BaseModel
                     $sSSLShopURL . "?cl=order$urlShopParam&fnc=execute&klarna_order_id={checkout.order.id}&stoken=$sGetChallenge",
                 "push"         =>
                     $sSSLShopURL . "?cl=KlarnaAcknowledge$urlShopParam&klarna_order_id={checkout.order.id}",
-            ),
-        );
+            );
 
-        if ($this->isValidationEnabled()) {
-            $this->_aOrderData["merchant_urls"]["validation"] =
-                $sSSLShopURL . "?cl=KlarnaValidate&s=$sessionId";
-        }
+            if ($this->isValidationEnabled()) {
+                $this->_aOrderData["merchant_urls"]["validation"] =
+                    $sSSLShopURL . "?cl=KlarnaValidate&s=$sessionId";
+            }
 
-        if (!empty($cancellationTerms)) {
-            $this->_aOrderData["merchant_urls"]["cancellation_terms"] = $cancellationTerms;
+            if (!empty($cancellationTerms)) {
+                $this->_aOrderData["merchant_urls"]["cancellation_terms"] = $cancellationTerms;
+            }
         }
 
         $this->_aOrderData = array_merge(

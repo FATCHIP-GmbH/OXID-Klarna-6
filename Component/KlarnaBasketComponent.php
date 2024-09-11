@@ -168,7 +168,8 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
             $oSession->setVariable("kexFakeUserId", $oUser->getId());
         }
 
-        $oKlarnaOrder   = oxNew(KlarnaOrder::class, $oBasket, $oUser);
+        //unlike for the other /sessions requests, the merchant urls are not needed for the create order call here.
+        $oKlarnaOrder   = oxNew(KlarnaOrder::class, $oBasket, $oUser, true);
         $aOrderData     = $oKlarnaOrder->getOrderData();
 
         $aOrderData = $this->modifyOrderForKeb($aOrderData, $oBasket, $oUser);
