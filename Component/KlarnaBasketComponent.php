@@ -52,6 +52,7 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
     public function tobasketKEB($sProductId = null, $dAmount = null, $aSel = null, $aPersParam = null, $blOverride = false)
     {
         $oSession = Registry::getSession();
+        $sProductId = $sProductId ?: Registry::getConfig()->getRequestParameter('aid');
 
         if (!$this->basketHasProduct($oSession->getBasket(), $sProductId)) {
             $this->tobasket($sProductId, $dAmount, $aSel, $aPersParam, $blOverride);
