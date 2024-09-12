@@ -327,7 +327,7 @@ class KlarnaOrder extends BaseModel
             $oBasket->setShipping($shippingId);
             $oPrice      = $oBasket->tcklarna_calculateDeliveryCost();
             $basketPrice = $oBasket->getPriceForPayment() / $currency->rate;
-            if ($this->doesShippingMethodSupportKCO($shippingId, $basketPrice)) {
+            if ($this->doesShippingMethodSupportKCO($shippingId, $basketPrice) || $this->isExpressEnabled()) {
                 $method = clone $shippingMethod;
 
                 $price             = KlarnaUtils::parseFloatAsInt($oPrice->getBruttoPrice() * 100);
@@ -405,6 +405,15 @@ class KlarnaOrder extends BaseModel
         return count($paymentList) && in_array('klarna_checkout', array_keys($paymentList));
     }
 
+    protected function isExpressEnabled()
+    {
+        return KlarnaUtils::isKlarnaPaymentsEnabled() && KlarnaUtils::getShopConfVar('blKlarnaDisplayExpressButton') && $this->getKEBClientId();
+    }
+
+    protected function getKEBClientId()
+    {
+        return KlarnaUtils::getShopConfVar("sKlarnaExpressButtonClientId");
+    }
 
     /**
      *
