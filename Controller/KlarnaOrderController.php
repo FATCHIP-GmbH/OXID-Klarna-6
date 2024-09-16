@@ -131,7 +131,7 @@ class KlarnaOrderController extends KlarnaOrderController_parent
                 $oSession->setVariable('kebmail', $address["email"]);
                 $oSession->setVariable('deladrid', $deladrid);
             }
-            $oSession->setVariable('sAuthToken', $kebauthresponse->client_token);
+            $oSession->setVariable('sAuthToken', $kebauthresponse->session_id);
             $oSession->setVariable('finalizeRequired', $kebauthresponse->finalize_required);
 
         }
