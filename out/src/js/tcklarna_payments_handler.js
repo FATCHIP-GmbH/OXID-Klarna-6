@@ -215,8 +215,6 @@ window.klarnaAsyncCallback = function () {
             case 'finalize':
                 if($form.attr('id') === 'orderConfirmAgbBottom') {
                     finalize(objResponse);
-                } else {
-                    $form.submit();
                 }
                 break;
 
@@ -310,6 +308,7 @@ window.klarnaAsyncCallback = function () {
         // Override form submission
         $sbmButton.click(function (event) {
             if (window.keborderpayload) {
+                event.preventDefault();
                 $('<input>').attr({
                       type: 'hidden',
                       name: 'kexpaymentid',
