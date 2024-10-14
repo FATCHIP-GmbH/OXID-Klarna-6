@@ -1,6 +1,6 @@
 [{$smarty.block.parent}]
 
-[{if $oViewConf->isCheckoutNonKlarnaCountry() && $oView->getIsOrderStep() }]
+[{if $oViewConf->isCheckoutNonKlarnaCountry() && $oView->getIsOrderStep()}]
     [{capture assign="otherCountry"}]
         <div class="col-lg-2">
             <button type="button"

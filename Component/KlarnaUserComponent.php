@@ -101,7 +101,7 @@ class KlarnaUserComponent extends KlarnaUserComponent_parent
         if ($user = $this->getUser()) {
             $aInvAddress = Registry::getRequest()->getRequestEscapedParameter("invadr");
 
-            if ($user->oxuser__oxcompany->value !== $aInvAddress["oxuser__oxcompany"]) {
+            if ((string)$user->oxuser__oxcompany->value !== (string)$aInvAddress["oxuser__oxcompany"]) {
                 Registry::getSession()->setVariable("klarnaB2BSessionWasChanged",true);
                 KlarnaUtils::fullyResetKlarnaSession();
             }

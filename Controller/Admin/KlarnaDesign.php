@@ -3,12 +3,9 @@
 namespace TopConcepts\Klarna\Controller\Admin;
 
 
-use OxidEsales\Eshop\Core\Request;
 use TopConcepts\Klarna\Core\KlarnaConsts;
 use TopConcepts\Klarna\Core\KlarnaUtils;
-use OxidEsales\Eshop\Application\Model\Actions;
 use OxidEsales\Eshop\Core\Registry;
-use OxidEsales\Eshop\Core\Field;
 
 /**
  * Class Klarna_Config for module configuration in OXID backend
@@ -45,6 +42,9 @@ class KlarnaDesign extends KlarnaBaseConfig
         $this->addTplParam('mode', $this->getActiveKlarnaMode());
         $this->addTplParam('locale', $locale);
         $this->addTplParam('aKlarnaFooterImgUrls', KlarnaConsts::getFooterImgUrls());
+
+        $this->addTplParam('kebtheme', array('default', 'light', 'outlined'));
+        $this->addTplParam('kebshape', array('default', 'rect', 'pill'));
 
         return $this->_sThisTemplate;
     }

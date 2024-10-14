@@ -1,6 +1,6 @@
 [{$smarty.block.parent}]
 
-[{if $openAmazonLogin }]
+[{if $openAmazonLogin}]
     <script type="text/javascript">
         window.onload = clickWidgetButton;
         function clickWidgetButton(){

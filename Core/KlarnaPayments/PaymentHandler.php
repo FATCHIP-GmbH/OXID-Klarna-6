@@ -2,10 +2,12 @@
 namespace TopConcepts\Klarna\Core\KlarnaPayments;
 
 use OxidEsales\Eshop\Application\Model\Order;
+use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use TopConcepts\Klarna\Core\KlarnaPayment;
 use TopConcepts\Klarna\Core\KlarnaPaymentsClient;
+use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Core\PaymentHandlerInterface;
 
 class PaymentHandler implements PaymentHandlerInterface
@@ -78,10 +80,12 @@ class PaymentHandler implements PaymentHandlerInterface
     protected function getContext()
     {
         $oSession = Registry::getSession();
+
+        $user = KlarnaUtils::getUserOrFakeUserFromSession();
         /** @var  KlarnaPayment $oKlarnaPayment */
         $oKlarnaPayment = oxNew(KlarnaPayment::class,
             $oSession->getBasket(),
-            $oSession->getUser()
+            $user
         );
 
         return $oKlarnaPayment;

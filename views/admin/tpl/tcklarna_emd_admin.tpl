@@ -1,14 +1,14 @@
 <link rel="stylesheet" href="[{$oViewConf->getResourceUrl()}]main.css">
-<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tcklarna_admin2.css') }]">
-<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster.bundle.min.css') }]">
+<link rel="stylesheet" href="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tcklarna_admin2.css')}]">
+<link rel="stylesheet" href="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster.bundle.min.css')}]">
 <link rel="stylesheet"
-      href="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster-sideTip-light.min.css') }]">
+      href="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster-sideTip-light.min.css')}]">
 <script type="text/javascript"
-        src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/jquery-1.12.4.min.js') }]"></script>
+        src="[{$oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/jquery-1.12.4.min.js')}]"></script>
 <script type="text/javascript"
-        src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/tooltipster.bundle.min.js') }]"></script>
+        src="[{$oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/tooltipster.bundle.min.js')}]"></script>
 
-[{if $readonly }]
+[{if $readonly}]
     [{assign var="readonly" value="readonly disabled"}]
 [{else}]
     [{assign var="readonly" value=""}]
@@ -36,7 +36,7 @@
                                     <input type="hidden" name="confbools[blKlarnaEmdCustomerAccountInfo]" value="0">
                                     <input type="checkbox" name="confbools[blKlarnaEmdCustomerAccountInfo]" value="1"
                                            id="EmdCustomerAccountInfo"
-                                           [{if $confbools.blKlarnaEmdCustomerAccountInfo}]checked[{/if}] [{ $readonly}]>
+                                           [{if $confbools.blKlarnaEmdCustomerAccountInfo}]checked[{/if}] [{$readonly}]>
                                     <div class="toggle-control"></div>
                                 </label>
                             </div>
@@ -58,7 +58,7 @@
                                     <input type="hidden" name="confbools[blKlarnaEmdPaymentHistoryFull]" value="0">
                                     <input type="checkbox" name="confbools[blKlarnaEmdPaymentHistoryFull]" value="1"
                                            id="EmdPaymentHistoryFull"
-                                           [{if $confbools.blKlarnaEmdPaymentHistoryFull}]checked[{/if}] [{ $readonly}]
+                                           [{if $confbools.blKlarnaEmdPaymentHistoryFull}]checked[{/if}] [{$readonly}]
                                            class="js-payment-history-toggle">
                                     <div class="toggle-control"></div>
                                 </label>
@@ -173,7 +173,7 @@
                                     <input type="hidden" name="confbools[blKlarnaEmdPassThrough]" value="0">
                                     <input type="checkbox" name="confbools[blKlarnaEmdPassThrough]" value="1"
                                            id="EmdPassThrough"
-                                           [{if $confbools.blKlarnaEmdPassThrough}]checked[{/if}] [{ $readonly}]>
+                                           [{if $confbools.blKlarnaEmdPassThrough}]checked[{/if}] [{$readonly}]>
                                     <div class="toggle-control"></div>
                                 </label>
                             </div>
@@ -193,5 +193,5 @@
         </form>
     </div>
 </div>
-<script src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_lib.js') }]"></script>
-<script src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_emd.js') }]"></script>
+<script src="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_lib.js')}]"></script>
+<script src="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_emd.js')}]"></script>

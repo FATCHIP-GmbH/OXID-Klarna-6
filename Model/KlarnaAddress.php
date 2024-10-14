@@ -62,7 +62,7 @@ class KlarnaAddress extends KlarnaAddress_parent
 
 
     /**
-     * Compare two oxAddress objects. If data filds are the same return true
+     * Compare two oxAddress objects. If data fields are the same return true
      *
      * @param Address $that other object
      * @return boolean

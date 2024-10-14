@@ -1,8 +1,10 @@
 <?php
 
+use OxidEsales\Eshop\Application\Component\Widget\ArticleDetails;
 use OxidEsales\Eshop\Application\Controller\Admin\PaymentMain;
 use TopConcepts\Klarna\Component\KlarnaBasketComponent;
 use TopConcepts\Klarna\Component\KlarnaUserComponent;
+use TopConcepts\Klarna\Component\Widgets\KlarnaArticleDetails;
 use TopConcepts\Klarna\Component\Widgets\KlarnaServiceMenu;
 use TopConcepts\Klarna\Controller\Admin\KlarnaConfiguration;
 use TopConcepts\Klarna\Controller\Admin\KlarnaDesign;
@@ -107,37 +109,39 @@ $aModule = array(
     ),
     'extend'      => array(
         // models
-        Basket::class             => KlarnaBasket::class,
-        User::class               => KlarnaUser::class,
-        Article::class            => KlarnaArticle::class,
-        Order::class              => KlarnaOrder::class,
-        Address::class            => KlarnaAddress::class,
-        Payment::class            => KlarnaPayment::class,
-        CountryList::class        => KlarnaCountryList::class,
-        OrderArticle::class       => KlarnaOrderArticle::class,
-        UserPayment::class        => KlarnaUserPayment::class,
+        Basket::class               => KlarnaBasket::class,
+        User::class                 => KlarnaUser::class,
+        Article::class              => KlarnaArticle::class,
+        Order::class                => KlarnaOrder::class,
+        Address::class              => KlarnaAddress::class,
+        Payment::class              => KlarnaPayment::class,
+        CountryList::class          => KlarnaCountryList::class,
+        OrderArticle::class         => KlarnaOrderArticle::class,
+        UserPayment::class          => KlarnaUserPayment::class,
         // controllers
-        ThankYouController::class => KlarnaThankYouController::class,
-        ViewConfig::class         => KlarnaViewConfig::class,
-        OrderController::class    => KlarnaOrderController::class,
-        UserController::class     => KlarnaUserController::class,
-        PaymentController::class  => KlarnaPaymentController::class,
-        BasketController::class   => KlarnaBasketController::class,
-        // admin
-        OrderAddress::class       => KlarnaOrderAddress::class,
-        OrderList::class          => KlarnaOrderList::class,
-        AdminOrderArticle::class  => KlarnaAdminOrderArticle::class,
-        OrderMain::class          => KlarnaOrderMain::class,
-        OrderOverview::class      => KlarnaOrderOverview::class,
-        PaymentMain::class        => KlarnaPaymentMain::class,
-        //components
-        BasketComponent::class    => KlarnaBasketComponent::class,
-        UserComponent::class      => KlarnaUserComponent::class,
-        ServiceMenu::class        => KlarnaServiceMenu::class,
+        ThankYouController::class   => KlarnaThankYouController::class,
+        ViewConfig::class           => KlarnaViewConfig::class,
+        OrderController::class      => KlarnaOrderController::class,
+        UserController::class       => KlarnaUserController::class,
+        PaymentController::class    => KlarnaPaymentController::class,
+        BasketController::class     => KlarnaBasketController::class,
 
-        OxidEsales\Eshop\Core\Config::class                      => Config::class,
-        OxidEsales\Eshop\Application\Model\PaymentGateway::class => PaymentGateway::class,
-        OxidEsales\Eshop\Core\ShopControl::class => KlarnaShopControl::class
+        // admin
+        OrderAddress::class         => KlarnaOrderAddress::class,
+        OrderList::class            => KlarnaOrderList::class,
+        AdminOrderArticle::class    => KlarnaAdminOrderArticle::class,
+        OrderMain::class            => KlarnaOrderMain::class,
+        OrderOverview::class        => KlarnaOrderOverview::class,
+        PaymentMain::class          => KlarnaPaymentMain::class,
+        //components
+        BasketComponent::class      => KlarnaBasketComponent::class,
+        UserComponent::class        => KlarnaUserComponent::class,
+        ServiceMenu::class          => KlarnaServiceMenu::class,
+        ArticleDetails::class       => KlarnaArticleDetails::class,
+
+        OxidEsales\Eshop\Core\Config::class                         => Config::class,
+        OxidEsales\Eshop\Application\Model\PaymentGateway::class    => PaymentGateway::class,
+        OxidEsales\Eshop\Core\ShopControl::class                    => KlarnaShopControl::class
     ),
     'templates'   => array(
 

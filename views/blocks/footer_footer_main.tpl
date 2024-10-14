@@ -4,13 +4,13 @@
 [{if $aKlFooter.script}]
     [{$aKlFooter.script}]
 [{/if}]
-[{oxscript include=$oViewConf->getModuleUrl('tcklarna','out/src/js/tcklarna_scripts.js') priority=10 }]
+[{oxscript include=$oViewConf->getModuleUrl('tcklarna','out/src/js/tcklarna_scripts.js') priority=10}]
 
 [{if $aKlFooter}]
 
-    [{capture assign=klFooterContent }]
+    [{capture assign=klFooterContent}]
     [{if $aKlFooter.url}]
-        [{if $oViewConf->getActiveTheme() == 'azure' }]
+        [{if $oViewConf->getActiveTheme() == 'azure'}]
             <li class="klarna-logo">
                 <style>
                     .kl-logo {margin-top: 30px;padding: 4px 20px;}
@@ -32,7 +32,7 @@
                 </style>
 
                 <div class="kl-logo">
-                    <div class="[{if ($aKlFooter.class === 'logoFooter' || $aKlFooter.class === 'logoBlack' || $aKlFooter.class === 'logoWhite') }]kl-logo-inner[{/if}]">
+                    <div class="[{if ($aKlFooter.class === 'logoFooter' || $aKlFooter.class === 'logoBlack' || $aKlFooter.class === 'logoWhite')}]kl-logo-inner[{/if}]">
                         <img [{if ($aKlFooter.class === 'logoFooter')}]width="135" height="75"[{/if}] src="[{$aKlFooter.url}]">
                     </div>
                 </div>
@@ -67,7 +67,7 @@
             }
         }
     </script>
-    [{assign var=klFooterContent value=$klFooterContent|escape:javascript }]
+    [{assign var=klFooterContent value=$klFooterContent|escape:javascript}]
     [{oxscript add="embedKlarnaLogo('$klFooterContent');"}]
 [{/if}]
 

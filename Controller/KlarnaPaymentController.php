@@ -288,7 +288,6 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
                     Registry::getSession()->setVariable('sAuthToken', $sAuthToken);
                     $dt = new \DateTime();
                     Registry::getSession()->setVariable('sTokenTimeStamp', $dt->getTimestamp());
-
                 }
 
                 $this->oKlarnaPayment = new KlarnaPayment($oBasket, $this->getUser());

@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright 2018 Klarna AB
  *
@@ -14,17 +15,26 @@
  * limitations under the License.
  */
 
-/**
- * Moves template contents to loginbox (after submit button)
- * Because there are no blocks in loginbox template to override
- *
- * @param lawNoticeTemplate
- */
-function moveLawNotice(lawNoticeTemplate){
-    var submitButton = document.querySelector("#loginBox button[type='submit']");
+namespace TopConcepts\Klarna\Component\Widgets;
 
-    if (lawNoticeTemplate && submitButton) {
-        submitButton.insertAdjacentHTML('beforebegin', lawNoticeTemplate);
+use TopConcepts\Klarna\Core\KlarnaUtils;
+use OxidEsales\Eshop\Core\Registry;
+
+/**
+ * Class oxw_klarna_servicemenu extends service menu widget
+ */
+class KlarnaArticleDetails extends KlarnaArticleDetails_parent
+{
+    public function render()
+    {
+        $this->addTplParam("kebtheme", KlarnaUtils::getShopConfVar("sKlarnaKEBTheme"));
+        $this->addTplParam("kebshape", KlarnaUtils::getShopConfVar("sKlarnaKEBShape"));
+
+        return parent::render();
+    }
+
+    public function isUserLoggedIn()
+    {
+        return $this->getUser() !== null;
     }
 }
-

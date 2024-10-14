@@ -1,14 +1,14 @@
 <link rel="stylesheet" href="[{$oViewConf->getResourceUrl()}]main.css">
-<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tcklarna_admin2.css') }]">
-<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster.bundle.min.css') }]">
-<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster-sideTip-light.min.css') }]">
-<script type="text/javascript" src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/jquery-1.12.4.min.js') }]"></script>
+<link rel="stylesheet" href="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tcklarna_admin2.css')}]">
+<link rel="stylesheet" href="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster.bundle.min.css')}]">
+<link rel="stylesheet" href="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster-sideTip-light.min.css')}]">
+<script type="text/javascript" src="[{$oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/jquery-1.12.4.min.js')}]"></script>
 <script type="text/javascript"
-        src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/tooltipster.bundle.min.js') }]"></script>
+        src="[{$oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/tooltipster.bundle.min.js')}]"></script>
 
 <div class="[{$box|default:'box'}]" style="[{if !$box && !$bottom_buttons}]height: 100%;[{/if}]">
 
-    [{if $readonly }]
+    [{if $readonly}]
         [{assign var="readonly" value="readonly disabled"}]
     [{else}]
         [{assign var="readonly" value=""}]
@@ -23,8 +23,8 @@
             [{oxmultilang ident="TCKLARNA_KP_OPTIONS_REMOVAL"}]
         </div>
 
-        [{assign var="tabName" value="TCKLARNA_BASIC_SETTINGS"|oxmultilangassign }]
-        [{include file="tcklarna_header.tpl" title="TCKLARNA_CONFIGURATION_KP"|oxmultilangassign desc="TCKLARNA_CONFIGURATION_KP_ADMIN_DESC"|oxmultilangassign }]
+        [{assign var="tabName" value="TCKLARNA_BASIC_SETTINGS"|oxmultilangassign}]
+        [{include file="tcklarna_header.tpl" title="TCKLARNA_CONFIGURATION_KP"|oxmultilangassign desc="TCKLARNA_CONFIGURATION_KP_ADMIN_DESC"|oxmultilangassign}]
 
         <hr>
         <h2>[{oxmultilang ident="TCKLARNA_CHOOSE_KP_OPTIONS"}]</h2>

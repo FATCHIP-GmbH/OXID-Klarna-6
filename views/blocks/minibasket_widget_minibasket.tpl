@@ -10,13 +10,15 @@
             [{oxscript add='$(".modal-footer").append(button);'}]
         [{else}]
             <script type="text/javascript">
-                var url = "[{ $oViewConf->getSslSelfLink()|cat:"cl=KlarnaExpress"|html_entity_decode}]";
+                var url = "[{$oViewConf->getSslSelfLink()|cat:"cl=KlarnaExpress"|html_entity_decode}]";
             </script>
             [{oxscript add='$("p.functions .btn-primary").attr("href", url);'}]
         [{/if}]
     [{/if}]
 [{else}]
-    [{$smarty.block.parent}]
+    [{if $oViewConf->getActiveClassName() == "oxwminibasket" || !$oViewConf->isKebPaymentInProcess()}]
+        [{$smarty.block.parent}]
+    [{/if}]
 [{/if}]
 
 

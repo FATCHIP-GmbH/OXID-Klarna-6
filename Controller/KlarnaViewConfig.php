@@ -140,9 +140,19 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
     /**
      *
      */
-    public function addBuyNow()
+    public function displayExpressButton()
     {
-        return KlarnaUtils::getShopConfVar('blKlarnaDisplayBuyNow');
+        return KlarnaUtils::getShopConfVar('blKlarnaDisplayExpressButton') && $this->getKEBClientId();
+    }
+
+    public function getKEBClientId()
+    {
+        return KlarnaUtils::getShopConfVar("sKlarnaExpressButtonClientId");
+    }
+
+    public function getLocale()
+    {
+        return KlarnaConsts::getLocale();
     }
 
     /**
@@ -151,6 +161,12 @@ class KlarnaViewConfig extends KlarnaViewConfig_parent
     public function getMode()
     {
         return KlarnaUtils::getShopConfVar('sKlarnaActiveMode');
+    }
+
+    public function isKebPaymentInProcess()
+    {
+        $payload = Registry::getSession()->getVariable("keborderpayload");
+        return (bool) $payload;
     }
 
     /**

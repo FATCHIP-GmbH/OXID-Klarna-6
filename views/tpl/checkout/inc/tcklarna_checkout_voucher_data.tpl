@@ -1,4 +1,4 @@
-[{if $oViewConf->getShowVouchers() && $oxcmp_basket->getVoucherDiscValue() }]
+[{if $oViewConf->getShowVouchers() && $oxcmp_basket->getVoucherDiscValue()}]
     [{assign var="currency" value=$oView->getActCurrency()}]
     [{foreach from=$oxcmp_basket->getVouchers() item=sVoucher key=key name=Voucher}]
     <div class="couponData">
@@ -13,7 +13,7 @@
             </a>
 
             <span id="voucherAmount">
-                [{oxprice price=$sVoucher->dVoucherdiscount*-1 currency=$currency }]
+                [{oxprice price=$sVoucher->dVoucherdiscount*-1 currency=$currency}]
             </span>
         </strong>
     </div>

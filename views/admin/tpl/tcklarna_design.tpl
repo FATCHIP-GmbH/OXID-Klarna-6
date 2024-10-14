@@ -1,19 +1,19 @@
 [{assign var="lang_tag" value=$languages.$editlanguage->abbr|oxupper}]
 
 <link rel="stylesheet" href="[{$oViewConf->getResourceUrl()}]main.css">
-<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tcklarna_admin2.css') }]">
-<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster.bundle.min.css') }]">
+<link rel="stylesheet" href="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tcklarna_admin2.css')}]">
+<link rel="stylesheet" href="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster.bundle.min.css')}]">
 <link rel="stylesheet"
-      href="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster-sideTip-light.min.css') }]">
+      href="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster-sideTip-light.min.css')}]">
 <script type="text/javascript"
-        src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/jquery-1.12.4.min.js') }]"></script>
+        src="[{$oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/jquery-1.12.4.min.js')}]"></script>
 <script type="text/javascript"
-        src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/tooltipster.bundle.min.js') }]"></script>
-<script src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/jscolor/jscolor.js') }]"></script>
+        src="[{$oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/tooltipster.bundle.min.js')}]"></script>
+<script src="[{$oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/jscolor/jscolor.js')}]"></script>
 
 <div class="[{$box|default:'box'}]" style="[{if !$box && !$bottom_buttons}]height: 100%;[{/if}]">
     <div class="main-container">
-        [{include file="tcklarna_header.tpl" title="TCKLARNA_KLARNADESIGN"|oxmultilangassign desc="TCKLARNA_DESIGN_SETTINGS_ADMIN_DESC"|oxmultilangassign }]
+        [{include file="tcklarna_header.tpl" title="TCKLARNA_KLARNADESIGN"|oxmultilangassign desc="TCKLARNA_DESIGN_SETTINGS_ADMIN_DESC"|oxmultilangassign}]
         <div class="klarna-expandable-list">
             <form name="myedit" id="myedit" method="post"
                   action="[{$oViewConf->getSelfLink()}]"
@@ -29,7 +29,7 @@
                     <div class="row-label">
                         <div class="sign plus"></div>
                         <div class="text ">
-                            [{ oxmultilang ident="TCKLARNA_FOOTER" }]
+                            [{oxmultilang ident="TCKLARNA_FOOTER"}]
                         </div>
                     </div>
                     <div class="clear"></div>
@@ -42,13 +42,13 @@
                                         <tbody>
                                         <tr class="dark">
                                             <td class="name-bold" colspan="3">
-                                                [{ oxmultilang ident="TCKLARNA_DISPLAY_IN_FOOTER" }]
+                                                [{oxmultilang ident="TCKLARNA_DISPLAY_IN_FOOTER"}]
                                             </td>
                                         </tr>
-                                        [{ if ($mode === 'KCO') }]
+                                        [{if ($mode === 'KCO')}]
                                             <tr class="dark">
                                                 <td class="name">
-                                                    [{ oxmultilang ident="TCKLARNA_FOOTER_PAYMENT_METHODS" }]
+                                                    [{oxmultilang ident="TCKLARNA_FOOTER_PAYMENT_METHODS"}]
                                                 </td>
                                                 <td class="input w460">
                                                     <div class="input">
@@ -59,7 +59,7 @@
                                                                 <input type="checkbox" class="toggle_input radio_type"
                                                                        name="confstrs[sKlarnaFooterDisplay]"
                                                                        value="1" id="FooterDisplay"
-                                                                       [{if ($confstrs.sKlarnaFooterDisplay === '1')}]checked[{/if}] [{ $readonly}]/>
+                                                                       [{if ($confstrs.sKlarnaFooterDisplay === '1')}]checked[{/if}] [{$readonly}]/>
                                                                 <div class="toggle-control"></div>
                                                             </label>
                                                         </div>
@@ -75,20 +75,20 @@
                                         [{/if}]
                                         <tr class="dark">
                                             <td class="name">
-                                                [{ oxmultilang ident="TCKLARNA_FOOTER_KLARNA_LOGO" }]
+                                                [{oxmultilang ident="TCKLARNA_FOOTER_KLARNA_LOGO"}]
                                             </td>
                                             <td class="input w460">
                                                 <div class="input">
                                                     <div class="display">
                                                         <label class="label toggle" for="FooterDisplay1">
-                                                            [{ if ($mode === 'KP') }]
+                                                            [{if ($mode === 'KP')}]
                                                                 <input type="hidden"
                                                                        name="confstrs[sKlarnaFooterDisplay]" value="0">
                                                             [{/if}]
                                                             <input type="checkbox" class="toggle_input radio_type"
                                                                    name="confstrs[sKlarnaFooterDisplay]"
                                                                    value="2" id="FooterDisplay1"
-                                                                   [{if ($confstrs.sKlarnaFooterDisplay === '2')}]checked[{/if}] [{ $readonly}]/>
+                                                                   [{if ($confstrs.sKlarnaFooterDisplay === '2')}]checked[{/if}] [{$readonly}]/>
                                                             <div class="toggle-control"></div>
                                                         </label>
                                                     </div>
@@ -105,68 +105,68 @@
                                     </table>
                                 </td>
                             </tr>
-                            [{if ($mode === 'KCO') }]
+                            [{if ($mode === 'KCO')}]
                                 <tr class="no-t-border">
                                     <td>
                                         <div class="rows-wrapper"
-                                             [{ if $confstrs.sKlarnaFooterDisplay === '1' }]style="display: block"[{/if}]>
+                                             [{if $confstrs.sKlarnaFooterDisplay === '1'}]style="display: block"[{/if}]>
                                             <table class="inner">
                                                 <tbody>
                                                 <tr class="dark">
                                                     <td class="name-bold" colspan="3">
-                                                        [{ oxmultilang ident="TCKLARNA_FOOTER_PAYMENT_METHODS" }] [{ oxmultilang ident="TCKLARNA_DESIGN" }]
+                                                        [{oxmultilang ident="TCKLARNA_FOOTER_PAYMENT_METHODS"}] [{oxmultilang ident="TCKLARNA_DESIGN"}]
                                                     </td>
                                                 </tr>
                                                 <tr class="dark">
                                                     <td colspan="2">
-                                                        [{ oxmultilang ident="TCKLARNA_LONG_VERSION" }]
+                                                        [{oxmultilang ident="TCKLARNA_LONG_VERSION"}]
                                                     </td>
                                                 </tr>
                                                 <tr class="dark">
                                                     <td class="half">
                                                         <input type="radio" id="long-black"
                                                                name="confstrs[sKlarnaFooterValue]" value="longBlack"
-                                                               [{ if ($confstrs.sKlarnaFooterValue === 'longBlack') }]checked[{/if}]>
+                                                               [{if ($confstrs.sKlarnaFooterValue === 'longBlack')}]checked[{/if}]>
                                                         <label class="kl-logo white" for="long-black">
                                                             <div class="">
-                                                                <img src="[{ $locale|string_format:$aKlarnaFooterImgUrls.longBlack }]">
+                                                                <img src="[{$locale|string_format:$aKlarnaFooterImgUrls.longBlack}]">
                                                             </div>
                                                         </label>
                                                     </td>
                                                     <td class="half">
                                                         <input type="radio" id="long-white"
                                                                name="confstrs[sKlarnaFooterValue]" value="longWhite"
-                                                               [{ if $confstrs.sKlarnaFooterValue == 'longWhite' }]checked[{/if}]>
+                                                               [{if $confstrs.sKlarnaFooterValue == 'longWhite'}]checked[{/if}]>
                                                         <label class="kl-logo black" for="long-white">
                                                             <div class="">
-                                                                <img src="[{ $locale|string_format:$aKlarnaFooterImgUrls.longWhite }]">
+                                                                <img src="[{$locale|string_format:$aKlarnaFooterImgUrls.longWhite}]">
                                                             </div>
                                                         </label>
                                                     </td>
                                                 </tr>
                                                 <tr class="dark">
                                                     <td colspan="2">
-                                                        [{ oxmultilang ident="TCKLARNA_SHORT_VERSION" }]
+                                                        [{oxmultilang ident="TCKLARNA_SHORT_VERSION"}]
                                                     </td>
                                                 </tr>
                                                 <tr class="dark">
                                                     <td class="half">
                                                         <input type="radio" id="short-black"
                                                                name="confstrs[sKlarnaFooterValue]" value="shortBlack"
-                                                               [{ if $confstrs.sKlarnaFooterValue == 'shortBlack' }]checked[{/if}]>
+                                                               [{if $confstrs.sKlarnaFooterValue == 'shortBlack'}]checked[{/if}]>
                                                         <label class="kl-logo white" for="short-black">
                                                             <div class="">
-                                                                <img src="[{ $locale|string_format:$aKlarnaFooterImgUrls.shortBlack }]">
+                                                                <img src="[{$locale|string_format:$aKlarnaFooterImgUrls.shortBlack}]">
                                                             </div>
                                                         </label>
                                                     </td>
                                                     <td class="half">
                                                         <input type="radio" id="short-white"
                                                                name="confstrs[sKlarnaFooterValue]" value="shortWhite"
-                                                               [{ if $confstrs.sKlarnaFooterValue == 'shortWhite' }]checked[{/if}]>
+                                                               [{if $confstrs.sKlarnaFooterValue == 'shortWhite'}]checked[{/if}]>
                                                         <label class="kl-logo black" for="short-white">
                                                             <div class="">
-                                                                <img src="[{ $locale|string_format:$aKlarnaFooterImgUrls.shortWhite }]">
+                                                                <img src="[{$locale|string_format:$aKlarnaFooterImgUrls.shortWhite}]">
                                                             </div>
                                                         </label>
                                                     </td>
@@ -177,44 +177,44 @@
                                 </tr>
                             [{/if}]
 
-                            [{if ($mode === 'KCO') }]
+                            [{if ($mode === 'KCO')}]
                                 <tr class="no-t-border no-b-border">
                                 <td>
                                     <div class="rows-wrapper"
-                                         [{if $confstrs.sKlarnaFooterDisplay === '2' }]style="display: block"[{/if}]>
+                                         [{if $confstrs.sKlarnaFooterDisplay === '2'}]style="display: block"[{/if}]>
                                         <table class="inner">
                                         <tbody>
                                         <tr class="dark">
                                             <td class="name-bold" colspan="3">
-                                                [{oxmultilang ident="TCKLARNA_FOOTER_KLARNA_LOGO" }] [{oxmultilang ident="TCKLARNA_DESIGN" }]
+                                                [{oxmultilang ident="TCKLARNA_FOOTER_KLARNA_LOGO"}] [{oxmultilang ident="TCKLARNA_DESIGN"}]
                                             </td>
                                         </tr>
                                         <tr class="dark">
                                             <td class="half">
-                                                [{oxmultilang ident="TCKLARNA_BLACK" }]
+                                                [{oxmultilang ident="TCKLARNA_BLACK"}]
                                             </td>
                                             <td class="half">
-                                                [{oxmultilang ident="TCKLARNA_WHITE" }]
+                                                [{oxmultilang ident="TCKLARNA_WHITE"}]
                                             </td>
                                         </tr>
                                         <tr class="dark">
                                             <td class="half">
                                                 <input type="radio" id="logo-black" name="confstrs[sKlarnaFooterValue]"
                                                        value="logoBlack"
-                                                       [{if $confstrs.sKlarnaFooterValue == 'logoBlack' }]checked="checked"[{/if}]>
+                                                       [{if $confstrs.sKlarnaFooterValue == 'logoBlack'}]checked="checked"[{/if}]>
                                                 <label class="kl-logo white" for="logo-black">
                                                     <div class="kl-logo-inner">
-                                                        <img class="" src="[{ $aKlarnaFooterImgUrls.logoBlack }]">
+                                                        <img class="" src="[{$aKlarnaFooterImgUrls.logoBlack}]">
                                                     </div>
                                                 </label>
                                             </td>
                                             <td class="half">
                                                 <input type="radio" id="logo-white" name="confstrs[sKlarnaFooterValue]"
                                                        value="logoWhite"
-                                                       [{if $confstrs.sKlarnaFooterValue == 'logoWhite' }]checked[{/if}]>
+                                                       [{if $confstrs.sKlarnaFooterValue == 'logoWhite'}]checked[{/if}]>
                                                 <label class="kl-logo black" for="logo-white">
                                                     <div class="kl-logo-inner">
-                                                        <img class="" src="[{ $aKlarnaFooterImgUrls.logoWhite }]">
+                                                        <img class="" src="[{$aKlarnaFooterImgUrls.logoWhite}]">
                                                     </div>
                                                 </label>
                                             </td>
@@ -229,21 +229,21 @@
                                 <tr class="no-t-border no-b-border">
                                 <td>
                                     <div class="rows-wrapper"
-                                         [{if $confstrs.sKlarnaFooterDisplay === '2' }]style="display: block"[{/if}]>
+                                         [{if $confstrs.sKlarnaFooterDisplay === '2'}]style="display: block"[{/if}]>
                                         <table class="inner">
                                             <tbody>
                                             <tr class="dark">
                                                 <td class="name-bold" colspan="3">
-                                                    [{oxmultilang ident="TCKLARNA_FOOTER_KLARNA_LOGO" }] [{ oxmultilang ident="TCKLARNA_DESIGN" }]
+                                                    [{oxmultilang ident="TCKLARNA_FOOTER_KLARNA_LOGO"}] [{oxmultilang ident="TCKLARNA_DESIGN"}]
                                                 </td>
                                             </tr>
                                             <tr class="dark">
                                                 <td class="half">
                                                     <input type="radio" id="logo-footer" name="confstrs[sKlarnaFooterValue]"
                                                            value="logoFooter"
-                                                           [{if $confstrs.sKlarnaFooterValue == 'logoFooter' }]checked="checked"[{/if}]>
+                                                           [{if $confstrs.sKlarnaFooterValue == 'logoFooter'}]checked="checked"[{/if}]>
                                                     <label for="logo-footer">
-                                                        <img width="135" height="75" class="" src="[{ $aKlarnaFooterImgUrls.logoFooter }]">
+                                                        <img width="135" height="75" class="" src="[{$aKlarnaFooterImgUrls.logoFooter}]">
                                                     </label>
                                                 </td>
                                             </tr>
@@ -259,141 +259,81 @@
                 </div>
 
                 <!-- Product details page and basket -->
-                [{ if $mode === 'KCO' }]
+                [{if $mode === 'KP'}]
                     <div class="klarna-row">
                         <div class="row-label">
                             <div class="sign plus"></div>
                             <div class="text ">
-                                [{ oxmultilang ident="TCKLARNA_DETAILS_AND_BASKET" }]
+                                [{oxmultilang ident="TCKLARNA_DETAILS_AND_BASKET"}]
                             </div>
                         </div>
                         <div class="clear"></div>
                         <div class="rows-wrapper">
                             <table class="config-options">
                                 <tbody>
-                                [{ assign var="showKPWidgetOptions" value=false }]
-                                [{ if $showKPWidgetOptions }]
-                                    [{* Klarna Payment Method Widget *}]
-                                    <tr class="no-t-border">
-                                        <td>
-                                            <table class="inner">
-                                                <tbody>
-                                                <tr class="dark">
-                                                    <td class="name-bold" colspan="3">
-                                                        [{ oxmultilang ident="TCKLARNA_DISPLAY_PAYMENT_WIDGET" }]
-                                                    </td>
-                                                </tr>
+                                <tr class="no-t-border no-b-border">
+                                    <td>
+                                        <table class="inner">
+                                            <tbody>
                                                 <tr class="dark">
                                                     <td class="name">
-                                                        [{ oxmultilang ident="TCKLARNA_ON_PROD_PAGE" }]
+                                                        [{oxmultilang ident="TCKLARNA_KEB_THEME"}]
                                                     </td>
-                                                    <td class="input w460">
+                                                    <td>
                                                         <div class="input">
-                                                            <div class="display">
-                                                                <label class="label toggle"
-                                                                       for="DisplayWidgetOnProdPage">
-                                                                    <input type="hidden"
-                                                                           name="confbools[tcklarna_blKlarnaDisplayWidgetOnProdPage]"
-                                                                           value="0">
-                                                                    <input type="checkbox" class="toggle_input"
-                                                                           name="confbools[tcklarna_blKlarnaDisplayWidgetOnProdPage]"
-                                                                           value="1"
-                                                                           [{if ($confbools.tcklarna_blKlarnaDisplayWidgetOnProdPage)}]checked[{/if}] [{ $readonly}]/>
-                                                                    <div class="toggle-control"
-                                                                         id="DisplayWidgetOnProdPage"></div>
-                                                                </label>
+                                                            <div class="selector" id="kebthemeSelector">
+                                                                <div class="selector__menu">
+                                                                    <ul class="selector__choices">
+                                                                        [{foreach from=$kebtheme item=name}]
+                                                                            <li class="selector__item[{if $confstrs.sKlarnaKEBTheme == $name}]--selected[{/if}]">
+                                                                                <a href="#" data-value="[{$name}]">
+                                                                                    [{oxmultilang ident="TCKLARNA_KEB_THEME_"|cat:$name}]
+                                                                                </a>
+                                                                            </li>
+                                                                        [{/foreach}]
+                                                                    </ul>
+                                                                    <input type="hidden" name="confstrs[sKlarnaKEBTheme]"
+                                                                           value="[{$confstrs.sKlarnaKEBTheme}]">
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </td>
-                                                    <td class="info-block">
-                                                        <span class="kl-tooltip"
-                                                              title="[{oxmultilang ident="TCKLARNA_WIDGET_ON_BASKET_PAGE_TOOLTIP"}]">
-                                                            <i class="fa fa-question fa-lg" aria-hidden="true"></i>
-                                                        </span>
-                                                    </td>
                                                 </tr>
-                                                <tr class="dark">
-                                                    <td class="name">
-                                                        [{ oxmultilang ident="TCKLARNA_ON_BASKET_PAGE" }]
-                                                    </td>
-                                                    <td class="input w460">
-                                                        <div class="input">
-                                                            <div class="display">
-                                                                <label class="label toggle"
-                                                                       for="DisplayWidgetOnBasketPage">
-                                                                    <input type="hidden"
-                                                                           name="confbools[tcklarna_blKlarnaDisplayWidgetOnBasketPage]"
-                                                                           value="0">
-                                                                    <input type="checkbox" class="toggle_input"
-                                                                           name="confbools[tcklarna_blKlarnaDisplayWidgetOnBasketPage]"
-                                                                           value="1" id="DisplayWidgetOnBasketPage"
-                                                                           [{if ($confbools.tcklarna_blKlarnaDisplayWidgetOnBasketPage)}]checked[{/if}] [{ $readonly}]/>
-                                                                    <div class="toggle-control"></div>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td class="info-block">
-                                                        <span class="kl-tooltip"
-                                                              title="[{oxmultilang ident="TCKLARNA_WIDGET_ON_PROD_PAGE_TOOLTIP"}]">
-                                                            <i class="fa fa-question fa-lg" aria-hidden="true"></i>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                [{/if}]
 
-                                [{ if $mode === 'KCO' }]
-                                    <tr class="no-t-border no-b-border">
-                                        <td>
-                                            <table class="inner">
-                                                <tbody>
-                                                <tr class="dark">
-                                                    <td class="name-bold" colspan="3">
-                                                        [{ oxmultilang ident="TCKLARNA_DISPLAY_BUY_NOW" }]
-                                                    </td>
-                                                </tr>
-                                                <tr class="dark">
+                                                <tr>
                                                     <td class="name">
-                                                        [{ oxmultilang ident="TCKLARNA_ON_PROD_PAGE" }]
+                                                        [{oxmultilang ident="TCKLARNA_KEB_SHAPE"}]
                                                     </td>
-                                                    <td class="input w460">
+                                                    <td>
                                                         <div class="input">
-                                                            <div class="display">
-                                                                <label class="label toggle" for="DisplayBuyNow">
-                                                                    <input type="hidden"
-                                                                           name="confbools[blKlarnaDisplayBuyNow]"
-                                                                           value="0">
-                                                                    <input type="checkbox" class="toggle_input"
-                                                                           name="confbools[blKlarnaDisplayBuyNow]"
-                                                                           value="1" id="DisplayBuyNow"
-                                                                           [{if ($confbools.blKlarnaDisplayBuyNow)}]checked[{/if}] [{ $readonly}]/>
-                                                                    <div class="toggle-control"></div>
-                                                                </label>
+                                                            <div class="selector" id="kebshapeSelector">
+                                                                <div class="selector__menu">
+                                                                    <ul class="selector__choices">
+                                                                        [{foreach from=$kebshape item=name}]
+                                                                            <li class="selector__item[{if $confstrs.sKlarnaKEBShape == $name}]--selected[{/if}]">
+                                                                                <a href="#" data-value="[{$name}]">
+                                                                                    [{oxmultilang ident="TCKLARNA_KEB_SHAPE_"|cat:$name}]
+                                                                                </a>
+                                                                            </li>
+                                                                        [{/foreach}]
+                                                                    </ul>
+                                                                    <input type="hidden" name="confstrs[sKlarnaKEBShape]"
+                                                                           value="[{$confstrs.sKlarnaKEBShape}]">
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </td>
-                                                    <td class="info-block">
-                                                <span class="kl-tooltip"
-                                                      title="[{oxmultilang ident="TCKLARNA_BUY_NOW_ON_PROD_PAGE_TOOLTIP"}]">
-                                                    <i class="fa fa-question fa-lg" aria-hidden="true"></i>
-                                                </span>
-                                                    </td>
+[{*                                                    <td class="info-block">*}]
+[{*                                                        <span class="kl-tooltip"*}]
+[{*                                                              title="[{oxmultilang ident="TCKLARNA_KEB_SHAPE_TOOLTIP"}]">*}]
+[{*                                                            <i class="fa fa-question fa-lg" aria-hidden="true"></i>*}]
+[{*                                                        </span>*}]
+[{*                                                    </td>*}]
                                                 </tr>
-                                                </tbody>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                [{ elseif !$showKPWidgetOptions }]
-                                    <tr class="no-t-border no-b-border">
-                                        <td>
-                                            [{ "TCKLARNA_NO_OPTIONS_MODE"|oxmultilangassign }]
-                                        </td>
-                                    </tr>
-                                [{/if}]
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -405,10 +345,10 @@
                     <div class="row-label">
                         <div class="sign plus"></div>
                         <div class="text ">
-                            [{ if ($mode === 'KP') }]
-                                [{ oxmultilang ident="TCKLARNA_PAYMENT_DESIGN" }]
-                            [{ elseif ($mode === 'KCO') }]
-                                [{ oxmultilang ident="TCKLARNA_CHECKOUT_DESIGN" }]
+                            [{if ($mode === 'KP')}]
+                                [{oxmultilang ident="TCKLARNA_PAYMENT_DESIGN"}]
+                            [{elseif ($mode === 'KCO')}]
+                                [{oxmultilang ident="TCKLARNA_CHECKOUT_DESIGN"}]
                             [{/if}]
                         </div>
                     </div>
@@ -418,19 +358,19 @@
                             <tbody>
                             <tr class="dark">
                                 <td class="name-bold" colspan="3">
-                                    [{ oxmultilang ident="TCKLARNA_COLOR_SETTINGS" }]
+                                    [{oxmultilang ident="TCKLARNA_COLOR_SETTINGS"}]
                                 </td>
                             </tr>
-                            [{ if ($mode === 'KP') }]
+                            [{if ($mode === 'KP')}]
                                 <tr class="dark">
                                     <td class="name">
-                                        [{ oxmultilang ident="TCKLARNA_BORDER" }]
+                                        [{oxmultilang ident="TCKLARNA_BORDER"}]
                                     </td>
                                     <td class="w460">
                                         <div class="input color-picker">
                                             <input class="color {hash:true,required:false}"
                                                    name="confaarrs[aKlarnaDesignKP][color_border]"
-                                                   value="[{ $confaarrs.aKlarnaDesignKP.color_border }]">
+                                                   value="[{$confaarrs.aKlarnaDesignKP.color_border}]">
                                         </div>
                                     </td>
                                     <td class="info-block">
@@ -441,13 +381,13 @@
                                 </tr>
                                 <tr class="dark">
                                     <td class="name">
-                                        [{ oxmultilang ident="TCKLARNA_BORDER_SELECTED" }]
+                                        [{oxmultilang ident="TCKLARNA_BORDER_SELECTED"}]
                                     </td>
                                     <td class="input w460">
                                         <div class="color-picker">
                                             <input class="color {hash:true,required:false}"
                                                    name="confaarrs[aKlarnaDesignKP][color_border_selected]"
-                                                   value="[{ $confaarrs.aKlarnaDesignKP.color_border_selected }]">
+                                                   value="[{$confaarrs.aKlarnaDesignKP.color_border_selected}]">
                                         </div>
                                     </td>
                                     <td class="info-block">
@@ -456,89 +396,89 @@
                                 </span>
                                     </td>
                                 </tr>
-                            [{/if }]
+                            [{/if}]
                             <tr class="dark">
                                 <td class="name">
-                                    [{ oxmultilang ident="TCKLARNA_BUTTON" }]
+                                    [{oxmultilang ident="TCKLARNA_BUTTON"}]
                                 </td>
                                 <td class="input w460">
                                     <div class="color-picker">
                                         <input class="color {hash:true,required:false}"
                                                name="confaarrs[aKlarnaDesign][color_button]"
-                                               value="[{ $confaarrs.aKlarnaDesign.color_button }]">
+                                               value="[{$confaarrs.aKlarnaDesign.color_button}]">
                                     </div>
                                 </td>
                                 <td class="info-block">
                                 <span class="kl-tooltip"
-                                      title="[{ if $mode === 'KCO' }][{oxmultilang ident="TCKLARNA_KCO_BUTTON_TOOLTIP"}][{else}][{oxmultilang ident="TCKLARNA_BUTTON_TOOLTIP"}][{/if}]">
+                                      title="[{if $mode === 'KCO'}][{oxmultilang ident="TCKLARNA_KCO_BUTTON_TOOLTIP"}][{else}][{oxmultilang ident="TCKLARNA_BUTTON_TOOLTIP"}][{/if}]">
                                     <i class="fa fa-question fa-lg" aria-hidden="true"></i>
                                 </span>
                                 </td>
                             </tr>
                             <tr class="dark">
                                 <td class="name">
-                                    [{ oxmultilang ident="TCKLARNA_BUTTON_TEXT" }]
+                                    [{oxmultilang ident="TCKLARNA_BUTTON_TEXT"}]
                                 </td>
                                 <td class="input w460">
                                     <div class="color-picker">
                                         <input class="color {hash:true,required:false}"
                                                name="confaarrs[aKlarnaDesign][color_button_text]"
-                                               value="[{ $confaarrs.aKlarnaDesign.color_button_text }]">
+                                               value="[{$confaarrs.aKlarnaDesign.color_button_text}]">
                                     </div>
                                 </td>
                                 <td class="info-block">
                                 <span class="kl-tooltip"
-                                      title="[{ if $mode === 'KCO' }][{oxmultilang ident="TCKLARNA_KCO_BUTTON_TEXT_TOOLTIP"}][{else}][{oxmultilang ident="TCKLARNA_BUTTON_TEXT_TOOLTIP"}][{/if}]">
+                                      title="[{if $mode === 'KCO'}][{oxmultilang ident="TCKLARNA_KCO_BUTTON_TEXT_TOOLTIP"}][{else}][{oxmultilang ident="TCKLARNA_BUTTON_TEXT_TOOLTIP"}][{/if}]">
                                     <i class="fa fa-question fa-lg" aria-hidden="true"></i>
                                 </span>
                                 </td>
                             </tr>
                             <tr class="dark">
                                 <td class="name">
-                                    [{ oxmultilang ident="TCKLARNA_CHECKBOX" }]
+                                    [{oxmultilang ident="TCKLARNA_CHECKBOX"}]
                                 </td>
                                 <td class="input w460">
                                     <div class="color-picker">
                                         <input class="color {hash:true,required:false}"
                                                name="confaarrs[aKlarnaDesign][color_checkbox]"
-                                               value="[{ $confaarrs.aKlarnaDesign.color_checkbox }]">
+                                               value="[{$confaarrs.aKlarnaDesign.color_checkbox}]">
                                     </div>
                                 </td>
                                 <td class="info-block">
                                 <span class="kl-tooltip"
-                                      title="[{ if $mode === 'KCO' }][{oxmultilang ident="TCKLARNA_KCO_DESIGN_CHECKBOX_TOOLTIP"}][{else}][{oxmultilang ident="TCKLARNA_DESIGN_CHECKBOX_TOOLTIP"}][{/if}]">
+                                      title="[{if $mode === 'KCO'}][{oxmultilang ident="TCKLARNA_KCO_DESIGN_CHECKBOX_TOOLTIP"}][{else}][{oxmultilang ident="TCKLARNA_DESIGN_CHECKBOX_TOOLTIP"}][{/if}]">
                                     <i class="fa fa-question fa-lg" aria-hidden="true"></i>
                                 </span>
                                 </td>
                             </tr>
                             <tr class="dark">
                                 <td class="name">
-                                    [{ oxmultilang ident="TCKLARNA_CHECKBOX_CHECKMARK" }]
+                                    [{oxmultilang ident="TCKLARNA_CHECKBOX_CHECKMARK"}]
                                 </td>
                                 <td class="input w460">
                                     <div class="color-picker">
                                         <input class="color {hash:true,required:false}"
                                                name="confaarrs[aKlarnaDesign][color_checkbox_checkmark]"
-                                               value="[{ $confaarrs.aKlarnaDesign.color_checkbox_checkmark }]">
+                                               value="[{$confaarrs.aKlarnaDesign.color_checkbox_checkmark}]">
                                     </div>
                                 </td>
                                 <td class="info-block">
                                 <span class="kl-tooltip"
-                                      title="[{ if $mode === 'KCO' }][{oxmultilang ident="TCKLARNA_KCO_DESIGN_CHECKBOX_CHECKMARK_TOOLTIP"}][{else}][{oxmultilang ident="TCKLARNA_DESIGN_CHECKBOX_CHECKMARK_TOOLTIP"}][{/if}]">
+                                      title="[{if $mode === 'KCO'}][{oxmultilang ident="TCKLARNA_KCO_DESIGN_CHECKBOX_CHECKMARK_TOOLTIP"}][{else}][{oxmultilang ident="TCKLARNA_DESIGN_CHECKBOX_CHECKMARK_TOOLTIP"}][{/if}]">
                                     <i class="fa fa-question fa-lg" aria-hidden="true"></i>
                                 </span>
                                 </td>
                             </tr>
-                            [{ if ($mode === 'KP') }]
+                            [{if ($mode === 'KP')}]
                                 <tr class="dark">
                                     <td class="name">
-                                        [{ oxmultilang ident="TCKLARNA_DETAILS" }]
+                                        [{oxmultilang ident="TCKLARNA_DETAILS"}]
                                     </td>
                                     <td class="input w460">
                                         <div class="color-picker">
                                             <input class="color {hash:true,required:false}"
                                                    name="confaarrs[aKlarnaDesignKP][color_details]"
-                                                   value="[{ $confaarrs.aKlarnaDesignKP.color_details }]">
+                                                   value="[{$confaarrs.aKlarnaDesignKP.color_details}]">
                                         </div>
                                     </td>
                                     <td class="info-block">
@@ -550,50 +490,50 @@
                             [{/if}]
                             <tr class="dark">
                                 <td class="name">
-                                    [{ oxmultilang ident="TCKLARNA_HEADER" }]
+                                    [{oxmultilang ident="TCKLARNA_HEADER"}]
                                 </td>
                                 <td class="input w460">
                                     <div class="color-picker">
                                         <input class="color {hash:true,required:false}"
                                                name="confaarrs[aKlarnaDesign][color_header]"
-                                               value="[{ $confaarrs.aKlarnaDesign.color_header }]">
+                                               value="[{$confaarrs.aKlarnaDesign.color_header}]">
                                     </div>
                                 </td>
                                 <td class="info-block">
                                 <span class="kl-tooltip"
-                                      title="[{ if $mode === 'KCO' }][{oxmultilang ident="TCKLARNA_KCO_HEADER_TOOLTIP"}][{else}][{oxmultilang ident="TCKLARNA_HEADER_TOOLTIP"}][{/if}]">
+                                      title="[{if $mode === 'KCO'}][{oxmultilang ident="TCKLARNA_KCO_HEADER_TOOLTIP"}][{else}][{oxmultilang ident="TCKLARNA_HEADER_TOOLTIP"}][{/if}]">
                                     <i class="fa fa-question fa-lg" aria-hidden="true"></i>
                                 </span>
                                 </td>
                             </tr>
                             <tr class="dark">
                                 <td class="name">
-                                    [{ oxmultilang ident="TCKLARNA_LINK" }]
+                                    [{oxmultilang ident="TCKLARNA_LINK"}]
                                 </td>
                                 <td class="input w460">
                                     <div class="color-picker">
                                         <input class="color {hash:true,required:false}"
                                                name="confaarrs[aKlarnaDesign][color_link]"
-                                               value="[{ $confaarrs.aKlarnaDesign.color_link }]">
+                                               value="[{$confaarrs.aKlarnaDesign.color_link}]">
                                     </div>
                                 </td>
                                 <td class="info-block">
                                 <span class="kl-tooltip"
-                                      title="[{ if $mode === 'KCO' }][{oxmultilang ident="TCKLARNA_KCO_LINK_TOOLTIP"}][{else}][{oxmultilang ident="TCKLARNA_LINK_TOOLTIP"}][{/if}]">
+                                      title="[{if $mode === 'KCO'}][{oxmultilang ident="TCKLARNA_KCO_LINK_TOOLTIP"}][{else}][{oxmultilang ident="TCKLARNA_LINK_TOOLTIP"}][{/if}]">
                                     <i class="fa fa-question fa-lg" aria-hidden="true"></i>
                                 </span>
                                 </td>
                             </tr>
-                            [{ if ($mode === 'KP') }]
+                            [{if ($mode === 'KP')}]
                                 <tr class="dark">
                                     <td class="name">
-                                        [{ oxmultilang ident="TCKLARNA_TEXT" }]
+                                        [{oxmultilang ident="TCKLARNA_TEXT"}]
                                     </td>
                                     <td class="input w460">
                                         <div class="color-picker">
                                             <input class="color {hash:true,required:false}"
                                                    name="confaarrs[aKlarnaDesignKP][color_text]"
-                                                   value="[{ $confaarrs.aKlarnaDesignKP.color_text }]">
+                                                   value="[{$confaarrs.aKlarnaDesignKP.color_text}]">
                                         </div>
                                     </td>
                                     <td class="info-block">
@@ -604,13 +544,13 @@
                                 </tr>
                                 <tr class="dark">
                                     <td class="name">
-                                        [{ oxmultilang ident="TCKLARNA_SECONDARY_TEXT" }]
+                                        [{oxmultilang ident="TCKLARNA_SECONDARY_TEXT"}]
                                     </td>
                                     <td class="input w460">
                                         <div class="color-picker">
                                             <input class="color {hash:true,required:false}"
                                                    name="confaarrs[aKlarnaDesignKP][color_text_secondary]"
-                                                   value="[{ $confaarrs.aKlarnaDesignKP.color_text_secondary }]">
+                                                   value="[{$confaarrs.aKlarnaDesignKP.color_text_secondary}]">
                                         </div>
                                     </td>
                                     <td class="info-block">
@@ -626,19 +566,19 @@
                             <tbody>
                             <tr class="dark">
                                 <td class="name-bold" colspan="3">
-                                    [{ oxmultilang ident="TCKLARNA_RADIUS_SETTINGS" }]
+                                    [{oxmultilang ident="TCKLARNA_RADIUS_SETTINGS"}]
                                 </td>
                             </tr>
                             <tr class="dark">
                                 <td class="name">
-                                    [{ oxmultilang ident="TCKLARNA_BORDER_RADIUS" }]
+                                    [{oxmultilang ident="TCKLARNA_BORDER_RADIUS"}]
                                 </td>
                                 <td>
                                     <div class="input w460">
                                         <input class="radius small pull-left" maxlength="4"
                                                name="confaarrs[aKlarnaDesign][radius_border]"
                                                style="border-radius: [{$confaarrs.aKlarnaDesign.radius_border}];"
-                                               value="[{ $confaarrs.aKlarnaDesign.radius_border }]">
+                                               value="[{$confaarrs.aKlarnaDesign.radius_border}]">
                                         <input class="range small pull-left" type="range" min="0" max="20"
                                                value="[{$confaarrs.aKlarnaDesign.radius_border|substr:0:-2}]"/>
                                     </div>
@@ -670,7 +610,7 @@
                                 </td>
                                 <td class="info-block">
                                     <span class="kl-tooltip"
-                                          title=[{ if $mode === 'KCO' }]"[{oxmultilang ident="TCKLARNA_KCO_BORDER_RADIUS_TOOLTIP"}]"[{else}]
+                                          title=[{if $mode === 'KCO'}]"[{oxmultilang ident="TCKLARNA_KCO_BORDER_RADIUS_TOOLTIP"}]"[{else}]
                                     "[{oxmultilang ident="TCKLARNA_BORDER_RADIUS_TOOLTIP"}]"[{/if}]>
                                     <i class="fa fa-question fa-lg" aria-hidden="true"></i>
                                     </span>
@@ -690,7 +630,7 @@
         </div>
     </div>
 </div>
-<script src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_lib.js') }]"></script>
-<script src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_design.js') }]"></script>
+<script src="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_lib.js')}]"></script>
+<script src="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_design.js')}]"></script>
 
 
