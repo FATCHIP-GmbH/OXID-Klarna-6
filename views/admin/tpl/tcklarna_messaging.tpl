@@ -1,22 +1,22 @@
 [{assign var="lang_tag" value=$languages.$editlanguage->abbr|oxupper}]
 
 <script type="text/javascript">
-    var tcklarna_countriesList = JSON.parse('[{ $tcklarna_countryList }]');
+    var tcklarna_countriesList = JSON.parse('[{$tcklarna_countryList}]');
 </script>
 
-[{if $readonly }]
+[{if $readonly}]
     [{assign var="readonly" value="readonly disabled"}]
     [{else}]
     [{assign var="readonly" value=""}]
     [{/if}]
 
 <link rel="stylesheet" href="[{$oViewConf->getResourceUrl()}]main.css">
-<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tcklarna_admin2.css') }]">
-<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster.bundle.min.css') }]">
-<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster-sideTip-light.min.css') }]">
-<script type="text/javascript" src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/jquery-1.12.4.min.js') }]"></script>
+<link rel="stylesheet" href="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tcklarna_admin2.css')}]">
+<link rel="stylesheet" href="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster.bundle.min.css')}]">
+<link rel="stylesheet" href="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster-sideTip-light.min.css')}]">
+<script type="text/javascript" src="[{$oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/jquery-1.12.4.min.js')}]"></script>
 <script type="text/javascript"
-        src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/tooltipster.bundle.min.js') }]"></script>
+        src="[{$oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/tooltipster.bundle.min.js')}]"></script>
 
 
 <div class="[{$box|default:'box'}]" style="[{if !$box && !$bottom_buttons}]height: 100%;[{/if}]">
@@ -27,7 +27,7 @@
             <div class="w12">
                 <h1>[{oxmultilang ident="TCKLARNA_ON_SITE_MESSAGING_HEADER_TITLE"}]</h1>
                 <p>[{oxmultilang ident="TCKLARNA_ON_SITE_MESSAGING_HEADER_DESC"}]</p>
-                <img src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/img/display-instant-financing_EN.png') }]" height=270px" width="350px"><img src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/img/easy-to-customise_EN.png') }]" height="270px" width="350px"><img src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/img/personalised-messaging_EN.png') }]" height="270px" width="350px">
+                <img src="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/img/display-instant-financing_EN.png')}]" height=270px" width="350px"><img src="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/img/easy-to-customise_EN.png')}]" height="270px" width="350px"><img src="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/img/personalised-messaging_EN.png')}]" height="270px" width="350px">
                 <p style="margin-top: 10px;padding-top: 10px">[{oxmultilang ident="TCKLARNA_ON_SITE_MESSAGING_HEADER_DESC_2"}]</p>
                 <a href="https://merchants.klarna.com/" target="_blank" class="btn-save saveButton" id="merchant-button">
                     [{oxmultilang ident="TCKLARNA_ON_SITE_MESSAGING_MERCHANT_BUTTON"}]
@@ -110,5 +110,5 @@
         </form>
     </div>
 </div>
-<script src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_lib.js') }]"></script>
-<script src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_emd.js') }]"></script>
+<script src="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_lib.js')}]"></script>
+<script src="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_emd.js')}]"></script>

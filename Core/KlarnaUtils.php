@@ -31,7 +31,6 @@ use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\CountryList;
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Application\Model\User;
-use OxidEsales\Eshop\Core\Exception\SystemComponentException;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 
@@ -41,6 +40,20 @@ use OxidEsales\Eshop\Core\DatabaseProvider;
  */
 class KlarnaUtils
 {
+    public static function getUserOrFakeUserFromSession()
+    {
+        $oSession = Registry::getSession();
+
+        if ($fakeUserId = $oSession->getVariable("kexFakeUserId")) {
+            $user = oxNew(User::class);
+            $user->load($fakeUserId);
+        }else {
+            $user = $oSession->getUser();
+        }
+
+        return $user;
+    }
+
     /**
      * @param null $email
      * @return User
@@ -351,6 +364,7 @@ class KlarnaUtils
         Registry::getSession()->deleteVariable('finalizeRequired');
         Registry::getSession()->deleteVariable('sCountryISO');
         Registry::getSession()->deleteVariable('sFakeUserId');
+        Registry::getSession()->deleteVariable("kexFakeUserId");
     }
 
     /**

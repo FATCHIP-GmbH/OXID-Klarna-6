@@ -38,9 +38,9 @@
 
                 </dt>
                 <dt>
-                    [{if $kpError }]
+                    [{if $kpError}]
                         <div class="kp-method alert alert-info"
-                             style="[{if !$is_checked}]display: none; [{/if}]max-width:700px">[{ $kpError }]</div>
+                             style="[{if !$is_checked}]display: none; [{/if}]max-width:700px">[{$kpError}]</div>
                     [{else}]
                         <div id="pay_later" class="kp-method" style="display: none;"></div>
                     [{/if}]

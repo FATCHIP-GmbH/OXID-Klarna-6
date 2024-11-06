@@ -18,8 +18,14 @@
 namespace TopConcepts\Klarna\Component;
 
 
+use OxidEsales\Eshop\Core\Field;
+use OxidEsales\EshopCommunity\Application\Model\Basket;
+use OxidEsales\EshopCommunity\Application\Model\BasketItem;
 use TopConcepts\Klarna\Core\KlarnaClientBase;
+use TopConcepts\Klarna\Core\KlarnaOrder;
 use TopConcepts\Klarna\Core\KlarnaOrderManagementClient;
+use TopConcepts\Klarna\Core\KlarnaPayment;
+use TopConcepts\Klarna\Core\KlarnaPaymentsClient;
 use TopConcepts\Klarna\Core\KlarnaUtils;
 use TopConcepts\Klarna\Core\KlarnaCheckoutClient;
 use OxidEsales\Eshop\Core\Exception\StandardException;
@@ -41,19 +47,59 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
     protected $_sRedirectController = 'KlarnaExpress';
 
     /**
-     * Executing action from details page
+     * Executing Klarna Express checkout from details page
      */
-    public function actionKlarnaExpressCheckoutFromDetailsPage()
+    public function tobasketKEB($sProductId = null, $dAmount = null, $aSel = null, $aPersParam = null, $blOverride = false)
     {
-        // trows exception if adding item to basket fails
-        $this->tobasket();
+        $oSession = Registry::getSession();
+        $sProductId = $sProductId ?: Registry::getConfig()->getRequestParameter('aid');
 
-        $oConfig = Registry::getConfig();
-        Registry::getUtils()->redirect(
-            $oConfig->getShopSecureHomeUrl() . 'cl=' . $this->_sRedirectController . '',
-            false,
-            302
-        );
+        if (!$this->basketHasProduct($oSession->getBasket(), $sProductId)) {
+            $this->tobasket($sProductId, $dAmount, $aSel, $aPersParam, $blOverride);
+
+            $oBasket = $oSession->getBasket();
+            $oBasket->calculateBasket(true);
+        }
+
+        Registry::getUtils()->showMessageAndExit($this->getKebOrderPayload());
+    }
+
+    protected function basketHasProduct(Basket $basket, $productId)
+    {
+        if ($basket->getItemsCount() !== 0) {
+            /** @var BasketItem $article */
+            foreach ($basket->getBasketArticles() as $article) {
+                if ($article->getProductId() == $productId) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    protected function getClientTokenFromSession()
+    {
+        $oSession = Registry::getSession();
+
+        $aKPSessionData = $oSession->getVariable('klarna_session_data');
+        if(!$aKPSessionData['client_token']) {
+            $oBasket    = $oSession->getBasket();
+            $oUser      = $this->getUser();
+
+            if ($oBasket->getItemsCount() && $oUser) {
+                /** @var KlarnaPayment $oKlarnaPayment */
+                $oKlarnaPayment = oxNew(KlarnaPayment::class, $oBasket, $oUser);
+                $oKlarnaPayment->setStatus('authorize');
+
+                $this->getKlarnaPaymentsClient()
+                    ->initOrder($oKlarnaPayment)
+                    ->createOrUpdateSession();
+            }
+        }
+
+        $aKPSessionData = $oSession->getVariable('klarna_session_data');
+        return $aKPSessionData['client_token'];
     }
 
     /**
@@ -101,6 +147,56 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
         return $result;
     }
 
+    public function getKebOrderPayload()
+    {
+        $oSession = Registry::getSession();
+        $oBasket = $oSession->getBasket();
+        $oUser = $this->getUser();
+
+        if (!$oUser) {
+            $tempMail = md5(time());
+
+            $oUser = KlarnaUtils::getFakeUser($tempMail);
+            $oSession->setVariable('sShipSet', KlarnaUtils::getShopConfVar("sKlarnaKEBMethod"));
+
+            $oUser->resolveCountry();
+            $countryid = $oUser->getKlarnaDeliveryCountry()->getId();
+            $oUser->oxuser__oxcountryid = new Field($countryid, Field::T_RAW);
+
+            $oUser->save();
+
+            $oSession->setVariable("kexFakeUserId", $oUser->getId());
+        }
+
+        //unlike for the other /sessions requests, the merchant urls are not needed for the create order call here.
+        $oKlarnaOrder   = oxNew(KlarnaOrder::class, $oBasket, $oUser, true);
+        $aOrderData     = $oKlarnaOrder->getOrderData();
+
+        $aOrderData = $this->modifyOrderForKeb($aOrderData, $oBasket, $oUser);
+
+        $orderPayload = json_encode($aOrderData);
+
+        $oSession->setVariable("keborderpayload", $orderPayload);
+
+        return $orderPayload;
+    }
+
+    protected function modifyOrderForKeb(array $aOrderData, $oBasket, $oUser)
+    {
+        if (Registry::getSession()->getVariable("keborderpayload")) {
+            unset($aOrderData["merchant_urls"]);
+            unset($aOrderData["billing_address"]);
+
+            $currencyName = $oBasket->getBasketCurrency()->name;
+            $sCountryISO = $oUser->resolveCountry();
+
+            $aOrderData["purchase_country"] = $sCountryISO;
+            $aOrderData["purchase_currency"] = $currencyName;
+        }
+
+        return $aOrderData;
+    }
+
     /**
      * Sends update request to checkout API
      * @return array order data
@@ -135,4 +231,12 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
         return KlarnaOrderManagementClient::getInstance();
     }
 
+    /**
+     *
+     * @return KlarnaPaymentsClient|KlarnaClientBase
+     */
+    protected function getKlarnaPaymentsClient()
+    {
+        return KlarnaPaymentsClient::getInstance();
+    }
 }

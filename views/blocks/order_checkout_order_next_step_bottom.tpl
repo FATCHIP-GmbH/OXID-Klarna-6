@@ -1,4 +1,4 @@
-[{ $smarty.block.parent }]
+[{$smarty.block.parent}]
 
 [{if $payment->oxpayments__oxid->value !== 'bestitamazon'}]
     <script type="javascript/text">

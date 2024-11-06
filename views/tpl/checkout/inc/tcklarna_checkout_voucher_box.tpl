@@ -1,7 +1,7 @@
 <div class="col-sm-[{if $oViewConf->isUserLoggedIn() && ($savedAddresses == false || !$shippingAddressAllowed)}]12[{else}]6[{/if}]">
     [{assign var="couponUsed_1" value=$oViewConf->getShowVouchers()}]
-    [{assign var="couponUsed_2" value=$oxcmp_basket->getVoucherDiscValue() }]
-    <div class="drop-container [{if $couponUsed_1 && $couponUsed_2 }]active[{/if}]" id="klarnaVouchersWidget">
+    [{assign var="couponUsed_2" value=$oxcmp_basket->getVoucherDiscValue()}]
+    <div class="drop-container [{if $couponUsed_1 && $couponUsed_2}]active[{/if}]" id="klarnaVouchersWidget">
         <div class="drop-trigger">
             <div class="klarna-label">
                 <span class="glyphicon glyphicon-star pull-left" aria-hidden="true"></span>
@@ -9,7 +9,7 @@
                 <span class="glyphicon glyphicon-menu-down pull-right" aria-hidden="true"></span>
             </div>
         </div>
-        <div class="drop-content" [{if $couponUsed_1 && $couponUsed_2 }]style="display: block;"[{/if}]">
+        <div class="drop-content" [{if $couponUsed_1 && $couponUsed_2}]style="display: block;"[{/if}]">
             <div class="voucherData">
                 [{include file='tcklarna_checkout_voucher_data.tpl'}]
             </div>

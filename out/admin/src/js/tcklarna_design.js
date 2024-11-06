@@ -42,3 +42,14 @@ $('input.radio_type').click(function(){
             }).bind(this));
 });
 
+var kebthemeSelector =
+    new Selector2({
+        id: 'kebthemeSelector',
+        fromOptions: false
+    });
+
+var kebshapeSelector =
+    new Selector2({
+          id: 'kebshapeSelector',
+          fromOptions: false
+      });

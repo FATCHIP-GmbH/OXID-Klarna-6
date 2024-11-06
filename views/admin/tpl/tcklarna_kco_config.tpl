@@ -1,37 +1,37 @@
 <link rel="stylesheet" href="[{$oViewConf->getResourceUrl()}]main.css">
-<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tcklarna_admin2.css') }]">
-<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster.bundle.min.css') }]">
-<link rel="stylesheet" href="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster-sideTip-light.min.css') }]">
-<script type="text/javascript" src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/jquery-1.12.4.min.js') }]"></script>
+<link rel="stylesheet" href="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tcklarna_admin2.css')}]">
+<link rel="stylesheet" href="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster.bundle.min.css')}]">
+<link rel="stylesheet" href="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/css/tooltipster-sideTip-light.min.css')}]">
+<script type="text/javascript" src="[{$oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/jquery-1.12.4.min.js')}]"></script>
 <script type="text/javascript"
-        src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/tooltipster.bundle.min.js') }]"></script>
-[{if $sslNotSet }]
+        src="[{$oViewConf->getModuleUrl('tcklarna', 'out/src/js/libs/tooltipster.bundle.min.js')}]"></script>
+[{if $sslNotSet}]
 [{/if}]
 
 <div class="[{$box|default:'box'}]" style="[{if !$box && !$bottom_buttons}]height: 100%;[{/if}]">
 
     <script type="text/javascript">
-        var tcklarna_countriesList = JSON.parse('[{ $tcklarna_countryList }]');
+        var tcklarna_countriesList = JSON.parse('[{$tcklarna_countryList}]');
     </script>
 
-    [{if $readonly }]
+    [{if $readonly}]
         [{assign var="readonly" value="readonly disabled"}]
     [{else}]
         [{assign var="readonly" value=""}]
     [{/if}]
 
     <div class="main-container">
-        [{assign var="tabName" value="TCKLARNA_BASIC_SETTINGS"|oxmultilangassign }]
+        [{assign var="tabName" value="TCKLARNA_BASIC_SETTINGS"|oxmultilangassign}]
         [{include file="tcklarna_header.tpl" title="TCKLARNA_CONFIGURATION_KCO"|oxmultilangassign desc="TCKLARNA_CONFIGURATION_KCO_ADMIN_DESC"|oxmultilangassign}]
         <hr>
-        [{if $sslNotSet }]
+        [{if $sslNotSet}]
             <br>
             <div class="messagebox danger" style="display: block">
                 <strong>[{"TCKLARNA_ERROR_SHOP_SSL_NOT_CONFIGURED"|oxmultilangassign:"Klarna Checkout"}]</strong>
             </div>
             <br>
         [{/if}]
-        [{if $KCOinactive }]
+        [{if $KCOinactive}]
             <br>
             <div class="messagebox danger" style="display: block">
                 <strong>[{oxmultilang ident="TCKLARNA_ERROR_KCO_INACTIVE"}]</strong>
@@ -56,13 +56,13 @@
                         <div class="selector" id="defaultCountry">
                             <div class="selector__menu">
                                 <ul class="selector__choices">
-                                    [{ foreach from=$activeCountries item="oxCountry" name="activeCountris" }]
-                                        <li class="selector__item[{if $confstrs.sKlarnaDefaultCountry === $oxCountry->oxcountry__oxisoalpha2->value }]--selected[{/if}]">
-                                            <a href="#" data-value=[{ $oxCountry->oxcountry__oxisoalpha2->value }]>
-                                                [{ $oxCountry->oxcountry__oxtitle->value }]
+                                    [{foreach from=$activeCountries item="oxCountry" name="activeCountris"}]
+                                        <li class="selector__item[{if $confstrs.sKlarnaDefaultCountry === $oxCountry->oxcountry__oxisoalpha2->value}]--selected[{/if}]">
+                                            <a href="#" data-value=[{$oxCountry->oxcountry__oxisoalpha2->value}]>
+                                                [{$oxCountry->oxcountry__oxtitle->value}]
                                             </a>
                                         </li>
-                                    [{ /foreach }]
+                                    [{/foreach}]
                                 </ul>
                                 <input type="hidden" name="confstrs[sKlarnaDefaultCountry]"
                                        value="[{$confstrs.sKlarnaDefaultCountry}]">
@@ -85,7 +85,7 @@
                                            value="0">
                                     <input type="checkbox" name="confbools[blKlarnaAllowSeparateDeliveryAddress]"
                                            value="1" id="AllowSeparateDeliveryAddress"
-                                           [{if ($confbools.blKlarnaAllowSeparateDeliveryAddress)}]checked[{/if}] [{ $readonly}]>
+                                           [{if ($confbools.blKlarnaAllowSeparateDeliveryAddress)}]checked[{/if}] [{$readonly}]>
                                     <div class="toggle-control"></div>
                                 </label>
                             </div>
@@ -111,7 +111,7 @@
                                     <input type="hidden" name="confbools[blKlarnaMandatoryPhone]" value="0">
                                     <input type="checkbox" name="confbools[blKlarnaMandatoryPhone]" value="1"
                                            id="MandatoryPhone"
-                                           [{if ($confbools.blKlarnaMandatoryPhone)}]checked[{/if}] [{ $readonly}]>
+                                           [{if ($confbools.blKlarnaMandatoryPhone)}]checked[{/if}] [{$readonly}]>
                                     <div class="toggle-control"></div>
                                 </label>
                             </div>
@@ -133,7 +133,7 @@
                                     <input type="hidden" name="confbools[blKlarnaMandatoryBirthDate]" value="0">
                                     <input type="checkbox" name="confbools[blKlarnaMandatoryBirthDate]" value="1"
                                            id="MandatoryBirthDate"
-                                           [{if ($confbools.blKlarnaMandatoryBirthDate)}]checked[{/if}] [{ $readonly}]>
+                                           [{if ($confbools.blKlarnaMandatoryBirthDate)}]checked[{/if}] [{$readonly}]>
                                     <div class="toggle-control"></div>
                                 </label>
                             </div>
@@ -155,7 +155,7 @@
                                     <input type="hidden" name="confbools[blKlarnaEnableAutofocus]" value="0">
                                     <input type="checkbox" name="confbools[blKlarnaEnableAutofocus]" value="1"
                                            id="EnableAutofocus"
-                                           [{if ($confbools.blKlarnaEnableAutofocus)}]checked[{/if}] [{ $readonly}]>
+                                           [{if ($confbools.blKlarnaEnableAutofocus)}]checked[{/if}] [{$readonly}]>
                                     <div class="toggle-control"></div>
                                 </label>
                             </div>
@@ -211,7 +211,7 @@
                                 <td>[{oxmultilang ident="TCKLARNA_ORDER_VALIDATION"}]</td>
                                 <td></td>
                                 <td>
-                                    <span class="kl-tooltip" title="[{oxmultilang ident="TCKLARNA_VALIDATION_TOOLTIP" }]">
+                                    <span class="kl-tooltip" title="[{oxmultilang ident="TCKLARNA_VALIDATION_TOOLTIP"}]">
                                         <i class="fa fa-question fa-lg" aria-hidden="true"></i>
                                     </span>
                                 </td>
@@ -254,7 +254,7 @@
                                     <label class="label toggle kco">
                                         <input type="hidden" name="confbools[tcklarna_blKlarnaSalutationMandatory]" value="0">
                                         <input type="checkbox" name="confbools[tcklarna_blKlarnaSalutationMandatory]" value="1"
-                                               [{if ($confbools.tcklarna_blKlarnaSalutationMandatory)}]checked[{/if}] [{ $readonly}]>
+                                               [{if ($confbools.tcklarna_blKlarnaSalutationMandatory)}]checked[{/if}] [{$readonly}]>
                                         <div class="toggle-control"></div>
                                     </label>
                                 </div>
@@ -267,7 +267,7 @@
                         </td>
                     </tr>
                 [{/if*}]
-                [{if $blGermanyActive }]
+                [{if $blGermanyActive}]
                     [{*<tr>*}]
                     [{*<td>*}]
                     [{*<div class="klarna-flag de"></div>*}]
@@ -281,7 +281,7 @@
                     [{*<label class="label toggle kco">*}]
                     [{*<input type="hidden" name="confbools[tcklarna_blKlarnaEnableDHLPackstations]" value="0">*}]
                     [{*<input type="checkbox" name="confbools[tcklarna_blKlarnaEnableDHLPackstations]" value="1"*}]
-                    [{*[{if ($confbools.tcklarna_blKlarnaEnableDHLPackstations)}]checked[{/if}] [{ $readonly}]>*}]
+                    [{*[{if ($confbools.tcklarna_blKlarnaEnableDHLPackstations)}]checked[{/if}] [{$readonly}]>*}]
                     [{*<div class="toggle-control"></div>*}]
                     [{*</label>*}]
                     [{*</div>*}]
@@ -303,7 +303,7 @@
                                     <input type="hidden" name="confbools[blKlarnaEnablePreFilling]" value="0">
                                     <input type="checkbox" name="confbools[blKlarnaEnablePreFilling]" value="1"
                                            id="EnablePreFilling"
-                                           [{if ($confbools.blKlarnaEnablePreFilling)}]checked[{/if}] [{ $readonly}]>
+                                           [{if ($confbools.blKlarnaEnablePreFilling)}]checked[{/if}] [{$readonly}]>
                                     <div class="toggle-control"></div>
                                 </label>
                             </div>
@@ -336,7 +336,7 @@
                                         <input type="hidden" name="confbools[blKlarnaPreFillNotification]" value="0">
                                         <input type="checkbox" name="confbools[blKlarnaPreFillNotification]" value="1"
                                                id="PreFillNotification"
-                                               [{if ($confbools.blKlarnaPreFillNotification)}]checked[{/if}] [{ $readonly}]>
+                                               [{if ($confbools.blKlarnaPreFillNotification)}]checked[{/if}] [{$readonly}]>
                                         <div class="toggle-control"></div>
                                     </label>
                                 </div>
@@ -354,7 +354,7 @@
                         <table class="mlm5 inner-table">
                             <tr>
                                 <td class="saveinnewlangtext">
-                                    [{ oxmultilang ident="GENERAL_LANGUAGE" }]
+                                    [{oxmultilang ident="GENERAL_LANGUAGE"}]
                                 </td>
                                 <td>
                                     <div class="input">
@@ -363,13 +363,13 @@
                                                 <ul class="selector__choices">
                                                     [{foreach from=$languages key=lang item=olang}]
                                                         <li class="selector__item[{if $lang == $editlanguage}]--selected[{/if}]">
-                                                            <a href="#" data-value="[{ $lang }]">[{ $olang->name }]</a>
+                                                            <a href="#" data-value="[{$lang}]">[{$olang->name}]</a>
                                                         </li>
                                                     [{/foreach}]
                                                 </ul>
                                                 <input type="hidden" name="editlanguage" id="editlanguage"
                                                        class="saveinnewlanginput"
-                                                       value="[{ $editlanguage }]">
+                                                       value="[{$editlanguage}]">
                                             </div>
                                         </div>
                                     </div>
@@ -377,7 +377,7 @@
                                 <td>
                                 </td>
                             </tr>
-                            [{ include file="tcklarna_lang_spec_conf.tpl" }]
+                            [{include file="tcklarna_lang_spec_conf.tpl"}]
                         </table>
                     </td>
                 </tr>
@@ -400,5 +400,5 @@
     </div>
 </div>
 
-<script src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_lib.js') }]"></script>
-<script src="[{ $oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_configuration.js') }]"></script>
+<script src="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_lib.js')}]"></script>
+<script src="[{$oViewConf->getModuleUrl('tcklarna', 'out/admin/src/js/tcklarna_admin_configuration.js')}]"></script>

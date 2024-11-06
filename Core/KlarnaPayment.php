@@ -166,11 +166,15 @@ class KlarnaPayment extends BaseModel
         );
 
         $this->_aUserData             = $oUser->getKlarnaPaymentData();
+
+        unset($this->_aUserData["billing_address"]);
+
         $this->_aOrderLines           = $oBasket->getKlarnaOrderLines();
         $this->_aOrderLines['locale'] = $sLocale;
         $this->_aOrderData            = array_merge($this->_aOrderData, $this->_aOrderLines);
         $this->addOptions();
         $this->setCustomerData();
+        //TODO make sure checksumCheck finds nothing after KEX button was pressed
         $this->checksumCheck();
 
         if (!(KlarnaUtils::is_ajax()) && $this->isAuthorized() && $this->aUpdateData) {
@@ -439,9 +443,9 @@ class KlarnaPayment extends BaseModel
     {
         $this->errors = array();
 
-        if ($this->isOrderStateChanged() || $this->paymentChanged) {
-            $this->addErrorMessage('TCKLARNA_KP_ORDER_DATA_CHANGED');
-        }
+//        if ($this->isOrderStateChanged() || $this->paymentChanged) {
+//            $this->addErrorMessage('TCKLARNA_KP_ORDER_DATA_CHANGED');
+//        }
 
         $this->validateToken();
         $this->validateKlarnaUserData();

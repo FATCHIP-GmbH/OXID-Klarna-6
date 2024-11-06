@@ -6,7 +6,7 @@ Klarna Checkout and Klarna Payments Module for the OXID eShop
 ### Title: Klarna Checkout and Klarna Payments Module for the OXID eShop
 ### Author: Fatchip GmbH, https://www.fatchip.de
 ### Prefix: tcklarna
-### Version: 5.5.4
+### Version: 5.5.5
 ### Link: https://www.klarna.com/de/verkaeufer/plattformen-und-partner/oxid/
 ### Mail: oxid@klarna.com
 
@@ -21,11 +21,11 @@ OXID eShop Plugin to integrate Klarna Checkout and Klarna Payments to OXID eShop
 
 In the shop's main folder ( the one with composer.json file) run this command:
 
-composer require fatchip-gmbh/oxid-klarna-6:v5.5.4
+composer require fatchip-gmbh/oxid-klarna-6:v5.5.5
 
 or add the following line within the "require" section to your composer.json file:
 
-"fatchip-gmbh/oxid-klarna-6": "v5.5.4"
+"fatchip-gmbh/oxid-klarna-6": "v5.5.5"
 
 and run
 

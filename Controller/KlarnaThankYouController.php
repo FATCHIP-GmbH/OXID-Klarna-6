@@ -45,6 +45,11 @@ class KlarnaThankYouController extends KlarnaThankYouController_parent
     {
         $render = parent::render();
 
+//        if ($payload = Registry::getSession()->getVariable("keborderpayload")) {
+//            print_r($payload);
+//            die("test");
+//        }
+        
         if ($sKlarnaId = Registry::getSession()->getVariable('klarna_checkout_order_id')) {
             $oOrder = Registry::get(Order::class);
             $oOrder->loadByKlarnaId($sKlarnaId);

@@ -1,7 +1,7 @@
 [{$smarty.block.parent}]
 
 [{if $payment && $payment->isKPPayment()}]
-    [{capture assign="insertLogoJS" }]
+    [{capture assign="insertLogoJS"}]
         var theme = '[{$oViewConf->getActiveTheme()}]';
         if(theme === 'flow'){
             var $parent = $('#orderPayment').find('.panel-body');
@@ -22,5 +22,5 @@
                 .appendTo($parent)
         }
     [{/capture}]
-    [{ oxscript add=$insertLogoJS priority=10 }]
+    [{oxscript add=$insertLogoJS priority=10}]
 [{/if}]

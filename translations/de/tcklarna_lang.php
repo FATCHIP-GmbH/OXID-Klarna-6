@@ -39,7 +39,6 @@ $aLang = array(
     'TCKLARNA_LAW_NOTICE'                        => 'Es gelten die <a href="%s" class="klarna-notification" target="_blank">Nutzungsbedingungen</a> zur Datenübertragung',
     'TCKLARNA_OUTSIDE_VOUCHER'                   => 'Sie haben einen Gutschein?',
     'TCKLARNA_GO_TO_CHECKOUT'                    => 'Zur Kasse',
-    'TCKLARNA_BUY_NOW'                           => 'Jetzt kaufen',
     'TCKLARNA_USE_AS_DELIVERY_ADDRESS'           => 'Als Lieferanschrift verwenden',
     'TCKLARNA_CHOOSE_DELIVERY_ADDRESS'           => 'Lieferadresse wählen',
     'TCKLARNA_CREATE_USER_ACCOUNT'               => 'Kundenkonto anlegen',
@@ -73,6 +72,8 @@ $aLang = array(
     'TCKLARNA_PLEASE_AGREE_TO_TERMS'            => 'Bitte stimmen Sie den AGB und den Widerrufsbedingungen für digitale Inhalte zu.',
     'TCKLARNA_ERROR_NOT_ENOUGH_IN_STOCK'        => 'Nicht ausreichender Lagerbestand des Produkts %s.',
     'TCKLARNA_ERROR_NO_SHIPPING_METHODS_SET_UP' => 'Derzeit ist keine Versandart für dieses Land definiert: %s',
+
+    'TCKLARNA_ERROR_KEB_USER_EXISTS'         => 'Unter der angegebenen E-Mail existiert bereits ein User im Shop. Bitte melden Sie sich an um die Klarna-Bestellung fortzusetzen.',
 
     'TCKLARNA_PAY_LATER_SUBTITLE'    => 'Erst kaufen, dann bezahlen',
     'TCKLARNA_SLICE_IT_SUBTITLE'     => 'Bequem in Raten zahlen',
