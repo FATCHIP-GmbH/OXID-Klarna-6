@@ -97,7 +97,7 @@ class KlarnaPayment extends KlarnaPayment_parent
     public static function getKlarnaPaymentsIds($filter = null, $b2b = false)
     {
         if ($b2b) {
-            return [self::KLARNA_PAYMENT_ID];
+            return [self::KLARNA_PAYMENT_PAY_LATER_ID];
         }
 
         if ($filter === 'KP') {
