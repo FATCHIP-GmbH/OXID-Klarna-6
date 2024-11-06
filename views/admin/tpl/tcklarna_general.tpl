@@ -456,7 +456,6 @@
                                 <div class="selector" id="kebmethodSelector">
                                     <div class="selector__menu">
                                         <ul class="selector__choices">
-                                            [{$confstrs.sKlarnaKEBMethod|var_dump}]
                                             [{foreach from=$kebshippingmethods key=shippingId item=oDelSet}]
                                                 <li class="selector__item[{if $confstrs.sKlarnaKEBMethod == $shippingId}]--selected[{/if}]">
                                                     <a href="#" data-value="[{$shippingId}]">

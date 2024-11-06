@@ -208,7 +208,7 @@ class KlarnaPayment extends BaseModel
     
     protected function setCustomerData() {
         $append = array();
-        if ($this->isB2B()) {
+        if ($this->isCustomerB2B()) {
             $append['customer']['type'] = 'organization';
             $this->_aUserData['customer']['type'] = 'organization';
         } else {
@@ -217,9 +217,12 @@ class KlarnaPayment extends BaseModel
         $this->_aOrderData += $append;
     }
 
-    public function isB2B()
+    public function isCustomerB2B()
     {
-        return $this->b2bAllowed && !empty($this->_aUserData['billing_address']['organization_name']);
+        return $this->b2bAllowed && (
+            !empty($this->_aUserData['billing_address']['organization_name']) ||
+            !empty($this->_aUserData['shipping_address']['organization_name'])
+            );
     }
 
     /**
@@ -417,11 +420,14 @@ class KlarnaPayment extends BaseModel
      */
     public function validateKlarnaUserData()
     {
-        if ($this->_aUserData['billing_address']['organization_name'] && !$this->b2bAllowed) {       // oxid fieldName invadr[oxuser__oxcompany]
+        $hasOrg = $this->_aUserData['billing_address']['organization_name']
+            || $this->_aUserData['shipping_address']['organization_name'];
+
+        if ($hasOrg && !$this->b2bAllowed) {       // oxid fieldName invadr[oxuser__oxcompany]
             $this->addErrorMessage('KP_AVAILABLE_FOR_PRIVATE_ONLY');
         }
 
-        if (empty($this->_aUserData['billing_address']['organization_name']) && !$this->b2cAllowed) {       // oxid fieldName invadr[oxuser__oxcompany]
+        if (!$hasOrg && !$this->b2cAllowed) {       // oxid fieldName invadr[oxuser__oxcompany]
             $this->addErrorMessage('KP_AVAILABLE_FOR_COMPANIES_ONLY');
         }
     }
