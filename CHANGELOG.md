@@ -1,3 +1,6 @@
+### 5.5.5
+* Fixed migration throwing error for missing method
+
 ### 5.5.4
 * Added migrations 
 * Added authorization callback URL for initiate and update session requests
