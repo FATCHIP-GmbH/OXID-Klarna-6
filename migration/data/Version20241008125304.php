@@ -33,4 +33,8 @@ final class Version20241008125304 extends AbstractMigration
             $oPayment->delete();
         }
     }
+
+    public function down(Schema $schema) : void
+    {
+    }
 }
