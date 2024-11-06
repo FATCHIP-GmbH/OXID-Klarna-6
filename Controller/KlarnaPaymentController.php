@@ -18,6 +18,8 @@
 namespace TopConcepts\Klarna\Controller;
 
 
+use OxidEsales\Eshop\Core\Field;
+use OxidEsales\Eshop\Core\Model\BaseModel;
 use OxidEsales\Eshop\Core\UtilsView;
 use TopConcepts\Klarna\Core\Exception\KlarnaWrongCredentialsException;
 use TopConcepts\Klarna\Core\KlarnaPaymentsClient;
@@ -150,7 +152,7 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
                 $this->render();
             }
 
-            $isB2B = $this->oKlarnaPayment->isB2B();
+            $isB2B = $this->oKlarnaPayment->isCustomerB2B();
             if ($isB2B && $this->oKlarnaPayment->isAuthorized()) {
                 if (Registry::getSession()->getVariable('reauthorizeRequired')) {
                     KlarnaPayment::cleanUpSession();
@@ -221,13 +223,15 @@ class KlarnaPaymentController extends KlarnaPaymentController_parent
             if (KlarnaUtils::isKlarnaPaymentsEnabled()) {
 
                 //If One Klarna is Active, no other KP Payments should be displayed
-                if(KlarnaUtils::getIsOneKlarnaActive()) {
-                    $KPPaymentIds = [KlarnaPaymentHelper::KLARNA_PAYMENT_ID];
+                if (KlarnaUtils::getShopConfVar('sKlarnaB2Option') === "B2B") {
+                    $activePaymentIds = KlarnaPaymentModel::getKlarnaPaymentsIds(null, true);
+                }elseif(KlarnaUtils::getIsOneKlarnaActive()) {
+                    $activePaymentIds = [KlarnaPaymentHelper::KLARNA_PAYMENT_ID];
                 }else {
-                    $KPPaymentIds = KlarnaPaymentModel::getKlarnaPaymentsIds('KP');
+                    $activePaymentIds = KlarnaPaymentModel::getKlarnaPaymentsIds('KP');
                 }
 
-                $toRemove = array_diff($allKlarnaPaymentIds, $KPPaymentIds);
+                $toRemove = array_diff($allKlarnaPaymentIds, $activePaymentIds);
             }
             foreach ($toRemove as $paymentId) {
                 unset($this->aPaymentList[$paymentId]);
