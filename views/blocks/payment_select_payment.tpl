@@ -15,6 +15,7 @@
                     <label for="kp-pl"><b>[{oxmultilang ident="TCKLARNA_BILLIE_TITLE"}]</b></label>
                     <img src="[{$paymentmethod->getBadgeUrl()}]">
                 </dt>
+                <dt style="font-weight: normal">[{oxmultilang ident="TCKLARNA_BILLIE_SUBTITLE"}]</dt>
                 <dt>
                     [{if $kpError}]
                         <div class="kp-method alert alert-info"

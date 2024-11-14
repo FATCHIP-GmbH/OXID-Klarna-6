@@ -83,8 +83,8 @@ $aLang = array(
     'TCKLARNA_PAY_NOW_SUBTITLE'      => 'Easy and direct payment',
     'TCKLARNA_ORDER_AMOUNT_TOO_HIGH' => 'The order amount is too high.',
 
-    'TCKLARNA_BILLIE_TITLE'     => 'Pay by invoice',
-    'TCKLARNA_BILLIE_SUBTITLE'  => 'Jetzt kaufen, später bezahlen',
+    'TCKLARNA_BILLIE_TITLE'     => 'Invoice',
+    'TCKLARNA_BILLIE_SUBTITLE'  => 'Buy now, pay later',
 
     'TCKLARNA_ANONYMIZED_PRODUCT'                  => 'Anonymized product title:',
 
