@@ -11,6 +11,7 @@
                     [{assign var="confVarName" value="sKlarnaTermsConditionsURI_"|cat:$lang_tag}]
                     <div class="input">
                         <input type="text" class="url-input m-lang"
+                               id="klarnaConditionUri"
                                name="confstrs[sKlarnaTermsConditionsURI_[{$lang_tag}]]"
                                value="[{$confstrs.$confVarName}]"
                                pattern="^(https://)?([a-zA-Z0-9]([a-zA-ZäöüÄÖÜ0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}.*" required>
@@ -29,6 +30,7 @@
                     [{assign var="confVarName" value="sKlarnaCancellationRightsURI_"|cat:$lang_tag}]
                     <div class="input">
                         <input type="text" class="url-input m-lang"
+                               id="klarnaCancellationUri"
                                name="confstrs[sKlarnaCancellationRightsURI_[{$lang_tag}]]"
                                value="[{$confstrs.$confVarName}]"
                                pattern="^(https://)?([a-zA-Z0-9]([a-zA-ZäöüÄÖÜ0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}.*" required>
@@ -61,3 +63,37 @@
         </table>
     </td>
 </tr>
+
+<script>
+    window.onload = function () {
+        let displayExpressButton = document.getElementById("DisplayExpressButton");
+        let mode_checkout = document.getElementById("mode_checkout");
+        let mode_payment = document.getElementById("mode_payment");
+
+        let klarnaConditionUri = document.getElementById("klarnaConditionUri");
+        let klarnaCancellationUri = document.getElementById("klarnaCancellationUri");
+
+        klarnaSetRequiredUris();
+        displayExpressButton.onchange = function () {
+            klarnaSetRequiredUris();
+        }
+
+        mode_checkout.onchange = function () {
+            klarnaSetRequiredUris();
+        }
+
+        mode_payment.onchange = function () {
+            klarnaSetRequiredUris();
+        }
+
+        function klarnaSetRequiredUris() {
+            if (displayExpressButton.checked || mode_checkout.checked) {
+                klarnaConditionUri.required = true;
+                klarnaCancellationUri.required = true;
+            }else {
+                klarnaConditionUri.required = false;
+                klarnaCancellationUri.required = false;
+            }
+        }
+    }
+</script>
