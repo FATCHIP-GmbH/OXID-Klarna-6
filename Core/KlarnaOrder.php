@@ -157,7 +157,9 @@ class KlarnaOrder extends BaseModel
             $this->_aUserData
         );
 
-        unset($this->_aOrderData["billing_address"]);
+        if (Registry::getSession()->getVariable("keborderpayload")) {
+            unset($this->_aOrderData["billing_address"]);
+        }
 
         //clean up in case of returning to the iframe with an open order
         Registry::getSession()->deleteVariable('externalCheckout');
@@ -246,6 +248,11 @@ class KlarnaOrder extends BaseModel
         if($this->activeB2Option === 'B2B'){
             $this->b2cAllowed = false;
         }
+    }
+
+    protected function isB2B()
+    {
+       return $this->_aUserData['billing_address']['organization_name'] && $this->b2bAllowed;
     }
     
     protected function setCustomerData() {
