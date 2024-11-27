@@ -318,7 +318,6 @@ window.klarnaAsyncCallback = function () {
             } else if ($kpRadio.active && $form.attr('id') === 'payment') {
                 event.preventDefault();
                 if (!$kpRadio.active.hasError) {
-                    $('.loading').show(600);
                     klarnaSendXHR({
                         action: 'checkOrderStatus',
                         paymentId: $kpRadio.active.value,

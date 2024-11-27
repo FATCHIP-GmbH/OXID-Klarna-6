@@ -167,8 +167,9 @@ class KlarnaPayment extends BaseModel
 
         $this->_aUserData             = $oUser->getKlarnaPaymentData();
 
-        unset($this->_aUserData["billing_address"]);
-
+        if (Registry::getSession()->getVariable("keborderpayload")) {
+            unset($this->_aUserData["billing_address"]);
+        }
         $this->_aOrderLines           = $oBasket->getKlarnaOrderLines();
         $this->_aOrderLines['locale'] = $sLocale;
         $this->_aOrderData            = array_merge($this->_aOrderData, $this->_aOrderLines);
@@ -219,7 +220,9 @@ class KlarnaPayment extends BaseModel
 
     public function isB2B()
     {
-        return $this->b2bAllowed && !empty($this->_aUserData['billing_address']['organization_name']);
+        $isBillingOrg = !empty($this->_aUserData['billing_address']['organization_name']);
+        $isShippingOrg = !empty($this->_aUserData['shipping_address']['organization_name']);
+        return $this->b2bAllowed && ($isBillingOrg || $isShippingOrg);
     }
 
     /**
