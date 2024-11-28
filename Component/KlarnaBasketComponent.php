@@ -183,16 +183,14 @@ class KlarnaBasketComponent extends KlarnaBasketComponent_parent
 
     protected function modifyOrderForKeb(array $aOrderData, $oBasket, $oUser)
     {
-        if (Registry::getSession()->getVariable("keborderpayload")) {
-            unset($aOrderData["merchant_urls"]);
-            unset($aOrderData["billing_address"]);
+        unset($aOrderData["merchant_urls"]);
+        unset($aOrderData["billing_address"]);
 
-            $currencyName = $oBasket->getBasketCurrency()->name;
-            $sCountryISO = $oUser->resolveCountry();
+        $currencyName = $oBasket->getBasketCurrency()->name;
+        $sCountryISO = $oUser->resolveCountry();
 
-            $aOrderData["purchase_country"] = $sCountryISO;
-            $aOrderData["purchase_currency"] = $currencyName;
-        }
+        $aOrderData["purchase_country"] = $sCountryISO;
+        $aOrderData["purchase_currency"] = $currencyName;
 
         return $aOrderData;
     }

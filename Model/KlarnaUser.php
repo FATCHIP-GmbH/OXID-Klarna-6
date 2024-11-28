@@ -121,7 +121,6 @@ class KlarnaUser extends KlarnaUser_parent
             }
         }
 
-        //TODO remove billing address for KEB
         $aUserData = array(
             'billing_address'  => $billingAddress,
             'shipping_address' => isset($shippingAddress) ? $shippingAddress : $billingAddress,
