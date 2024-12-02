@@ -19,18 +19,14 @@ namespace TopConcepts\Klarna\Core;
 
 
 use OxidEsales\Eshop\Application\Controller\Admin\ShopConfiguration;
-use OxidEsales\Eshop\Application\Model\Actions;
-use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\DbMetaDataHandler;
-use OxidEsales\Eshop\Core\Model\BaseModel;
 use OxidEsales\Eshop\Core\Registry;
-use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Database\Adapter\Doctrine\Database;
 use OxidEsales\DoctrineMigrationWrapper\MigrationsBuilder;
 use Symfony\Component\Console\Output\BufferedOutput;
 
-class KlarnaInstaller extends ShopConfiguration
+final class KlarnaInstaller
 {
     const KLARNA_MODULE_ID = 'tcklarna';
 
@@ -173,7 +169,8 @@ class KlarnaInstaller extends ShopConfiguration
             'select' => array(),
         );
 
-        $savedConf     = $this->loadConfVars($shopId, 'module:'. self::KLARNA_MODULE_ID);
+        $oShopConf     = oxNew(ShopConfiguration::class);
+        $savedConf     = $oShopConf->loadConfVars($shopId, 'module:'. self::KLARNA_MODULE_ID);
         $savedConfVars = $savedConf['vars'];
 
         foreach ($defaultConfVars as $type => $values) {
@@ -188,7 +185,7 @@ class KlarnaInstaller extends ShopConfiguration
                 $config->saveShopConfVar(
                     $type,
                     $name,
-                    $this->_serializeConfVar($type, $name, $data),
+                    $data,
                     $shopId,
                     "module:" . self::KLARNA_MODULE_ID
                 );
