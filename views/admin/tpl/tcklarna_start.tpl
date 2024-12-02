@@ -12,7 +12,7 @@
                 <p>[{"TCKLARNA_WELCOME_TO_CONFIGURATION"|oxmultilangassign:$klarnaOxidLink}]</p>
                 <div class="top-button-group">
                     <div class="w50per">
-                        <a href="https://eu.portal.klarna.com/signup/oxid" target="_blank">
+                        <a href="https://portal.klarna.com/products/signup/basic-info?utm_source=klarnacom&utm_campaign=/de/verkaeufer/&utm_medium=referral&utm_content=klarnacom-link&_gl=1*17c7ixe*_gcl_aw*R0NMLjE3MzE5Mjk4NjAuQ2owS0NRaUE2T3U1QmhDckFSSXNBUG9UeHJBQmZ3bVUtRmZwQWxtRmFxeTVFTnFBYzRld25POXF3QXlfZ2VSNGVPNjduRXFrTFlKX054SWFBb2hJRUFMd193Y0I.*_gcl_au*NzgzNjMxMDQ0LjE3MzE2Nzc1NDQ." target="_blank">
                             <button class="btn-save">[{oxmultilang ident="TCKLARNA_REGISTER_NOW_BUTTON"}]</button>
                         </a>
                     </div>

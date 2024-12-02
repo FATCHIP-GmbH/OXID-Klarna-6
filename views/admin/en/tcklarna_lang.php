@@ -144,7 +144,7 @@ $aLang = array(
     'TCKLARNA_CHOOSE_KP_OPTIONS' => 'Choose Klarna Payments options offered to customers:',
     'TCKLARNA_PAY_LATER'         => 'Pay later',
     'TCKLARNA_PAY_LATER.'        => 'Pay later.',
-    'TCKLARNA_PAY_LATER_START'   => 'For customers that want to buy now but pay later. Easy in 14, 21 or 28 days (depending on market).',
+    'TCKLARNA_PAY_LATER_START'   => 'For customers that want to buy now but pay later. Easy in 30 days (depending on market).',
     'TCKLARNA_PAY_LATER_TEXT'    => 'The option to pay later makes buying quicker and easier for customers: no need to fill out lengthy personal details or card number online.',
     'TCKLARNA_SLICE_IT'          => 'Financing',
     'TCKLARNA_SLICE_IT.'         => 'Financing.',
@@ -349,7 +349,7 @@ or contact Klarna Integration Support.',
     'TCKLARNA_ON_SITE_MESSAGING_HEADER_TITLE'   => 'What is On-Site Messaging?',
     'TCKLARNA_ON_SITE_MESSAGING_HEADER_DESC' => 'Consumers are not always aware of the different credit and financing options available to them before they reach the checkout. Knowing financing is available early on influences the purchase decision.
 On-Site Messaging is easy and simple to integrate providing tailored messaging ranging from generic banners to promote your partnership with Klarna and availability of financing to personalized credit promotions on product or cart pages.',
-    'TCKLARNA_ON_SITE_MESSAGING_HEADER_DESC_2' => 'Find more information on <a class="cl-pink" href="https://developers.klarna.com/documentation/on-site-messaging/getting-started/" target="_blank">how to get started here</a><br><br>
+    'TCKLARNA_ON_SITE_MESSAGING_HEADER_DESC_2' => 'Find more information on <a class="cl-pink" href="https://docs.klarna.com/conversion-boosters/on-site-messaging/before-you-start/" target="_blank" rel=”noopener">how to get started here</a><br><br>
 And log in to the <a class="cl-pink" href="https://merchants.klarna.com/" target="_blank">Merchant Portal</a> to generate your personal JavaScript and placement code. On-Site Messaging will be activated in your shop, as soon as the JavaScript code has been saved and at least one placement code has been entered.<br>
 You can deactivate it anytime by removing the codes again.',
     'TCKLARNA_ON_SITE_MESSAGING_MERCHANT_BUTTON' => 'Go to Merchant Portal',
