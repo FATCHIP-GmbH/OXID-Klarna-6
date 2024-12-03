@@ -1,5 +1,10 @@
-### 5.5.5
+### 5.5.6
+* Introducing Billie
 * Fixed migration throwing error for missing method
+* Fixed KlarnaInstaller resetting after apply-configuration process
+
+### 5.5.5
+* Added Klarna Express Checkout
 
 ### 5.5.4
 * Added migrations 
