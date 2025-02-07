@@ -329,10 +329,7 @@ For a detailed description of the different settings please see the tool-tip fun
 
     'TCKLARNA_EU_WARNING' => '<p>To comply with the EU Geoblocking Regulation it is highly recommended to enable all European countries and assign them to the Klarna Checkout payment method.</p><p>Missing countries: %s</p>',
     'TCKLARNA_ON_SITE_MESSAGING' => 'On-Site Messaging',
-    'TCKLARNA_ON_SITE_MESSAGING_ADMIN_DESC' => 'Here you can configure the On-Site messaging to use with the Klarna extension 
-for OXID. For a detailed description of the different settings please see the tool-tip function 
-<i class="fa fa-question-circle-o" aria-hidden="true"></i>, see the <a class="cl-pink" href="%s" target="_blank">documentation</a> 
-or contact Klarna Integration Support.',
+    'TCKLARNA_ON_SITE_MESSAGING_ADMIN_DESC' => 'Here you can configure the On-Site messaging to use with the Klarna extension for OXID. ',
     'TCKLARNA_ON_SITE_MESSAGING_SCRIPT'         => 'Script',
     'TCKLARNA_CREDIT_PROMOTION_PRODUCT'         => 'Credit Promotion Product Detail Page',
     'TCKLARNA_CREDIT_PROMOTION_BASKET'          => 'Credit Promotion Basket Page',
