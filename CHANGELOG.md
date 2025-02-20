@@ -1,3 +1,7 @@
+### 5.5.7
+* Changes in payment method description
+* Fixed on site messaging in admin description
+
 ### 5.5.6
 * Introducing Billie
 * Fixed migration throwing error for missing method
